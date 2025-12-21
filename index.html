@@ -1592,12 +1592,23 @@
                     padding: 14,
                     cornerRadius: 12,
                     displayColors: true,
-                    titleFont: { weight: '600' }
+                    titleFont: { weight: '600' },
+                    callbacks: {
+                        label: function (context) {
+                            let label = context.dataset.label || '';
+                            if (label) label += ': ';
+                            if (context.parsed.y !== null) {
+                                const unit = label.includes('湿度') ? '%' : '°C';
+                                label += context.parsed.y.toFixed(1) + unit;
+                            }
+                            return label;
+                        }
+                    }
                 }
             },
             scales: {
                 x: { grid: { color: 'rgba(148, 163, 184, 0.06)' }, ticks: { color: '#64748b', font: { size: 10 }, maxRotation: 45 } },
-                y: { grid: { color: 'rgba(148, 163, 184, 0.06)' }, ticks: { color: '#64748b', font: { size: 10 } } }
+                y: { grid: { color: 'rgba(148, 163, 184, 0.06)' }, ticks: { color: '#64748b', font: { size: 10 }, callback: function (value) { return value + '°C'; } } }
             }
         };
 
