@@ -1342,17 +1342,21 @@
 
         // Generate time-based greeting and weather comment
         function updateGreeting(temp, humidity) {
-            const hour = new Date().getHours();
+            const now = new Date();
+            const hour = now.getHours();
+            const month = now.getMonth() + 1;
             let greeting, emoji;
 
-            // Time-based greeting
-            if (hour >= 5 && hour < 7) { greeting = 'おはようございます'; emoji = '🌅'; }
-            else if (hour >= 7 && hour < 10) { greeting = 'おはようございます'; emoji = '☀️'; }
-            else if (hour >= 10 && hour < 12) { greeting = 'おはようございます'; emoji = '🌤️'; }
+            // Time-based greeting (more detailed)
+            if (hour >= 4 && hour < 6) { greeting = '早起きですね'; emoji = '🌄'; }
+            else if (hour >= 6 && hour < 8) { greeting = 'おはようございます'; emoji = '🌅'; }
+            else if (hour >= 8 && hour < 10) { greeting = 'おはようございます'; emoji = '☀️'; }
+            else if (hour >= 10 && hour < 12) { greeting = '良い午前を'; emoji = '🌤️'; }
             else if (hour >= 12 && hour < 14) { greeting = 'こんにちは'; emoji = '☀️'; }
-            else if (hour >= 14 && hour < 17) { greeting = 'こんにちは'; emoji = '🌤️'; }
-            else if (hour >= 17 && hour < 19) { greeting = 'こんばんは'; emoji = '🌆'; }
-            else if (hour >= 19 && hour < 22) { greeting = 'こんばんは'; emoji = '🌙'; }
+            else if (hour >= 14 && hour < 16) { greeting = 'こんにちは'; emoji = '🌤️'; }
+            else if (hour >= 16 && hour < 18) { greeting = '午後もお疲れさま'; emoji = '🌇'; }
+            else if (hour >= 18 && hour < 20) { greeting = 'こんばんは'; emoji = '🌆'; }
+            else if (hour >= 20 && hour < 23) { greeting = 'こんばんは'; emoji = '🌙'; }
             else { greeting = 'お夜更かしですか？'; emoji = '🌃'; }
 
             const t = `<span class="temp-highlight">${temp.toFixed(1)}°C</span>`;
@@ -1362,26 +1366,62 @@
             const wc = weatherData?.weatherCode ?? -1;
             const pp = weatherData?.precipProb ?? 0;
             const ws = weatherData?.windSpeed ?? 0;
+            const uv = weatherData?.uvIndex ?? 0;
+            const fl = weatherData?.feelsLike ?? temp;
 
-            // Weather state detection
+            // Weather state detection (detailed)
             const isThunderstorm = wc >= 95;
-            const isHeavyRain = wc >= 80 && wc < 95;
-            const isSnow = wc >= 71 && wc < 80;
-            const isRain = wc >= 61 && wc < 71;
+            const isHeavySnow = wc >= 75 && wc < 80;
+            const isSnow = wc >= 71 && wc < 75;
+            const isSleet = wc >= 80 && wc < 82;
+            const isHeavyRain = wc >= 82 && wc < 95;
+            const isModerateRain = wc >= 63 && wc < 67;
+            const isRain = wc >= 61 && wc < 63;
             const isDrizzle = wc >= 51 && wc < 61;
             const isFog = wc >= 45 && wc < 51;
-            const isCloudy = wc >= 2 && wc < 45;
+            const isOvercast = wc >= 3 && wc < 45;
+            const isPartlyCloudy = wc === 2;
             const isClear = wc >= 0 && wc <= 1;
-            const isRaining = isThunderstorm || isHeavyRain || isRain || isDrizzle;
-            const isWindy = ws >= 8;
-            const isVeryWindy = ws >= 15;
+            const isRaining = isThunderstorm || isHeavyRain || isModerateRain || isRain || isDrizzle;
+
+            // Wind levels (more detailed)
+            const isCalm = ws < 3;
+            const isLightBreeze = ws >= 3 && ws < 8;
+            const isWindy = ws >= 8 && ws < 15;
+            const isVeryWindy = ws >= 15 && ws < 25;
+            const isStormWind = ws >= 25;
             const willRain = pp >= 50 && !isRaining;
 
-            // Humidity levels
-            const isVeryDry = humidity < 30;
-            const isDry = humidity >= 30 && humidity < 50;
-            const isHumid = humidity >= 75 && humidity < 85;
-            const isVeryHumid = humidity >= 85;
+            // Humidity levels (more detailed)
+            const isExtremelyDry = humidity < 20;
+            const isVeryDry = humidity >= 20 && humidity < 30;
+            const isDry = humidity >= 30 && humidity < 45;
+            const isComfortableHumid = humidity >= 45 && humidity < 60;
+            const isHumid = humidity >= 60 && humidity < 75;
+            const isVeryHumid = humidity >= 75 && humidity < 85;
+            const isExtremelyHumid = humidity >= 85;
+
+            // UV levels
+            const isHighUV = uv >= 6;
+            const isVeryHighUV = uv >= 8;
+            const isExtremeUV = uv >= 11;
+
+            // Time period
+            const isMorning = hour >= 6 && hour < 12;
+            const isAfternoon = hour >= 12 && hour < 18;
+            const isEvening = hour >= 18 && hour < 22;
+            const isNight = hour >= 22 || hour < 6;
+
+            // Season detection
+            const isSummer = month >= 6 && month <= 8;
+            const isWinter = month === 12 || month <= 2;
+            const isRainy = month === 6 || month === 7;
+            const isSpring = month >= 3 && month <= 5;
+            const isAutumn = month >= 9 && month <= 11;
+
+            // Feels-like difference
+            const feelsHotter = fl > temp + 2;
+            const feelsColder = fl < temp - 2;
 
             let comment = '';
 
@@ -1390,187 +1430,455 @@
             // PRIORITY 1: Hazardous weather (thunderstorm)
             // ============================================================
             if (isThunderstorm) {
-                if (temp >= 25) {
+                if (temp >= 30 && isExtremelyHumid) {
+                    comment = `⛈️ ${t}・湿度${h}% — 猛暑の中の雷雨！蒸し風呂状態。エアコンの効いた室内へ`;
+                } else if (temp >= 28 && isSummer) {
+                    comment = `⛈️ ${t} — 夏の夕立ですね。激しい雷雨。落雷に注意して屋内へ`;
+                } else if (temp >= 25) {
                     comment = `⛈️ ${t} — 雷雨発生中！蒸し暑さの中、激しい雨。屋内に避難を`;
+                } else if (temp >= 15 && isSpring) {
+                    comment = `⛈️ ${t} — 春雷です。急な雨と雷。傘があっても屋内が安全`;
+                } else if (temp >= 10) {
+                    comment = `⛈️ ${t} — 冷たい雷雨。濡れると体が冷えます。建物内へ`;
+                } else if (isVeryWindy || isStormWind) {
+                    comment = `⛈️ ${t} — 雷雨と強風！飛来物に注意。窓から離れて`;
                 } else {
                     comment = `⛈️ ${t} — 雷雨です。落雷の危険あり。安全な場所でお過ごしを`;
                 }
+                if (isStormWind) comment += ' 🌀 暴風注意！';
             }
             // ============================================================
-            // PRIORITY 2: Snow
+            // PRIORITY 2: Heavy Snow
             // ============================================================
-            else if (isSnow) {
+            else if (isHeavySnow) {
+                if (temp <= -10) {
+                    comment = `❄️ ${t} — 猛吹雪！極寒です。外出は命に関わります`;
+                } else if (temp <= -5 && isStormWind) {
+                    comment = `❄️ ${t} — 猛吹雪です。視界ゼロ。絶対に外出しないで`;
+                } else if (temp <= -5) {
+                    comment = `❄️ ${t} — 厳しい寒さの中、大雪が降っています。路面完全凍結`;
+                } else if (temp <= 0 && isVeryWindy) {
+                    comment = `❄️ ${t} — 吹雪いています。視界不良と凍結に厳重注意`;
+                } else if (temp <= 0) {
+                    comment = `❄️ ${t} — 本格的な雪。積もりそうです。早めの帰宅を`;
+                } else {
+                    comment = `❄️ ${t} — 湿った重い雪。傘がすぐ壊れそう。足元注意`;
+                }
+            }
+            // ============================================================
+            // PRIORITY 3: Snow
+            // ============================================================
+            else if (isSnow || isSleet) {
                 if (temp <= -5) {
                     comment = `❄️ ${t} — 厳しい寒さの中、雪が降り続いています。路面完全凍結`;
+                } else if (temp <= 0 && isVeryDry) {
+                    comment = `❄️ ${t} — サラサラの粉雪。積もりやすいです。足元注意`;
                 } else if (temp <= 0) {
                     comment = `❄️ ${t} — 雪が積もりそう。足元と運転にくれぐれもご注意を`;
+                } else if (temp <= 2 && isSleet) {
+                    comment = `🌨️ ${t} — みぞれが降っています。傘が必須。滑りやすいので注意`;
                 } else if (temp <= 3) {
                     comment = `🌨️ ${t} — みぞれ混じりの雪。傘とすべりにくい靴で`;
+                } else if (isMorning) {
+                    comment = `🌨️ ${t} — 朝から雪。通勤・通学は時間に余裕を持って`;
+                } else if (isEvening) {
+                    comment = `🌨️ ${t} — 夜にかけて積もるかも。帰宅は早めに`;
                 } else {
                     comment = `🌨️ ${t} — この気温で雪は珍しいですね。足元注意`;
                 }
-                if (isVeryWindy) comment += '。吹雪になりそうです 🌀';
+                if (isVeryWindy) comment += ' 🌀 吹雪に注意';
             }
             // ============================================================
-            // PRIORITY 3: Heavy Rain / Showers
+            // PRIORITY 4: Heavy Rain / Showers
             // ============================================================
-            else if (isHeavyRain) {
-                if (temp >= 30) {
+            else if (isHeavyRain || isModerateRain) {
+                if (temp >= 32 && isExtremelyHumid) {
+                    comment = `🌧️ ${t}・湿度${h}% — 猛暑の中の豪雨。蒸し地獄。雨宿りして涼を`;
+                } else if (temp >= 28 && isSummer && isAfternoon) {
+                    comment = `🌧️ ${t} — 夏の夕立が激しいです。1時間もすれば止むかも`;
+                } else if (temp >= 28 && isExtremelyHumid) {
+                    comment = `🌧️ ${t}・湿度${h}% — 熱帯のようなスコール。ジメジメします`;
+                } else if (temp >= 25 && isRainy) {
+                    comment = `🌧️ ${t} — 梅雨の本降り。じめじめ蒸し暑い。除湿器を`;
+                } else if (temp >= 25) {
                     comment = `🌧️ ${t} — 蒸し暑い中、激しい雨。雨宿りして涼みましょう`;
+                } else if (temp >= 20 && isWindy) {
+                    comment = `🌧️ ${t} — 横殴りの雨。傘が役に立たないかも`;
                 } else if (temp >= 20) {
                     comment = `🌧️ ${t} — 激しい雨。傘があっても濡れそう。少し待つのが吉`;
+                } else if (temp >= 15 && isEvening) {
+                    comment = `🌧️ ${t} — 夕方の本降り。帰宅ラッシュに影響しそう`;
+                } else if (temp >= 10 && isAutumn) {
+                    comment = `🌧️ ${t} — 秋の冷たい雨。濡れると体が冷えます。暖かくして`;
                 } else if (temp >= 10) {
                     comment = `🌧️ ${t} — 冷たい雨が激しく降っています。濡れると冷えます`;
+                } else if (temp >= 5) {
+                    comment = `🌧️ ${t} — 凍えるような冷たい豪雨。濡れたらすぐ着替えを`;
                 } else {
-                    comment = `🌧️ ${t} — 冷たい雨が激しい。暖かい屋内で過ごしましょう`;
+                    comment = `🌧️ ${t} — 冷たい雨が激しい。雪に変わるかも。暖かい屋内へ`;
                 }
+                if (isVeryWindy) comment += ' 💨 風も強い！';
             }
             // ============================================================
-            // PRIORITY 4: Regular Rain
+            // PRIORITY 5: Regular Rain
             // ============================================================
             else if (isRain) {
-                if (temp >= 30 && isVeryHumid) {
-                    comment = `☔ ${t}・湿度${h}% — ムシムシした雨。不快指数高め。除湿を`;
+                if (temp >= 30 && isExtremelyHumid) {
+                    comment = `☔ ${t}・湿度${h}% — ムシムシした熱帯雨。不快指数MAX。エアコンを`;
+                } else if (temp >= 28 && isVeryHumid) {
+                    comment = `☔ ${t}・湿度${h}% — 蒸し暑い雨。汗が止まらない。こまめに水分補給`;
+                } else if (temp >= 25 && isMorning) {
+                    comment = `☔ ${t} — 朝から雨。傘を忘れずに。蒸し暑くなりそう`;
                 } else if (temp >= 25) {
                     comment = `☔ ${t} — 暖かい雨が降っています。傘をお持ちください`;
+                } else if (temp >= 20 && isRainy) {
+                    comment = `☔ ${t} — 梅雨らしいしとしと雨。カビ対策を忘れずに`;
+                } else if (temp >= 18 && isSpring) {
+                    comment = `☔ ${t} — 春雨ですね。花粉が流れるのは嬉しいかも`;
                 } else if (temp >= 15) {
                     comment = `☔ ${t} — しとしと雨。肌寒さを感じたら上着を`;
+                } else if (temp >= 10 && isAutumn) {
+                    comment = `☔ ${t} — 秋雨です。気温も下がって寒くなってきました`;
+                } else if (temp >= 10) {
+                    comment = `☔ ${t} — 肌寒い雨。長袖と傘は必須`;
+                } else if (temp >= 5 && isWinter) {
+                    comment = `☔ ${t} — 冬の冷たい雨。みぞれになるかも`;
                 } else if (temp >= 5) {
                     comment = `☔ ${t} — 冷たい雨。濡れると一気に冷えます`;
+                } else if (temp >= 2) {
+                    comment = `☔ ${t} — 氷雨です。雪に変わりそうな寒さ`;
                 } else {
-                    comment = `☔ ${t} — 氷雨が降っています。雪に変わるかも`;
+                    comment = `☔ ${t} — 氷雨が降っています。路面凍結に注意`;
                 }
             }
             // ============================================================
-            // PRIORITY 5: Drizzle
+            // PRIORITY 6: Drizzle
             // ============================================================
             else if (isDrizzle) {
-                if (temp >= 25) {
-                    comment = `🌧️ ${t} — 小雨がパラついています。傘なしでも大丈夫かも？`;
+                if (temp >= 28 && isExtremelyHumid) {
+                    comment = `🌧️ ${t}・湿度${h}% — 霧雨だけどムシムシ。汗が乾かない`;
+                } else if (temp >= 25 && isSummer) {
+                    comment = `🌧️ ${t} — 少しだけパラついています。傘なしでも大丈夫かも？`;
+                } else if (temp >= 25) {
+                    comment = `🌧️ ${t} — 小雨がパラついています。折りたたみ傘があると安心`;
+                } else if (temp >= 20 && isRainy) {
+                    comment = `🌧️ ${t} — 梅雨のしっとり霧雨。髪がまとまらない季節`;
+                } else if (temp >= 18 && isSpring) {
+                    comment = `🌧️ ${t} — 春の霧雨。新緑が潤う良い雨`;
                 } else if (temp >= 15) {
                     comment = `🌧️ ${t} — 霧雨が降っています。しっとりした空気`;
+                } else if (temp >= 10 && isAutumn) {
+                    comment = `🌧️ ${t} — 秋の霧雨。紅葉が濡れて美しい`;
+                } else if (temp >= 10) {
+                    comment = `🌧️ ${t} — 小雨が降っています。肌寒さに注意`;
+                } else if (temp >= 5) {
+                    comment = `🌧️ ${t} — 細かい冷たい雨。濡れると寒いので傘を`;
                 } else {
-                    comment = `🌧️ ${t} — 細かい雨が降っています。濡れると寒いので傘を`;
+                    comment = `🌧️ ${t} — 凍てつく霧雨。雪に変わるかも`;
                 }
             }
             // ============================================================
-            // PRIORITY 6: Fog
+            // PRIORITY 7: Fog
             // ============================================================
             else if (isFog) {
-                if (temp >= 20) {
+                if (temp >= 25 && isExtremelyHumid) {
+                    comment = `🌫️ ${t}・湿度${h}% — 蒸し霧。サウナのような空気`;
+                } else if (temp >= 20 && isMorning) {
+                    comment = `🌫️ ${t} — 朝霧が出ています。日が昇れば晴れそう`;
+                } else if (temp >= 20) {
                     comment = `🌫️ ${t} — 暖かい霧が立ち込めています。視界不良注意`;
+                } else if (temp >= 15 && isAutumn) {
+                    comment = `🌫️ ${t} — 秋霧ですね。幻想的ですが運転注意`;
+                } else if (temp >= 10 && isMorning) {
+                    comment = `🌫️ ${t} — 放射霧です。日中は晴れる見込み`;
                 } else if (temp >= 10) {
                     comment = `🌫️ ${t} — 霧が出ています。運転は十分な車間距離を`;
+                } else if (temp >= 5) {
+                    comment = `🌫️ ${t} — 冷たい霧。視界悪く路面も滑りやすい`;
+                } else if (temp >= 0) {
+                    comment = `🌫️ ${t} — 凍霧です。路面がアイスバーン状態かも`;
                 } else {
-                    comment = `🌫️ ${t} — 冷たい霧。視界悪く道も滑りやすいかも`;
+                    comment = `🌫️ ${t} — 極寒の霧。すべてが凍りついています`;
                 }
             }
             // ============================================================
-            // PRIORITY 7: Clear/Cloudy with temperature+humidity
+            // PRIORITY 8: Clear/Cloudy with temperature+humidity+UV+time
             // ============================================================
             else {
                 // EXTREME HEAT 38+
                 if (temp >= 38) {
-                    if (isClear) {
+                    if (isNight) {
+                        comment = `🚨 ${t} — 深夜でも危険な暑さ。エアコンをつけて熱中症に警戒`;
+                    } else if (isClear && isExtremeUV && !isNight) {
+                        comment = `🚨 ${t} — 危険！UV極端、体温超え。外出禁止レベル`;
+                    } else if (isClear && isAfternoon) {
+                        comment = `🚨 ${t} — 午後の猛暑がピーク！日陰も40°C近い。屋内へ`;
+                    } else if (isClear && !isNight) {
                         comment = `🚨 ${t} — 危険な猛暑！直射日光を避け、15分ごとに水分を`;
-                    } else if (isVeryHumid) {
+                    } else if (isExtremelyHumid) {
                         comment = `🚨 ${t}・湿度${h}% — 命に関わる蒸し暑さ。クーラーの効いた室内へ`;
+                    } else if (isEvening) {
+                        comment = `🚨 ${t} — 夕方になっても危険な暑さ。熱中症に警戒`;
                     } else {
                         comment = `🚨 ${t} — 体温を超える暑さ。曇っていても熱中症の危険`;
                     }
                 }
-                // HOT 32-38
-                else if (temp >= 32) {
-                    if (isClear && isDry) {
-                        comment = `☀️ ${t} — カラッと晴れた真夏日。帽子と日焼け止めを`;
-                    } else if (isClear) {
-                        comment = `☀️ ${t} — 日差しが強い真夏日。熱中症に注意`;
+                // HOT 35-38
+                else if (temp >= 35) {
+                    if (isNight) {
+                        comment = `🔥 ${t} — 熱帯夜。エアコンなしでは眠れない暑さ`;
+                    } else if (isClear && isVeryHighUV && !isNight) {
+                        comment = `🔥 ${t} — 猛暑日！UV非常に強い。帽子・日傘・日焼け止め必須`;
+                    } else if (isClear && isMorning) {
+                        comment = `🔥 ${t} — 朝から猛暑。今日は一日厳しい暑さに`;
+                    } else if (isClear && isAfternoon) {
+                        comment = `🔥 ${t} — 午後の猛暑。15分おきに水分補給を`;
+                    } else if (isEvening) {
+                        comment = `🔥 ${t} — 夕方でも猛暑。日が暮れても暑さは続きます`;
+                    } else if (isExtremelyHumid) {
+                        comment = `🔥 ${t}・湿度${h}% — 蒸し風呂状態。汗が乾かず危険`;
                     } else if (isVeryHumid) {
+                        comment = `🔥 ${t}・湿度${h}% — 不快指数極大。エアコン全開で`;
+                    } else if (feelsHotter) {
+                        comment = `🔥 ${t}（体感${fl.toFixed(0)}°C）— 湿度で体感はさらに暑い`;
+                    } else {
+                        comment = `🔥 ${t} — 猛暑です。こまめな水分・塩分補給を`;
+                    }
+                }
+                // HOT 32-35
+                else if (temp >= 32) {
+                    if (isNight) {
+                        comment = `🌙 ${t} — 暑い夜。エアコンをつけて熱中症対策を`;
+                    } else if (isClear && isHighUV && isDry && !isNight) {
+                        comment = `☀️ ${t} — カラッと晴れた真夏日。UV強め。帽子と日焼け止めを`;
+                    } else if (isClear && isVeryHighUV && !isNight) {
+                        comment = `☀️ ${t} — 日差しが痛い真夏日。UV対策は必須`;
+                    } else if (isClear && isMorning) {
+                        comment = `☀️ ${t} — 朝から暑い！日中はさらに気温上昇`;
+                    } else if (isClear && isAfternoon) {
+                        comment = `☀️ ${t} — 日差しが強い真夏日。熱中症に注意`;
+                    } else if (isClear && isEvening) {
+                        comment = `🌇 ${t} — 夕方でもまだ暑い。水分補給を忘れずに`;
+                    } else if (isExtremelyHumid) {
                         comment = `😫 ${t}・湿度${h}% — 蒸し暑くて不快。エアコン必須`;
-                    } else if (isCloudy) {
+                    } else if (isVeryHumid && isAfternoon) {
+                        comment = `😫 ${t}・湿度${h}% — 午後は特に蒸し暑い。休憩を多めに`;
+                    } else if (isOvercast) {
                         comment = `🌻 ${t} — 曇っていても暑い。水分補給を忘れずに`;
+                    } else if (feelsColder && isLightBreeze && !isNight) {
+                        comment = `☀️ ${t} — 暑いですが風があって少し楽。日陰を選んで`;
                     } else {
                         comment = `🍧 ${t} — 夏本番！アイスが美味しい季節ですね`;
                     }
                 }
-                // WARM 25-32
+                // WARM 28-32
+                else if (temp >= 28) {
+                    if (isNight) {
+                        comment = `🌙 ${t} — 暑い夜。窓を開けるか冷房をつけて`;
+                    } else if (isClear && isDry && isHighUV && !isNight) {
+                        comment = `✨ ${t} — カラッと晴れて気持ちいい！UV対策を忘れずに`;
+                    } else if (isClear && isMorning) {
+                        comment = `☀️ ${t} — 爽やかな夏の朝。日中は暑くなりそう`;
+                    } else if (isClear && isEvening) {
+                        comment = `🌇 ${t} — 日が傾いてきました。夕涼みには少し早いかも`;
+                    } else if (isClear && isAfternoon) {
+                        comment = `☀️ ${t} — 夏らしい陽気。半袖でちょうどいい`;
+                    } else if (isExtremelyHumid) {
+                        comment = `💧 ${t}・湿度${h}% — 蒸し暑い！除湿器かエアコンを`;
+                    } else if (isVeryHumid && isRainy) {
+                        comment = `💧 ${t}・湿度${h}% — 梅雨らしいジメジメ。カビ対策を`;
+                    } else if (isPartlyCloudy && !isNight) {
+                        comment = `⛅ ${t} — 時々雲がかかりますが暑い。水分補給を`;
+                    } else if (isOvercast) {
+                        comment = `☁️ ${t} — 曇っていますが蒸し暑い。風があると楽`;
+                    } else {
+                        comment = `🌴 ${t} — 夏日です。冷たい飲み物が美味しい`;
+                    }
+                }
+                // WARM 25-28
                 else if (temp >= 25) {
-                    if (isClear && isDry) {
+                    if (isNight) {
+                        comment = `🌙 ${t} — 暖かい夜。窓を開けて寝ると気持ちいいかも`;
+                    } else if (isClear && isDry && isMorning) {
+                        comment = `✨ ${t} — 爽やかな朝！絶好のお出かけ日和`;
+                    } else if (isClear && isDry && !isNight) {
                         comment = `✨ ${t} — カラッと爽やかな晴れ！最高のお出かけ日和`;
-                    } else if (isClear) {
+                    } else if (isClear && isHighUV && !isNight) {
+                        comment = `☀️ ${t} — 日差したっぷり。UVケアを忘れずに`;
+                    } else if (isClear && !isNight) {
                         comment = `😊 ${t} — 気持ちのいい晴れ。半袖でちょうどいい`;
+                    } else if (isExtremelyHumid) {
+                        comment = `💧 ${t}・湿度${h}% — ジメジメ曇り空。扇風機があると快適`;
                     } else if (isVeryHumid) {
                         comment = `💧 ${t}・湿度${h}% — 蒸し暑い曇り空。扇風機があると快適`;
-                    } else if (isCloudy) {
+                    } else if (isPartlyCloudy && isSpring && !isNight) {
+                        comment = `🌸 ${t} — 春らしい陽気。お花見にぴったり`;
+                    } else if (isOvercast) {
                         comment = `⛅ ${t} — 曇りですが暖かい。薄着で過ごせます`;
                     } else {
                         comment = `🌸 ${t} — 過ごしやすい気温。窓を開けると気持ちいい`;
                     }
                 }
-                // COMFORTABLE 18-25
-                else if (temp >= 18) {
-                    if (isClear && isDry) {
+                // COMFORTABLE 22-25
+                else if (temp >= 22) {
+                    if (isNight) {
+                        comment = `🌙 ${t} — 穏やかな夜。リラックスタイムに最適`;
+                    } else if (isClear && isDry && isMorning) {
+                        comment = `🍀 ${t} — 爽やかな朝。散歩やジョギングに最適`;
+                    } else if (isClear && isDry && !isNight) {
                         comment = `🍀 ${t} — 爽やかな秋晴れのような陽気。散歩に最適`;
-                    } else if (isClear) {
+                    } else if (isClear && isSpring && !isNight) {
+                        comment = `🌷 ${t} — 春の陽気。新緑が眩しい`;
+                    } else if (isClear && isAutumn && !isNight) {
+                        comment = `🍁 ${t} — 秋晴れの心地よさ。紅葉狩りにいい季節`;
+                    } else if (isClear && !isNight) {
                         comment = `☀️ ${t} — 穏やかな晴れ。過ごしやすい一日に`;
                     } else if (isVeryHumid) {
                         comment = `🌧️ ${t} — 湿気が多め。雨が近いかもしれません`;
-                    } else if (isVeryDry) {
-                        comment = `💨 ${t} — 乾燥した空気。のど飴と保湿を忘れずに`;
+                    } else if (isPartlyCloudy && !isNight) {
+                        comment = `⛅ ${t} — 薄曇り。過ごしやすい気温です`;
                     } else {
                         comment = `☕ ${t} — 穏やかな気温。コーヒーでもいかが？`;
                     }
                 }
-                // COOL 10-18
-                else if (temp >= 10) {
-                    if (isClear && isDry) {
+                // COMFORTABLE 18-22
+                else if (temp >= 18) {
+                    if (isNight) {
+                        comment = `🌙 ${t} — 静かで穏やかな夜。よく眠れそう`;
+                    } else if (isClear && isDry && isAutumn && !isNight) {
+                        comment = `🍂 ${t} — 秋晴れの爽やかさ。読書日和ですね`;
+                    } else if (isClear && isDry && !isNight) {
+                        comment = `🍀 ${t} — 爽やかな陽気。上着なしでも快適`;
+                    } else if (isClear && isMorning) {
+                        comment = `☀️ ${t} — 気持ちいい朝。日中は暖かくなりそう`;
+                    } else if (isClear && !isNight) {
+                        comment = `☀️ ${t} — 穏やかな晴れ。過ごしやすい一日に`;
+                    } else if (isExtremelyDry) {
+                        comment = `💨 ${t} — 乾燥注意！加湿器やハンドクリームを`;
+                    } else if (isVeryDry) {
+                        comment = `💨 ${t} — 乾燥した空気。のど飴と保湿を忘れずに`;
+                    } else if (isVeryHumid) {
+                        comment = `🌧️ ${t} — 湿気が高い。天気の変化に注意`;
+                    } else if (isOvercast && isSpring && !isNight) {
+                        comment = `🌸 ${t} — 穏やかな春曇り。花粉が気になる季節`;
+                    } else {
+                        comment = `☕ ${t} — 穏やかな気温。ゆったり過ごしましょう`;
+                    }
+                }
+                // COOL 14-18
+                else if (temp >= 14) {
+                    if (isNight) {
+                        comment = `🌙 ${t} — 少し肌寒い夜。薄手の上着があると安心`;
+                    } else if (isClear && isDry && isAutumn && !isNight) {
+                        comment = `🍁 ${t} — 秋の行楽日和。軽い上着で紅葉狩りへ`;
+                    } else if (isClear && isDry && !isNight) {
                         comment = `🍁 ${t} — 秋晴れの爽やかさ。薄手の上着があると安心`;
-                    } else if (isClear) {
+                    } else if (isClear && isMorning) {
+                        comment = `☀️ ${t} — 肌寒い朝。日中は暖かくなります`;
+                    } else if (isClear && !isNight) {
                         comment = `🧥 ${t} — 晴れていますがひんやり。上着を忘れずに`;
                     } else if (isVeryHumid) {
                         comment = `🌫️ ${t} — 湿っぽくて肌寒い。雨が降りそう`;
-                    } else if (isCloudy) {
+                    } else if (isOvercast && isAutumn) {
+                        comment = `🍂 ${t} — 秋曇り。温かい飲み物が恋しい`;
+                    } else if (isOvercast) {
                         comment = `⛅ ${t} — 曇りで少し肌寒い。長袖がちょうどいい`;
+                    } else if (isEvening) {
+                        comment = `🌆 ${t} — 夕方になって涼しくなりました。上着を`;
                     } else {
                         comment = `🍂 ${t} — 秋の空気。温かい飲み物が恋しくなりますね`;
                     }
                 }
+                // COOL 10-14
+                else if (temp >= 10) {
+                    if (isNight) {
+                        comment = `🌙 ${t} — 冷え込む夜。暖かくしてお休みください`;
+                    } else if (isClear && isDry && isMorning) {
+                        comment = `🌅 ${t} — 冷え込む朝。日中は暖かくなる見込み`;
+                    } else if (isClear && isDry) {
+                        comment = `🍁 ${t} — 秋晴れですが肌寒い。しっかり上着を`;
+                    } else if (isClear && isWinter && !isNight) {
+                        comment = `❄️ ${t} — 冬晴れ。日差しは暖かいですが空気は冷たい`;
+                    } else if (isClear) {
+                        comment = `🧥 ${t} — 晴れていますが冷えます。上着必須`;
+                    } else if (isVeryHumid) {
+                        comment = `🌫️ ${t} — 湿っぽくて底冷え。暖房をつけましょう`;
+                    } else if (isOvercast && isWinter) {
+                        comment = `☁️ ${t} — 冬曇り。暖房が恋しい一日`;
+                    } else if (isOvercast) {
+                        comment = `⛅ ${t} — 曇りで肌寒い。セーターやカーディガンを`;
+                    } else {
+                        comment = `🍂 ${t} — 涼しさを通り越して寒い。暖かくして`;
+                    }
+                }
                 // CHILLY 5-10
                 else if (temp >= 5) {
-                    if (isClear && isVeryDry) {
+                    if (isNight) {
+                        comment = `🌙 ${t} — 冷え込む夜。暖房をつけてゆっくり休みましょう`;
+                    } else if (isClear && isExtremelyDry) {
+                        comment = `🌬️ ${t} — キリッと冬晴れ。空気がカラカラ。保湿必須`;
+                    } else if (isClear && isVeryDry) {
                         comment = `🌬️ ${t} — キリッと冷たい冬晴れ。空気が乾燥しています`;
+                    } else if (isClear && isMorning) {
+                        comment = `❄️ ${t} — 霜が降りるような朝。日中も寒い`;
                     } else if (isClear) {
                         comment = `⛄ ${t} — 晴れていますが寒いです。しっかり防寒を`;
-                    } else if (isVeryHumid || isHumid) {
+                    } else if (isExtremelyHumid || isVeryHumid) {
+                        comment = `❄️ ${t}・湿度${h}% — 湿度高く底冷え。雪の予感`;
+                    } else if (isHumid) {
                         comment = `❄️ ${t} — 湿度が高く底冷えします。暖房で暖まりましょう`;
-                    } else if (isCloudy) {
+                    } else if (isOvercast && isWinter) {
+                        comment = `☁️ ${t} — 冬曇り。雪がちらつくかも`;
+                    } else if (isOvercast) {
                         comment = `☁️ ${t} — 曇りで寒々しい。温かい飲み物で一息を`;
+                    } else if (isWindy) {
+                        comment = `🌬️ ${t} — 風が冷たい。体感温度はもっと低い`;
                     } else {
                         comment = `🧣 ${t} — コートとマフラーの季節ですね`;
                     }
                 }
                 // COLD 0-5
                 else if (temp >= 0) {
-                    if (willRain) {
+                    if (isNight) {
+                        comment = `🥶 ${t} — 凍える夜。暖房をしっかり効かせてお休みを`;
+                    } else if (willRain && isHumid) {
+                        comment = `🌨️ ${t}・湿度${h}% — 雪になりそう。積もるかも`;
+                    } else if (willRain) {
                         comment = `🌨️ ${t} — 雪になりそうな寒さ。路面凍結にご注意を`;
+                    } else if (isClear && isMorning) {
+                        comment = `❄️ ${t} — 放射冷却で凍える朝。路面凍結注意`;
                     } else if (isClear) {
                         comment = `🥶 ${t} — 凍えるような晴れ。放射冷却で冷え込んでいます`;
+                    } else if (isVeryWindy) {
+                        comment = `🥶 ${t} — 寒風が身にしみる。体感は氷点下`;
+                    } else if (isOvercast) {
+                        comment = `☁️ ${t} — どんより寒い。雪の気配を感じます`;
                     } else {
                         comment = `🥶 ${t} — かなり冷え込んでいます。厚着をして暖かく`;
                     }
                 }
                 // FREEZING -5 to 0
                 else if (temp >= -5) {
-                    if (isVeryHumid || isHumid) {
+                    if (isVeryHumid || isExtremelyHumid) {
+                        comment = `❄️ ${t}・湿度${h}% — 氷点下で湿度高い。大雪になりそう`;
+                    } else if (isHumid) {
                         comment = `❄️ ${t} — 氷点下で湿度も高い。雪が降りそう`;
+                    } else if (isVeryWindy) {
+                        comment = `🧊 ${t} — 氷点下の強風。外出は極力避けて`;
+                    } else if (isClear) {
+                        comment = `🧊 ${t} — 快晴ですが極寒。放射冷却で猛烈に冷えています`;
                     } else {
                         comment = `🧊 ${t} — 氷点下です。水道管凍結にご注意を`;
                     }
                 }
                 // EXTREME COLD -5 below
                 else {
-                    if (isVeryHumid || isHumid) {
+                    if (isVeryHumid || isExtremelyHumid) {
                         comment = `⚠️ ${t}・湿度${h}% — 大雪・吹雪の恐れ。不要不急の外出は控えて`;
+                    } else if (isStormWind || isVeryWindy) {
+                        comment = `⚠️ ${t} — 猛烈な寒さと強風。命に関わる危険。外出禁止`;
+                    } else if (temp <= -10) {
+                        comment = `⚠️ ${t} — 極寒！数分で凍傷の危険。絶対に外出しないで`;
                     } else {
                         comment = `🥶 ${t} — 厳しい冷え込み。短時間でも凍傷に注意`;
                     }
