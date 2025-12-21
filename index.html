@@ -922,7 +922,8 @@
                 <div class="footer-stat-value">2024/3 〜 現在</div>
             </div>
         </div>
-        <div class="version-info">v1.2.0</div>
+        <div class="version-info">v1.3.0 <span style="opacity: 0.5; font-size: 0.75em;">| 最終更新: 2025/12/22 01:15</span>
+        </div>
     </div>
 
     <script>
@@ -2033,7 +2034,13 @@
                 type: 'line',
                 plugins: [crosshairPlugin],
                 data: {
-                    labels: sampled.map(d => d.date.toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' }) + ' ' + d.date.toLocaleTimeString('ja-JP', { hour: '2-digit' })),
+                    labels: sampled.map(d => {
+                        const days = ['日', '月', '火', '水', '木', '金', '土'];
+                        const date = d.date.toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' });
+                        const day = days[d.date.getDay()];
+                        const time = d.date.toLocaleTimeString('ja-JP', { hour: '2-digit' });
+                        return `${date}(${day}) ${time}`;
+                    }),
                     datasets: [{ label: '気温', data: sampled.map(d => d.temperature), borderColor: '#a78bfa', backgroundColor: 'rgba(167, 139, 250, 0.1)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 0, pointHoverRadius: 5 }]
                 },
                 options: baseOptions
@@ -2075,7 +2082,13 @@
                 type: 'line',
                 plugins: [crosshairPlugin],
                 data: {
-                    labels: dailyData.map(d => d.date.toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })),
+                    labels: dailyData.map(d => {
+                        const days = ['日', '月', '火', '水', '木', '金', '土'];
+                        const year = d.date.getFullYear();
+                        const date = d.date.toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' });
+                        const day = days[d.date.getDay()];
+                        return `${year}/${date}(${day})`;
+                    }),
                     datasets: [
                         { label: '日最高', data: dailyData.map(d => d.max), borderColor: '#f87171', backgroundColor: 'rgba(248, 113, 113, 0.12)', fill: '+1', tension: 0.3, borderWidth: 1.5, pointRadius: 0, pointHoverRadius: 4 },
                         { label: '日最低', data: dailyData.map(d => d.min), borderColor: '#60a5fa', backgroundColor: 'rgba(96, 165, 250, 0.08)', fill: false, tension: 0.3, borderWidth: 1.5, pointRadius: 0, pointHoverRadius: 4 }
