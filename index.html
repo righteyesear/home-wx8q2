@@ -1,0 +1,1740 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌡️ 外気温モニター</title>
+    <meta name="description" content="リアルタイム外気温ダッシュボード">
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌡️</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-primary: #030712;
+            --bg-secondary: #0f172a;
+            --bg-card: rgba(15, 23, 42, 0.85);
+            --border-color: rgba(99, 102, 241, 0.12);
+            --border-glow: rgba(99, 102, 241, 0.4);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --accent-orange: #fb923c;
+            --accent-red: #f87171;
+            --accent-blue: #60a5fa;
+            --accent-cyan: #22d3ee;
+            --accent-green: #4ade80;
+            --accent-purple: #a78bfa;
+            --shadow-glow: 0 0 60px rgba(99, 102, 241, 0.2);
+            --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+            --temp-hue: 30;
+        }
+
+        /* Light Mode */
+        html.light-mode {
+            --bg-primary: #f1f5f9;
+            --bg-secondary: #ffffff;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --border-color: rgba(99, 102, 241, 0.15);
+            --border-glow: rgba(99, 102, 241, 0.3);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.1);
+            --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        html.light-mode .bg-orb {
+            opacity: 0.3;
+        }
+
+        html.light-mode .grid-pattern {
+            opacity: 0.03;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--border-glow);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.5;
+            overflow-x: hidden;
+            transition: background 1s ease;
+        }
+
+        /* Dynamic Temperature Background */
+        .background-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+            transition: all 2s ease;
+        }
+
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            animation: float 20s ease-in-out infinite;
+            transition: background 2s ease, opacity 2s ease;
+        }
+
+        .bg-orb-1 {
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, hsla(var(--temp-hue), 90%, 60%, 0.2) 0%, transparent 70%);
+            top: -300px;
+            right: -200px;
+        }
+
+        .bg-orb-2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, hsla(calc(var(--temp-hue) + 180), 70%, 50%, 0.15) 0%, transparent 70%);
+            bottom: -200px;
+            left: -100px;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(30px, -30px) scale(1.05);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) scale(0.95);
+            }
+        }
+
+        /* Grid Pattern */
+        .grid-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 0 20px hsla(var(--temp-hue), 90%, 60%, 0.5));
+            transition: filter 2s ease;
+        }
+
+        .logo h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, hsl(var(--temp-hue), 90%, 65%) 0%, hsl(calc(var(--temp-hue) + 30), 80%, 60%) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: background 2s ease;
+        }
+
+        /* Greeting Section */
+        .greeting-section {
+            text-align: center;
+            margin-bottom: 32px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.8s ease;
+        }
+
+        .greeting-section.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .greeting-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .greeting-text .emoji {
+            font-size: 1.5rem;
+        }
+
+        .weather-comment {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .weather-comment .temp-highlight {
+            color: hsl(var(--temp-hue), 85%, 65%);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        /* Alert Banner */
+        .alert-banner {
+            background: linear-gradient(135deg, rgba(251, 146, 60, 0.2) 0%, rgba(251, 146, 60, 0.1) 100%);
+            border: 1px solid rgba(251, 146, 60, 0.4);
+            border-radius: 12px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: alertPulse 2s ease-in-out infinite;
+        }
+
+        .alert-banner.alert-warning {
+            background: linear-gradient(135deg, rgba(250, 204, 21, 0.2) 0%, rgba(250, 204, 21, 0.1) 100%);
+            border-color: rgba(250, 204, 21, 0.4);
+        }
+
+        .alert-banner.alert-severe {
+            background: linear-gradient(135deg, rgba(248, 113, 113, 0.2) 0%, rgba(248, 113, 113, 0.1) 100%);
+            border-color: rgba(248, 113, 113, 0.4);
+        }
+
+        .alert-banner.alert-special {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(168, 85, 247, 0.1) 100%);
+            border-color: rgba(168, 85, 247, 0.4);
+        }
+
+        .alert-icon {
+            font-size: 1.3rem;
+        }
+
+        #alertText {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        @keyframes alertPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        .status-info {
+            display: flex;
+            gap: 20px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--bg-card);
+            border-radius: 100px;
+            border: 1px solid var(--border-color);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            box-shadow: 0 0 12px var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        /* Skeleton Loading */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(100, 116, 139, 0.2) 25%, rgba(100, 116, 139, 0.4) 50%, rgba(100, 116, 139, 0.2) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* Main Stats Grid */
+        .main-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 28px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-card);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--border-glow);
+            box-shadow: var(--shadow-glow), var(--shadow-card);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .stat-card.temp::before {
+            background: linear-gradient(90deg, hsl(var(--temp-hue), 90%, 60%), hsl(calc(var(--temp-hue) + 30), 80%, 55%));
+            transition: background 2s ease;
+        }
+
+        .stat-card.humidity::before {
+            background: linear-gradient(135deg, #60a5fa 0%, #22d3ee 100%);
+        }
+
+        .stat-card.high::before {
+            background: #f87171;
+        }
+
+        .stat-card.low::before {
+            background: #22d3ee;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .stat-icon {
+            font-size: 1.5rem;
+        }
+
+        .comfort-badge {
+            font-size: 0.65rem;
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.5s ease;
+        }
+
+        .comfort-badge.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .comfort-badge.hot {
+            background: rgba(248, 113, 113, 0.2);
+            color: #f87171;
+        }
+
+        .comfort-badge.warm {
+            background: rgba(251, 146, 60, 0.2);
+            color: #fb923c;
+        }
+
+        .comfort-badge.comfort {
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+        }
+
+        .comfort-badge.cool {
+            background: rgba(96, 165, 250, 0.2);
+            color: #60a5fa;
+        }
+
+        .comfort-badge.cold {
+            background: rgba(34, 211, 238, 0.2);
+            color: #22d3ee;
+        }
+
+        /* UV Badge styles */
+        .uv-badge {
+            font-size: 0.6rem;
+            padding: 3px 8px;
+            border-radius: 100px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .uv-badge.uv-low {
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+        }
+
+        .uv-badge.uv-moderate {
+            background: rgba(250, 204, 21, 0.2);
+            color: #facc15;
+        }
+
+        .uv-badge.uv-high {
+            background: rgba(251, 146, 60, 0.2);
+            color: #fb923c;
+        }
+
+        .uv-badge.uv-very-high {
+            background: rgba(248, 113, 113, 0.2);
+            color: #f87171;
+        }
+
+        .uv-badge.uv-extreme {
+            background: rgba(168, 85, 247, 0.2);
+            color: #a855f7;
+        }
+
+        .stat-value.feels-like {
+            color: #94a3b8;
+        }
+
+        .stat-value.uv {
+            color: #94a3b8;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 12px;
+        }
+
+        .stat-value {
+            font-size: 3.2rem;
+            font-weight: 800;
+            line-height: 1;
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            transition: color 2s ease, text-shadow 2s ease;
+        }
+
+        .stat-value.temp {
+            color: hsl(var(--temp-hue), 85%, 65%);
+            text-shadow: 0 0 40px hsla(var(--temp-hue), 90%, 60%, 0.4);
+        }
+
+        .stat-value.humidity {
+            color: var(--accent-cyan);
+            text-shadow: 0 0 40px rgba(34, 211, 238, 0.3);
+        }
+
+        .stat-value.high {
+            color: var(--accent-red);
+            text-shadow: 0 0 40px rgba(248, 113, 113, 0.3);
+        }
+
+        .stat-value.low {
+            color: var(--accent-blue);
+            text-shadow: 0 0 40px rgba(96, 165, 250, 0.3);
+        }
+
+        .stat-unit {
+            font-size: 1.5rem;
+            font-weight: 600;
+            opacity: 0.8;
+        }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .chart-card {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 28px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s ease;
+        }
+
+        .chart-card:hover {
+            border-color: rgba(99, 102, 241, 0.25);
+        }
+
+        .chart-card.full-width {
+            grid-column: span 2;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-badge {
+            font-size: 0.65rem;
+            padding: 6px 14px;
+            border-radius: 100px;
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--accent-purple);
+            font-weight: 600;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .chart-container {
+            height: 300px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-container canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .chart-skeleton {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .chart-skeleton.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Footer Stats */
+        .footer-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 32px;
+            padding: 24px 40px;
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            flex-wrap: wrap;
+        }
+
+        .footer-stat {
+            text-align: center;
+        }
+
+        .footer-stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .footer-stat-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .footer-stat-value.highlight {
+            color: var(--accent-orange);
+            text-shadow: 0 0 20px rgba(251, 146, 60, 0.3);
+        }
+
+        .footer-stat-value.cool {
+            color: var(--accent-blue);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-card.full-width {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .main-stats {
+                gap: 16px;
+            }
+
+            .stat-card {
+                padding: 20px;
+                border-radius: 20px;
+            }
+
+            .stat-value {
+                font-size: 2.5rem;
+            }
+
+            .stat-unit {
+                font-size: 1.2rem;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+
+            .footer-stats {
+                gap: 24px;
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .stat-card {
+                padding: 16px;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+
+            .stat-unit {
+                font-size: 1rem;
+            }
+
+            .logo h1 {
+                font-size: 1.3rem;
+            }
+
+            .chart-container {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-effects">
+        <div class="bg-orb bg-orb-1"></div>
+        <div class="bg-orb bg-orb-2"></div>
+    </div>
+    <div class="grid-pattern"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <span class="logo-icon">🌡️</span>
+                <h1>外気温モニター</h1>
+            </div>
+            <div class="status-info">
+                <div class="status-item">
+                    <div class="status-dot"></div>
+                    <span>更新 <strong id="lastUpdate"><span class="skeleton"
+                                style="width:40px;height:14px"></span></strong></span>
+                </div>
+                <div class="status-item">
+                    <span>📊 <strong id="dataCount"><span class="skeleton"
+                                style="width:60px;height:14px"></span></strong></span>
+                </div>
+                <div class="status-item">
+                    <span>⏱️ 次回 <strong id="nextUpdate"><span class="skeleton"
+                                style="width:30px;height:14px"></span></strong></span>
+                </div>
+                <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">
+                    <span id="themeIcon">🌙</span> <span id="themeText">ダーク</span>
+                </button>
+            </div>
+        </header>
+
+        <div id="greetingSection" class="greeting-section">
+            <div class="greeting-text"><span class="emoji"></span> <span id="greetingMain"></span></div>
+            <div class="weather-comment" id="weatherComment"></div>
+        </div>
+
+        <!-- Warning/Alert Banner -->
+        <div id="alertBanner" class="alert-banner" style="display: none;">
+            <span class="alert-icon">⚠️</span>
+            <span id="alertText"></span>
+        </div>
+
+        <div class="main-stats">
+            <div class="stat-card temp">
+                <div class="stat-header">
+                    <span class="stat-icon">🌡️</span>
+                    <span id="comfortBadge" class="comfort-badge"></span>
+                </div>
+                <div class="stat-label">現在の気温</div>
+                <div class="stat-value temp"><span id="currentTemp"><span class="skeleton"
+                            style="width:80px;height:40px"></span></span><span class="stat-unit">°C</span></div>
+            </div>
+            <div class="stat-card humidity">
+                <div class="stat-header"><span class="stat-icon">💧</span></div>
+                <div class="stat-label">現在の湿度</div>
+                <div class="stat-value humidity"><span id="currentHumidity"><span class="skeleton"
+                            style="width:60px;height:40px"></span></span><span class="stat-unit">%</span></div>
+            </div>
+            <div class="stat-card feels-like">
+                <div class="stat-header"><span class="stat-icon">🌡️</span></div>
+                <div class="stat-label">体感温度</div>
+                <div class="stat-value feels-like"><span id="feelsLike"><span class="skeleton"
+                            style="width:60px;height:40px"></span></span><span class="stat-unit">°C</span></div>
+            </div>
+            <div class="stat-card uv">
+                <div class="stat-header"><span class="stat-icon">☀️</span><span id="uvBadge" class="uv-badge"></span>
+                </div>
+                <div class="stat-label">紫外線指数</div>
+                <div class="stat-value uv"><span id="uvIndex"><span class="skeleton"
+                            style="width:40px;height:40px"></span></span></div>
+            </div>
+            <div class="stat-card high">
+                <div class="stat-header"><span class="stat-icon">🔺</span></div>
+                <div class="stat-label">今日の最高</div>
+                <div class="stat-value high"><span id="todayHigh"><span class="skeleton"
+                            style="width:80px;height:40px"></span></span><span class="stat-unit">°C</span></div>
+            </div>
+            <div class="stat-card low">
+                <div class="stat-header"><span class="stat-icon">🔻</span></div>
+                <div class="stat-label">今日の最低</div>
+                <div class="stat-value low"><span id="todayLow"><span class="skeleton"
+                            style="width:80px;height:40px"></span></span><span class="stat-unit">°C</span></div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card full-width">
+                <div class="chart-header">
+                    <span class="chart-title">📈 直近24時間の気温・湿度</span>
+                    <span class="chart-badge">1分間隔</span>
+                </div>
+                <div class="chart-container">
+                    <div id="chartSkeleton1" class="chart-skeleton">
+                        <div class="skeleton" style="width:100%;height:100%;border-radius:8px"></div>
+                    </div>
+                    <canvas id="chart24h"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header">
+                    <span class="chart-title">📊 週間気温推移</span>
+                    <span class="chart-badge">30分平均</span>
+                </div>
+                <div class="chart-container">
+                    <div id="chartSkeleton2" class="chart-skeleton">
+                        <div class="skeleton" style="width:100%;height:100%;border-radius:8px"></div>
+                    </div>
+                    <canvas id="chartWeek"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header">
+                    <span class="chart-title">📅 月別 最高/最低気温</span>
+                    <span class="chart-badge">全期間</span>
+                </div>
+                <div class="chart-container">
+                    <div id="chartSkeleton3" class="chart-skeleton">
+                        <div class="skeleton" style="width:100%;height:100%;border-radius:8px"></div>
+                    </div>
+                    <canvas id="chartMonthly"></canvas>
+                </div>
+            </div>
+            <div class="chart-card full-width">
+                <div class="chart-header">
+                    <span class="chart-title">🗓️ 日別 最高/最低気温</span>
+                    <span class="chart-badge">全期間</span>
+                </div>
+                <div class="chart-container">
+                    <div id="chartSkeleton4" class="chart-skeleton">
+                        <div class="skeleton" style="width:100%;height:100%;border-radius:8px"></div>
+                    </div>
+                    <canvas id="chartYearly"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-stats">
+            <div class="footer-stat">
+                <div class="footer-stat-label">年間最高</div>
+                <div class="footer-stat-value highlight"><span id="yearHigh">--</span>°C</div>
+            </div>
+            <div class="footer-stat">
+                <div class="footer-stat-label">年間最低</div>
+                <div class="footer-stat-value cool"><span id="yearLow">--</span>°C</div>
+            </div>
+            <div class="footer-stat">
+                <div class="footer-stat-label">今週平均</div>
+                <div class="footer-stat-value"><span id="weekAvg">--</span>°C</div>
+            </div>
+            <div class="footer-stat">
+                <div class="footer-stat-label">前週比</div>
+                <div class="footer-stat-value" id="weekDiff"><span id="weekDiffValue">--</span></div>
+            </div>
+            <div class="footer-stat">
+                <div class="footer-stat-label">24h最高</div>
+                <div class="footer-stat-value highlight"><span id="last24hHigh">--</span>°C</div>
+            </div>
+            <div class="footer-stat">
+                <div class="footer-stat-label">24h最低</div>
+                <div class="footer-stat-value cool"><span id="last24hLow">--</span>°C</div>
+            </div>
+            <div class="footer-stat">
+                <div class="footer-stat-label">データ期間</div>
+                <div class="footer-stat-value">2024/3 〜 現在</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SPREADSHEET_ID = '1nbmJIIUzw8n2PcHp98NaiKnaAVciBx_Egpokjjx7uW8';
+        const BASE_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv`;
+        const SUMMARY_URL = `${BASE_URL}&sheet=Summary`;
+        const DAILY_URL = `${BASE_URL}&sheet=Daily`;
+        const RECENT_URL = `${BASE_URL}&sheet=Recent`;
+        const WEEKLY_URL = `${BASE_URL}&sheet=Weekly`;
+
+        // Open-Meteo API for 東京都葛飾区東金町5丁目 (35.7727, 139.8680)
+        // Includes: weather_code, precipitation, wind_speed, uv_index, apparent_temperature
+        const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?latitude=35.7727&longitude=139.8680&current=weather_code,precipitation,wind_speed_10m,apparent_temperature,uv_index&hourly=precipitation_probability,uv_index&forecast_days=1&timezone=Asia%2FTokyo';
+
+        const UPDATE_INTERVAL = 60 * 1000;
+
+        let summaryData = {}, dailyData = [], recentData = [], weeklyData = [], weatherData = null, charts = {}, nextUpdateTime = null;
+
+        // Theme settings: 'auto', 'light', 'dark'
+        let themeSetting = localStorage.getItem('theme') || 'auto';
+        let notificationsEnabled = localStorage.getItem('notifications') === 'true';
+        const TEMP_ALERT_THRESHOLD = 35; // Notify when temp >= this
+
+        // PWA Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(e => console.log('SW registration failed:', e));
+        }
+
+        // Request notification permission on load
+        function requestNotificationPermission() {
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission().then(p => {
+                    if (p === 'granted') {
+                        notificationsEnabled = true;
+                        localStorage.setItem('notifications', 'true');
+                    }
+                });
+            }
+        }
+
+        // Send notification if conditions are met
+        function checkAndNotify(temp) {
+            if (!notificationsEnabled || Notification.permission !== 'granted') return;
+            if (temp >= TEMP_ALERT_THRESHOLD) {
+                new Notification('🌡️ 外気温モニター', {
+                    body: `${temp.toFixed(1)}°C - 猛暑警報！熱中症に注意してください`,
+                    icon: '🌡️',
+                    tag: 'temp-alert'
+                });
+            } else if (temp <= 0) {
+                new Notification('🌡️ 外気温モニター', {
+                    body: `${temp.toFixed(1)}°C - 氷点下です。凍結に注意`,
+                    icon: '❄️',
+                    tag: 'temp-alert'
+                });
+            }
+        }
+
+        // Theme toggle: auto -> light -> dark -> auto
+        function toggleTheme() {
+            const modes = ['auto', 'light', 'dark'];
+            const idx = modes.indexOf(themeSetting);
+            themeSetting = modes[(idx + 1) % 3];
+            localStorage.setItem('theme', themeSetting);
+            applyTheme();
+        }
+
+        // Apply theme based on setting
+        function applyTheme() {
+            const hour = new Date().getHours();
+            let isLight = false;
+
+            if (themeSetting === 'light') {
+                isLight = true;
+            } else if (themeSetting === 'dark') {
+                isLight = false;
+            } else { // auto: light 6-18, dark otherwise
+                isLight = (hour >= 6 && hour < 18);
+            }
+
+            document.documentElement.classList.toggle('light-mode', isLight);
+
+            // Update button text
+            const icon = themeSetting === 'auto' ? '🔄' : (themeSetting === 'light' ? '☀️' : '🌙');
+            const text = themeSetting === 'auto' ? '自動' : (themeSetting === 'light' ? 'ライト' : 'ダーク');
+            document.getElementById('themeIcon').textContent = icon;
+            document.getElementById('themeText').textContent = text;
+
+            // Update meta theme color
+            document.querySelector('meta[name="theme-color"]').content = isLight ? '#f1f5f9' : '#3b82f6';
+        }
+
+        // Initialize theme on load
+        applyTheme();
+
+        function parseSummaryCSV(csv) {
+            const lines = csv.trim().split(/\r?\n/);
+            const summary = {};
+            for (const line of lines) {
+                const [label, value] = line.split(',').map(v => v.replace(/"/g, '').trim());
+                if (label.includes('今日の最高')) summary.todayHigh = parseFloat(value);
+                else if (label.includes('今日の最低')) summary.todayLow = parseFloat(value);
+                else if (label.includes('年間最高')) summary.yearHigh = parseFloat(value);
+                else if (label.includes('年間最低')) summary.yearLow = parseFloat(value);
+                else if (label.includes('現在の気温')) summary.currentTemp = parseFloat(value);
+                else if (label.includes('現在の湿度')) summary.currentHumidity = parseFloat(value);
+                else if (label.includes('データ件数')) summary.dataCount = parseInt(value);
+            }
+            return summary;
+        }
+
+        function parseDailyCSV(csv) {
+            return csv.trim().split(/\r?\n/).slice(1).map(line => {
+                const [dateStr, max, min] = line.split(',').map(v => v.replace(/"/g, ''));
+                const d = new Date(dateStr);
+                return !isNaN(d) && !isNaN(parseFloat(max)) ? { date: d, max: parseFloat(max), min: parseFloat(min) } : null;
+            }).filter(Boolean).sort((a, b) => a.date - b.date);
+        }
+
+        function parseRecentCSV(csv) {
+            return csv.trim().split(/\r?\n/).slice(1).map(line => {
+                let [dateStr, temp, humidity] = line.split(',').map(v => v.replace(/"/g, ''));
+                dateStr = dateStr.replace(/ (\d):/, ' 0$1:');
+                const d = new Date(dateStr.replace(' ', 'T'));
+                return !isNaN(d) && !isNaN(parseFloat(temp)) ? { date: d, temperature: parseFloat(temp), humidity: parseFloat(humidity) } : null;
+            }).filter(Boolean).sort((a, b) => a.date - b.date);
+        }
+
+        async function fetchAll() {
+            await Promise.all([
+                fetch(SUMMARY_URL).then(r => r.text()).then(csv => { summaryData = parseSummaryCSV(csv); updateUI(); }),
+                fetch(DAILY_URL).then(r => r.text()).then(csv => { dailyData = parseDailyCSV(csv); }),
+                fetch(RECENT_URL).then(r => r.text()).then(csv => { recentData = parseRecentCSV(csv); }),
+                fetch(WEEKLY_URL).then(r => r.text()).then(csv => { weeklyData = parseRecentCSV(csv); }).catch(() => { weeklyData = recentData; }),
+                fetch(WEATHER_URL).then(r => r.json()).then(data => {
+                    const hour = new Date().getHours();
+                    weatherData = {
+                        weatherCode: data.current?.weather_code,
+                        precipitation: data.current?.precipitation,
+                        windSpeed: data.current?.wind_speed_10m,
+                        feelsLike: data.current?.apparent_temperature,
+                        uvIndex: data.current?.uv_index ?? data.hourly?.uv_index?.[hour] ?? 0,
+                        precipProb: data.hourly?.precipitation_probability?.[hour] || 0,
+                        maxUvToday: data.hourly?.uv_index ? Math.max(...data.hourly.uv_index.slice(0, 24)) : 0
+                    };
+                    updateUI(); // Update UI again with weather data
+                }).catch(e => { console.log('Weather API error:', e); weatherData = null; })
+            ]);
+            updateCharts();
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+
+            // Hide chart skeletons after charts are drawn
+            document.querySelectorAll('.chart-skeleton').forEach(el => el.classList.add('hidden'));
+
+            // Update data analysis in footer
+            updateDataAnalysis();
+
+            // Fetch weather alerts (separate try-catch for CORS issues)
+            fetchAlerts();
+        }
+
+        // Calculate and display data analysis in footer
+        function updateDataAnalysis() {
+            const now = new Date();
+            const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+            // 24h high/low from recentData
+            if (recentData.length > 0) {
+                const last24hData = recentData.filter(d => d.date >= last24h);
+                if (last24hData.length > 0) {
+                    const temps = last24hData.map(d => d.temperature);
+                    document.getElementById('last24hHigh').textContent = Math.max(...temps).toFixed(1);
+                    document.getElementById('last24hLow').textContent = Math.min(...temps).toFixed(1);
+                }
+            }
+
+            // Weekly average from weeklyData
+            if (weeklyData.length > 0) {
+                const thisWeekStart = new Date(now);
+                thisWeekStart.setDate(thisWeekStart.getDate() - thisWeekStart.getDay());
+                thisWeekStart.setHours(0, 0, 0, 0);
+
+                const lastWeekStart = new Date(thisWeekStart);
+                lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+
+                const thisWeekData = weeklyData.filter(d => d.date >= thisWeekStart);
+                const lastWeekData = weeklyData.filter(d => d.date >= lastWeekStart && d.date < thisWeekStart);
+
+                if (thisWeekData.length > 0) {
+                    const thisWeekAvg = thisWeekData.reduce((sum, d) => sum + d.temperature, 0) / thisWeekData.length;
+                    document.getElementById('weekAvg').textContent = thisWeekAvg.toFixed(1);
+
+                    if (lastWeekData.length > 0) {
+                        const lastWeekAvg = lastWeekData.reduce((sum, d) => sum + d.temperature, 0) / lastWeekData.length;
+                        const diff = thisWeekAvg - lastWeekAvg;
+                        const diffEl = document.getElementById('weekDiffValue');
+                        const sign = diff >= 0 ? '+' : '';
+                        diffEl.textContent = `${sign}${diff.toFixed(1)}°C`;
+                        diffEl.parentElement.style.color = diff >= 0 ? '#fb923c' : '#60a5fa';
+                    }
+                }
+            }
+        }
+
+        // Fetch JMA weather alerts for Tokyo (Katsushika = 23区東部)
+        async function fetchAlerts() {
+            try {
+                // JMA Warning API for Tokyo (130000)
+                const response = await fetch('https://www.jma.go.jp/bosai/warning/data/warning/130000.json');
+                const data = await response.json();
+
+                // Find Katsushika area (code 1312200) or 23区東部 (code 130014)
+                const areaWarnings = [];
+                if (data.areaTypes) {
+                    for (const areaType of data.areaTypes) {
+                        for (const area of (areaType.areas || [])) {
+                            // 23区東部 or 葛飾区
+                            if (area.code === '130014' || area.code === '1312200' || area.name?.includes('東部')) {
+                                for (const warning of (area.warnings || [])) {
+                                    if (warning.status === '発表' || warning.status === '継続') {
+                                        areaWarnings.push({
+                                            name: warning.name || warning.code,
+                                            level: warning.kind?.code || 0
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                updateAlertBanner(areaWarnings);
+            } catch (e) {
+                console.log('JMA Alert API unavailable (CORS):', e.message);
+                // Hide alert banner on error
+                document.getElementById('alertBanner').style.display = 'none';
+            }
+        }
+
+        // Update the alert banner
+        function updateAlertBanner(alerts) {
+            const banner = document.getElementById('alertBanner');
+            const alertText = document.getElementById('alertText');
+            const alertIcon = banner.querySelector('.alert-icon');
+
+            if (alerts.length === 0) {
+                banner.style.display = 'none';
+                return;
+            }
+
+            // Priority: special warning > warning > advisory
+            const specialWarnings = alerts.filter(a => a.name?.includes('特別警報'));
+            const warnings = alerts.filter(a => a.name?.includes('警報') && !a.name?.includes('特別'));
+            const advisories = alerts.filter(a => a.name?.includes('注意報'));
+
+            let displayAlerts, className, icon;
+
+            if (specialWarnings.length > 0) {
+                displayAlerts = specialWarnings;
+                className = 'alert-special';
+                icon = '🚨';
+            } else if (warnings.length > 0) {
+                displayAlerts = warnings;
+                className = 'alert-severe';
+                icon = '⚠️';
+            } else {
+                displayAlerts = advisories;
+                className = 'alert-warning';
+                icon = '⚡';
+            }
+
+            const names = displayAlerts.map(a => a.name).join('、');
+            alertText.textContent = `葛飾区: ${names}`;
+            alertIcon.textContent = icon;
+            banner.className = `alert-banner ${className}`;
+            banner.style.display = 'flex';
+        }
+
+        // Get comfort level based on temperature
+        function getComfortLevel(temp) {
+            if (temp >= 35) return { text: '🥵 猛暑', class: 'hot' };
+            if (temp >= 28) return { text: '☀️ 暑い', class: 'warm' };
+            if (temp >= 18) return { text: '😊 快適', class: 'comfort' };
+            if (temp >= 10) return { text: '🍂 涼しい', class: 'cool' };
+            return { text: '🥶 寒い', class: 'cold' };
+        }
+
+        // Update temperature-based theme
+        function updateTempTheme(temp) {
+            // Map temperature to hue: cold (200 blue) to hot (0 red), comfortable = 80 (yellow-green)
+            let hue;
+            if (temp <= 0) hue = 200;      // Blue
+            else if (temp <= 10) hue = 180; // Cyan
+            else if (temp <= 18) hue = 120; // Green
+            else if (temp <= 25) hue = 60;  // Yellow
+            else if (temp <= 30) hue = 30;  // Orange
+            else hue = 0;                   // Red
+
+            document.documentElement.style.setProperty('--temp-hue', hue);
+        }
+
+        function updateUI() {
+            if (!summaryData.currentTemp) return;
+
+            const temp = summaryData.currentTemp;
+
+            document.getElementById('currentTemp').textContent = temp.toFixed(1);
+            document.getElementById('currentHumidity').textContent = Math.round(summaryData.currentHumidity);
+            document.getElementById('todayHigh').textContent = summaryData.todayHigh.toFixed(1);
+            document.getElementById('todayLow').textContent = summaryData.todayLow.toFixed(1);
+            document.getElementById('yearHigh').textContent = summaryData.yearHigh.toFixed(1);
+            document.getElementById('yearLow').textContent = summaryData.yearLow.toFixed(1);
+            if (summaryData.dataCount) document.getElementById('dataCount').textContent = summaryData.dataCount.toLocaleString() + ' 件';
+
+            // Update feels-like temperature (from weather API or calculated)
+            const feelsLikeEl = document.getElementById('feelsLike');
+            let fl;
+            if (weatherData?.feelsLike != null) {
+                fl = weatherData.feelsLike;
+            } else {
+                fl = calculateFeelsLike(temp, summaryData.currentHumidity, weatherData?.windSpeed || 0);
+            }
+            feelsLikeEl.textContent = fl.toFixed(1);
+
+            // Color feels-like based on value
+            const flParent = feelsLikeEl.closest('.stat-value');
+            if (fl >= 35) { flParent.style.color = '#f87171'; flParent.style.textShadow = '0 0 20px rgba(248,113,113,0.4)'; }
+            else if (fl >= 28) { flParent.style.color = '#fb923c'; flParent.style.textShadow = '0 0 20px rgba(251,146,60,0.3)'; }
+            else if (fl >= 18) { flParent.style.color = '#4ade80'; flParent.style.textShadow = '0 0 20px rgba(74,222,128,0.3)'; }
+            else if (fl >= 10) { flParent.style.color = '#38bdf8'; flParent.style.textShadow = '0 0 20px rgba(56,189,248,0.3)'; }
+            else { flParent.style.color = '#22d3ee'; flParent.style.textShadow = '0 0 20px rgba(34,211,238,0.4)'; }
+
+            // Update UV index
+            const uvIndexEl = document.getElementById('uvIndex');
+            const uvBadge = document.getElementById('uvBadge');
+            const uvCard = uvIndexEl.closest('.stat-card');
+            const hour = new Date().getHours();
+
+            if (weatherData?.uvIndex != null && (hour >= 6 && hour <= 19)) {
+                const uv = weatherData.uvIndex;
+                uvIndexEl.textContent = uv.toFixed(1);
+                const uvLevel = getUvLevel(uv);
+                uvBadge.textContent = uvLevel.text;
+                uvBadge.className = `uv-badge ${uvLevel.class}`;
+
+                // Color UV value based on level
+                const uvParent = uvIndexEl.closest('.stat-value');
+                if (uv >= 11) { uvParent.style.color = '#a855f7'; uvParent.style.textShadow = '0 0 20px rgba(168,85,247,0.4)'; }
+                else if (uv >= 8) { uvParent.style.color = '#f87171'; uvParent.style.textShadow = '0 0 20px rgba(248,113,113,0.4)'; }
+                else if (uv >= 6) { uvParent.style.color = '#fb923c'; uvParent.style.textShadow = '0 0 20px rgba(251,146,60,0.3)'; }
+                else if (uv >= 3) { uvParent.style.color = '#facc15'; uvParent.style.textShadow = '0 0 20px rgba(250,204,21,0.3)'; }
+                else { uvParent.style.color = '#4ade80'; uvParent.style.textShadow = '0 0 20px rgba(74,222,128,0.3)'; }
+
+                uvCard.style.opacity = '1';
+            } else {
+                // Night time - dim the UV card
+                uvIndexEl.textContent = '--';
+                uvBadge.textContent = '夜間';
+                uvBadge.className = 'uv-badge uv-low';
+                const uvParent = uvIndexEl.closest('.stat-value');
+                uvParent.style.color = '#64748b';
+                uvParent.style.textShadow = 'none';
+                uvCard.style.opacity = '0.6';
+            }
+
+            // Update comfort badge
+            const comfort = getComfortLevel(temp);
+            const badge = document.getElementById('comfortBadge');
+            badge.textContent = comfort.text;
+            badge.className = `comfort-badge show ${comfort.class}`;
+
+            // Update temperature theme
+            updateTempTheme(temp);
+
+            // Update greeting
+            updateGreeting(temp, summaryData.currentHumidity);
+        }
+
+        // Calculate feels-like temperature (simple formula)
+        function calculateFeelsLike(temp, humidity, windSpeed) {
+            // Use heat index for warm temps, wind chill for cold
+            if (temp >= 27) {
+                // Simplified heat index
+                return temp + 0.33 * (humidity / 100 * 6.105 * Math.exp(17.27 * temp / (237.7 + temp))) - 4;
+            } else if (temp <= 10 && windSpeed > 0) {
+                // Wind chill
+                return 13.12 + 0.6215 * temp - 11.37 * Math.pow(windSpeed, 0.16) + 0.3965 * temp * Math.pow(windSpeed, 0.16);
+            }
+            return temp;
+        }
+
+        // Get UV level description
+        function getUvLevel(uv) {
+            if (uv >= 11) return { text: '極端', class: 'uv-extreme' };
+            if (uv >= 8) return { text: '非常に強い', class: 'uv-very-high' };
+            if (uv >= 6) return { text: '強い', class: 'uv-high' };
+            if (uv >= 3) return { text: '中程度', class: 'uv-moderate' };
+            return { text: '弱い', class: 'uv-low' };
+        }
+
+        // Generate time-based greeting and weather comment
+        function updateGreeting(temp, humidity) {
+            const hour = new Date().getHours();
+            let greeting, emoji;
+
+            // Time-based greeting
+            if (hour >= 5 && hour < 7) { greeting = 'おはようございます'; emoji = '🌅'; }
+            else if (hour >= 7 && hour < 10) { greeting = 'おはようございます'; emoji = '☀️'; }
+            else if (hour >= 10 && hour < 12) { greeting = 'おはようございます'; emoji = '🌤️'; }
+            else if (hour >= 12 && hour < 14) { greeting = 'こんにちは'; emoji = '☀️'; }
+            else if (hour >= 14 && hour < 17) { greeting = 'こんにちは'; emoji = '🌤️'; }
+            else if (hour >= 17 && hour < 19) { greeting = 'こんばんは'; emoji = '🌆'; }
+            else if (hour >= 19 && hour < 22) { greeting = 'こんばんは'; emoji = '🌙'; }
+            else { greeting = 'お夜更かしですか？'; emoji = '🌃'; }
+
+            const t = `<span class="temp-highlight">${temp.toFixed(1)}°C</span>`;
+            const h = Math.round(humidity);
+
+            // Weather API data
+            const wc = weatherData?.weatherCode ?? -1;
+            const pp = weatherData?.precipProb ?? 0;
+            const ws = weatherData?.windSpeed ?? 0;
+
+            // Weather state detection
+            const isThunderstorm = wc >= 95;
+            const isHeavyRain = wc >= 80 && wc < 95;
+            const isSnow = wc >= 71 && wc < 80;
+            const isRain = wc >= 61 && wc < 71;
+            const isDrizzle = wc >= 51 && wc < 61;
+            const isFog = wc >= 45 && wc < 51;
+            const isCloudy = wc >= 2 && wc < 45;
+            const isClear = wc >= 0 && wc <= 1;
+            const isRaining = isThunderstorm || isHeavyRain || isRain || isDrizzle;
+            const isWindy = ws >= 8;
+            const isVeryWindy = ws >= 15;
+            const willRain = pp >= 50 && !isRaining;
+
+            // Humidity levels
+            const isVeryDry = humidity < 30;
+            const isDry = humidity >= 30 && humidity < 50;
+            const isHumid = humidity >= 75 && humidity < 85;
+            const isVeryHumid = humidity >= 85;
+
+            let comment = '';
+
+
+            // ============================================================
+            // PRIORITY 1: Hazardous weather (thunderstorm)
+            // ============================================================
+            if (isThunderstorm) {
+                if (temp >= 25) {
+                    comment = `⛈️ ${t} — 雷雨発生中！蒸し暑さの中、激しい雨。屋内に避難を`;
+                } else {
+                    comment = `⛈️ ${t} — 雷雨です。落雷の危険あり。安全な場所でお過ごしを`;
+                }
+            }
+            // ============================================================
+            // PRIORITY 2: Snow
+            // ============================================================
+            else if (isSnow) {
+                if (temp <= -5) {
+                    comment = `❄️ ${t} — 厳しい寒さの中、雪が降り続いています。路面完全凍結`;
+                } else if (temp <= 0) {
+                    comment = `❄️ ${t} — 雪が積もりそう。足元と運転にくれぐれもご注意を`;
+                } else if (temp <= 3) {
+                    comment = `🌨️ ${t} — みぞれ混じりの雪。傘とすべりにくい靴で`;
+                } else {
+                    comment = `🌨️ ${t} — この気温で雪は珍しいですね。足元注意`;
+                }
+                if (isVeryWindy) comment += '。吹雪になりそうです 🌀';
+            }
+            // ============================================================
+            // PRIORITY 3: Heavy Rain / Showers
+            // ============================================================
+            else if (isHeavyRain) {
+                if (temp >= 30) {
+                    comment = `🌧️ ${t} — 蒸し暑い中、激しい雨。雨宿りして涼みましょう`;
+                } else if (temp >= 20) {
+                    comment = `🌧️ ${t} — 激しい雨。傘があっても濡れそう。少し待つのが吉`;
+                } else if (temp >= 10) {
+                    comment = `🌧️ ${t} — 冷たい雨が激しく降っています。濡れると冷えます`;
+                } else {
+                    comment = `🌧️ ${t} — 冷たい雨が激しい。暖かい屋内で過ごしましょう`;
+                }
+            }
+            // ============================================================
+            // PRIORITY 4: Regular Rain
+            // ============================================================
+            else if (isRain) {
+                if (temp >= 30 && isVeryHumid) {
+                    comment = `☔ ${t}・湿度${h}% — ムシムシした雨。不快指数高め。除湿を`;
+                } else if (temp >= 25) {
+                    comment = `☔ ${t} — 暖かい雨が降っています。傘をお持ちください`;
+                } else if (temp >= 15) {
+                    comment = `☔ ${t} — しとしと雨。肌寒さを感じたら上着を`;
+                } else if (temp >= 5) {
+                    comment = `☔ ${t} — 冷たい雨。濡れると一気に冷えます`;
+                } else {
+                    comment = `☔ ${t} — 氷雨が降っています。雪に変わるかも`;
+                }
+            }
+            // ============================================================
+            // PRIORITY 5: Drizzle
+            // ============================================================
+            else if (isDrizzle) {
+                if (temp >= 25) {
+                    comment = `🌧️ ${t} — 小雨がパラついています。傘なしでも大丈夫かも？`;
+                } else if (temp >= 15) {
+                    comment = `🌧️ ${t} — 霧雨が降っています。しっとりした空気`;
+                } else {
+                    comment = `🌧️ ${t} — 細かい雨が降っています。濡れると寒いので傘を`;
+                }
+            }
+            // ============================================================
+            // PRIORITY 6: Fog
+            // ============================================================
+            else if (isFog) {
+                if (temp >= 20) {
+                    comment = `🌫️ ${t} — 暖かい霧が立ち込めています。視界不良注意`;
+                } else if (temp >= 10) {
+                    comment = `🌫️ ${t} — 霧が出ています。運転は十分な車間距離を`;
+                } else {
+                    comment = `🌫️ ${t} — 冷たい霧。視界悪く道も滑りやすいかも`;
+                }
+            }
+            // ============================================================
+            // PRIORITY 7: Clear/Cloudy with temperature+humidity
+            // ============================================================
+            else {
+                // EXTREME HEAT 38+
+                if (temp >= 38) {
+                    if (isClear) {
+                        comment = `🚨 ${t} — 危険な猛暑！直射日光を避け、15分ごとに水分を`;
+                    } else if (isVeryHumid) {
+                        comment = `🚨 ${t}・湿度${h}% — 命に関わる蒸し暑さ。クーラーの効いた室内へ`;
+                    } else {
+                        comment = `🚨 ${t} — 体温を超える暑さ。曇っていても熱中症の危険`;
+                    }
+                }
+                // HOT 32-38
+                else if (temp >= 32) {
+                    if (isClear && isDry) {
+                        comment = `☀️ ${t} — カラッと晴れた真夏日。帽子と日焼け止めを`;
+                    } else if (isClear) {
+                        comment = `☀️ ${t} — 日差しが強い真夏日。熱中症に注意`;
+                    } else if (isVeryHumid) {
+                        comment = `😫 ${t}・湿度${h}% — 蒸し暑くて不快。エアコン必須`;
+                    } else if (isCloudy) {
+                        comment = `🌻 ${t} — 曇っていても暑い。水分補給を忘れずに`;
+                    } else {
+                        comment = `🍧 ${t} — 夏本番！アイスが美味しい季節ですね`;
+                    }
+                }
+                // WARM 25-32
+                else if (temp >= 25) {
+                    if (isClear && isDry) {
+                        comment = `✨ ${t} — カラッと爽やかな晴れ！最高のお出かけ日和`;
+                    } else if (isClear) {
+                        comment = `😊 ${t} — 気持ちのいい晴れ。半袖でちょうどいい`;
+                    } else if (isVeryHumid) {
+                        comment = `💧 ${t}・湿度${h}% — 蒸し暑い曇り空。扇風機があると快適`;
+                    } else if (isCloudy) {
+                        comment = `⛅ ${t} — 曇りですが暖かい。薄着で過ごせます`;
+                    } else {
+                        comment = `🌸 ${t} — 過ごしやすい気温。窓を開けると気持ちいい`;
+                    }
+                }
+                // COMFORTABLE 18-25
+                else if (temp >= 18) {
+                    if (isClear && isDry) {
+                        comment = `🍀 ${t} — 爽やかな秋晴れのような陽気。散歩に最適`;
+                    } else if (isClear) {
+                        comment = `☀️ ${t} — 穏やかな晴れ。過ごしやすい一日に`;
+                    } else if (isVeryHumid) {
+                        comment = `🌧️ ${t} — 湿気が多め。雨が近いかもしれません`;
+                    } else if (isVeryDry) {
+                        comment = `💨 ${t} — 乾燥した空気。のど飴と保湿を忘れずに`;
+                    } else {
+                        comment = `☕ ${t} — 穏やかな気温。コーヒーでもいかが？`;
+                    }
+                }
+                // COOL 10-18
+                else if (temp >= 10) {
+                    if (isClear && isDry) {
+                        comment = `🍁 ${t} — 秋晴れの爽やかさ。薄手の上着があると安心`;
+                    } else if (isClear) {
+                        comment = `🧥 ${t} — 晴れていますがひんやり。上着を忘れずに`;
+                    } else if (isVeryHumid) {
+                        comment = `🌫️ ${t} — 湿っぽくて肌寒い。雨が降りそう`;
+                    } else if (isCloudy) {
+                        comment = `⛅ ${t} — 曇りで少し肌寒い。長袖がちょうどいい`;
+                    } else {
+                        comment = `🍂 ${t} — 秋の空気。温かい飲み物が恋しくなりますね`;
+                    }
+                }
+                // CHILLY 5-10
+                else if (temp >= 5) {
+                    if (isClear && isVeryDry) {
+                        comment = `🌬️ ${t} — キリッと冷たい冬晴れ。空気が乾燥しています`;
+                    } else if (isClear) {
+                        comment = `⛄ ${t} — 晴れていますが寒いです。しっかり防寒を`;
+                    } else if (isVeryHumid || isHumid) {
+                        comment = `❄️ ${t} — 湿度が高く底冷えします。暖房で暖まりましょう`;
+                    } else if (isCloudy) {
+                        comment = `☁️ ${t} — 曇りで寒々しい。温かい飲み物で一息を`;
+                    } else {
+                        comment = `🧣 ${t} — コートとマフラーの季節ですね`;
+                    }
+                }
+                // COLD 0-5
+                else if (temp >= 0) {
+                    if (willRain) {
+                        comment = `🌨️ ${t} — 雪になりそうな寒さ。路面凍結にご注意を`;
+                    } else if (isClear) {
+                        comment = `🥶 ${t} — 凍えるような晴れ。放射冷却で冷え込んでいます`;
+                    } else {
+                        comment = `🥶 ${t} — かなり冷え込んでいます。厚着をして暖かく`;
+                    }
+                }
+                // FREEZING -5 to 0
+                else if (temp >= -5) {
+                    if (isVeryHumid || isHumid) {
+                        comment = `❄️ ${t} — 氷点下で湿度も高い。雪が降りそう`;
+                    } else {
+                        comment = `🧊 ${t} — 氷点下です。水道管凍結にご注意を`;
+                    }
+                }
+                // EXTREME COLD -5 below
+                else {
+                    if (isVeryHumid || isHumid) {
+                        comment = `⚠️ ${t}・湿度${h}% — 大雪・吹雪の恐れ。不要不急の外出は控えて`;
+                    } else {
+                        comment = `🥶 ${t} — 厳しい冷え込み。短時間でも凍傷に注意`;
+                    }
+                }
+            }
+
+            // ============================================================
+            // ADD WIND WARNING (if not already mentioned in weather)
+            // ============================================================
+            if (isVeryWindy && !isSnow && !isThunderstorm) {
+                comment += ' 🌀 強風です。飛ばされないよう注意';
+            } else if (isWindy && !isRaining && !isSnow) {
+                comment += ' 💨 風があります';
+            }
+
+            // ============================================================
+            // ADD RAIN FORECAST WARNING (when not currently raining)
+            // ============================================================
+            if (willRain && pp >= 70 && !isRaining) {
+                comment += ' ☂️ 雨の予報。傘を持っていきましょう';
+            } else if (willRain && pp >= 50 && !isRaining) {
+                comment += ' 🌂 降水確率高め。念のため傘を';
+            }
+
+            document.getElementById('greetingMain').textContent = greeting;
+            document.querySelector('.greeting-text .emoji').textContent = emoji;
+            document.getElementById('weatherComment').innerHTML = comment;
+            document.getElementById('greetingSection').classList.add('show');
+        }
+
+        function updateCharts() { updateChart24h(); updateChartWeek(); updateChartMonthly(); updateChartYearly(); }
+
+        const baseOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { intersect: false, mode: 'index' },
+            plugins: {
+                legend: { labels: { color: '#94a3b8', font: { size: 11, weight: '500' }, usePointStyle: true, padding: 20 } },
+                tooltip: {
+                    backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                    titleColor: '#f8fafc',
+                    bodyColor: '#cbd5e1',
+                    borderColor: 'rgba(99, 102, 241, 0.4)',
+                    borderWidth: 1,
+                    padding: 14,
+                    cornerRadius: 12,
+                    displayColors: true,
+                    titleFont: { weight: '600' }
+                }
+            },
+            scales: {
+                x: { grid: { color: 'rgba(148, 163, 184, 0.06)' }, ticks: { color: '#64748b', font: { size: 10 }, maxRotation: 45 } },
+                y: { grid: { color: 'rgba(148, 163, 184, 0.06)' }, ticks: { color: '#64748b', font: { size: 10 } } }
+            }
+        };
+
+        const crosshairPlugin = {
+            id: 'crosshair',
+            afterDraw: (chart) => {
+                if (chart.tooltip?._active?.length) {
+                    const ctx = chart.ctx;
+                    const x = chart.tooltip._active[0].element.x;
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.moveTo(x, chart.chartArea.top);
+                    ctx.lineTo(x, chart.chartArea.bottom);
+                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = 'rgba(139, 92, 246, 0.4)';
+                    ctx.setLineDash([4, 4]);
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            }
+        };
+
+        function updateChart24h() {
+            if (!recentData.length) return;
+            const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
+            const data = recentData.filter(d => d.date >= cutoff);
+
+            const ctx = document.getElementById('chart24h').getContext('2d');
+            if (charts.chart24h) charts.chart24h.destroy();
+            charts.chart24h = new Chart(ctx, {
+                type: 'line',
+                plugins: [crosshairPlugin],
+                data: {
+                    labels: data.map(d => d.date.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })),
+                    datasets: [
+                        { label: '気温', data: data.map(d => d.temperature), borderColor: '#fb923c', backgroundColor: 'rgba(251, 146, 60, 0.08)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 0, pointHoverRadius: 6, yAxisID: 'y' },
+                        { label: '湿度', data: data.map(d => d.humidity), borderColor: '#22d3ee', backgroundColor: 'rgba(34, 211, 238, 0.08)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 0, pointHoverRadius: 6, yAxisID: 'y1' }
+                    ]
+                },
+                options: {
+                    ...baseOptions,
+                    scales: {
+                        ...baseOptions.scales,
+                        y: { ...baseOptions.scales.y, position: 'left', title: { display: true, text: '°C', color: '#fb923c', font: { size: 11, weight: '600' } } },
+                        y1: { ...baseOptions.scales.y, position: 'right', title: { display: true, text: '%', color: '#22d3ee', font: { size: 11, weight: '600' } }, grid: { drawOnChartArea: false } }
+                    }
+                }
+            });
+        }
+
+        function updateChartWeek() {
+            const sourceData = weeklyData.length > 0 ? weeklyData : recentData;
+            if (!sourceData.length) return;
+            const sampled = sourceData.filter((_, i) => i % 30 === 0);
+
+            const ctx = document.getElementById('chartWeek').getContext('2d');
+            if (charts.chartWeek) charts.chartWeek.destroy();
+            charts.chartWeek = new Chart(ctx, {
+                type: 'line',
+                plugins: [crosshairPlugin],
+                data: {
+                    labels: sampled.map(d => d.date.toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' }) + ' ' + d.date.toLocaleTimeString('ja-JP', { hour: '2-digit' })),
+                    datasets: [{ label: '気温', data: sampled.map(d => d.temperature), borderColor: '#a78bfa', backgroundColor: 'rgba(167, 139, 250, 0.1)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 0, pointHoverRadius: 5 }]
+                },
+                options: baseOptions
+            });
+        }
+
+        function updateChartMonthly() {
+            if (!dailyData.length) return;
+            const monthly = {};
+            dailyData.forEach(d => {
+                const key = `${d.date.getFullYear()}-${String(d.date.getMonth() + 1).padStart(2, '0')}`;
+                if (!monthly[key]) monthly[key] = { temps: [], mins: [], date: new Date(d.date.getFullYear(), d.date.getMonth(), 1) };
+                monthly[key].temps.push(d.max);
+                monthly[key].mins.push(d.min);
+            });
+            const data = Object.values(monthly).map(m => ({ date: m.date, max: Math.max(...m.temps), min: Math.min(...m.mins) })).sort((a, b) => a.date - b.date);
+
+            const ctx = document.getElementById('chartMonthly').getContext('2d');
+            if (charts.chartMonthly) charts.chartMonthly.destroy();
+            charts.chartMonthly = new Chart(ctx, {
+                type: 'bar',
+                plugins: [crosshairPlugin],
+                data: {
+                    labels: data.map(d => d.date.toLocaleDateString('ja-JP', { year: '2-digit', month: 'short' })),
+                    datasets: [
+                        { label: '最高', data: data.map(d => d.max), backgroundColor: 'rgba(248, 113, 113, 0.75)', borderColor: '#f87171', borderWidth: 0, borderRadius: 6 },
+                        { label: '最低', data: data.map(d => d.min), backgroundColor: 'rgba(96, 165, 250, 0.75)', borderColor: '#60a5fa', borderWidth: 0, borderRadius: 6 }
+                    ]
+                },
+                options: baseOptions
+            });
+        }
+
+        function updateChartYearly() {
+            if (!dailyData.length) return;
+            const ctx = document.getElementById('chartYearly').getContext('2d');
+            if (charts.chartYearly) charts.chartYearly.destroy();
+            charts.chartYearly = new Chart(ctx, {
+                type: 'line',
+                plugins: [crosshairPlugin],
+                data: {
+                    labels: dailyData.map(d => d.date.toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' })),
+                    datasets: [
+                        { label: '日最高', data: dailyData.map(d => d.max), borderColor: '#f87171', backgroundColor: 'rgba(248, 113, 113, 0.12)', fill: '+1', tension: 0.3, borderWidth: 1.5, pointRadius: 0, pointHoverRadius: 4 },
+                        { label: '日最低', data: dailyData.map(d => d.min), borderColor: '#60a5fa', backgroundColor: 'rgba(96, 165, 250, 0.08)', fill: false, tension: 0.3, borderWidth: 1.5, pointRadius: 0, pointHoverRadius: 4 }
+                    ]
+                },
+                options: baseOptions
+            });
+        }
+
+        function updateCountdown() {
+            if (!nextUpdateTime) return;
+            const remaining = Math.max(0, nextUpdateTime - Date.now());
+            const minutes = Math.floor(remaining / 60000);
+            const seconds = Math.floor((remaining % 60000) / 1000);
+            document.getElementById('nextUpdate').textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        async function init() {
+            await fetchAll();
+            nextUpdateTime = Date.now() + UPDATE_INTERVAL;
+            setInterval(updateCountdown, 1000);
+            setInterval(() => { fetchAll(); nextUpdateTime = Date.now() + UPDATE_INTERVAL; }, UPDATE_INTERVAL);
+
+            // Fix chart resize issue - redraw charts completely on resize
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => { updateCharts(); }, 250);
+            });
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
