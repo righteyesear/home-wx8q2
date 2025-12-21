@@ -663,6 +663,14 @@
             color: var(--accent-blue);
         }
 
+        .version-info {
+            text-align: center;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            opacity: 0.5;
+            margin-top: 16px;
+        }
+
         /* Responsive */
         @media (max-width: 1200px) {
             .main-stats {
@@ -914,6 +922,7 @@
                 <div class="footer-stat-value">2024/3 〜 現在</div>
             </div>
         </div>
+        <div class="version-info">v1.2.0</div>
     </div>
 
     <script>
@@ -925,8 +934,8 @@
         const WEEKLY_URL = `${BASE_URL}&sheet=Weekly`;
 
         // Open-Meteo API for 東京都葛飾区東金町5丁目 (35.7727, 139.8680)
-        // Includes: weather_code, precipitation, wind_speed, uv_index, apparent_temperature
-        const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?latitude=35.7727&longitude=139.8680&current=weather_code,precipitation,wind_speed_10m,apparent_temperature,uv_index&hourly=precipitation_probability,uv_index&forecast_days=1&timezone=Asia%2FTokyo';
+        // Includes: weather_code, precipitation, wind_speed, uv_index, apparent_temperature, hourly forecast
+        const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?latitude=35.7727&longitude=139.8680&current=weather_code,precipitation,wind_speed_10m,apparent_temperature,uv_index&hourly=weather_code,precipitation_probability,uv_index,temperature_2m&forecast_days=1&timezone=Asia%2FTokyo';
 
         const UPDATE_INTERVAL = 60 * 1000;
 
@@ -1050,14 +1059,31 @@
                 fetch(WEEKLY_URL).then(r => r.text()).then(csv => { weeklyData = parseRecentCSV(csv); }).catch(() => { weeklyData = recentData; }),
                 fetch(WEATHER_URL).then(r => r.json()).then(data => {
                     const hour = new Date().getHours();
+                    const hourlyWeather = data.hourly?.weather_code || [];
+                    const hourlyPrecip = data.hourly?.precipitation_probability || [];
+                    const hourlyTemp = data.hourly?.temperature_2m || [];
+
+                    // Check if weather will worsen in next 3 hours
+                    const futureWeatherCodes = hourlyWeather.slice(hour, hour + 4);
+                    const currentCode = data.current?.weather_code || 0;
+                    const maxFuturePrecipProb = Math.max(...hourlyPrecip.slice(hour, hour + 4));
+                    const willWorsen = futureWeatherCodes.some(c => c >= 51) && currentCode < 51;
+                    const willImprove = currentCode >= 51 && futureWeatherCodes.every(c => c < 51);
+
                     weatherData = {
-                        weatherCode: data.current?.weather_code,
+                        weatherCode: currentCode,
                         precipitation: data.current?.precipitation,
                         windSpeed: data.current?.wind_speed_10m,
                         feelsLike: data.current?.apparent_temperature,
                         uvIndex: data.current?.uv_index ?? data.hourly?.uv_index?.[hour] ?? 0,
-                        precipProb: data.hourly?.precipitation_probability?.[hour] || 0,
-                        maxUvToday: data.hourly?.uv_index ? Math.max(...data.hourly.uv_index.slice(0, 24)) : 0
+                        precipProb: hourlyPrecip[hour] || 0,
+                        maxUvToday: data.hourly?.uv_index ? Math.max(...data.hourly.uv_index.slice(0, 24)) : 0,
+                        // Forecast data
+                        futureWeatherCodes: futureWeatherCodes,
+                        maxFuturePrecipProb: maxFuturePrecipProb,
+                        willWorsen: willWorsen,
+                        willImprove: willImprove,
+                        tempIn3Hours: hourlyTemp[hour + 3] || null
                     };
                     updateUI(); // Update UI again with weather data
                 }).catch(e => { console.log('Weather API error:', e); weatherData = null; })
@@ -1567,6 +1593,35 @@
                 comment += ' ☂️ 雨の予報。傘を持っていきましょう';
             } else if (willRain && pp >= 50 && !isRaining) {
                 comment += ' 🌂 降水確率高め。念のため傘を';
+            }
+
+            // ============================================================
+            // ADD WEATHER FORECAST (worsening/improving)
+            // ============================================================
+            const willWorsen = weatherData?.willWorsen;
+            const willImprove = weatherData?.willImprove;
+            const maxFuturePrecip = weatherData?.maxFuturePrecipProb || 0;
+            const tempIn3h = weatherData?.tempIn3Hours;
+
+            if (willWorsen && maxFuturePrecip >= 60) {
+                comment += ' ⚠️ 数時間後に天気が崩れそうです';
+            } else if (willWorsen && maxFuturePrecip >= 40) {
+                comment += ' 🌥️ この後、雲が増えてきそう';
+            }
+
+            if (willImprove && !isRaining) {
+                comment += ' 🌤️ これから晴れてきます';
+            } else if (willImprove && isRaining) {
+                comment += ' 🌈 もう少しで雨が上がりそう';
+            }
+
+            // Temperature change forecast
+            if (tempIn3h && Math.abs(tempIn3h - temp) >= 4) {
+                if (tempIn3h > temp) {
+                    comment += ` 📈 3時間後は${tempIn3h.toFixed(0)}°Cに上昇`;
+                } else {
+                    comment += ` 📉 3時間後は${tempIn3h.toFixed(0)}°Cに下降`;
+                }
             }
 
             document.getElementById('greetingMain').textContent = greeting;
