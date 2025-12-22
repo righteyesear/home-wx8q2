@@ -2685,14 +2685,22 @@
                             `🍁 ${t} — 晴れていますが肌寒い午後`,
                             `☀️ ${t} — 日差しはあるけど冷える`
                         ]);
-                    } else if (isClear && isDry) {
+                    } else if (isClear && isEvening) {
+                        // Evening specific - no sunlight mentions
+                        comment = pick([
+                            `🌆 ${t} — 夕方から冷え込みます。上着を`,
+                            `🌇 ${t} — 日が沈むと急に寒くなります`,
+                            `🌆 ${t} — 夕暮れは肌寒い。暖かくして`,
+                            `🌇 ${t} — 夜に向けて冷え込みます`
+                        ]);
+                    } else if (isClear && isDry && (isMorning || isAfternoon)) {
                         comment = pick([
                             `🍁 ${t} — 秋晴れですが肌寒い。しっかり上着を`,
                             `🧥 ${t} — 晴れでも寒い。上着必須`,
                             `🍁 ${t} — 空気が冷たい。暖かくして`,
                             `🧥 ${t} — 晴れていますが冷えます`
                         ]);
-                    } else if (isClear && isWinter && !isNight) {
+                    } else if (isClear && isWinter && (isMorning || isAfternoon)) {
                         comment = pick([
                             `❄️ ${t} — 冬晴れ。日差しは暖かいですが空気は冷たい`,
                             `☀️ ${t} — 冬の日差し。外は寒いです`,
@@ -2762,13 +2770,13 @@
                             `🌙 ${t} — 冷える夜。温かい飲み物でリラックス`,
                             `🌙 ${t} — 暖房が恋しい夜。ゆっくり休んで`
                         ]);
-                    } else if (isClear && isExtremelyDry) {
+                    } else if (isClear && isExtremelyDry && (isMorning || isAfternoon)) {
                         comment = pick([
                             `🌬️ ${t} — キリッと冬晴れ。空気がカラカラ。保湿必須`,
                             `💨 ${t} — 乾燥した冬晴れ。肌がガサガサに`,
                             `🌬️ ${t} — 冬晴れですが乾燥注意。保湿を`
                         ]);
-                    } else if (isClear && isVeryDry) {
+                    } else if (isClear && isVeryDry && (isMorning || isAfternoon)) {
                         comment = pick([
                             `🌬️ ${t} — キリッと冷たい冬晴れ。空気が乾燥しています`,
                             `❄️ ${t} — 冬晴れ。乾燥で唇が荒れそう`,
@@ -2890,11 +2898,17 @@
                             `🌆 ${t} — 夕方から急激に冷え込みます`,
                             `🌇 ${t} — 日没後は危険な寒さ`
                         ]);
-                    } else if (isClear) {
+                    } else if (isClear && (isMorning || isAfternoon)) {
                         comment = pick([
                             `🥶 ${t} — 凍えるような晴れ。放射冷却で冷え込んでいます`,
                             `❄️ ${t} — 冬晴れ。見た目より寒い`,
                             `🥶 ${t} — 晴れても極寒。しっかり防寒を`
+                        ]);
+                    } else if (isClear && (isEvening || isNight)) {
+                        comment = pick([
+                            `🌙 ${t} — 凍える夜。暖房必須`,
+                            `❄️ ${t} — 極寒の夜。暖かくして`,
+                            `🥶 ${t} — 凍てつく夜。外出は控えめに`
                         ]);
                     } else if (isVeryWindy) {
                         comment = pick([

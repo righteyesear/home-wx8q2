@@ -1,6 +1,6 @@
 // Service Worker for 外気温モニター PWA
-// Version 2 - Auto-update enabled
-const CACHE_NAME = 'temp-monitor-v2';
+// Version 3 - Updated for sunrise/sunset support
+const CACHE_NAME = 'temp-monitor-v3';
 const urlsToCache = [
     './',
     './index.html'
