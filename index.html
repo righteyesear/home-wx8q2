@@ -159,7 +159,207 @@
                 linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
             background-size: 60px 60px;
             pointer-events: none;
+            z-index: -2;
+        }
+
+        /* Weather Effects Container */
+        .weather-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
             z-index: -1;
+            overflow: hidden;
+        }
+
+        /* --- Starry Night Effect --- */
+        .effect-stars {
+            background-image:
+                radial-gradient(1px 1px at 10% 10%, #fff, transparent),
+                radial-gradient(1px 1px at 20% 40%, #fff, transparent),
+                radial-gradient(1px 1px at 30% 70%, #fff, transparent),
+                radial-gradient(2px 2px at 40% 20%, #fff, transparent),
+                radial-gradient(1px 1px at 50% 50%, #fff, transparent),
+                radial-gradient(2px 2px at 60% 80%, #fff, transparent),
+                radial-gradient(1px 1px at 70% 30%, #fff, transparent),
+                radial-gradient(1px 1px at 80% 60%, #fff, transparent),
+                radial-gradient(2px 2px at 90% 10%, #fff, transparent),
+                radial-gradient(1px 1px at 5% 90%, #fff, transparent);
+            background-size: 500px 500px;
+            opacity: 0;
+            transition: opacity 2s ease;
+            animation: twinkle 4s infinite alternate;
+        }
+
+        .effect-stars::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(1px 1px at 15% 15%, #fff, transparent),
+                radial-gradient(2px 2px at 25% 45%, #fff, transparent),
+                radial-gradient(1px 1px at 35% 75%, #fff, transparent),
+                radial-gradient(1px 1px at 45% 25%, #fff, transparent),
+                radial-gradient(2px 2px at 55% 55%, #fff, transparent),
+                radial-gradient(1px 1px at 65% 85%, #fff, transparent),
+                radial-gradient(2px 2px at 75% 35%, #fff, transparent),
+                radial-gradient(1px 1px at 85% 65%, #fff, transparent);
+            background-size: 400px 400px;
+            animation: twinkle 6s infinite alternate-reverse;
+        }
+
+        @keyframes twinkle {
+            0% {
+                opacity: 0.3;
+                transform: translateY(0);
+            }
+
+            100% {
+                opacity: 0.8;
+                transform: translateY(-2px);
+            }
+        }
+
+        /* --- Rain Effect --- */
+        .effect-rain {
+            background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%);
+            background-size: 2px 30vh;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .effect-rain.active {
+            animation: rain-fall 0.8s linear infinite;
+        }
+
+        @keyframes rain-fall {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 0 30vh;
+            }
+        }
+
+        /* --- Snow Effect --- */
+        .effect-snow {
+            background-image:
+                radial-gradient(3px 3px at 20% 30%, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(2px 2px at 40% 70%, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(4px 4px at 60% 20%, rgba(255, 255, 255, 0.8), transparent),
+                radial-gradient(3px 3px at 80% 60%, rgba(255, 255, 255, 0.8), transparent);
+            background-size: 200px 200px;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+
+        .effect-snow.active {
+            animation: snow-fall 8s linear infinite;
+        }
+
+        @keyframes snow-fall {
+            0% {
+                transform: translateY(-200px);
+            }
+
+            100% {
+                transform: translateY(200px);
+            }
+        }
+
+        /* --- Clouds/Fog Effect --- */
+        .effect-clouds {
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+            background-size: 200% 100%;
+            filter: blur(40px);
+            opacity: 0;
+            transition: opacity 2s ease;
+            transform-origin: center;
+        }
+
+        .effect-clouds.active {
+            animation: cloud-drift 30s linear infinite alternate;
+        }
+
+        @keyframes cloud-drift {
+            0% {
+                transform: translateX(-10%);
+            }
+
+            100% {
+                transform: translateX(10%);
+            }
+        }
+
+        /* --- Sun Glow/Flare Effect --- */
+        .effect-sun {
+            background: radial-gradient(circle at 80% 10%, rgba(255, 200, 0, 0.15) 0%, rgba(255, 200, 0, 0.05) 30%, transparent 70%);
+            mix-blend-mode: screen;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+
+        .effect-sun.active {
+            animation: sun-pulse 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes sun-pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        /* Dark/Light Mode Adaptations */
+        html.light-mode .effect-stars {
+            display: none;
+        }
+
+        /* No stars in day */
+        html.light-mode .effect-rain {
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(51, 65, 85, 0.15) 50%, rgba(0, 0, 0, 0) 100%);
+        }
+
+        html.light-mode .effect-snow {
+            background-image:
+                radial-gradient(3px 3px at 20% 30%, rgba(203, 213, 225, 0.6), transparent),
+                radial-gradient(2px 2px at 40% 70%, rgba(203, 213, 225, 0.6), transparent),
+                radial-gradient(4px 4px at 60% 20%, rgba(203, 213, 225, 0.6), transparent),
+                radial-gradient(3px 3px at 80% 60%, rgba(203, 213, 225, 0.6), transparent);
+        }
+
+        /* Glassmorphism Refinement */
+        .stat-card,
+        .chart-card,
+        .footer-stats {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            /* Softer border */
+            box-shadow:
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            /* Inner highlight */
+        }
+
+        html.light-mode .stat-card,
+        html.light-mode .chart-card,
+        html.light-mode .footer-stats {
+            border-color: rgba(99, 102, 241, 0.1);
+            box-shadow:
+                0 4px 20px rgba(0, 0, 0, 0.03),
+                0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         .container {
@@ -859,6 +1059,16 @@
         <div class="bg-orb bg-orb-1"></div>
         <div class="bg-orb bg-orb-2"></div>
     </div>
+    <!-- New Weather Animation Layer -->
+    <div class="weather-effects">
+        <div id="effectStars" class="effect-stars" style="position:absolute;top:0;left:0;width:100%;height:100%"></div>
+        <div id="effectRain" class="effect-rain" style="position:absolute;top:0;left:0;width:100%;height:100%"></div>
+        <div id="effectSnow" class="effect-snow" style="position:absolute;top:0;left:0;width:100%;height:100%"></div>
+        <div id="effectClouds" class="effect-clouds" style="position:absolute;top:0;left:0;width:100%;height:100%">
+        </div>
+        <div id="effectSun" class="effect-sun" style="position:absolute;top:0;left:0;width:100%;height:100%"></div>
+    </div>
+
     <div class="grid-pattern"></div>
 
     <div class="container">
@@ -905,7 +1115,7 @@
         <div id="aiAdvisorSection" class="ai-advisor-section">
             <div class="ai-advisor-header">
                 <span class="ai-advisor-icon">🤖</span>
-                <span class="ai-advisor-label">AI気象アドバイザー</span>
+                <span class="ai-advisor-label">AI気象アドバイザー(β)</span>
                 <span class="ai-advisor-time" id="aiAdvisorTime"></span>
             </div>
             <div class="ai-advisor-content" id="aiAdvisorContent">
@@ -1525,6 +1735,49 @@
 
             // Update greeting
             updateGreeting(temp, summaryData.currentHumidity);
+
+            // Update weather visual effects
+            updateWeatherEffects(weatherData?.weatherCode || 0, new Date().getHours());
+        }
+
+        // Switch background effects based on weather code and time
+        function updateWeatherEffects(code, hour) {
+            // Reset all effects
+            document.querySelectorAll('.weather-effects > div').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.weather-effects > div').forEach(el => el.style.opacity = '0');
+
+            const isDay = hour >= 6 && hour < 18;
+            let activeEffectId = null;
+
+            // Simple mapping
+            // Rain: 51-67, 80-82, 95-99
+            if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82) || code >= 95) {
+                activeEffectId = 'effectRain';
+            }
+            // Snow: 71-77, 85-86
+            else if ((code >= 71 && code <= 77) || code === 85 || code === 86) {
+                activeEffectId = 'effectSnow';
+            }
+            // Cloudy/Fog: 45, 48
+            else if (code === 45 || code === 48) {
+                activeEffectId = 'effectClouds';
+            }
+            // Sunny/Clear: 0, 1 -> Sun (day) or Stars (night)
+            else if (code === 0 || code === 1) {
+                activeEffectId = isDay ? 'effectSun' : 'effectStars';
+            }
+            // Partly cloudy: 2, 3 -> Clouds
+            else if (code === 2 || code === 3) {
+                activeEffectId = 'effectClouds';
+            }
+
+            if (activeEffectId) {
+                const el = document.getElementById(activeEffectId);
+                if (el) {
+                    el.classList.add('active');
+                    el.style.opacity = '1';
+                }
+            }
         }
 
         // Calculate feels-like temperature (simple formula)
@@ -3732,8 +3985,24 @@
 
         function updateChart24h() {
             if (!recentData.length) return;
-            const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
-            const data = recentData.filter(d => d.date >= cutoff);
+            const now = Date.now();
+            const cutoff = new Date(now - 24 * 60 * 60 * 1000); // 24h ago
+
+            // Current data (last 24h)
+            const currentData = recentData.filter(d => d.date >= cutoff);
+
+            // Yesterday's data (24h to 48h ago, shifted to match current time)
+            // We search in recentData first (if it has >24h history), or fetch daily/history if needed.
+            // For simplicity, we assume recentData might contain older data or we use what we have.
+            // Ideally, we align by shifting +24h to yesterday's timestamps to match x-axis.
+            const yesterdayCutoffStart = new Date(now - 48 * 60 * 60 * 1000);
+            const yesterdayCutoffEnd = new Date(now - 24 * 60 * 60 * 1000);
+
+            // Find data points from exactly 24h ago
+            const yesterdayData = recentData.filter(d => d.date >= yesterdayCutoffStart && d.date < yesterdayCutoffEnd).map(d => ({
+                ...d,
+                shiftedDate: new Date(d.date.getTime() + 24 * 60 * 60 * 1000) // Shift to today for plotting
+            }));
 
             // Detect mobile screen
             const isMobile = window.innerWidth <= 600;
@@ -3746,10 +4015,53 @@
                 type: 'line',
                 plugins: [crosshairPlugin],
                 data: {
-                    labels: data.map(d => d.date.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })),
+                    labels: currentData.map(d => d.date.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })),
                     datasets: [
-                        { label: '気温', data: data.map(d => d.temperature), borderColor: '#fb923c', backgroundColor: 'rgba(251, 146, 60, 0.08)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 0, pointHoverRadius: 6, yAxisID: 'y' },
-                        { label: '湿度', data: data.map(d => d.humidity), borderColor: '#22d3ee', backgroundColor: 'rgba(34, 211, 238, 0.08)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 0, pointHoverRadius: 6, yAxisID: 'y1' }
+                        {
+                            label: '気温',
+                            data: currentData.map(d => d.temperature),
+                            borderColor: '#fb923c',
+                            backgroundColor: 'rgba(251, 146, 60, 0.05)',
+                            fill: false,
+                            tension: 0.4,
+                            borderWidth: 3, // Thicker line for emphasis
+                            pointRadius: 0,
+                            pointHoverRadius: 6,
+                            yAxisID: 'y',
+                            order: 1
+                        },
+                        {
+                            label: '昨日の気温',
+                            data: currentData.map(curr => {
+                                // Find closest data point from yesterday (naive matching)
+                                const match = yesterdayData.find(prev => Math.abs(prev.shiftedDate - curr.date) < 15 * 60 * 1000); // within 15 mins
+                                return match ? match.temperature : null;
+                            }),
+                            borderColor: '#94a3b8',
+                            borderDash: [4, 4], // Dotted line
+                            backgroundColor: 'transparent',
+                            fill: false,
+                            tension: 0.4,
+                            borderWidth: 1.5,
+                            pointRadius: 0,
+                            pointHoverRadius: 4,
+                            yAxisID: 'y',
+                            order: 2,
+                            spanGaps: true
+                        },
+                        {
+                            label: '湿度',
+                            data: currentData.map(d => d.humidity),
+                            borderColor: 'transparent', // No border line
+                            backgroundColor: 'rgba(34, 211, 238, 0.12)', // Subtle fill background
+                            fill: true,
+                            tension: 0.4,
+                            borderWidth: 0,
+                            pointRadius: 0,
+                            pointHoverRadius: 0,
+                            yAxisID: 'y1',
+                            order: 3
+                        }
                     ]
                 },
                 options: {
