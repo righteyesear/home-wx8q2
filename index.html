@@ -949,7 +949,7 @@
                 <div class="footer-stat-value">2024/3 〜 現在</div>
             </div>
         </div>
-        <div class="version-info">v1.6.0 <span style="opacity: 0.5; font-size: 0.75em;">| 最終更新: 2025/12/22 14:15</span>
+        <div class="version-info">v1.7.0 <span style="opacity: 0.5; font-size: 0.75em;">| 最終更新: 2025/12/22 16:52</span>
         </div>
     </div>
 
@@ -962,8 +962,8 @@
         const WEEKLY_URL = `${BASE_URL}&sheet=Weekly`;
 
         // Open-Meteo API for 東京都葛飾区東金町5丁目 (35.7727, 139.8680)
-        // Includes: weather_code, precipitation, wind_speed, uv_index, apparent_temperature, hourly forecast
-        const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?latitude=35.7727&longitude=139.8680&current=weather_code,precipitation,wind_speed_10m,apparent_temperature,uv_index&hourly=weather_code,precipitation_probability,uv_index,temperature_2m&forecast_days=1&timezone=Asia%2FTokyo&wind_speed_unit=ms';
+        // Includes: weather_code, precipitation, wind_speed, uv_index, apparent_temperature, hourly forecast, sunrise/sunset
+        const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?latitude=35.7727&longitude=139.8680&current=weather_code,precipitation,wind_speed_10m,apparent_temperature,uv_index&hourly=weather_code,precipitation_probability,uv_index,temperature_2m&daily=sunrise,sunset&forecast_days=1&timezone=Asia%2FTokyo&wind_speed_unit=ms';
 
         const UPDATE_INTERVAL = 60 * 1000;
 
@@ -1023,17 +1023,26 @@
             applyTheme();
         }
 
-        // Apply theme based on setting
+        // Apply theme based on setting (uses sunrise/sunset when available)
         function applyTheme() {
-            const hour = new Date().getHours();
+            const now = new Date();
             let isLight = false;
 
             if (themeSetting === 'light') {
                 isLight = true;
             } else if (themeSetting === 'dark') {
                 isLight = false;
-            } else { // auto: light 6-18, dark otherwise
-                isLight = (hour >= 6 && hour < 18);
+            } else {
+                // Auto mode: use sunrise/sunset if available, fallback to 6-18
+                if (weatherData?.sunrise && weatherData?.sunset) {
+                    const sunriseTime = new Date(weatherData.sunrise);
+                    const sunsetTime = new Date(weatherData.sunset);
+                    isLight = (now >= sunriseTime && now < sunsetTime);
+                } else {
+                    // Fallback: light 6-18, dark otherwise
+                    const hour = now.getHours();
+                    isLight = (hour >= 6 && hour < 18);
+                }
             }
 
             document.documentElement.classList.toggle('light-mode', isLight);
@@ -1116,8 +1125,13 @@
                         maxFuturePrecipProb: maxFuturePrecipProb,
                         willWorsen: willWorsen,
                         willImprove: willImprove,
-                        tempIn3Hours: hourlyTemp[hour + 3] || null
+                        tempIn3Hours: hourlyTemp[hour + 3] || null,
+                        // Sunrise / Sunset (e.g., "2025-12-22T06:47")
+                        sunrise: data.daily?.sunrise?.[0] || null,
+                        sunset: data.daily?.sunset?.[0] || null
                     };
+                    // Update theme based on sunrise/sunset
+                    applyTheme();
                     updateUI(); // Update UI again with weather data
                 }).catch(e => { console.log('Weather API error:', e); weatherData = null; })
             ]);
@@ -1400,7 +1414,13 @@
 
             // Weather-based emoji (combines weather + time of day)
             const wcEmoji = weatherData?.weatherCode ?? 0;
-            const isDaytime = hour >= 6 && hour < 18;
+            // Use sunrise/sunset for daytime detection
+            let isDaytime = hour >= 6 && hour < 18; // fallback
+            if (weatherData?.sunrise && weatherData?.sunset) {
+                const sunriseTime = new Date(weatherData.sunrise);
+                const sunsetTime = new Date(weatherData.sunset);
+                isDaytime = (now >= sunriseTime && now < sunsetTime);
+            }
             const isNighttime = !isDaytime;
 
             // Weather code to emoji mapping
@@ -1486,11 +1506,16 @@
             const isVeryHighUV = uv >= 8;
             const isExtremeUV = uv >= 11;
 
-            // Time period
-            const isMorning = hour >= 6 && hour < 12;
-            const isAfternoon = hour >= 12 && hour < 18;
-            const isEvening = hour >= 18 && hour < 22;
-            const isNight = hour >= 22 || hour < 6;
+            // Time period (uses sunrise/sunset when available)
+            let sunriseHour = 6, sunsetHour = 18; // fallback
+            if (weatherData?.sunrise && weatherData?.sunset) {
+                sunriseHour = new Date(weatherData.sunrise).getHours();
+                sunsetHour = new Date(weatherData.sunset).getHours();
+            }
+            const isMorning = hour >= sunriseHour && hour < 12;
+            const isAfternoon = hour >= 12 && hour < sunsetHour;
+            const isEvening = hour >= sunsetHour && hour < sunsetHour + 4;
+            const isNight = hour >= sunsetHour + 4 || hour < sunriseHour;
 
             // Season detection
             const isSummer = month >= 6 && month <= 8;
@@ -1580,12 +1605,17 @@
             // Check if conditions changed
             const conditionsChanged = conditionKey !== lastConditionKey;
 
-            // If conditions haven't changed and we have a previous comment, reuse it
+            // If conditions haven't changed and we have a previous comment, reuse it with updated temperature
             if (!conditionsChanged && lastComment) {
                 document.getElementById('greetingSection').classList.add('show');
                 document.querySelector('.greeting-text .emoji').textContent = emoji;
                 document.getElementById('greetingMain').textContent = greeting;
-                document.getElementById('weatherComment').innerHTML = lastComment;
+                // Update temperature in previous comment to current value
+                const updatedComment = lastComment.replace(
+                    /<span class="temp-highlight">[0-9.-]+°C<\/span>/g,
+                    `<span class="temp-highlight">${temp.toFixed(1)}°C</span>`
+                );
+                document.getElementById('weatherComment').innerHTML = updatedComment;
                 return;
             }
 
