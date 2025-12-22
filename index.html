@@ -301,6 +301,82 @@
             opacity: 1;
         }
 
+        /* AI Advisor Section */
+        .ai-advisor-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 50%, rgba(236, 72, 153, 0.1) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeInUp 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-advisor-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+        }
+
+        .ai-advisor-section.show {
+            display: block;
+        }
+
+        .ai-advisor-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .ai-advisor-icon {
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .ai-advisor-label {
+            font-weight: 600;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .ai-advisor-time {
+            font-size: 0.75rem;
+            opacity: 0.6;
+            margin-left: auto;
+        }
+
+        .ai-advisor-content {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         @keyframes alertPulse {
 
             0%,
@@ -825,6 +901,18 @@
             <span class="alert-link-hint">📋 詳細</span>
         </a>
 
+        <!-- AI Advisor Section -->
+        <div id="aiAdvisorSection" class="ai-advisor-section">
+            <div class="ai-advisor-header">
+                <span class="ai-advisor-icon">🤖</span>
+                <span class="ai-advisor-label">AI気象アドバイザー</span>
+                <span class="ai-advisor-time" id="aiAdvisorTime"></span>
+            </div>
+            <div class="ai-advisor-content" id="aiAdvisorContent">
+                分析中...
+            </div>
+        </div>
+
         <div class="main-stats">
             <div class="stat-card temp">
                 <div class="stat-header">
@@ -1146,6 +1234,70 @@
 
             // Fetch weather alerts (separate try-catch for CORS issues)
             fetchAlerts();
+
+            // Load AI advisor comment
+            loadAIComment();
+        }
+
+        // Load AI advisor comment from ai_comment.json
+        async function loadAIComment() {
+            try {
+                const resp = await fetch('./ai_comment.json?' + Date.now());
+                if (!resp.ok) {
+                    // File doesn't exist yet, keep section hidden
+                    return;
+                }
+                const data = await resp.json();
+
+                if (data.advice) {
+                    // Convert simple markdown to HTML
+                    const html = simpleMarkdownToHtml(data.advice);
+                    document.getElementById('aiAdvisorContent').innerHTML = html;
+
+                    // Format time
+                    if (data.generated_at) {
+                        const genTime = new Date(data.generated_at);
+                        const timeStr = genTime.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+                        document.getElementById('aiAdvisorTime').textContent = `${timeStr} 生成`;
+                    }
+
+                    // Show section
+                    document.getElementById('aiAdvisorSection').classList.add('show');
+                }
+            } catch (e) {
+                // ai_comment.json not found or parse error, keep hidden
+                console.log('AI comment not available:', e.message);
+            }
+        }
+
+        // Simple markdown to HTML converter
+        function simpleMarkdownToHtml(text) {
+            if (!text) return '';
+
+            let html = text
+                // Escape HTML first
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                // Bold: **text** or __text__
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/__(.+?)__/g, '<strong>$1</strong>')
+                // Italic: *text* or _text_
+                .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                .replace(/_(.+?)_/g, '<em>$1</em>')
+                // Bullet points: - item
+                .replace(/^- (.+)$/gm, '<li>$1</li>')
+                // Numbered lists: 1. item
+                .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+                // Line breaks
+                .replace(/\n/g, '<br>');
+
+            // Wrap consecutive <li> in <ul>
+            html = html.replace(/(<li>.*?<\/li>(<br>)?)+/g, match => {
+                const items = match.replace(/<br>/g, '');
+                return '<ul style="margin: 8px 0; padding-left: 20px;">' + items + '</ul>';
+            });
+
+            return html;
         }
 
         // Calculate and display data analysis in footer
