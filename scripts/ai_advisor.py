@@ -7,9 +7,12 @@ AI気象アドバイザー - Gemini 3 Flash Thinking による総合分析
 import os
 import json
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional, Dict, Any, List
 from pathlib import Path
+
+# JST タイムゾーン（GitHub ActionsはUTCで動くため必要）
+JST = timezone(timedelta(hours=9))
 
 # .env ファイルから環境変数を読み込み
 from dotenv import load_dotenv
@@ -358,7 +361,7 @@ def analyze_with_gemini(spreadsheet_data: Dict, weather_data: Dict, alerts_data:
         return "⚠️ APIキーが設定されていません"
     
     # 現在時刻と次回更新時刻を計算
-    now = datetime.now()
+    now = datetime.now(JST)
     time_str = now.strftime('%Y年%m月%d日 %H時%M分')
     current_hour = now.hour
     
@@ -550,7 +553,7 @@ def analyze_with_gemini(spreadsheet_data: Dict, weather_data: Dict, alerts_data:
 
 def main():
     """メイン処理"""
-    print(f"[{datetime.now().isoformat()}] AI気象アドバイザー 開始")
+    print(f"[{datetime.now(JST).isoformat()}] AI気象アドバイザー 開始")
     
     # 1. データ収集
     print("  → スプレッドシートからデータ取得中...")
@@ -575,7 +578,7 @@ def main():
     
     # 3. JSON出力
     output = {
-        'generated_at': datetime.now().isoformat(),
+        'generated_at': datetime.now(JST).isoformat(),
         'advice': advice,
         'data_summary': {
             'outdoor_temp': spreadsheet_data.get('current', {}).get('temperature'),
@@ -589,12 +592,12 @@ def main():
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
     
-    print(f"[{datetime.now().isoformat()}] 完了 → ai_comment.json に保存")
+    print(f"[{datetime.now(JST).isoformat()}] 完了 → ai_comment.json に保存")
 
 
 def demo_with_fake_alerts():
     """デモ: 大雨警報・洪水警報がある状況をシミュレート"""
-    print(f"[{datetime.now().isoformat()}] === デモモード: 大雨警報・洪水警報 ===")
+    print(f"[{datetime.now(JST).isoformat()}] === デモモード: 大雨警報・洪水警報 ===")
     
     # 1. データ収集（実データ）
     print("  → スプレッドシートからデータ取得中...")
