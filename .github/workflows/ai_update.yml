@@ -1,0 +1,39 @@
+name: AI Weather Advisor Update
+
+on:
+  schedule:
+    - cron: '0 22 * * *'
+    - cron: '0 1 * * *'
+    - cron: '0 4 * * *'
+    - cron: '0 8 * * *'
+    - cron: '0 12 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-ai-comment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - run: |
+          if [ -f ai_comment.json ]; then cp ai_comment.json ai_comment.backup.json; fi
+      - run: python scripts/ai_advisor.py
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+        continue-on-error: true
+      - run: |
+          if [ ! -f ai_comment.json ] && [ -f ai_comment.backup.json ]; then
+            cp ai_comment.backup.json ai_comment.json
+          fi
+          rm -f ai_comment.backup.json
+      - run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add ai_comment.json || true
+          git diff --quiet ai_comment.json || git commit -m "🤖 Update AI advice"
+          git push || true
