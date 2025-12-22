@@ -35,6 +35,69 @@ LATITUDE = 35.7727
 LONGITUDE = 139.8680
 AREA_CODE = '1312200'  # 葛飾区
 
+
+# =============================================================================
+# 体感温度計算（物理モデル）
+# =============================================================================
+def calculate_feels_like(temp: float, humidity: float, wind_speed_10m: float) -> float:
+    """
+    体感温度を計算（3帯域物理モデル）
+    - wind_speed_10m: Open-Meteoの風速（10m高さ）を0.6倍して2m高さに補正
+    - テテンスの式で水蒸気圧を算出
+    - 温度帯に応じて3つの計算式を使い分け
+    """
+    import math
+    
+    # 風速補正（10m → 2m）
+    v = max(0, wind_speed_10m * 0.6)
+    
+    # テテンスの式で水蒸気圧(hPa)を算出
+    e = 6.11 * math.pow(10, (7.5 * temp) / (temp + 237.3)) * (humidity / 100)
+    
+    def wind_chill(temp, v):
+        """リンケの風冷指数（寒冷時）"""
+        if v <= 0:
+            return temp
+        v_kmh = v * 3.6  # m/s → km/h
+        return 13.12 + 0.6215 * temp - 11.37 * math.pow(v_kmh, 0.16) + 0.3965 * temp * math.pow(v_kmh, 0.16)
+    
+    def steadman(temp, e, v):
+        """ステッドマンの式（中間温度帯）"""
+        return temp + 0.33 * e - 0.70 * v - 4.0
+    
+    def heat_index(temp, humidity):
+        """暑さ指数（高温時）"""
+        c1, c2, c3, c4 = -8.78469475556, 1.61139411, 2.33854883889, -0.14611605
+        c5, c6, c7, c8, c9 = -0.012308094, -0.0164248277778, 0.002211732, 0.00072546, -0.000003582
+        return (c1 + c2 * temp + c3 * humidity + c4 * temp * humidity 
+                + c5 * temp * temp + c6 * humidity * humidity 
+                + c7 * temp * temp * humidity + c8 * temp * humidity * humidity 
+                + c9 * temp * temp * humidity * humidity)
+    
+    def lerp(a, b, t):
+        """線形補間"""
+        t = max(0, min(1, t))
+        return a + (b - a) * t
+    
+    # 温度帯に応じて計算式を選択（境界は線形補間）
+    if temp <= 8:
+        return wind_chill(temp, v)
+    elif temp <= 12:
+        wc = wind_chill(temp, v)
+        st = steadman(temp, e, v)
+        t = (temp - 8) / 4
+        return lerp(wc, st, t)
+    elif temp <= 25:
+        return steadman(temp, e, v)
+    elif temp <= 29:
+        st = steadman(temp, e, v)
+        hi = heat_index(temp, humidity)
+        t = (temp - 25) / 4
+        return lerp(st, hi, t)
+    else:
+        return heat_index(temp, humidity)
+
+
 # =============================================================================
 # データ取得関数
 # =============================================================================
@@ -462,16 +525,26 @@ def analyze_with_gemini(spreadsheet_data: Dict, weather_data: Dict, alerts_data:
             range_desc = "寒暖差拡大" if wt['range_trend'] > 0.5 else "寒暖差縮小" if wt['range_trend'] < -0.5 else "安定"
             prompt += f"- 日較差傾向: {wt['range_trend']:+.1f}°C（{range_desc}）\n"
 
+    # 体感温度と風速を計算
+    current_weather = weather_data.get('current', {})
+    api_wind_speed = current_weather.get('wind_speed', 0) or 0
+    adjusted_wind_speed = api_wind_speed * 0.6  # 10m → 2m 高さ補正
+    
+    # 体感温度を自作計算式で算出（3帯域物理モデル）
+    api_temp = current_weather.get('temperature', 0) or 0
+    api_humidity = current_weather.get('humidity', 50) or 50
+    calculated_feels_like = calculate_feels_like(api_temp, api_humidity, api_wind_speed)
+    
     prompt += f"""
 ====================================
-【屋外天気予報】（Open-Meteo API）
+【屋外天気予報】（Open-Meteo API + 独自計算）
 ====================================
-- 現在の天気: {weather_code_to_text(weather_data.get('current', {}).get('weather_code', 0))}
-- 気温: {weather_data.get('current', {}).get('temperature', '不明')}°C
-- 体感温度: {weather_data.get('current', {}).get('feels_like', '不明')}°C
-- 湿度: {weather_data.get('current', {}).get('humidity', '不明')}%
-- 風速: {weather_data.get('current', {}).get('wind_speed', '不明')} m/s
-- UV指数: {weather_data.get('current', {}).get('uv_index', 0)}
+- 現在の天気: {weather_code_to_text(current_weather.get('weather_code', 0))}
+- 気温: {current_weather.get('temperature', '不明')}°C
+- 体感温度: {calculated_feels_like:.1f}°C（※独自計算: 風速0.6倍補正、ステッドマンの式適用）
+- 湿度: {current_weather.get('humidity', '不明')}%
+- 風速: {adjusted_wind_speed:.1f} m/s（※元データ{api_wind_speed}m/sを0.6倍補正）
+- UV指数: {current_weather.get('uv_index', 0)}
 
 【今後12時間の予報】
 """
