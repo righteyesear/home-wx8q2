@@ -293,7 +293,7 @@ def fetch_weather_forecast() -> Dict[str, Any]:
         f"precipitation,wind_speed_10m,wind_gusts_10m,uv_index"
         f"&hourly=weather_code,temperature_2m,precipitation_probability,wind_speed_10m"
         f"&daily=sunrise,sunset,uv_index_max,precipitation_probability_max"
-        f"&forecast_days=2&timezone=Asia/Tokyo"
+        f"&forecast_days=2&timezone=Asia/Tokyo&wind_speed_unit=ms"
     )
     
     result = {
@@ -552,8 +552,13 @@ def analyze_with_gemini(spreadsheet_data: Dict, weather_data: Dict, alerts_data:
 - 現在の外気温: {sensor_temp}°C
 - 現在の湿度: {sensor_humidity}%
 - **体感温度: {sensor_feels_like:.1f}°C**（風速{actual_wind_speed:.1f}m/sを考慮した実際の肌感覚）
-- 今日の最高気温: {spreadsheet_data.get('current', {}).get('today_high', '不明')}°C
-- 今日の最低気温: {spreadsheet_data.get('current', {}).get('today_low', '不明')}°C
+- 今日の最高気温（0時以降の記録）: {spreadsheet_data.get('current', {}).get('today_high', '不明')}°C
+- 今日の最低気温（0時以降の記録）: {spreadsheet_data.get('current', {}).get('today_low', '不明')}°C
+
+【重要】上記の「今日の最高/最低気温」は予報値ではなく、本日0時以降にセンサーで
+記録された実測値です。朝の時間帯では、まだ日中の気温上昇前なので数値が低いのは
+当然です。「今日の最高気温が5°Cだから寒い」のような判断は誤りです。
+日中の気温予測はOpen-Meteo予報データを参照してください。
 
 ※ 体感温度は独自の物理モデル（風速補正＋ステッドマンの式）で算出。
    気温と体感温度の差が大きい場合、風や湿度の影響が強いことを意味します。
@@ -745,32 +750,23 @@ def analyze_with_gemini(spreadsheet_data: Dict, weather_data: Dict, alerts_data:
     wind_impact = "強い" if abs(temp_feels_diff) > 3 else "中程度" if abs(temp_feels_diff) > 1.5 else "軽微"
     
     prompt += f"""
-╔══════════════════════════════════════════════════════════════════════════════╗
-║                        【🧠 体感温度の算出について】                           ║
-╠══════════════════════════════════════════════════════════════════════════════╣
-║ あなたに提供される「体感温度」は、Open-Meteo等のAPIから取得したものではなく、  ║
-║ 以下の独自物理モデルで算出した値です。分析の際はこの値を信頼してください。    ║
-╚══════════════════════════════════════════════════════════════════════════════╝
+════════════════════════════════════════════════════════════════════════════════
+【🌡️ 体感温度について】（独自計算による正確な値）
+════════════════════════════════════════════════════════════════════════════════
 
-■ 計算手順:
-1. 風速補正: Open-Meteo APIの風速（10m高さ）を0.6倍して地上2m高さに換算
-   → 今回の実効風速: {actual_wind_speed:.1f} m/s（元データ {api_wind_speed:.1f} m/s × 0.6）
+以下の体感温度は、気温・湿度・風速から独自の物理モデルで算出した値です。
+Open-Meteo APIの値ではありません。この値を信頼して分析してください。
 
-2. 水蒸気圧算出: テテンスの式で気温と湿度から水蒸気圧を計算
+現在のデータ:
+- 実測気温: {sensor_temp}°C
+- 湿度: {sensor_humidity}%
+- 風速: {actual_wind_speed:.1f} m/s（地上2m地点相当）
+→ **体感温度: {sensor_feels_like:.1f}°C**
 
-3. 温度帯別の計算式を適用:
-   - 8°C以下: リンケの風冷指数（Wind Chill）
-   - 12°C〜25°C: ステッドマンの式（Steadman's Apparent Temperature）
-   - 29°C以上: 暑さ指数（Heat Index）
-   - 境界（8-12°C, 25-29°C）: 線形補間でスムーズに遷移
-
-4. 今回の計算結果:
-   - 実測気温: {sensor_temp}°C
-   - 湿度: {sensor_humidity}%
-   - 実効風速: {actual_wind_speed:.1f} m/s
-   → **体感温度: {sensor_feels_like:.1f}°C**
-   
-   気温との差: {temp_feels_diff:+.1f}°C（風や湿度の影響: {wind_impact}）
+気温との差: {temp_feels_diff:+.1f}°C
+- 差が3°C以上: 風や湿度の影響が非常に強い（防寒必須）
+- 差が1.5〜3°C: 影響あり（服装調整推奨）
+- 差が1.5°C未満: 影響軽微
 
 ════════════════════════════════════════════════════════════════════════════════
 【🎯 あなたの使命】
