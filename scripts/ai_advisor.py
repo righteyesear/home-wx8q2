@@ -20,6 +20,7 @@ env_path = Path(__file__).parent.parent / '.env'
 load_dotenv(env_path)
 
 from google import genai
+from data_analysis import analyze_data_comprehensive
 
 # =============================================================================
 # 設定
@@ -28,7 +29,8 @@ SPREADSHEET_ID = os.environ.get('SPREADSHEET_ID', '1nbmJIIUzw8n2PcHp98NaiKnaAVci
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
 
 # 更新スケジュール（JST時間）
-UPDATE_HOURS = [7, 10, 13, 17, 21]
+# 昼間（7-22時）: 毎時、夜間: 1時, 4時
+UPDATE_HOURS = [1, 4, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
 
 # 東京都葛飾区東金町5丁目
 LATITUDE = 35.7727
@@ -41,15 +43,19 @@ AREA_CODE = '1312200'  # 葛飾区
 # =============================================================================
 def calculate_feels_like(temp: float, humidity: float, wind_speed_10m: float) -> float:
     """
-    体感温度を計算（3帯域物理モデル）
+    体感温度を計算（3帯域物理モデル + 微風補正）
     - wind_speed_10m: Open-Meteoの風速（10m高さ）を0.6倍して2m高さに補正
     - テテンスの式で水蒸気圧を算出
     - 温度帯に応じて3つの計算式を使い分け
+    - 風速1.3m/s未満の場合は影響を線形に減少（微風時の過剰補正を防止）
     """
     import math
     
     # 風速補正（10m → 2m）
     v = max(0, wind_speed_10m * 0.6)
+    
+    # 微風閾値（この値未満では風の影響を線形に減少させる）
+    MIN_WIND_THRESHOLD = 1.3
     
     # テテンスの式で水蒸気圧(hPa)を算出
     e = 6.11 * math.pow(10, (7.5 * temp) / (temp + 237.3)) * (humidity / 100)
@@ -81,21 +87,29 @@ def calculate_feels_like(temp: float, humidity: float, wind_speed_10m: float) ->
     
     # 温度帯に応じて計算式を選択（境界は線形補間）
     if temp <= 8:
-        return wind_chill(temp, v)
+        raw_result = wind_chill(temp, v)
     elif temp <= 12:
         wc = wind_chill(temp, v)
         st = steadman(temp, e, v)
         t = (temp - 8) / 4
-        return lerp(wc, st, t)
+        raw_result = lerp(wc, st, t)
     elif temp <= 25:
-        return steadman(temp, e, v)
+        raw_result = steadman(temp, e, v)
     elif temp <= 29:
         st = steadman(temp, e, v)
         hi = heat_index(temp, humidity)
         t = (temp - 25) / 4
-        return lerp(st, hi, t)
+        raw_result = lerp(st, hi, t)
     else:
-        return heat_index(temp, humidity)
+        raw_result = heat_index(temp, humidity)
+    
+    # 微風補正: 風速が MIN_WIND_THRESHOLD 未満の場合、
+    # 計算結果と実気温の間を線形補間して過剰補正を防止
+    if v < MIN_WIND_THRESHOLD:
+        wind_factor = v / MIN_WIND_THRESHOLD  # 0〜1の範囲
+        return lerp(temp, raw_result, wind_factor)
+    
+    return raw_result
 
 
 # =============================================================================
@@ -103,20 +117,25 @@ def calculate_feels_like(temp: float, humidity: float, wind_speed_10m: float) ->
 # =============================================================================
 
 def fetch_spreadsheet_data() -> Dict[str, Any]:
-    """Google Spreadsheetから温湿度データを取得（詳細版）"""
+    """
+    Google Spreadsheetから温湿度データを取得（強化版）
+    - 全レコードを取得（1分毎×12000件）
+    - analyze_data_comprehensive で包括的分析を実行
+    """
     base_url = f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/gviz/tq?tqx=out:csv"
     
     result = {
         'current': {},
-        'recent_48': [],          # 直近48件（30分ごと24時間分）
-        'hourly_pattern': {},     # 時間帯別パターン
-        'daily_detailed': [],     # 7日間の6時間帯別データ
-        'weekly_trend': {},       # 週間傾向分析
+        'analysis': {},         # 包括的分析結果
+        'daily_detailed': [],   # 日別詳細（互換性維持）
+        'weekly_trend': {},     # 週間傾向（互換性維持）
         'error': None
     }
     
     try:
-        # Summary シート（現在値）
+        # ========================================
+        # 1. Summary シート（現在値）
+        # ========================================
         summary_url = f"{base_url}&sheet=Summary"
         resp = requests.get(summary_url, timeout=10)
         resp.raise_for_status()
@@ -134,18 +153,20 @@ def fetch_spreadsheet_data() -> Dict[str, Any]:
                 elif '今日の最低' in label:
                     result['current']['today_low'] = float(value)
         
-        # Recent シート（30分ごと48件 = 24時間分）
+        # ========================================
+        # 2. Recent シート（全レコード取得）
+        # ========================================
         recent_url = f"{base_url}&sheet=Recent"
-        resp = requests.get(recent_url, timeout=10)
+        resp = requests.get(recent_url, timeout=30)  # タイムアウト延長
         resp.raise_for_status()
         
         lines = resp.text.strip().split('\n')[1:]  # ヘッダースキップ
-        all_recent = []
+        all_records = []
         for line in lines:
             parts = line.replace('"', '').split(',')
             if len(parts) >= 3:
                 try:
-                    all_recent.append({
+                    all_records.append({
                         'datetime': parts[0].strip(),
                         'temperature': float(parts[1].strip()),
                         'humidity': float(parts[2].strip())
@@ -153,130 +174,53 @@ def fetch_spreadsheet_data() -> Dict[str, Any]:
                 except ValueError:
                     continue
         
-        # 直近48件を取得
-        result['recent_48'] = all_recent[-48:]
+        print(f"  → Recentシート: {len(all_records)}件のレコードを取得")
         
         # ========================================
-        # 24時間のパターン分析（Python事前計算）
+        # 3. 包括的分析を実行
         # ========================================
-        if result['recent_48']:
-            temps = [d['temperature'] for d in result['recent_48']]
-            humids = [d['humidity'] for d in result['recent_48']]
+        if all_records:
+            result['analysis'] = analyze_data_comprehensive(all_records)
             
-            # 最高・最低とその時刻
-            max_temp = max(temps)
-            min_temp = min(temps)
-            max_idx = temps.index(max_temp)
-            min_idx = temps.index(min_temp)
-            
-            result['hourly_pattern'] = {
-                'max_temp': max_temp,
-                'max_time': result['recent_48'][max_idx]['datetime'] if max_idx < len(result['recent_48']) else '不明',
-                'min_temp': min_temp,
-                'min_time': result['recent_48'][min_idx]['datetime'] if min_idx < len(result['recent_48']) else '不明',
-                'avg_temp': sum(temps) / len(temps),
-                'avg_humidity': sum(humids) / len(humids),
-                'temp_range': max_temp - min_temp,
-                'temp_change_24h': temps[-1] - temps[0] if len(temps) > 1 else 0,
-            }
-            
-            # 時間帯別平均（6時間帯）
-            # 0-6時、6-12時、12-18時、18-24時
-            time_slots = {'night': [], 'morning': [], 'afternoon': [], 'evening': []}
-            for d in result['recent_48']:
-                try:
-                    dt_str = d['datetime']
-                    # 時間を抽出（形式: "12/22 18:30" など）
-                    if ' ' in dt_str:
-                        time_part = dt_str.split(' ')[1]
-                        hour = int(time_part.split(':')[0])
-                        if 0 <= hour < 6:
-                            time_slots['night'].append(d['temperature'])
-                        elif 6 <= hour < 12:
-                            time_slots['morning'].append(d['temperature'])
-                        elif 12 <= hour < 18:
-                            time_slots['afternoon'].append(d['temperature'])
-                        else:
-                            time_slots['evening'].append(d['temperature'])
-                except:
-                    continue
-            
-            for slot, values in time_slots.items():
-                if values:
-                    result['hourly_pattern'][f'{slot}_avg'] = sum(values) / len(values)
-            
-            # 急変検出（1時間で1.5°C以上の変化）
-            rapid_changes = []
-            for i in range(2, len(temps)):  # 2件（1時間）ごとに比較
-                change = temps[i] - temps[i-2]
-                if abs(change) >= 1.5:
-                    rapid_changes.append({
-                        'time': result['recent_48'][i]['datetime'],
-                        'change': change
-                    })
-            result['hourly_pattern']['rapid_changes'] = rapid_changes[:3]  # 最大3件
-            
-            # 湿度トレンド
-            humidity_start = humids[0] if humids else 0
-            humidity_end = humids[-1] if humids else 0
-            result['hourly_pattern']['humidity_trend'] = humidity_end - humidity_start
-        
-        # ========================================
-        # Daily シート（7日間の詳細データ）
-        # ========================================
-        daily_url = f"{base_url}&sheet=Daily"
-        resp = requests.get(daily_url, timeout=10)
-        resp.raise_for_status()
-        
-        lines = resp.text.strip().split('\n')[1:]
-        daily_data = []
-        for line in lines[-7:]:  # 直近7日分
-            parts = line.replace('"', '').split(',')
-            if len(parts) >= 4:
-                try:
-                    day = {
-                        'date': parts[0].strip(),
-                        'high': float(parts[1].strip()) if parts[1].strip() else None,
-                        'low': float(parts[2].strip()) if parts[2].strip() else None,
-                        'avg': float(parts[3].strip()) if len(parts) > 3 and parts[3].strip() else None
-                    }
-                    # 日較差を計算
-                    if day['high'] is not None and day['low'] is not None:
-                        day['range'] = day['high'] - day['low']
-                    daily_data.append(day)
-                except ValueError:
-                    continue
-        
-        result['daily_detailed'] = daily_data
-        
-        # ========================================
-        # 週間傾向分析（Python事前計算）
-        # ========================================
-        if daily_data:
-            highs = [d['high'] for d in daily_data if d['high'] is not None]
-            lows = [d['low'] for d in daily_data if d['low'] is not None]
-            ranges = [d['range'] for d in daily_data if d.get('range') is not None]
-            
-            if highs and lows:
+            # 互換性のため一部データをトップレベルにも配置
+            if 'daily_summary' in result['analysis']:
+                result['daily_detailed'] = result['analysis']['daily_summary']
+            if 'statistics' in result['analysis']:
                 result['weekly_trend'] = {
-                    'week_high': max(highs),
-                    'week_low': min(lows),
-                    'avg_high': sum(highs) / len(highs),
-                    'avg_low': sum(lows) / len(lows),
-                    'avg_range': sum(ranges) / len(ranges) if ranges else 0,
+                    'week_high': result['analysis']['statistics'].get('temp_max'),
+                    'week_low': result['analysis']['statistics'].get('temp_min'),
+                    'avg_high': result['analysis']['statistics'].get('temp_mean'),
                 }
-                
-                # 傾向分析（直近3日 vs 前4日）
-                if len(highs) >= 5:
-                    recent_avg = sum(highs[-3:]) / 3
-                    earlier_avg = sum(highs[:-3]) / (len(highs) - 3)
-                    result['weekly_trend']['temp_trend'] = recent_avg - earlier_avg
-                    
-                    # 日較差の傾向
-                    if len(ranges) >= 5:
-                        recent_range = sum(ranges[-3:]) / 3
-                        earlier_range = sum(ranges[:-3]) / (len(ranges) - 3)
-                        result['weekly_trend']['range_trend'] = recent_range - earlier_range
+        
+        # ========================================
+        # 4. Daily シート（追加情報として取得）
+        # ========================================
+        try:
+            daily_url = f"{base_url}&sheet=Daily"
+            resp = requests.get(daily_url, timeout=10)
+            resp.raise_for_status()
+            
+            lines = resp.text.strip().split('\n')[1:]
+            for line in lines[-7:]:  # 直近7日分
+                parts = line.replace('"', '').split(',')
+                if len(parts) >= 4:
+                    try:
+                        day = {
+                            'date': parts[0].strip(),
+                            'high': float(parts[1].strip()) if parts[1].strip() else None,
+                            'low': float(parts[2].strip()) if parts[2].strip() else None,
+                            'avg': float(parts[3].strip()) if len(parts) > 3 and parts[3].strip() else None
+                        }
+                        if day['high'] is not None and day['low'] is not None:
+                            day['range'] = day['high'] - day['low']
+                        # daily_detailedに追加（重複チェック）
+                        existing_dates = [d.get('date') for d in result['daily_detailed']]
+                        if day['date'] not in existing_dates:
+                            result['daily_detailed'].append(day)
+                    except ValueError:
+                        continue
+        except Exception as e:
+            print(f"  [WARN] Dailyシート取得エラー: {e}")
             
     except Exception as e:
         result['error'] = str(e)
