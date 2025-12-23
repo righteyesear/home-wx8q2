@@ -115,6 +115,7 @@ jobs:
           else
             git add ai_comment.json
             git commit -m "🤖 Update AI weather advice [$(date +'%Y-%m-%d %H:%M JST')]"
+            git pull --rebase origin main || true
             git push
             echo "✅ Changes pushed successfully"
           fi
