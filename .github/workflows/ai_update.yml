@@ -1,21 +1,31 @@
 # AI気象アドバイザー 定期更新ワークフロー
-# 1日5回（JST 7時, 10時, 13時, 17時, 21時）実行
+# 昼間（7-22時）: 毎時、夜間: 1時, 4時 = 計18回/日
 
 name: AI Weather Advisor Update
 
 on:
   schedule:
     # UTC時間で設定（JST = UTC + 9）
-    # JST 7:00 = UTC 22:00 (前日)
-    # JST 10:00 = UTC 01:00
-    # JST 13:00 = UTC 04:00
-    # JST 17:00 = UTC 08:00
-    # JST 21:00 = UTC 12:00
-    - cron: '0 22 * * *'  # JST 7:00
-    - cron: '0 1 * * *'   # JST 10:00
-    - cron: '0 4 * * *'   # JST 13:00
-    - cron: '0 8 * * *'   # JST 17:00
-    - cron: '0 12 * * *'  # JST 21:00
+    # 夜間
+    - cron: '0 16 * * *'   # JST 1:00
+    - cron: '0 19 * * *'   # JST 4:00
+    # 昼間（7:00-22:00 JST = 22:00-13:00 UTC）
+    - cron: '0 22 * * *'   # JST 7:00
+    - cron: '0 23 * * *'   # JST 8:00
+    - cron: '0 0 * * *'    # JST 9:00
+    - cron: '0 1 * * *'    # JST 10:00
+    - cron: '0 2 * * *'    # JST 11:00
+    - cron: '0 3 * * *'    # JST 12:00
+    - cron: '0 4 * * *'    # JST 13:00
+    - cron: '0 5 * * *'    # JST 14:00
+    - cron: '0 6 * * *'    # JST 15:00
+    - cron: '0 7 * * *'    # JST 16:00
+    - cron: '0 8 * * *'    # JST 17:00
+    - cron: '0 9 * * *'    # JST 18:00
+    - cron: '0 10 * * *'   # JST 19:00
+    - cron: '0 11 * * *'   # JST 20:00
+    - cron: '0 12 * * *'   # JST 21:00
+    - cron: '0 13 * * *'   # JST 22:00
   
   # 手動実行も可能
   workflow_dispatch:
