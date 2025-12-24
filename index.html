@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🌡️ 外気温モニター</title>
     <meta name="description" content="リアルタイム外気温ダッシュボード">
+    <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#3b82f6">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -229,26 +230,181 @@
             }
         }
 
-        /* --- Rain Effect --- */
+        /* --- Rain Effect (Enhanced Multi-Layer Parallax) --- */
         .effect-rain {
-            background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%);
-            background-size: 2px 30vh;
             opacity: 0;
             transition: opacity 1s ease;
         }
 
-        .effect-rain.active {
-            animation: rain-fall 0.8s linear infinite;
+        /* Base layer (middle distance) */
+        .effect-rain::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 200%;
+            background-image:
+                repeating-linear-gradient(100deg,
+                    transparent,
+                    transparent 5px,
+                    rgba(174, 194, 224, 0.15) 5px,
+                    rgba(174, 194, 224, 0.15) 6px);
+            background-size: 100% 100%;
+            transform: skewX(-10deg);
+            animation: rain-fall-mid 0.7s linear infinite;
+            pointer-events: none;
         }
 
-        @keyframes rain-fall {
+        /* Front layer (closest, fastest, thicker) */
+        .effect-rain::after {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 200%;
+            background-image:
+                repeating-linear-gradient(100deg,
+                    transparent,
+                    transparent 8px,
+                    rgba(174, 194, 224, 0.25) 8px,
+                    rgba(174, 194, 224, 0.25) 10px);
+            background-size: 100% 100%;
+            transform: skewX(-12deg);
+            animation: rain-fall-front 0.5s linear infinite;
+            pointer-events: none;
+        }
+
+        /* Back layer (farthest, slowest, thinner, blurred) via extra element */
+        .effect-rain-back {
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 200%;
+            background-image:
+                repeating-linear-gradient(100deg,
+                    transparent,
+                    transparent 3px,
+                    rgba(174, 194, 224, 0.08) 3px,
+                    rgba(174, 194, 224, 0.08) 4px);
+            background-size: 100% 100%;
+            transform: skewX(-8deg);
+            filter: blur(1px);
+            animation: rain-fall-back 1.2s linear infinite;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .effect-rain.active,
+        .effect-rain.active::before,
+        .effect-rain.active::after {
+            opacity: 1;
+        }
+
+        .effect-rain-back.active {
+            opacity: 0.7;
+        }
+
+        @keyframes rain-fall-front {
             0% {
-                background-position: 0 0;
+                transform: skewX(-12deg) translateY(-50%);
             }
 
             100% {
-                background-position: 0 30vh;
+                transform: skewX(-12deg) translateY(0%);
             }
+        }
+
+        @keyframes rain-fall-mid {
+            0% {
+                transform: skewX(-10deg) translateY(-50%);
+            }
+
+            100% {
+                transform: skewX(-10deg) translateY(0%);
+            }
+        }
+
+        @keyframes rain-fall-back {
+            0% {
+                transform: skewX(-8deg) translateY(-50%);
+            }
+
+            100% {
+                transform: skewX(-8deg) translateY(0%);
+            }
+        }
+
+        /* --- Heavy Rain (more intense) --- */
+        .effect-rain.heavy::before {
+            animation-duration: 0.5s;
+        }
+
+        .effect-rain.heavy::after {
+            animation-duration: 0.35s;
+            background-image:
+                repeating-linear-gradient(100deg,
+                    transparent,
+                    transparent 6px,
+                    rgba(174, 194, 224, 0.35) 6px,
+                    rgba(174, 194, 224, 0.35) 9px);
+        }
+
+        /* --- Lightning Flash Effect --- */
+        .lightning-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0);
+            pointer-events: none;
+            z-index: 1000;
+            transition: background 0.1s ease;
+        }
+
+        .lightning-flash.active {
+            animation: lightning 0.3s ease-out;
+        }
+
+        @keyframes lightning {
+            0% {
+                background: rgba(200, 220, 255, 0);
+            }
+
+            10% {
+                background: rgba(200, 220, 255, 0.9);
+            }
+
+            20% {
+                background: rgba(200, 220, 255, 0.2);
+            }
+
+            30% {
+                background: rgba(200, 220, 255, 0.8);
+            }
+
+            50% {
+                background: rgba(200, 220, 255, 0.1);
+            }
+
+            100% {
+                background: rgba(200, 220, 255, 0);
+            }
+        }
+
+        /* --- Wet Window Blur Effect (during rain) --- */
+        .weather-effects.rainy .bg-orb {
+            filter: blur(150px);
+            transition: filter 2s ease;
+        }
+
+        .weather-effects.rainy~.grid-pattern {
+            opacity: 0.02;
+            filter: blur(1px);
         }
 
         /* --- Snow Effect --- */
@@ -1063,15 +1219,7 @@
         <div class="bg-orb bg-orb-1"></div>
         <div class="bg-orb bg-orb-2"></div>
     </div>
-    <!-- New Weather Animation Layer -->
-    <div class="weather-effects">
-        <div id="effectStars" class="effect-stars" style="position:absolute;top:0;left:0;width:100%;height:100%"></div>
-        <div id="effectRain" class="effect-rain" style="position:absolute;top:0;left:0;width:100%;height:100%"></div>
-        <div id="effectSnow" class="effect-snow" style="position:absolute;top:0;left:0;width:100%;height:100%"></div>
-        <div id="effectClouds" class="effect-clouds" style="position:absolute;top:0;left:0;width:100%;height:100%">
-        </div>
-        <div id="effectSun" class="effect-sun" style="position:absolute;top:0;left:0;width:100%;height:100%"></div>
-    </div>
+    <!-- Weather effects disabled -->
 
     <div class="grid-pattern"></div>
 
@@ -1362,6 +1510,108 @@
         // Initialize theme on load
         applyTheme();
 
+        // Weather effects control based on weather code
+        let lightningInterval = null;
+        function updateWeatherEffects() {
+            if (!weatherData) return;
+
+            const code = weatherData.weatherCode || 0;
+            const effectRain = document.getElementById('effectRain');
+            const effectRainBack = document.getElementById('effectRainBack');
+            const effectSnow = document.getElementById('effectSnow');
+            const effectClouds = document.getElementById('effectClouds');
+            const effectStars = document.getElementById('effectStars');
+            const weatherContainer = document.getElementById('weatherEffectsContainer');
+            const lightningFlash = document.getElementById('lightningFlash');
+
+            if (!effectRain || !weatherContainer) return;
+
+            // Reset all effects
+            effectRain.classList.remove('active', 'heavy');
+            effectRainBack?.classList.remove('active');
+            effectSnow?.classList.remove('active');
+            effectClouds?.classList.remove('active');
+            effectStars?.classList.remove('active');
+            weatherContainer.classList.remove('rainy');
+
+            // Clear lightning interval
+            if (lightningInterval) {
+                clearInterval(lightningInterval);
+                lightningInterval = null;
+            }
+
+            // Determine weather type from WMO code
+            // 0: Clear, 1-3: Cloudy, 45-48: Fog, 51-57: Drizzle, 61-67: Rain, 71-77: Snow, 80-82: Showers, 85-86: Snow showers, 95-99: Thunderstorm
+
+            const isNight = (() => {
+                if (weatherData.sunrise && weatherData.sunset) {
+                    const now = new Date();
+                    return now < new Date(weatherData.sunrise) || now >= new Date(weatherData.sunset);
+                }
+                const hour = new Date().getHours();
+                return hour < 6 || hour >= 18;
+            })();
+
+            if (code >= 95) {
+                // Thunderstorm - heavy rain + lightning
+                effectRain.classList.add('active', 'heavy');
+                effectRainBack?.classList.add('active');
+                weatherContainer.classList.add('rainy');
+                effectRain.style.opacity = '0.8';
+
+                // Random lightning flashes
+                lightningInterval = setInterval(() => {
+                    if (Math.random() < 0.4) {
+                        lightningFlash?.classList.add('active');
+                        setTimeout(() => lightningFlash?.classList.remove('active'), 300);
+                    }
+                }, 3000 + Math.random() * 4000);
+
+            } else if (code >= 80 && code < 95) {
+                // Heavy rain showers
+                effectRain.classList.add('active', 'heavy');
+                effectRainBack?.classList.add('active');
+                weatherContainer.classList.add('rainy');
+                effectRain.style.opacity = '0.7';
+
+            } else if (code >= 61 && code < 80) {
+                // Rain
+                const isHeavy = code >= 65;
+                effectRain.classList.add('active');
+                if (isHeavy) effectRain.classList.add('heavy');
+                effectRainBack?.classList.add('active');
+                weatherContainer.classList.add('rainy');
+                effectRain.style.opacity = isHeavy ? '0.6' : '0.4';
+
+            } else if (code >= 51 && code < 61) {
+                // Drizzle - light rain
+                effectRain.classList.add('active');
+                effectRainBack?.classList.add('active');
+                weatherContainer.classList.add('rainy');
+                effectRain.style.opacity = '0.3';
+
+            } else if (code >= 71 && code < 78 || code >= 85 && code < 87) {
+                // Snow
+                effectSnow?.classList.add('active');
+                effectSnow.style.opacity = code >= 75 ? '0.8' : '0.5';
+
+            } else if (code >= 45 && code < 49) {
+                // Fog
+                effectClouds?.classList.add('active');
+                effectClouds.style.opacity = '0.4';
+
+            } else if (code >= 1 && code <= 3) {
+                // Cloudy - subtle clouds
+                effectClouds?.classList.add('active');
+                effectClouds.style.opacity = '0.2';
+
+            } else if (code === 0 && isNight) {
+                // Clear night - show stars
+                effectStars?.classList.add('active');
+                effectStars.style.opacity = '0.6';
+            }
+        }
+
         function parseSummaryCSV(csv) {
             const lines = csv.trim().split(/\r?\n/);
             const summary = {};
@@ -1432,6 +1682,7 @@
                         sunset: data.daily?.sunset?.[0] || null
                     };
                     applyTheme();
+                    // updateWeatherEffects(); // 一旦無効化
                     updateUI();
                 }).catch(e => { console.log('Weather API error:', e); weatherData = null; })
             ]);
@@ -1578,12 +1829,47 @@
             }
         }
 
+        // JMA Warning Code to Name Mapping (気象庁警報・注意報コード - 完全版)
+        // 公式: 特別警報6種類、警報7種類、注意報16種類 + 津波・洪水関連
+        const JMA_WARNING_NAMES = {
+            // === 特別警報 (6種類) ===
+            '01': '暴風雪特別警報', '02': '大雪特別警報', '03': '大雨特別警報',
+            '04': '暴風特別警報', '05': '波浪特別警報', '06': '高潮特別警報',
+            // === 警報 (7種類) ===
+            '10': '大雨警報', '11': '洪水警報', '12': '大雪警報',
+            '13': '暴風警報', '14': '暴風雪警報', '15': '波浪警報', '16': '高潮警報',
+            // === 注意報 (16種類) ===
+            '17': '大雨注意報', '18': '洪水注意報', '19': '大雪注意報',
+            '20': '濃霧注意報', '21': '雷注意報', '22': '乾燥注意報',
+            '23': '強風注意報', '24': '風雪注意報', '25': '波浪注意報',
+            '26': '高潮注意報', '27': '霜注意報', '28': '低温注意報',
+            '29': '着氷注意報', '30': '着雪注意報', '31': '融雪注意報',
+            '32': 'なだれ注意報',
+            // === 津波関連 ===
+            '50': '大津波警報', '51': '津波警報', '52': '津波注意報',
+            '53': '津波予報', '54': '津波情報',
+            // === 土砂災害警戒情報 ===
+            '60': '土砂災害警戒情報',
+            // === 記録的短時間大雨情報 ===
+            '70': '記録的短時間大雨情報',
+            // === 竜巻注意情報 ===
+            '80': '竜巻注意情報',
+            // === 指定河川洪水予報 ===
+            '90': '氾濫発生情報', '91': '氾濫危険情報',
+            '92': '氾濫警戒情報', '93': '氾濫注意情報',
+            // === その他 ===
+            '00': '解除'
+        };
+
         // Fetch JMA weather alerts for Tokyo (Katsushika = 23区東部)
         async function fetchAlerts() {
             try {
                 // JMA Warning API for Tokyo (130000)
                 const response = await fetch('https://www.jma.go.jp/bosai/warning/data/warning/130000.json');
                 const data = await response.json();
+
+                // 発表時刻を取得
+                const reportTime = data.reportDatetime || null;
 
                 // Find Katsushika area (code 1312200) or 23区東部 (code 130014)
                 const areaWarnings = [];
@@ -1594,8 +1880,10 @@
                             if (area.code === '130014' || area.code === '1312200' || area.name?.includes('東部')) {
                                 for (const warning of (area.warnings || [])) {
                                     if (warning.status === '発表' || warning.status === '継続') {
+                                        const warningCode = warning.code?.toString().padStart(2, '0') || '';
+                                        const warningName = warning.name || JMA_WARNING_NAMES[warningCode] || `警報${warningCode}`;
                                         areaWarnings.push({
-                                            name: warning.name || warning.code,
+                                            name: warningName,
                                             level: warning.kind?.code || 0
                                         });
                                     }
@@ -1607,7 +1895,7 @@
 
                 // Save to global for comment integration
                 currentAlerts = areaWarnings;
-                updateAlertBanner(areaWarnings);
+                updateAlertBanner(areaWarnings, reportTime);
             } catch (e) {
                 console.log('JMA Alert API unavailable (CORS):', e.message);
                 // Hide alert banner on error
@@ -1616,7 +1904,7 @@
         }
 
         // Update the alert banner
-        function updateAlertBanner(alerts) {
+        function updateAlertBanner(alerts, reportTime = null) {
             const banner = document.getElementById('alertBanner');
             const alertText = document.getElementById('alertText');
             const alertIcon = banner.querySelector('.alert-icon');
@@ -1634,13 +1922,13 @@
             // Build display text showing ALL alerts in priority order
             const alertParts = [];
             if (specialWarnings.length > 0) {
-                alertParts.push('🚨 ' + specialWarnings.map(a => a.name).join('・'));
+                alertParts.push(specialWarnings.map(a => a.name).join('・'));
             }
             if (warnings.length > 0) {
-                alertParts.push('⚠️ ' + warnings.map(a => a.name).join('・'));
+                alertParts.push(warnings.map(a => a.name).join('・'));
             }
             if (advisories.length > 0) {
-                alertParts.push('⚡ ' + advisories.map(a => a.name).join('・'));
+                alertParts.push(advisories.map(a => a.name).join('・'));
             }
 
             // Determine banner style by highest priority
@@ -1653,10 +1941,17 @@
                 icon = '⚠️';
             } else {
                 className = 'alert-warning';
-                icon = '⚡';
+                icon = '🔔';
             }
 
-            alertText.textContent = `葛飾区: ${alertParts.join(' / ')}`;
+            // Format report time
+            let timeStr = '';
+            if (reportTime) {
+                const dt = new Date(reportTime);
+                timeStr = ` (${dt.getHours()}:${dt.getMinutes().toString().padStart(2, '0')}発表)`;
+            }
+
+            alertText.textContent = `葛飾区: ${alertParts.join(' / ')}${timeStr}`;
             alertIcon.textContent = icon;
             banner.className = `alert-banner ${className}`;
             banner.style.display = 'flex';
