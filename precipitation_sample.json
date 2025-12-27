@@ -1,0 +1,153 @@
+{
+    "updated_at": "2025-12-27T12:36:00+09:00",
+    "location": {
+        "latitude": 35.77877,
+        "longitude": 139.87817
+    },
+    "data": [
+        {
+            "time": "11:35",
+            "datetime": "202512271135",
+            "rainfall": 0,
+            "type": "observation"
+        },
+        {
+            "time": "11:40",
+            "datetime": "202512271140",
+            "rainfall": 0.5,
+            "type": "observation"
+        },
+        {
+            "time": "11:45",
+            "datetime": "202512271145",
+            "rainfall": 2.0,
+            "type": "observation"
+        },
+        {
+            "time": "11:50",
+            "datetime": "202512271150",
+            "rainfall": 5.5,
+            "type": "observation"
+        },
+        {
+            "time": "11:55",
+            "datetime": "202512271155",
+            "rainfall": 8.0,
+            "type": "observation"
+        },
+        {
+            "time": "12:00",
+            "datetime": "202512271200",
+            "rainfall": 12.0,
+            "type": "observation"
+        },
+        {
+            "time": "12:05",
+            "datetime": "202512271205",
+            "rainfall": 15.0,
+            "type": "observation"
+        },
+        {
+            "time": "12:10",
+            "datetime": "202512271210",
+            "rainfall": 18.0,
+            "type": "observation"
+        },
+        {
+            "time": "12:15",
+            "datetime": "202512271215",
+            "rainfall": 22.0,
+            "type": "observation"
+        },
+        {
+            "time": "12:20",
+            "datetime": "202512271220",
+            "rainfall": 18.0,
+            "type": "observation"
+        },
+        {
+            "time": "12:25",
+            "datetime": "202512271225",
+            "rainfall": 12.0,
+            "type": "observation"
+        },
+        {
+            "time": "12:30",
+            "datetime": "202512271230",
+            "rainfall": 8.0,
+            "type": "observation"
+        },
+        {
+            "time": "12:35",
+            "datetime": "202512271235",
+            "rainfall": 5.5,
+            "type": "observation"
+        },
+        {
+            "time": "12:40",
+            "datetime": "202512271240",
+            "rainfall": 3.0,
+            "type": "forecast"
+        },
+        {
+            "time": "12:45",
+            "datetime": "202512271245",
+            "rainfall": 1.5,
+            "type": "forecast"
+        },
+        {
+            "time": "12:50",
+            "datetime": "202512271250",
+            "rainfall": 0.5,
+            "type": "forecast"
+        },
+        {
+            "time": "12:55",
+            "datetime": "202512271255",
+            "rainfall": 0,
+            "type": "forecast"
+        },
+        {
+            "time": "13:00",
+            "datetime": "202512271300",
+            "rainfall": 0,
+            "type": "forecast"
+        },
+        {
+            "time": "13:05",
+            "datetime": "202512271305",
+            "rainfall": 0,
+            "type": "forecast"
+        },
+        {
+            "time": "13:10",
+            "datetime": "202512271310",
+            "rainfall": 0,
+            "type": "forecast"
+        },
+        {
+            "time": "13:15",
+            "datetime": "202512271315",
+            "rainfall": 0,
+            "type": "forecast"
+        },
+        {
+            "time": "13:20",
+            "datetime": "202512271320",
+            "rainfall": 0,
+            "type": "forecast"
+        },
+        {
+            "time": "13:25",
+            "datetime": "202512271325",
+            "rainfall": 0,
+            "type": "forecast"
+        },
+        {
+            "time": "13:30",
+            "datetime": "202512271330",
+            "rainfall": 0,
+            "type": "forecast"
+        }
+    ]
+}
