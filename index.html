@@ -877,6 +877,66 @@
             border-color: rgba(203, 213, 225, 0.5);
         }
 
+        /* Precipitation Chart Card */
+        .precipitation-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .precipitation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .precipitation-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .precipitation-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .precipitation-chart-container {
+            height: 120px;
+            position: relative;
+        }
+
+        .precipitation-legend {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 8px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .legend-obs {
+            color: #60a5fa;
+        }
+
+        .legend-forecast {
+            color: #93c5fd;
+        }
+
+        html.light-mode .precipitation-card {
+            background: rgba(241, 245, 249, 0.85);
+            border-color: rgba(203, 213, 225, 0.5);
+        }
+
         .greeting-text {
             font-size: 1.3rem;
             font-weight: 600;
@@ -1619,6 +1679,21 @@
             <div class="comment-content" id="weatherComment"></div>
         </div>
 
+        <!-- Precipitation Chart -->
+        <div id="precipitationCard" class="precipitation-card" style="display: none;">
+            <div class="precipitation-header">
+                <span class="precipitation-title">🌧️ 降水量予報</span>
+                <span class="precipitation-time" id="precipTime"></span>
+            </div>
+            <div class="precipitation-chart-container">
+                <canvas id="precipChart"></canvas>
+            </div>
+            <div class="precipitation-legend">
+                <span class="legend-item"><span class="legend-obs">●</span> 実測</span>
+                <span class="legend-item"><span class="legend-forecast">○</span> 予報</span>
+            </div>
+        </div>
+
         <!-- Warning/Alert Banner (clickable) -->
         <a id="alertBanner" class="alert-banner"
             href="https://www.jma.go.jp/bosai/warning/#area_type=class20s&area_code=1312200" target="_blank"
@@ -2056,6 +2131,8 @@
 
             // Immediately show 24h chart
             updateCharts();
+            loadAIComment();
+            loadPrecipitation();
             document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
             document.querySelectorAll('.chart-skeleton').forEach(el => el.classList.add('hidden'));
             updateDataAnalysis();
@@ -2145,6 +2222,99 @@
             } catch (e) {
                 // ai_comment.json not found or parse error, keep hidden
                 console.log('AI comment not available:', e.message);
+            }
+        }
+
+        // Load precipitation data from precipitation.json
+        let precipChart = null;
+        async function loadPrecipitation() {
+            try {
+                // Cloudflare Worker経由でYahoo Weather APIを取得
+                const resp = await fetch('https://yahoo-weather-proxy.miurayukimail.workers.dev');
+                if (!resp.ok) return;
+
+                const data = await resp.json();
+                if (!data.data || data.data.length === 0) return;
+
+                const precipData = data.data;
+                const labels = precipData.map(d => d.time);
+                const values = precipData.map(d => d.rainfall);
+                const colors = precipData.map(d =>
+                    d.type === 'observation' ? 'rgba(96, 165, 250, 0.8)' : 'rgba(147, 197, 253, 0.6)'
+                );
+                const borderColors = precipData.map(d =>
+                    d.type === 'observation' ? 'rgba(96, 165, 250, 1)' : 'rgba(147, 197, 253, 1)'
+                );
+
+                // Show card
+                document.getElementById('precipitationCard').style.display = 'block';
+
+                // Update time
+                if (data.updated_at) {
+                    const updTime = new Date(data.updated_at);
+                    document.getElementById('precipTime').textContent =
+                        updTime.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }) + ' 更新';
+                }
+
+                // Create/update chart
+                const ctx = document.getElementById('precipChart').getContext('2d');
+
+                if (precipChart) precipChart.destroy();
+
+                precipChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: '降水量 (mm/h)',
+                            data: values,
+                            backgroundColor: colors,
+                            borderColor: borderColors,
+                            borderWidth: 1,
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                                titleColor: '#f8fafc',
+                                bodyColor: '#f8fafc',
+                                padding: 10,
+                                borderColor: 'rgba(99, 102, 241, 0.3)',
+                                borderWidth: 1,
+                                callbacks: {
+                                    label: (ctx) => `${ctx.raw.toFixed(1)} mm/h`
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: { display: false },
+                                ticks: {
+                                    color: 'rgba(148, 163, 184, 0.8)',
+                                    font: { size: 10 }
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(148, 163, 184, 0.1)' },
+                                ticks: {
+                                    color: 'rgba(148, 163, 184, 0.8)',
+                                    font: { size: 10 },
+                                    callback: (v) => v + ' mm'
+                                }
+                            }
+                        }
+                    }
+                });
+
+                console.log('Precipitation chart loaded:', precipData.length, 'data points');
+            } catch (e) {
+                console.log('Precipitation data not available:', e.message);
             }
         }
 
