@@ -41,26 +41,80 @@
             --temp-hue: 30;
         }
 
-        /* Light Mode */
+        /* Light Mode - Premium Design */
         html.light-mode {
-            --bg-primary: #f1f5f9;
+            --bg-primary: linear-gradient(180deg, #dbeafe 0%, #e0f2fe 50%, #f0f9ff 100%);
             --bg-secondary: #ffffff;
-            --bg-card: rgba(255, 255, 255, 0.9);
-            --border-color: rgba(99, 102, 241, 0.15);
-            --border-glow: rgba(99, 102, 241, 0.3);
-            --text-primary: #0f172a;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --border-color: rgba(59, 130, 246, 0.15);
+            --border-glow: rgba(59, 130, 246, 0.3);
+            --text-primary: #1e293b;
             --text-secondary: #475569;
-            --text-muted: #94a3b8;
-            --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.1);
-            --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --text-muted: #64748b;
+            --shadow-glow: 0 0 60px rgba(59, 130, 246, 0.15);
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        html.light-mode body {
+            background: linear-gradient(180deg, #dbeafe 0%, #e0f2fe 50%, #f0f9ff 100%);
+            background-attachment: fixed;
         }
 
         html.light-mode .bg-orb {
-            opacity: 0.3;
+            opacity: 0.4;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
         }
 
         html.light-mode .grid-pattern {
-            opacity: 0.03;
+            opacity: 0.02;
+        }
+
+        /* Pull to Refresh */
+        .pull-to-refresh {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0;
+            background: var(--bg-card);
+            border-radius: 12px;
+            margin-bottom: 0;
+            height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .pull-to-refresh.visible {
+            opacity: 1;
+            height: auto;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+
+        .pull-to-refresh.refreshing .pull-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        .pull-spinner {
+            font-size: 1.2rem;
+            color: var(--accent-blue);
+        }
+
+        .pull-to-refresh span {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* Theme Toggle Button */
@@ -533,9 +587,66 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-            gap: 20px;
+            margin-bottom: 8px;
+            flex-wrap: nowrap;
+            gap: 8px;
+        }
+
+        .status-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .status-info::-webkit-scrollbar {
+            display: none;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .status-item strong {
+            color: var(--text-primary);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        html.light-mode .status-item {
+            background: rgba(241, 245, 249, 0.9);
+            border-color: rgba(203, 213, 225, 0.5);
         }
 
         .logo {
@@ -560,18 +671,210 @@
             transition: background 2s ease;
         }
 
-        /* Greeting Section */
-        .greeting-section {
+        /* Weather Hero Section (Redesigned) */
+        .weather-hero {
             text-align: center;
-            margin-bottom: 32px;
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: all 0.8s ease;
+            margin-top: 12px;
+            margin-bottom: 20px;
+            padding: 24px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            backdrop-filter: blur(12px);
         }
 
-        .greeting-section.show {
+        html.light-mode .weather-hero {
+            background: rgba(241, 245, 249, 0.85);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border-color: rgba(203, 213, 225, 0.5);
+            backdrop-filter: blur(8px);
+        }
+
+        html.light-mode .weather-hero-info {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(147, 197, 253, 0.12) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        html.light-mode .weather-hero-icon {
+            filter: drop-shadow(0 4px 12px rgba(251, 191, 36, 0.4));
+        }
+
+        html.light-mode .hero-temp-value {
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .weather-hero-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+
+        .weather-hero-icon {
+            font-size: 4rem;
+            line-height: 1;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        .weather-hero-temp {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .hero-temp-value {
+            font-size: 5rem;
+            font-weight: 200;
+            line-height: 1;
+            /* Default color, will be overridden by JS for gradient effect */
+            color: var(--text-primary);
+            transition: color 0.5s ease;
+        }
+
+        /* Temperature color classes */
+        .hero-temp-value.temp-freezing {
+            color: #60a5fa;
+        }
+
+        /* < 0℃ */
+        .hero-temp-value.temp-cold {
+            color: #38bdf8;
+        }
+
+        /* 0-10℃ */
+        .hero-temp-value.temp-cool {
+            color: #22d3ee;
+        }
+
+        /* 10-15℃ */
+        .hero-temp-value.temp-mild {
+            color: #2dd4bf;
+        }
+
+        /* 15-20℃ */
+        .hero-temp-value.temp-warm {
+            color: #fbbf24;
+        }
+
+        /* 20-25℃ */
+        .hero-temp-value.temp-hot {
+            color: #fb923c;
+        }
+
+        /* 25-30℃ */
+        .hero-temp-value.temp-extreme {
+            color: #ef4444;
+        }
+
+        /* > 30℃ */
+
+        .hero-temp-unit {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            margin-top: 12px;
+            margin-left: 2px;
+        }
+
+        /* Weather icon (no animation) */
+        .weather-hero-icon {
+            font-size: 4rem;
+            line-height: 1;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        .weather-hero-condition {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .weather-hero-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            margin-top: 8px;
+        }
+
+        .weather-hero-info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 16px;
+            min-width: 60px;
+        }
+
+        .weather-hero-info-item .info-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+
+        .weather-hero-info-item .info-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .weather-hero-info-item .info-unit {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .weather-hero-info-divider {
+            width: 1px;
+            height: 32px;
+            background: rgba(148, 163, 184, 0.2);
+        }
+
+        /* Comment Card Section */
+        .comment-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.5s ease;
+        }
+
+        .comment-card.show {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        .comment-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .comment-content {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            line-height: 1.5;
+            white-space: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding-bottom: 4px;
+        }
+
+        .comment-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        html.light-mode .comment-card {
+            background: rgba(241, 245, 249, 0.85);
+            border-color: rgba(203, 213, 225, 0.5);
         }
 
         .greeting-text {
@@ -723,6 +1026,26 @@
             font-size: 1rem;
             line-height: 1.6;
             color: var(--text-primary);
+        }
+
+        .ai-advisor-text {
+            display: inline;
+        }
+
+        .ai-advisor-expand {
+            display: inline-block;
+            background: none;
+            border: none;
+            color: var(--accent-blue);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0;
+            margin-left: 8px;
+        }
+
+        .ai-advisor-expand:hover {
+            text-decoration: underline;
         }
 
         @keyframes fadeInUp {
@@ -959,11 +1282,10 @@
         }
 
         .stat-label {
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
             margin-bottom: 12px;
         }
 
@@ -1249,9 +1571,52 @@
             </div>
         </header>
 
-        <div id="greetingSection" class="greeting-section">
-            <div class="greeting-text"><span class="emoji"></span> <span id="greetingMain"></span></div>
-            <div class="weather-comment" id="weatherComment"></div>
+        <!-- Pull to Refresh Indicator -->
+        <div id="pullToRefresh" class="pull-to-refresh">
+            <div class="pull-spinner">↻</div>
+            <span>引っ張って更新</span>
+        </div>
+
+        <!-- Current Weather Hero Section (Redesigned) -->
+        <div id="weatherHero" class="weather-hero">
+            <div class="weather-hero-center">
+                <div class="weather-hero-icon" id="heroWeatherIcon">☀️</div>
+                <div class="weather-hero-temp" id="heroTempContainer">
+                    <span id="heroTemp" class="hero-temp-value">--</span>
+                    <span class="hero-temp-unit">℃</span>
+                </div>
+                <div class="weather-hero-condition" id="heroCondition">--</div>
+            </div>
+            <div class="weather-hero-info">
+                <div class="weather-hero-info-item">
+                    <span class="info-label">体感</span>
+                    <span class="info-value" id="heroFeelsLike">--</span>
+                    <span class="info-unit">℃</span>
+                </div>
+                <div class="weather-hero-info-divider"></div>
+                <div class="weather-hero-info-item">
+                    <span class="info-label">湿度</span>
+                    <span class="info-value" id="heroHumidity">--</span>
+                    <span class="info-unit">%</span>
+                </div>
+                <div class="weather-hero-info-divider"></div>
+                <div class="weather-hero-info-item">
+                    <span class="info-label">風速</span>
+                    <span class="info-value" id="heroWind">--</span>
+                    <span class="info-unit">m/s</span>
+                </div>
+                <div class="weather-hero-info-divider"></div>
+                <div class="weather-hero-info-item">
+                    <span class="info-label">降水</span>
+                    <span class="info-value" id="heroPrecip">--</span>
+                    <span class="info-unit">%</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="greetingSection" class="comment-card">
+            <div class="comment-label">💬 一言コメント</div>
+            <div class="comment-content" id="weatherComment"></div>
         </div>
 
         <!-- Warning/Alert Banner (clickable) -->
@@ -1271,7 +1636,9 @@
                 <span class="ai-advisor-time" id="aiAdvisorTime"></span>
             </div>
             <div class="ai-advisor-content" id="aiAdvisorContent">
-                分析中...
+                <span class="ai-advisor-text" id="aiAdvisorText">分析中...</span>
+                <button class="ai-advisor-expand" id="aiAdvisorExpand" style="display: none;"
+                    onclick="toggleAiAdvisor()">続きを表示</button>
             </div>
         </div>
 
@@ -1738,7 +2105,32 @@
                 if (data.advice) {
                     // Convert simple markdown to HTML
                     const html = simpleMarkdownToHtml(data.advice);
-                    document.getElementById('aiAdvisorContent').innerHTML = html;
+                    const textEl = document.getElementById('aiAdvisorText');
+                    const expandBtn = document.getElementById('aiAdvisorExpand');
+
+                    // Store full text for later
+                    textEl.dataset.fullText = html;
+
+                    // Truncate if longer than 150 chars
+                    const plainText = data.advice;
+                    const TRUNCATE_LENGTH = 150;
+
+                    if (plainText.length > TRUNCATE_LENGTH) {
+                        // Find good break point (word boundary)
+                        let breakPoint = TRUNCATE_LENGTH;
+                        while (breakPoint > 100 && plainText[breakPoint] !== ' ') {
+                            breakPoint--;
+                        }
+                        const truncatedPlain = plainText.substring(0, breakPoint);
+                        const truncatedHtml = simpleMarkdownToHtml(truncatedPlain) + '...';
+                        textEl.innerHTML = truncatedHtml;
+                        textEl.dataset.truncated = 'true';
+                        expandBtn.style.display = 'inline-block';
+                    } else {
+                        textEl.innerHTML = html;
+                        textEl.dataset.truncated = 'false';
+                        expandBtn.style.display = 'none';
+                    }
 
                     // Format time
                     if (data.generated_at) {
@@ -2202,27 +2594,61 @@
             }
             const isNighttime = !isDaytime;
 
-            // Weather code to emoji mapping
+            // Weather code to emoji mapping (Complete Open-Meteo WMO codes)
             const getWeatherEmoji = (code, isDay) => {
-                // Thunderstorm (95-99)
-                if (code >= 95) return '⛈️';
-                // Heavy rain (80-94)
-                if (code >= 80 && code < 95) return isDay ? '🌧️' : '🌧️';
-                // Snow (71-79)
-                if (code >= 71 && code < 80) return '❄️';
-                // Sleet (66-70)
-                if (code >= 66 && code < 71) return '🌨️';
-                // Rain (61-65)
-                if (code >= 61 && code < 66) return isDay ? '🌧️' : '🌧️';
-                // Drizzle (51-60)
-                if (code >= 51 && code < 61) return '🌦️';
-                // Fog (45-50)
-                if (code >= 45 && code < 51) return '🌫️';
-                // Overcast (3-4)
-                if (code >= 3 && code < 45) return isDay ? '☁️' : '☁️';
-                // Partly cloudy (2)
+                // Thunderstorm with heavy hail (99)
+                if (code === 99) return '⛈️';
+                // Thunderstorm with slight/moderate hail (96)
+                if (code === 96) return '⛈️';
+                // Thunderstorm slight/moderate (95)
+                if (code === 95) return '🌩️';
+                // Snow showers heavy (86)
+                if (code === 86) return '🌨️';
+                // Snow showers slight (85)
+                if (code === 85) return '🌨️';
+                // Rain showers violent (82)
+                if (code === 82) return '🌧️';
+                // Rain showers moderate (81)
+                if (code === 81) return '🌦️';
+                // Rain showers slight (80)
+                if (code === 80) return '🌦️';
+                // Snow grains (77)
+                if (code === 77) return '🌨️';
+                // Heavy snow fall (75)
+                if (code === 75) return '❄️';
+                // Moderate snow fall (73)
+                if (code === 73) return '🌨️';
+                // Slight snow fall (71)
+                if (code === 71) return '🌨️';
+                // Freezing rain heavy (67)
+                if (code === 67) return '🌧️';
+                // Freezing rain light (66)
+                if (code === 66) return '🌧️';
+                // Freezing drizzle heavy (57)
+                if (code === 57) return '🌧️';
+                // Freezing drizzle light (56)
+                if (code === 56) return '🌧️';
+                // Rain heavy (65)
+                if (code === 65) return '🌧️';
+                // Rain moderate (63)
+                if (code === 63) return '🌧️';
+                // Rain slight (61)
+                if (code === 61) return '🌦️';
+                // Drizzle dense (55)
+                if (code === 55) return '🌦️';
+                // Drizzle moderate (53)
+                if (code === 53) return '🌦️';
+                // Drizzle light (51)
+                if (code === 51) return '🌦️';
+                // Depositing rime fog (48)
+                if (code === 48) return '🌫️';
+                // Fog (45)
+                if (code === 45) return '🌫️';
+                // Overcast (3)
+                if (code === 3) return '☁️';
+                // Mainly cloudy (2)
                 if (code === 2) return isDay ? '⛅' : '☁️';
-                // Mainly clear (1)
+                // Partly cloudy (1)
                 if (code === 1) return isDay ? '🌤️' : '🌙';
                 // Clear sky (0)
                 if (code === 0) {
@@ -4297,10 +4723,73 @@
             lastComment = comment;
             lastConditionKey = conditionKey;
 
-            document.getElementById('greetingMain').textContent = greeting;
-            document.querySelector('.greeting-text .emoji').textContent = emoji;
-            document.getElementById('weatherComment').innerHTML = comment;
+            // Update Weather Hero Section
+            const heroTempEl = document.getElementById('heroTemp');
+            heroTempEl.textContent = Math.round(temp);
+
+            // Apply temperature-based color
+            heroTempEl.classList.remove('temp-freezing', 'temp-cold', 'temp-cool', 'temp-mild', 'temp-warm', 'temp-hot', 'temp-extreme');
+            if (temp < 0) heroTempEl.classList.add('temp-freezing');
+            else if (temp < 10) heroTempEl.classList.add('temp-cold');
+            else if (temp < 15) heroTempEl.classList.add('temp-cool');
+            else if (temp < 20) heroTempEl.classList.add('temp-mild');
+            else if (temp < 25) heroTempEl.classList.add('temp-warm');
+            else if (temp < 30) heroTempEl.classList.add('temp-hot');
+            else heroTempEl.classList.add('temp-extreme');
+
+            // Update weather icon
+            document.getElementById('heroWeatherIcon').textContent = emoji;
+
+            document.getElementById('heroCondition').textContent = getWeatherConditionName(wc);
+            document.getElementById('heroFeelsLike').textContent = fl.toFixed(1);
+            document.getElementById('heroHumidity').textContent = Math.round(humidity);
+            document.getElementById('heroWind').textContent = ws.toFixed(1);
+            document.getElementById('heroPrecip').textContent = pp || 0;
+
+            // Update comment section (remove temperature display)
+            let cleanComment = comment
+                .replace(/<span class="temp-highlight">[0-9.-]+°C<\/span>/g, '')
+                .replace(/[・—]\s*/g, '')
+                .trim();
+            // Remove leading dash or bullet that may remain
+            cleanComment = cleanComment.replace(/^[—・\-]\s*/, '');
+            document.getElementById('weatherComment').innerHTML = cleanComment;
             document.getElementById('greetingSection').classList.add('show');
+        }
+
+        // Get weather condition name from WMO code (Complete)
+        function getWeatherConditionName(code) {
+            const conditions = {
+                0: '快晴',
+                1: 'ほぼ晴れ',
+                2: '晴れ時々曇り',
+                3: '曇り',
+                45: '霧',
+                48: '着氷性の霧',
+                51: '弱い霧雨',
+                53: '霧雨',
+                55: '強い霧雨',
+                56: '着氷性の霧雨',
+                57: '強い着氷性霧雨',
+                61: '弱い雨',
+                63: '雨',
+                65: '強い雨',
+                66: '着氷性の雨',
+                67: '強い着氷性の雨',
+                71: '弱い雪',
+                73: '雪',
+                75: '大雪',
+                77: '霧雪',
+                80: 'にわか雨',
+                81: 'やや強いにわか雨',
+                82: '激しいにわか雨',
+                85: 'にわか雪',
+                86: '激しいにわか雪',
+                95: '雷雨',
+                96: '雷雨（雹を伴う）',
+                99: '激しい雷雨（雹）'
+            };
+            return conditions[code] || '--';
         }
 
         function updateCharts() { updateChart24h(); updateChartWeek(); updateChartMonthly(); updateChartYearly(); }
@@ -4644,6 +5133,76 @@
                 clearTimeout(resizeTimeout);
                 resizeTimeout = setTimeout(() => { updateCharts(); }, 250);
             });
+
+            // Pull-to-refresh for mobile
+            let touchStartY = 0;
+            let isPulling = false;
+            const pullIndicator = document.getElementById('pullToRefresh');
+
+            document.addEventListener('touchstart', (e) => {
+                if (window.scrollY === 0) {
+                    touchStartY = e.touches[0].clientY;
+                    isPulling = true;
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!isPulling) return;
+                const touchY = e.touches[0].clientY;
+                const pullDistance = touchY - touchStartY;
+
+                if (pullDistance > 50 && window.scrollY === 0) {
+                    pullIndicator.classList.add('visible');
+                } else {
+                    pullIndicator.classList.remove('visible');
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchend', async () => {
+                if (pullIndicator.classList.contains('visible')) {
+                    pullIndicator.classList.add('refreshing');
+                    pullIndicator.querySelector('span').textContent = '更新中...';
+
+                    await fetchAll();
+                    nextUpdateTime = Date.now() + UPDATE_INTERVAL;
+
+                    pullIndicator.querySelector('span').textContent = '更新完了！';
+                    setTimeout(() => {
+                        pullIndicator.classList.remove('visible', 'refreshing');
+                        pullIndicator.querySelector('span').textContent = '引っ張って更新';
+                    }, 1000);
+                }
+                isPulling = false;
+            });
+        }
+
+        // Toggle AI advisor expand/collapse
+        function toggleAiAdvisor() {
+            const textEl = document.getElementById('aiAdvisorText');
+            const expandBtn = document.getElementById('aiAdvisorExpand');
+
+            if (textEl.dataset.truncated === 'true') {
+                // Expand to full text
+                textEl.innerHTML = textEl.dataset.fullText;
+                textEl.dataset.truncated = 'false';
+                expandBtn.textContent = '閉じる';
+            } else {
+                // Collapse back
+                const fullText = textEl.dataset.fullText;
+                // Re-truncate (we need original plain text, but can approximate)
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = fullText;
+                const plainText = tempDiv.textContent;
+
+                let breakPoint = 150;
+                while (breakPoint > 100 && plainText[breakPoint] !== ' ') {
+                    breakPoint--;
+                }
+                const truncated = plainText.substring(0, breakPoint) + '...';
+                textEl.innerHTML = truncated;
+                textEl.dataset.truncated = 'true';
+                expandBtn.textContent = '続きを表示';
+            }
         }
 
         init();
