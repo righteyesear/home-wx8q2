@@ -1829,22 +1829,27 @@
             }
         }
 
-        // JMA Warning Code to Name Mapping (気象庁防災情報XML公式コード)
+        // JMA Warning Code to Name Mapping (気象庁防災情報XML公式コード - 完全版)
         // 出典: 気象庁「防災情報XMLフォーマット コード管理表」
         const JMA_WARNING_NAMES = {
-            // === 特別警報 (32-38) ===
+            // === 気象警報・注意報・特別警報 ===
+            // 特別警報 (32-38)
             '32': '暴風雪特別警報', '33': '大雨特別警報', '35': '暴風特別警報',
             '36': '大雪特別警報', '37': '波浪特別警報', '38': '高潮特別警報',
-            // === 警報 (02-08) ===
+            // 警報 (02-08)
             '02': '暴風雪警報', '03': '大雨警報', '04': '洪水警報',
             '05': '暴風警報', '06': '大雪警報', '07': '波浪警報', '08': '高潮警報',
-            // === 注意報 (10-27) ===
+            // 注意報 (10-26)
             '10': '大雨注意報', '12': '大雪注意報', '13': '風雪注意報',
             '14': '雷注意報', '15': '強風注意報', '16': '波浪注意報',
             '17': '融雪注意報', '18': '洪水注意報', '19': '高潮注意報',
             '20': '濃霧注意報', '21': '乾燥注意報', '22': 'なだれ注意報',
             '23': '低温注意報', '24': '霜注意報', '25': '着氷注意報',
-            '26': '着雪注意報', '27': 'その他の注意報',
+            '26': '着雪注意報',
+            // === 津波警報・注意報 ===
+            '50': '津波警報解除', '51': '津波警報', '52': '大津波警報', '53': '大津波警報',
+            '60': '津波注意報解除', '62': '津波注意報',
+            '71': '津波予報', '72': '津波予報', '73': '津波予報',
             // === 解除 ===
             '00': '解除'
         };
@@ -4526,6 +4531,20 @@
                     },
                     plugins: {
                         ...baseOptions.plugins,
+                        // Override tooltip to prioritize current temperature
+                        tooltip: {
+                            ...baseOptions.plugins.tooltip,
+                            filter: function (tooltipItem) {
+                                // Prioritize '気温' (current) over '前日の気温' (yesterday)
+                                // When both exist at same x, filter out yesterday's data
+                                return tooltipItem.dataset.label !== '前日の気温';
+                            },
+                            itemSort: function (a, b) {
+                                // Sort: 気温 first, then 湿度
+                                const order = { '気温': 0, '湿度': 1, '前日の気温': 2 };
+                                return (order[a.dataset.label] || 99) - (order[b.dataset.label] || 99);
+                            }
+                        },
                         zoom: {
                             pan: {
                                 enabled: true,
