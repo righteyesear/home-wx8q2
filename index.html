@@ -3217,6 +3217,7 @@
 
             // Parse rise and set times to get hours as decimal
             const parseTime = (timeStr) => {
+                if (!timeStr || timeStr === '--:--') return null;
                 const [h, m] = timeStr.split(':').map(Number);
                 return h + m / 60;
             };
@@ -3227,23 +3228,32 @@
 
             // Calculate t based on TIME, not azimuth
             // Rise = 0%, Transit (midpoint) = 50%, Set = 100%
-            let t;
-            const duration = setHour > riseHour ? setHour - riseHour : (24 - riseHour) + setHour;
+            let t = 0.5; // Default to center if no times available
+            let isVisible = false;
 
-            if (currentHour >= riseHour && currentHour <= setHour) {
-                // Moon is above horizon
-                t = (currentHour - riseHour) / duration;
-            } else if (currentHour < riseHour) {
-                // Before moonrise
-                t = 0;
-            } else {
-                // After moonset
-                t = 1;
+            if (riseHour !== null && setHour !== null) {
+                const duration = setHour > riseHour ? setHour - riseHour : (24 - riseHour) + setHour;
+
+                if (currentHour >= riseHour && currentHour <= setHour) {
+                    // Moon is above horizon
+                    t = (currentHour - riseHour) / duration;
+                    isVisible = moonPos.altitude > 0;
+                } else if (currentHour < riseHour) {
+                    // Before moonrise
+                    t = 0;
+                } else {
+                    // After moonset
+                    t = 1;
+                }
+            } else if (riseHour !== null) {
+                // Only moonrise available (moonset next day)
+                if (currentHour >= riseHour) {
+                    isVisible = moonPos.altitude > 0;
+                    t = Math.min(1, (currentHour - riseHour) / 12); // Assume ~12h above horizon
+                }
             }
 
-            // Clamp t for visibility check
-            // Ensure moon is actually above horizon (altitude > 0) to avoid mismatch
-            const isVisible = t >= 0 && t <= 1 && moonPos.altitude > 0;
+            // Clamp t for position calculation
             const clampedT = Math.max(0, Math.min(1, t));
 
             // New SVG Coordinates (viewBox 0 0 340 200)
@@ -3257,12 +3267,14 @@
             const x = mt * mt * P0.x + 2 * mt * clampedT * P1.x + clampedT * clampedT * P2.x;
             const y = mt * mt * P0.y + 2 * mt * clampedT * P1.y + clampedT * clampedT * P2.y;
 
-            // Set Position
-            const finalY = isVisible ? y : 150;
-            const opacity = isVisible ? 1 : 0.3;
+            // Set Position - if below horizon, place at horizon level
+            const finalY = isVisible ? y : 160; // Below horizon line (150)
+            const opacity = isVisible ? 1 : 0.4;
+            const fillColor = isVisible ? '#fbbf24' : '#94a3b8'; // Yellow if visible, gray if not
 
             moonCircle.setAttribute('cx', x);
             moonCircle.setAttribute('cy', finalY);
+            moonCircle.setAttribute('fill', fillColor);
             moonCircle.style.opacity = opacity;
 
             if (moonGlow) {
@@ -3274,10 +3286,12 @@
             // Update Info Label
             if (moonInfoGroup && moonInfoText && moonInfoBg) {
                 if (isVisible) {
-                    // Update text
+                    // Update text with current position
                     const altText = `${Math.round(moonPos.altitude)}°`;
                     const dirText = getJapaneseCompassDirection(moonPos.azimuth);
                     moonInfoText.textContent = `${dirText} ${altText}`;
+                    moonInfoBg.setAttribute('fill', 'rgba(15,23,42,0.8)');
+                    moonInfoText.setAttribute('fill', '#fbbf24');
 
                     // Update box size based on text length (approx)
                     const textWidth = 80;
@@ -3292,7 +3306,19 @@
                     moonInfoGroup.setAttribute('transform', `translate(${x}, ${safeLabelY})`);
                     moonInfoGroup.setAttribute('opacity', 1);
                 } else {
-                    moonInfoGroup.setAttribute('opacity', 0);
+                    // Show "地平線下" when moon is below horizon
+                    moonInfoText.textContent = '地平線下';
+                    moonInfoBg.setAttribute('fill', 'rgba(30,41,59,0.9)');
+                    moonInfoText.setAttribute('fill', '#94a3b8');
+
+                    const textWidth = 70;
+                    moonInfoBg.setAttribute('width', textWidth);
+                    moonInfoBg.setAttribute('x', -textWidth / 2);
+                    moonInfoBg.setAttribute('y', -10);
+
+                    // Position below horizon line
+                    moonInfoGroup.setAttribute('transform', `translate(${x}, 175)`);
+                    moonInfoGroup.setAttribute('opacity', 0.8);
                 }
             }
         }
