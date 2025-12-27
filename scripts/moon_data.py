@@ -2,39 +2,50 @@
 """
 おはこん番地は！？ API から月データを取得
 https://labs.bitmeister.jp/ohakon/
+
+GitHub Actions用: JST（日本時間）を使用
 """
 
 import json
 import urllib.request
 import math
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 # 東京都葛飾区東金町5丁目の座標
 LAT = 35.7785
 LON = 139.878
+
+# 日本標準時 (JST = UTC+9)
+JST = timezone(timedelta(hours=9))
+
 
 def fetch_json(url):
     """URLからJSONを取得"""
     with urllib.request.urlopen(url, timeout=10) as resp:
         return json.loads(resp.read().decode('utf-8'))
 
+
 def get_compass_direction(azimuth):
     """方位角から日本語の方角を取得"""
+    if azimuth is None:
+        return None
     directions = ['北', '北北東', '北東', '東北東', '東', '東南東', '南東', '南南東',
                   '南', '南南西', '南西', '西南西', '西', '西北西', '北西', '北北西']
     idx = round(azimuth / 22.5) % 16
     return directions[idx]
 
+
 def fetch_moon_data():
     """APIから月の出入り時刻と位置データを取得"""
-    now = datetime.now()
+    # JSTで現在時刻を取得（GitHub Actions対応）
+    now = datetime.now(JST)
     
     base_url = "https://labs.bitmeister.jp/ohakon/json/"
     
     result = {
         "updated": now.strftime("%Y-%m-%d %H:%M:%S"),
         "location": {"lat": LAT, "lon": LON},
-        "date": f"{now.year}-{now.month:02d}-{now.day:02d}",
+        "date": now.strftime("%Y-%m-%d"),
         "error": None
     }
     
@@ -66,7 +77,7 @@ def fetch_moon_data():
             rise_pos_data = fetch_json(rise_pos_url)
             pos = rise_pos_data.get("positions", {})
             result["moonrise_azimuth"] = pos.get("moon_azimuth")
-            result["moonrise_direction"] = get_compass_direction(pos.get("moon_azimuth", 90))
+            result["moonrise_direction"] = get_compass_direction(pos.get("moon_azimuth"))
             
             # 月相と輝面率を取得
             moon_phase_deg = rise_pos_data.get("moon_phase")
@@ -86,7 +97,7 @@ def fetch_moon_data():
             set_pos_data = fetch_json(set_pos_url)
             pos = set_pos_data.get("positions", {})
             result["moonset_azimuth"] = pos.get("moon_azimuth")
-            result["moonset_direction"] = get_compass_direction(pos.get("moon_azimuth", 270))
+            result["moonset_direction"] = get_compass_direction(pos.get("moon_azimuth"))
         
     except Exception as e:
         result["error"] = str(e)
@@ -98,6 +109,8 @@ def fetch_moon_data():
 
 def main():
     print("[Moon] Fetching moon data from Ohakonbanchi API...")
+    print(f"[Moon] Using JST: {datetime.now(JST).strftime('%Y-%m-%d %H:%M:%S')}")
+    
     data = fetch_moon_data()
     
     # JSONファイルに保存
@@ -105,9 +118,12 @@ def main():
         json.dump(data, f, ensure_ascii=False, indent=2)
     
     print(f"[OK] Moon data saved:")
-    print(f"     moonrise={data.get('moonrise')} ({data.get('moonrise_direction', '?')})")
-    print(f"     moonset={data.get('moonset')} ({data.get('moonset_direction', '?')})")
-    print(f"     illumination={data.get('illumination', '?')}%")
+    print(f"     Date: {data.get('date')}")
+    print(f"     Moonrise: {data.get('moonrise')} ({data.get('moonrise_direction', '?')})")
+    print(f"     Moonset: {data.get('moonset')} ({data.get('moonset_direction', '?')})")
+    print(f"     Moon Age: {data.get('moon_age')}")
+    print(f"     Illumination: {data.get('illumination', '?')}%")
+    
     if data.get("error"):
         print(f"[WARN] Errors: {data['error']}")
 
