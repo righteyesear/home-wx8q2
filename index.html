@@ -2975,8 +2975,13 @@
             // Display rise/set directions from API or fallback
             const riseDirEl = document.getElementById('moonRiseDirSvg');
             const setDirEl = document.getElementById('moonSetDirSvg');
-            if (riseDirEl) riseDirEl.textContent = moonTimes.riseDirJp || '東';
-            if (setDirEl) setDirEl.textContent = moonTimes.setDirJp || '西';
+            // Show '--' if time is not available, otherwise use API direction or fallback
+            if (riseDirEl) {
+                riseDirEl.textContent = (moonTimes.rise === '--:--') ? '--' : (moonTimes.riseDirJp || '東');
+            }
+            if (setDirEl) {
+                setDirEl.textContent = (moonTimes.set === '--:--') ? '--' : (moonTimes.setDirJp || '西');
+            }
 
             // Display current position info in SVG (only when above horizon)
             const currentInfoEl = document.getElementById('moonCurrentInfoSvg');
