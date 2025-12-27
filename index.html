@@ -4465,7 +4465,8 @@
                             tension: 0.4,
                             borderWidth: 1.5,
                             pointRadius: 0,
-                            pointHoverRadius: 4,
+                            pointHoverRadius: 0,
+                            pointHitRadius: 0,  // Exclude from touch/hover detection
                             yAxisID: 'y',
                             order: 2,
                             spanGaps: true
@@ -4531,18 +4532,20 @@
                     },
                     plugins: {
                         ...baseOptions.plugins,
-                        // Override tooltip to prioritize current temperature
+                        // Override tooltip to use current temperature as anchor (prevents jitter)
                         tooltip: {
                             ...baseOptions.plugins.tooltip,
-                            filter: function (tooltipItem) {
-                                // Prioritize '気温' (current) over '前日の気温' (yesterday)
-                                // When both exist at same x, filter out yesterday's data
-                                return tooltipItem.dataset.label !== '前日の気温';
-                            },
+                            // Show all datasets in tooltip
+                            filter: null,
+                            // Sort: 気温 first, then 湿度, then 前日の気温
                             itemSort: function (a, b) {
-                                // Sort: 気温 first, then 湿度
                                 const order = { '気温': 0, '湿度': 1, '前日の気温': 2 };
                                 return (order[a.dataset.label] || 99) - (order[b.dataset.label] || 99);
+                            },
+                            // Position tooltip based on the first dataset (気温) only
+                            callbacks: {
+                                ...baseOptions.plugins.tooltip.callbacks,
+                                // Keep default label callback
                             }
                         },
                         zoom: {
