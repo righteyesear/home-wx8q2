@@ -809,6 +809,39 @@
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
+        /* Sunrise/Sunset display */
+        .sun-times {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            text-align: right;
+        }
+
+        .sun-time-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .sun-icon {
+            font-size: 1rem;
+        }
+
+        .sun-label {
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+
+        .sun-value {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
         .weather-hero-center {
             display: flex;
             flex-direction: column;
@@ -1085,6 +1118,87 @@
 
         html.light-mode .rain-alert {
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.1));
+        }
+
+        /* Moon Card Styles */
+        .moon-card {
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(10, 14, 26, 0.99));
+            border-color: rgba(251, 191, 36, 0.2);
+        }
+
+        html.light-mode .moon-card {
+            background: linear-gradient(180deg, rgba(255, 251, 235, 0.98), rgba(254, 249, 231, 0.99));
+            border-color: rgba(251, 191, 36, 0.3);
+        }
+
+        .moon-badge {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
+            color: #1e293b !important;
+            font-weight: 600;
+        }
+
+        /* Info Bar */
+        .moon-info-bar {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 12px;
+            padding: 8px 0;
+            flex-wrap: wrap;
+        }
+
+        .moon-info-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .moon-icon {
+            font-size: 2rem;
+            filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.4));
+        }
+
+        .moon-phase-name {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .moon-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .moon-stat-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fbbf24;
+        }
+
+        .moon-stat-unit {
+            font-size: 0.85rem;
+            color: #fbbf24;
+        }
+
+        /* Main Arc Area */
+        .moon-arc-main {
+            width: 100%;
+        }
+
+        .moon-arc-svg {
+            width: 100%;
+            height: auto;
+            min-height: 200px;
+        }
+
+        @media (max-width: 500px) {
+            .moon-info-bar {
+                gap: 12px;
+            }
+
+            .moon-arc-svg {
+                min-height: 110px;
+            }
         }
 
         .greeting-text {
@@ -1565,6 +1679,39 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            gap: 8px;
+        }
+
+        /* Drag handle */
+        .drag-handle {
+            cursor: grab;
+            opacity: 0.4;
+            font-size: 1.2rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: opacity 0.2s ease, background-color 0.2s ease;
+            user-select: none;
+        }
+
+        .drag-handle:hover {
+            opacity: 0.8;
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        /* Dragging states */
+        .chart-card.dragging {
+            opacity: 0.5;
+            transform: scale(0.98);
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
+        }
+
+        .chart-card.drag-over {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px var(--accent-blue), var(--shadow-card);
         }
 
         .chart-title {
@@ -1789,6 +1936,16 @@
 
         <!-- Current Weather Hero Section (Redesigned) -->
         <div id="weatherHero" class="weather-hero">
+            <div class="sun-times">
+                <div class="sun-time-item">
+                    <span class="sun-label">日の出</span>
+                    <span class="sun-value" id="sunriseTime">--:--</span>
+                </div>
+                <div class="sun-time-item">
+                    <span class="sun-label">日の入</span>
+                    <span class="sun-value" id="sunsetTime">--:--</span>
+                </div>
+            </div>
             <div class="weather-hero-center">
                 <div class="weather-hero-icon" id="heroWeatherIcon">☀️</div>
                 <div class="weather-hero-temp" id="heroTempContainer">
@@ -1820,6 +1977,12 @@
                     <span class="info-label">降水</span>
                     <span class="info-value" id="heroPrecip">--</span>
                     <span class="info-unit">%</span>
+                </div>
+                <div class="weather-hero-info-divider"></div>
+                <div class="weather-hero-info-item">
+                    <span class="info-label">気圧</span>
+                    <span class="info-value" id="heroPressure">--</span>
+                    <span class="info-unit">hPa</span>
                 </div>
             </div>
         </div>
@@ -1914,9 +2077,10 @@
             </div>
         </div>
 
-        <div class="charts-grid">
-            <div class="chart-card full-width">
+        <div class="charts-grid" id="chartsGrid">
+            <div class="chart-card full-width" data-chart-id="chart24h" draggable="true">
                 <div class="chart-header">
+                    <span class="drag-handle" title="ドラッグして並び替え">⠿</span>
                     <span class="chart-title">📈 直近24時間の気温・湿度</span>
                     <span class="chart-badge">1分間隔</span>
                 </div>
@@ -1927,8 +2091,9 @@
                     <canvas id="chart24h"></canvas>
                 </div>
             </div>
-            <div class="chart-card">
+            <div class="chart-card" data-chart-id="chartWeek" draggable="true">
                 <div class="chart-header">
+                    <span class="drag-handle" title="ドラッグして並び替え">⠿</span>
                     <span class="chart-title">📊 週間気温推移</span>
                     <span class="chart-badge">30分平均</span>
                 </div>
@@ -1939,8 +2104,105 @@
                     <canvas id="chartWeek"></canvas>
                 </div>
             </div>
-            <div class="chart-card">
+
+            <!-- Moon Information Card -->
+            <div class="chart-card moon-card" data-chart-id="moonCard" draggable="true">
                 <div class="chart-header">
+                    <span class="drag-handle" title="ドラッグして並び替え">⠿</span>
+                    <span class="chart-title">🌙 月情報</span>
+                    <span class="chart-badge moon-badge" id="moonNextPhaseText">--</span>
+                </div>
+
+                <!-- Info Row: Moon details -->
+                <div class="moon-info-bar">
+                    <div class="moon-info-group">
+                        <span class="moon-icon" id="moonIcon">🌕</span>
+                        <span class="moon-phase-name" id="moonPhaseName">--</span>
+                    </div>
+                    <div class="moon-info-group">
+                        <span class="moon-stat-label">月齢</span>
+                        <span class="moon-stat-value" id="moonAge">--</span>
+                    </div>
+                    <div class="moon-info-group">
+                        <span class="moon-stat-label">輝面率</span>
+                        <span class="moon-stat-value" id="moonIllumination">--</span><span
+                            class="moon-stat-unit">%</span>
+                    </div>
+                </div>
+
+                <!-- Main Arc Visualization -->
+                <div class="moon-arc-main">
+                    <svg viewBox="0 0 340 200" class="moon-arc-svg" style="min-height: 200px;"
+                        preserveAspectRatio="xMidYMid meet">
+                        <defs>
+                            <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.7" />
+                                <stop offset="100%" stop-color="#fbbf24" stop-opacity="0" />
+                            </radialGradient>
+                            <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#60a5fa" />
+                                <stop offset="50%" stop-color="#fbbf24" />
+                                <stop offset="100%" stop-color="#f97316" />
+                            </linearGradient>
+                            <filter id="textShadow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="rgba(0,0,0,0.8)" />
+                            </filter>
+                        </defs>
+
+                        <!-- Horizon line -->
+                        <line x1="20" y1="150" x2="320" y2="150" stroke="rgba(148,163,184,0.2)" stroke-width="1"
+                            stroke-dasharray="2,2" />
+                        <text x="170" y="148" text-anchor="middle" fill="rgba(148,163,184,0.4)" font-size="9">地平線</text>
+
+                        <!-- Arc path -->
+                        <path d="M 40 150 Q 170 -20 300 150" fill="none" stroke="url(#arcGrad)" stroke-width="3"
+                            stroke-linecap="round" />
+
+                        <!-- Rise Group (Left) -->
+                        <g class="moon-label-group">
+                            <circle cx="40" cy="150" r="5" fill="#60a5fa" stroke="#0f172a" stroke-width="2" />
+                            <!-- Labels adjusted: Dir -> Time -> Label -->
+                            <text x="40" y="170" text-anchor="middle" fill="#60a5fa" font-size="10" font-weight="600"
+                                id="moonRiseDirSvg">--</text>
+                            <text x="40" y="184" text-anchor="middle" fill="var(--text-primary)" font-size="13"
+                                font-weight="700" id="moonRiseTimeSvg" filter="url(#textShadow)">--:--</text>
+                            <text x="40" y="196" text-anchor="middle" fill="var(--text-muted)" font-size="9">月の出</text>
+                        </g>
+
+                        <!-- Transit Label (Top Center) -->
+                        <text x="170" y="15" text-anchor="middle" fill="#fbbf24" font-size="10" font-weight="500"
+                            style="opacity: 0.8;">南中</text>
+
+                        <!-- Set Group (Right) -->
+                        <g class="moon-label-group">
+                            <circle cx="300" cy="150" r="5" fill="#f97316" stroke="#0f172a" stroke-width="2" />
+                            <!-- Labels adjusted -->
+                            <text x="300" y="170" text-anchor="middle" fill="#f97316" font-size="10" font-weight="600"
+                                id="moonSetDirSvg">--</text>
+                            <text x="300" y="184" text-anchor="middle" fill="var(--text-primary)" font-size="13"
+                                font-weight="700" id="moonSetTimeSvg" filter="url(#textShadow)">--:--</text>
+                            <text x="300" y="196" text-anchor="middle" fill="var(--text-muted)" font-size="9">月の入</text>
+                        </g>
+
+                        <!-- Current Moon Marker & Glow -->
+                        <circle id="moonGlowCircle" cx="170" cy="70" r="22" fill="url(#moonGlow)" />
+                        <circle id="moonPosition" cx="170" cy="70" r="9" fill="#fbbf24" stroke="#0f172a"
+                            stroke-width="1.5" />
+
+                        <!-- Current Position Info (Floating) -->
+                        <g id="moonCurrentInfoGroup" opacity="0">
+                            <rect id="moonInfoBg" x="0" y="0" width="60" height="20" rx="4" fill="rgba(15,23,42,0.8)"
+                                stroke="rgba(251,191,36,0.3)" stroke-width="1" />
+                            <text id="moonCurrentInfoSvg" x="0" y="0" text-anchor="middle" fill="#fbbf24" font-size="10"
+                                font-weight="600" dy="4">--</text>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="chart-card" data-chart-id="chartMonthly" draggable="true">
+                <div class="chart-header">
+                    <span class="drag-handle" title="ドラッグして並び替え">⠿</span>
                     <span class="chart-title">📅 月別 最高/最低気温</span>
                     <span class="chart-badge">全期間</span>
                 </div>
@@ -1951,8 +2213,9 @@
                     <canvas id="chartMonthly"></canvas>
                 </div>
             </div>
-            <div class="chart-card full-width">
+            <div class="chart-card full-width" data-chart-id="chartYearly" draggable="true">
                 <div class="chart-header">
+                    <span class="drag-handle" title="ドラッグして並び替え">⠿</span>
                     <span class="chart-title">🗓️ 日別 最高/最低気温</span>
                     <span class="chart-badge">全期間</span>
                 </div>
@@ -2608,6 +2871,429 @@
                 console.log('Precipitation data not available:', e.message);
             }
         }
+
+        // Load sunrise/sunset times and pressure from Open-Meteo
+        async function loadSunTimes() {
+            try {
+                const LAT = 35.77877;
+                const LON = 139.87817;
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&daily=sunrise,sunset&current=surface_pressure&timezone=Asia/Tokyo&forecast_days=1`;
+                const resp = await fetch(url);
+                if (!resp.ok) return;
+
+                const data = await resp.json();
+                if (data.daily && data.daily.sunrise && data.daily.sunset) {
+                    const sunrise = new Date(data.daily.sunrise[0]);
+                    const sunset = new Date(data.daily.sunset[0]);
+
+                    const formatTime = (d) => d.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+
+                    document.getElementById('sunriseTime').textContent = formatTime(sunrise);
+                    document.getElementById('sunsetTime').textContent = formatTime(sunset);
+
+
+                }
+
+                // Display pressure
+                if (data.current && data.current.surface_pressure) {
+                    document.getElementById('heroPressure').textContent = Math.round(data.current.surface_pressure);
+                }
+            } catch (e) {
+                console.log('Sun times not available:', e.message);
+            }
+        }
+
+        // =====================================================
+        // MOON CALCULATIONS & DISPLAY
+        // =====================================================
+
+
+        async function loadMoonData() {
+            const now = new Date(); // Real-time mode
+            const LAT = 35.7785;
+            const LON = 139.878;
+
+            // Calculate local values (fallback)
+            const moonData = calculateMoonPhase(now);
+            const moonPos = calculateMoonPosition(now, LAT, LON);
+            let moonTimes = calculateMoonTimes(now, LAT, LON);
+
+            // Try to load API data from moon_data.json
+            try {
+                const resp = await fetch('moon_data.json?_=' + Date.now());
+                if (resp.ok) {
+                    const apiData = await resp.json();
+                    // Override times with API values if available
+                    if (apiData.moonrise && apiData.moonrise !== '--:--') {
+                        moonTimes.rise = apiData.moonrise;
+                    }
+                    if (apiData.moonset && apiData.moonset !== '--:--') {
+                        moonTimes.set = apiData.moonset;
+                    }
+                    // Override directions with API values
+                    if (apiData.moonrise_direction) {
+                        moonTimes.riseDirJp = apiData.moonrise_direction;
+                    }
+                    if (apiData.moonset_direction) {
+                        moonTimes.setDirJp = apiData.moonset_direction;
+                    }
+                    // Use API moon age if available
+                    if (apiData.moon_age !== null && apiData.moon_age !== undefined) {
+                        document.getElementById('moonAge').textContent = apiData.moon_age.toFixed(1);
+                    } else {
+                        document.getElementById('moonAge').textContent = moonData.age.toFixed(1);
+                    }
+                    // Use API illumination if available
+                    if (apiData.illumination !== null && apiData.illumination !== undefined) {
+                        document.getElementById('moonIllumination').textContent = Math.round(apiData.illumination);
+                    } else {
+                        document.getElementById('moonIllumination').textContent = Math.round(moonData.illumination * 100);
+                    }
+                    console.log('[Moon] Using API data:', apiData.moonrise, '-', apiData.moonset,
+                        'Dirs:', apiData.moonrise_direction, '-', apiData.moonset_direction,
+                        'Illumination:', apiData.illumination + '%');
+                } else {
+                    document.getElementById('moonAge').textContent = moonData.age.toFixed(1);
+                    document.getElementById('moonIllumination').textContent = Math.round(moonData.illumination * 100);
+                }
+            } catch (e) {
+                console.log('[Moon] API data not available, using calculation:', e.message);
+                document.getElementById('moonAge').textContent = moonData.age.toFixed(1);
+                document.getElementById('moonIllumination').textContent = Math.round(moonData.illumination * 100);
+            }
+
+            // Display phase info
+            document.getElementById('moonIcon').textContent = moonData.emoji;
+            document.getElementById('moonPhaseName').textContent = moonData.phaseName;
+
+            // Display times in SVG
+            const riseTimeEl = document.getElementById('moonRiseTimeSvg');
+            const setTimeEl = document.getElementById('moonSetTimeSvg');
+            if (riseTimeEl) riseTimeEl.textContent = moonTimes.rise || '--:--';
+            if (setTimeEl) setTimeEl.textContent = moonTimes.set || '--:--';
+
+            // Display rise/set directions from API or fallback
+            const riseDirEl = document.getElementById('moonRiseDirSvg');
+            const setDirEl = document.getElementById('moonSetDirSvg');
+            if (riseDirEl) riseDirEl.textContent = moonTimes.riseDirJp || '東';
+            if (setDirEl) setDirEl.textContent = moonTimes.setDirJp || '西';
+
+            // Display current position info in SVG (only when above horizon)
+            const currentInfoEl = document.getElementById('moonCurrentInfoSvg');
+            if (currentInfoEl) {
+                if (moonPos.altitude > 0) {
+                    currentInfoEl.textContent = `${getJapaneseCompassDirection(moonPos.azimuth)} ${Math.round(moonPos.altitude)}°`;
+                } else {
+                    currentInfoEl.textContent = '';
+                }
+            }
+
+            // Calculate next full moon
+            const synodic = 29.53058867;
+            const daysToFull = (14.77 - moonData.age + synodic) % synodic;
+            const nextPhaseTextEl = document.getElementById('moonNextPhaseText');
+            if (nextPhaseTextEl) {
+                if (daysToFull < 1) {
+                    nextPhaseTextEl.textContent = '満月 🌕';
+                } else if (moonData.age < 14.77) {
+                    nextPhaseTextEl.textContent = `満月まで${Math.round(daysToFull)}日`;
+                } else {
+                    const daysToNew = synodic - moonData.age;
+                    nextPhaseTextEl.textContent = `新月まで${Math.round(daysToNew)}日`;
+                }
+            }
+
+            // Update arc position (pass current time for time-based positioning)
+            updateMoonArcPosition(moonPos, moonTimes, now);
+        }
+
+        function calculateMoonPhase(date) {
+            // Reference new moon: Jan 6, 2000 18:14 UTC
+            const refNewMoon = new Date(Date.UTC(2000, 0, 6, 18, 14, 0));
+            const synodic = 29.53058867; // Synodic month in days
+
+            const daysSinceRef = (date - refNewMoon) / (1000 * 60 * 60 * 24);
+            const age = daysSinceRef % synodic;
+            const normalizedAge = age < 0 ? age + synodic : age;
+
+            // Phase (0-1)
+            const phase = normalizedAge / synodic;
+
+            // Illumination (simplified)
+            const illumination = (1 - Math.cos(2 * Math.PI * phase)) / 2;
+
+            // Phase name and emoji
+            let phaseName, emoji;
+            if (normalizedAge < 1.85) {
+                phaseName = '新月';
+                emoji = '🌑';
+            } else if (normalizedAge < 7.38) {
+                phaseName = '上弦の月';
+                emoji = '🌒';
+            } else if (normalizedAge < 11.07) {
+                phaseName = '半月（上弦）';
+                emoji = '🌓';
+            } else if (normalizedAge < 14.77) {
+                phaseName = '十三夜';
+                emoji = '🌔';
+            } else if (normalizedAge < 16.61) {
+                phaseName = '満月';
+                emoji = '🌕';
+            } else if (normalizedAge < 22.14) {
+                phaseName = '下弦の月';
+                emoji = '🌖';
+            } else if (normalizedAge < 25.84) {
+                phaseName = '半月（下弦）';
+                emoji = '🌗';
+            } else {
+                phaseName = '二十六夜';
+                emoji = '🌘';
+            }
+
+            return { age: normalizedAge, phase, illumination, phaseName, emoji };
+        }
+
+        function calculateMoonPosition(date, lat, lon) {
+            const jd = getJulianDate(date);
+            const T = (jd - 2451545.0) / 36525;
+
+            // Moon's mean elements (simplified)
+            const L = (218.3164477 + 481267.88123421 * T) % 360;
+            const M = (134.9633964 + 477198.8675055 * T) % 360;
+            const F = (93.2720950 + 483202.0175233 * T) % 360;
+
+            // Approximate Right Ascension and Declination
+            const Lrad = L * Math.PI / 180;
+            const Mrad = M * Math.PI / 180;
+            const Frad = F * Math.PI / 180;
+
+            // Simplified ecliptic longitude
+            let lambda = L + 6.29 * Math.sin(Mrad);
+            lambda = lambda % 360;
+            const lambdaRad = lambda * Math.PI / 180;
+
+            // Approximate declination
+            const epsilon = 23.439 - 0.00000036 * T;
+            const epsilonRad = epsilon * Math.PI / 180;
+
+            const dec = Math.asin(Math.sin(epsilonRad) * Math.sin(lambdaRad)) * 180 / Math.PI;
+            const ra = Math.atan2(Math.cos(epsilonRad) * Math.sin(lambdaRad), Math.cos(lambdaRad)) * 180 / Math.PI;
+
+            // Local Sidereal Time
+            // Use UTC hours/minutes for Sidereal Time calculation
+            const LST = (100.46 + 0.985647 * (jd - 2451545.0) + lon + date.getUTCHours() * 15 + date.getUTCMinutes() * 0.25) % 360;
+
+            // Hour angle
+            let HA = LST - ra;
+            if (HA < 0) HA += 360;
+            const HARad = HA * Math.PI / 180;
+            const latRad = lat * Math.PI / 180;
+            const decRad = dec * Math.PI / 180;
+
+            // Altitude
+            const altitude = Math.asin(
+                Math.sin(latRad) * Math.sin(decRad) +
+                Math.cos(latRad) * Math.cos(decRad) * Math.cos(HARad)
+            ) * 180 / Math.PI;
+
+            // Azimuth
+            let azimuth = Math.atan2(
+                Math.sin(HARad),
+                Math.cos(HARad) * Math.sin(latRad) - Math.tan(decRad) * Math.cos(latRad)
+            ) * 180 / Math.PI + 180;
+
+            // Approximate max altitude for today
+            const maxAltitude = 90 - lat + dec;
+
+            return { altitude, azimuth: azimuth % 360, maxAltitude: Math.min(90, Math.max(0, maxAltitude)) };
+        }
+
+        function calculateMoonTimes(date, lat, lon) {
+            // High-precision simulation to match calculatingMoonPosition
+            // Iterate from 00:00 to 24:00 to find horizon crossings
+            const dayStart = new Date(date);
+            dayStart.setHours(0, 0, 0, 0);
+
+            let rise = null;
+            let set = null;
+            let riseAzimuth = null;
+            let setAzimuth = null;
+
+            let prevPos = calculateMoonPosition(dayStart, lat, lon);
+
+            // 1-minute intervals (1440 steps) for maximum precision
+            for (let i = 1; i <= 1440; i++) {
+                const t = new Date(dayStart.getTime() + i * 60 * 1000);
+                const currPos = calculateMoonPosition(t, lat, lon);
+
+                // Apply approximate Parallax correction (-0.95 deg)
+                // Geocentric altitude is ~1 deg higher than Topocentric (observed) altitude at horizon.
+                // Subtracting this makes the moon lower, causing it to set earlier.
+                const alt1 = prevPos.altitude - 0.95;
+                const alt2 = currPos.altitude - 0.95;
+
+                // Check Horizon Crossing
+                if (alt1 < 0 && alt2 >= 0) {
+                    // Moonrise
+                    const fraction = (0 - alt1) / (alt2 - alt1);
+                    const riseMs = t.getTime() - 60 * 1000 + fraction * 60 * 1000;
+                    rise = new Date(riseMs);
+                    riseAzimuth = prevPos.azimuth + (currPos.azimuth - prevPos.azimuth) * fraction;
+                }
+                if (alt1 >= 0 && alt2 < 0) {
+                    // Moonset
+                    const fraction = (0 - alt1) / (alt2 - alt1);
+                    const setMs = t.getTime() - 60 * 1000 + fraction * 60 * 1000;
+                    set = new Date(setMs);
+                    setAzimuth = prevPos.azimuth + (currPos.azimuth - prevPos.azimuth) * fraction;
+                }
+                prevPos = currPos;
+            }
+
+            const formatHour = (d) => {
+                if (!d) return '--:--';
+                return d.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+            };
+
+            // Directions based on calculated azimuth if available
+            const moonData = calculateMoonPhase(date);
+            const age = moonData.age;
+
+            // Fallback directions (simplified) if not found (e.g. not rising today)
+            let riseDirJp = age < 14.77 ? '東南東' : '東北東';
+            let setDirJp = age < 14.77 ? '西南西' : '西北西';
+
+            if (riseAzimuth) riseDirJp = getJapaneseCompassDirection(riseAzimuth);
+            if (setAzimuth) setDirJp = getJapaneseCompassDirection(setAzimuth);
+
+            return {
+                rise: formatHour(rise),
+                set: formatHour(set),
+                riseDirJp,
+                setDirJp
+            };
+        }
+
+        function getJulianDate(date) {
+            const y = date.getUTCFullYear();
+            const m = date.getUTCMonth() + 1;
+            const d = date.getUTCDate() + date.getUTCHours() / 24 + date.getUTCMinutes() / 1440;
+
+            let Y = y, M = m;
+            if (M <= 2) { Y -= 1; M += 12; }
+
+            const A = Math.floor(Y / 100);
+            const B = 2 - A + Math.floor(A / 4);
+
+            return Math.floor(365.25 * (Y + 4716)) + Math.floor(30.6001 * (M + 1)) + d + B - 1524.5;
+        }
+
+        function getCompassDirection(azimuth) {
+            const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+            const idx = Math.round(azimuth / 22.5) % 16;
+            return directions[idx];
+        }
+
+        function getJapaneseCompassDirection(azimuth) {
+            const directions = ['北', '北北東', '北東', '東北東', '東', '東南東', '南東', '南南東', '南', '南南西', '南西', '西南西', '西', '西北西', '北西', '北北西'];
+            const idx = Math.round(azimuth / 22.5) % 16;
+            return directions[idx];
+        }
+
+
+
+        function updateMoonArcPosition(moonPos, moonTimes, currentTime) {
+            const moonCircle = document.getElementById('moonPosition');
+            const moonGlow = document.getElementById('moonGlowCircle');
+            const moonInfoGroup = document.getElementById('moonCurrentInfoGroup');
+            const moonInfoText = document.getElementById('moonCurrentInfoSvg');
+            const moonInfoBg = document.getElementById('moonInfoBg');
+            if (!moonCircle) return;
+
+            // Parse rise and set times to get hours as decimal
+            const parseTime = (timeStr) => {
+                const [h, m] = timeStr.split(':').map(Number);
+                return h + m / 60;
+            };
+
+            const riseHour = parseTime(moonTimes.rise);
+            const setHour = parseTime(moonTimes.set);
+            const currentHour = currentTime.getHours() + currentTime.getMinutes() / 60;
+
+            // Calculate t based on TIME, not azimuth
+            // Rise = 0%, Transit (midpoint) = 50%, Set = 100%
+            let t;
+            const duration = setHour > riseHour ? setHour - riseHour : (24 - riseHour) + setHour;
+
+            if (currentHour >= riseHour && currentHour <= setHour) {
+                // Moon is above horizon
+                t = (currentHour - riseHour) / duration;
+            } else if (currentHour < riseHour) {
+                // Before moonrise
+                t = 0;
+            } else {
+                // After moonset
+                t = 1;
+            }
+
+            // Clamp t for visibility check
+            // Ensure moon is actually above horizon (altitude > 0) to avoid mismatch
+            const isVisible = t >= 0 && t <= 1 && moonPos.altitude > 0;
+            const clampedT = Math.max(0, Math.min(1, t));
+
+            // New SVG Coordinates (viewBox 0 0 340 200)
+            // Start: 40,150 | Control: 170,-20 | End: 300,150
+            const P0 = { x: 40, y: 150 };
+            const P1 = { x: 170, y: -20 };
+            const P2 = { x: 300, y: 150 };
+
+            // Quadratic bezier calculation
+            const mt = 1 - clampedT;
+            const x = mt * mt * P0.x + 2 * mt * clampedT * P1.x + clampedT * clampedT * P2.x;
+            const y = mt * mt * P0.y + 2 * mt * clampedT * P1.y + clampedT * clampedT * P2.y;
+
+            // Set Position
+            const finalY = isVisible ? y : 150;
+            const opacity = isVisible ? 1 : 0.3;
+
+            moonCircle.setAttribute('cx', x);
+            moonCircle.setAttribute('cy', finalY);
+            moonCircle.style.opacity = opacity;
+
+            if (moonGlow) {
+                moonGlow.setAttribute('cx', x);
+                moonGlow.setAttribute('cy', finalY);
+                moonGlow.style.opacity = isVisible ? 1 : 0;
+            }
+
+            // Update Info Label
+            if (moonInfoGroup && moonInfoText && moonInfoBg) {
+                if (isVisible) {
+                    // Update text
+                    const altText = `${Math.round(moonPos.altitude)}°`;
+                    const dirText = getJapaneseCompassDirection(moonPos.azimuth);
+                    moonInfoText.textContent = `${dirText} ${altText}`;
+
+                    // Update box size based on text length (approx)
+                    const textWidth = 80;
+                    moonInfoBg.setAttribute('width', textWidth);
+                    moonInfoBg.setAttribute('x', -textWidth / 2);
+                    moonInfoBg.setAttribute('y', -10);
+
+                    // Position group: Above the moon marker
+                    const labelY = y - 25;
+                    const safeLabelY = Math.max(20, labelY); // Don't go off top
+
+                    moonInfoGroup.setAttribute('transform', `translate(${x}, ${safeLabelY})`);
+                    moonInfoGroup.setAttribute('opacity', 1);
+                } else {
+                    moonInfoGroup.setAttribute('opacity', 0);
+                }
+            }
+        }
+
+        // Call moon data on load
+        document.addEventListener('DOMContentLoaded', loadMoonData);
 
         // Simple markdown to HTML converter
         function simpleMarkdownToHtml(text) {
@@ -5585,6 +6271,7 @@
 
         async function init() {
             await fetchAll();
+            loadSunTimes(); // Load sunrise/sunset times
             nextUpdateTime = Date.now() + UPDATE_INTERVAL;
             setInterval(updateCountdown, 1000);
             setInterval(() => { fetchAll(); nextUpdateTime = Date.now() + UPDATE_INTERVAL; }, UPDATE_INTERVAL);
@@ -5666,6 +6353,129 @@
                 expandBtn.textContent = '続きを表示';
             }
         }
+
+        // =====================================================
+        // CHART CARD DRAG & DROP REORDERING
+        // =====================================================
+        function initChartReordering() {
+            const chartsGrid = document.getElementById('chartsGrid');
+            if (!chartsGrid) return;
+
+            let draggedElement = null;
+
+            // Load saved order from localStorage
+            const savedOrder = localStorage.getItem('chartOrder');
+            if (savedOrder) {
+                try {
+                    const order = JSON.parse(savedOrder);
+                    const cards = Array.from(chartsGrid.querySelectorAll('.chart-card'));
+                    const sortedCards = order.map(id => cards.find(c => c.dataset.chartId === id)).filter(Boolean);
+
+                    // Add any missing cards (new charts)
+                    cards.forEach(card => {
+                        if (!sortedCards.includes(card)) sortedCards.push(card);
+                    });
+
+                    sortedCards.forEach(card => chartsGrid.appendChild(card));
+                    console.log('[Charts] Loaded saved order:', order);
+                } catch (e) {
+                    console.log('[Charts] Failed to load saved order');
+                }
+            }
+
+            // Drag start
+            chartsGrid.addEventListener('dragstart', (e) => {
+                const card = e.target.closest('.chart-card');
+                if (!card) return;
+
+                draggedElement = card;
+                card.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', card.dataset.chartId);
+            });
+
+            // Drag end
+            chartsGrid.addEventListener('dragend', (e) => {
+                const card = e.target.closest('.chart-card');
+                if (card) card.classList.remove('dragging');
+
+                document.querySelectorAll('.chart-card.drag-over').forEach(el => {
+                    el.classList.remove('drag-over');
+                });
+
+                draggedElement = null;
+
+                // Save new order to localStorage
+                saveChartOrder();
+            });
+
+            // Drag over
+            chartsGrid.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+
+                const afterElement = getDragAfterElement(chartsGrid, e.clientY);
+                const dragging = chartsGrid.querySelector('.dragging');
+
+                if (afterElement == null) {
+                    chartsGrid.appendChild(dragging);
+                } else {
+                    chartsGrid.insertBefore(dragging, afterElement);
+                }
+            });
+
+            // Drag enter
+            chartsGrid.addEventListener('dragenter', (e) => {
+                const card = e.target.closest('.chart-card');
+                if (card && card !== draggedElement) {
+                    card.classList.add('drag-over');
+                }
+            });
+
+            // Drag leave
+            chartsGrid.addEventListener('dragleave', (e) => {
+                const card = e.target.closest('.chart-card');
+                if (card) card.classList.remove('drag-over');
+            });
+
+            // Drop
+            chartsGrid.addEventListener('drop', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.chart-card.drag-over').forEach(el => {
+                    el.classList.remove('drag-over');
+                });
+            });
+        }
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.chart-card:not(.dragging)')];
+
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        function saveChartOrder() {
+            const chartsGrid = document.getElementById('chartsGrid');
+            if (!chartsGrid) return;
+
+            const order = Array.from(chartsGrid.querySelectorAll('.chart-card'))
+                .map(card => card.dataset.chartId)
+                .filter(Boolean);
+
+            localStorage.setItem('chartOrder', JSON.stringify(order));
+            console.log('[Charts] Saved order:', order);
+        }
+
+        // Initialize reordering after DOM is ready
+        document.addEventListener('DOMContentLoaded', initChartReordering);
 
         init();
     </script>
