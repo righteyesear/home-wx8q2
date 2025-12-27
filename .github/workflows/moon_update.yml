@@ -1,0 +1,57 @@
+# 月データ更新ワークフロー（おはこん番地は！？ API）
+# 6時間ごとに更新
+
+name: Moon Data Update
+
+on:
+  schedule:
+    # 毎日 0, 6, 12, 18時に実行（UTC = JST-9h）
+    # JST 9:00, 15:00, 21:00, 3:00
+    - cron: '0 0,6,12,18 * * *'
+  
+  # 手動実行も可能
+  workflow_dispatch:
+
+concurrency:
+  group: moon-update
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  update-moon-data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Fetch moon data
+        run: |
+          python scripts/moon_data.py
+      
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          if [ -f moon_data.json ]; then
+            git add moon_data.json
+            if git diff --staged --quiet; then
+              echo "No changes to commit"
+            else
+              git commit -m "🌙 Update moon data [$(TZ=Asia/Tokyo date +'%Y-%m-%d %H:%M')]"
+              git pull --rebase origin main || true
+              git push
+              echo "✅ Moon data updated"
+            fi
+          fi
