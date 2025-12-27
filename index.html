@@ -1829,35 +1829,23 @@
             }
         }
 
-        // JMA Warning Code to Name Mapping (気象庁警報・注意報コード - 完全版)
-        // 公式: 特別警報6種類、警報7種類、注意報16種類 + 津波・洪水関連
+        // JMA Warning Code to Name Mapping (気象庁防災情報XML公式コード)
+        // 出典: 気象庁「防災情報XMLフォーマット コード管理表」
         const JMA_WARNING_NAMES = {
-            // === 特別警報 (6種類) ===
-            '01': '暴風雪特別警報', '02': '大雪特別警報', '03': '大雨特別警報',
-            '04': '暴風特別警報', '05': '波浪特別警報', '06': '高潮特別警報',
-            // === 警報 (7種類) ===
-            '10': '大雨警報', '11': '洪水警報', '12': '大雪警報',
-            '13': '暴風警報', '14': '暴風雪警報', '15': '波浪警報', '16': '高潮警報',
-            // === 注意報 (16種類) ===
-            '17': '大雨注意報', '18': '洪水注意報', '19': '大雪注意報',
-            '20': '濃霧注意報', '21': '雷注意報', '22': '乾燥注意報',
-            '23': '強風注意報', '24': '風雪注意報', '25': '波浪注意報',
-            '26': '高潮注意報', '27': '霜注意報', '28': '低温注意報',
-            '29': '着氷注意報', '30': '着雪注意報', '31': '融雪注意報',
-            '32': 'なだれ注意報',
-            // === 津波関連 ===
-            '50': '大津波警報', '51': '津波警報', '52': '津波注意報',
-            '53': '津波予報', '54': '津波情報',
-            // === 土砂災害警戒情報 ===
-            '60': '土砂災害警戒情報',
-            // === 記録的短時間大雨情報 ===
-            '70': '記録的短時間大雨情報',
-            // === 竜巻注意情報 ===
-            '80': '竜巻注意情報',
-            // === 指定河川洪水予報 ===
-            '90': '氾濫発生情報', '91': '氾濫危険情報',
-            '92': '氾濫警戒情報', '93': '氾濫注意情報',
-            // === その他 ===
+            // === 特別警報 (32-38) ===
+            '32': '暴風雪特別警報', '33': '大雨特別警報', '35': '暴風特別警報',
+            '36': '大雪特別警報', '37': '波浪特別警報', '38': '高潮特別警報',
+            // === 警報 (02-08) ===
+            '02': '暴風雪警報', '03': '大雨警報', '04': '洪水警報',
+            '05': '暴風警報', '06': '大雪警報', '07': '波浪警報', '08': '高潮警報',
+            // === 注意報 (10-27) ===
+            '10': '大雨注意報', '12': '大雪注意報', '13': '風雪注意報',
+            '14': '雷注意報', '15': '強風注意報', '16': '波浪注意報',
+            '17': '融雪注意報', '18': '洪水注意報', '19': '高潮注意報',
+            '20': '濃霧注意報', '21': '乾燥注意報', '22': 'なだれ注意報',
+            '23': '低温注意報', '24': '霜注意報', '25': '着氷注意報',
+            '26': '着雪注意報', '27': 'その他の注意報',
+            // === 解除 ===
             '00': '解除'
         };
 
@@ -4315,10 +4303,42 @@
         const baseOptions = {
             responsive: true,
             maintainAspectRatio: false,
-            interaction: { intersect: false, mode: 'index' },
+            // Optimized interaction for mobile touch
+            interaction: {
+                intersect: false,
+                mode: 'index',
+                axis: 'x'  // Only detect on x-axis for smoother sliding
+            },
+            // Smooth animations for mobile
+            animation: {
+                duration: 150
+            },
+            hover: {
+                animationDuration: 0,
+                mode: 'index',
+                intersect: false
+            },
+            // Reduce redraws on resize
+            resizeDelay: 100,
+            // Layout padding for touch
+            layout: {
+                padding: { left: 5, right: 10, top: 5, bottom: 5 }
+            },
+            // Dataset element animations
+            elements: {
+                point: {
+                    radius: 0,  // Hide points for cleaner look
+                    hoverRadius: 5,
+                    hitRadius: 10  // Larger hit area for touch
+                },
+                line: {
+                    tension: 0.3  // Smooth curves
+                }
+            },
             plugins: {
                 legend: { labels: { color: '#94a3b8', font: { size: 11, weight: '500' }, usePointStyle: true, padding: 20 } },
                 tooltip: {
+                    enabled: true,
                     backgroundColor: 'rgba(15, 23, 42, 0.95)',
                     titleColor: '#f8fafc',
                     bodyColor: '#cbd5e1',
@@ -4328,6 +4348,13 @@
                     cornerRadius: 12,
                     displayColors: true,
                     titleFont: { weight: '600' },
+                    // Smooth tooltip transitions
+                    animation: {
+                        duration: 80,
+                        easing: 'easeOutQuart'
+                    },
+                    // Tooltip stays put on touch devices
+                    position: 'nearest',
                     callbacks: {
                         label: function (context) {
                             let label = context.dataset.label || '';
