@@ -4404,15 +4404,11 @@
             if (!sourceData.length) return;
 
             const now = Date.now();
-            const cutoff24h = new Date(now - 24 * 60 * 60 * 1000);  // 24h ago (initial view)
-            const cutoff8days = new Date(now - 8 * 24 * 60 * 60 * 1000);  // 8 days ago (data range)
+            const cutoff24h = new Date(now - 24 * 60 * 60 * 1000);  // 24h ago
+            const cutoff48h = new Date(now - 48 * 60 * 60 * 1000);  // 48h ago (for yesterday comparison)
 
-            // Use all data within 8 days (but sample if too many for performance)
-            let chartData = sourceData.filter(d => d.date >= cutoff8days);
-            if (chartData.length > 2500) {
-                const sampleRate = Math.ceil(chartData.length / 2500);
-                chartData = chartData.filter((_, i) => i % sampleRate === 0);
-            }
+            // Use only 48h of data (no zoom/pan needed)
+            let chartData = sourceData.filter(d => d.date >= cutoff48h);
 
             // Sort by date
             chartData.sort((a, b) => a.date - b.date);
@@ -4422,9 +4418,8 @@
             const humidData = chartData.map(d => ({ x: d.date, y: d.humidity }));
 
             // Create "yesterday comparison" data by shifting each point +24h
-            const cutoff48h = new Date(now - 48 * 60 * 60 * 1000);
             const yesterdayData = chartData
-                .filter(d => d.date >= cutoff48h && d.date < cutoff24h)
+                .filter(d => d.date < cutoff24h)
                 .map(d => ({
                     x: new Date(d.date.getTime() + 24 * 60 * 60 * 1000),  // Shift +24h
                     y: d.temperature
@@ -4465,8 +4460,8 @@
                             tension: 0.4,
                             borderWidth: 1.5,
                             pointRadius: 0,
-                            pointHoverRadius: 0,
-                            pointHitRadius: 0,  // Exclude from touch/hover detection
+                            pointHoverRadius: 4,  // Show circle on hover
+                            pointHitRadius: 0,    // But don't use for tooltip position
                             yAxisID: 'y',
                             order: 2,
                             spanGaps: true
@@ -4547,37 +4542,8 @@
                                 ...baseOptions.plugins.tooltip.callbacks,
                                 // Keep default label callback
                             }
-                        },
-                        zoom: {
-                            pan: {
-                                enabled: true,
-                                mode: 'x',
-                                threshold: 5,
-                                modifierKey: null  // Drag without any modifier key on PC
-                            },
-                            zoom: {
-                                wheel: {
-                                    enabled: true,
-                                    modifierKey: isMobile ? null : 'ctrl'  // PC: Ctrl+wheel, Mobile: direct wheel
-                                },
-                                pinch: { enabled: true },
-                                drag: {
-                                    enabled: !isMobile,  // PC: drag-to-zoom with modifier
-                                    modifierKey: 'shift'  // Shift+drag to zoom
-                                },
-                                mode: 'x',
-                                onZoomComplete: function ({ chart }) {
-                                    // Optional: handle zoom complete event
-                                }
-                            },
-                            limits: {
-                                x: {
-                                    min: cutoff8days.getTime(),  // Allow panning back to 8 days ago
-                                    max: now,                     // Up to now
-                                    minRange: 60 * 60 * 1000     // Minimum 1 hour range
-                                }
-                            }
                         }
+                        // Zoom disabled - showing fixed 24h view
                     }
                 }
             });
