@@ -871,42 +871,33 @@
             transition: color 0.5s ease;
         }
 
-        /* Temperature color classes */
-        .hero-temp-value.temp-freezing {
-            color: #60a5fa;
-        }
-
-        /* < 0℃ */
-        .hero-temp-value.temp-cold {
-            color: #38bdf8;
-        }
-
-        /* 0-10℃ */
-        .hero-temp-value.temp-cool {
-            color: #22d3ee;
-        }
-
-        /* 10-15℃ */
-        .hero-temp-value.temp-mild {
-            color: #2dd4bf;
-        }
-
-        /* 15-20℃ */
-        .hero-temp-value.temp-warm {
-            color: #fbbf24;
-        }
-
-        /* 20-25℃ */
-        .hero-temp-value.temp-hot {
-            color: #fb923c;
-        }
-
-        /* 25-30℃ */
+        /* Temperature color classes - gradient based on --temp-hue */
+        .hero-temp-value.temp-freezing,
+        .hero-temp-value.temp-cold,
+        .hero-temp-value.temp-cool,
+        .hero-temp-value.temp-mild,
+        .hero-temp-value.temp-warm,
+        .hero-temp-value.temp-hot,
         .hero-temp-value.temp-extreme {
-            color: #ef4444;
+            background: linear-gradient(135deg,
+                    hsl(var(--temp-hue), 85%, 60%) 0%,
+                    hsl(calc(var(--temp-hue) + 25), 80%, 55%) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+            transition: background 2s ease;
         }
 
-        /* > 30℃ */
+        /* < 0℃ - extra glow for freezing */
+        .hero-temp-value.temp-freezing {
+            filter: drop-shadow(0 0 20px hsla(var(--temp-hue), 80%, 60%, 0.5));
+        }
+
+        /* > 30℃ - extra glow for extreme heat */
+        .hero-temp-value.temp-extreme {
+            filter: drop-shadow(0 0 20px hsla(var(--temp-hue), 80%, 60%, 0.6));
+        }
 
         .hero-temp-unit {
             font-size: 1.5rem;
@@ -6333,6 +6324,19 @@
             else if (temp < 25) heroTempEl.classList.add('temp-warm');
             else if (temp < 30) heroTempEl.classList.add('temp-hot');
             else heroTempEl.classList.add('temp-extreme');
+
+            // Update --temp-hue CSS variable for dynamic gradient colors
+            // Blue (220) for cold → Green (120) for mild → Orange (30) → Red (0) for hot
+            const tempHue = temp <= -10 ? 220 :      // Freezing: deep blue
+                temp <= 0 ? 200 :         // Very cold: blue
+                    temp <= 10 ? 180 :        // Cold: cyan
+                        temp <= 15 ? 160 :        // Cool: teal
+                            temp <= 20 ? 120 :        // Mild: green
+                                temp <= 25 ? 60 :         // Warm: yellow-green
+                                    temp <= 30 ? 30 :         // Hot: orange
+                                        temp <= 35 ? 15 :         // Very hot: orange-red
+                                            0;                        // Extreme: red
+            document.documentElement.style.setProperty('--temp-hue', tempHue);
 
             // Update weather icon
             document.getElementById('heroWeatherIcon').textContent = emoji;
