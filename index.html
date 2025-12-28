@@ -6619,17 +6619,27 @@
                         // Override tooltip to use current temperature as anchor (prevents jitter)
                         tooltip: {
                             ...baseOptions.plugins.tooltip,
-                            // Show all datasets in tooltip
-                            filter: null,
-                            // Sort: 気温 first, then 湿度, then 前日の気温
-                            itemSort: function (a, b) {
-                                const order = { '気温': 0, '湿度': 1, '前日の気温': 2 };
-                                return (order[a.dataset.label] || 99) - (order[b.dataset.label] || 99);
+                            // Show all datasets in tooltip (filter must be function, not null)
+                            filter: function (tooltipItem) {
+                                // Show all items that have data
+                                return tooltipItem.parsed.y !== null && tooltipItem.parsed.y !== undefined;
                             },
-                            // Position tooltip based on the first dataset (気温) only
+                            // Sort: 気温 first, then 前日の気温, then 湿度
+                            itemSort: function (a, b) {
+                                const order = { '気温': 0, '前日の気温': 1, '湿度': 2 };
+                                return (order[a.dataset.label] ?? 99) - (order[b.dataset.label] ?? 99);
+                            },
                             callbacks: {
                                 ...baseOptions.plugins.tooltip.callbacks,
-                                // Keep default label callback
+                                label: function (context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) label += ': ';
+                                    if (context.parsed.y !== null && context.parsed.y !== undefined) {
+                                        const unit = label.includes('湿度') ? '%' : '°C';
+                                        label += context.parsed.y.toFixed(1) + unit;
+                                    }
+                                    return label;
+                                }
                             }
                         }
                         // Zoom disabled - showing fixed 24h view
