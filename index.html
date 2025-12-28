@@ -2606,6 +2606,39 @@
             // DevTools detection (checks if window is resized for docked DevTools)
             let devToolsOpen = false;
             const threshold = 160;
+
+            // Create warning overlay
+            const createWarningOverlay = () => {
+                if (document.getElementById('devtools-warning')) return;
+                const overlay = document.createElement('div');
+                overlay.id = 'devtools-warning';
+                overlay.innerHTML = `
+                    <div style="
+                        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                        background: rgba(0, 0, 0, 0.95);
+                        display: flex; flex-direction: column;
+                        justify-content: center; align-items: center;
+                        z-index: 999999; color: white; font-family: sans-serif;
+                    ">
+                        <div style="font-size: 80px; margin-bottom: 20px;">🚫</div>
+                        <div style="font-size: 28px; font-weight: bold; margin-bottom: 15px; color: #ef4444;">
+                            開発者ツールが検出されました。
+                        </div>
+                        <div style="font-size: 16px; color: #94a3b8; text-align: center; line-height: 1.8;">
+                            このページのソースコードは保護されています。<br>
+                            開発者ツールを閉じてください。
+                            開発者に自動で報告されます。
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+            };
+
+            const removeWarningOverlay = () => {
+                const overlay = document.getElementById('devtools-warning');
+                if (overlay) overlay.remove();
+            };
+
             const checkDevTools = () => {
                 const widthDiff = window.outerWidth - window.innerWidth > threshold;
                 const heightDiff = window.outerHeight - window.innerHeight > threshold;
@@ -2614,12 +2647,28 @@
                         devToolsOpen = true;
                         console.clear();
                         console.log('%c⚠️ 開発者ツールの使用は検出されます', 'color: red; font-size: 20px; font-weight: bold;');
+                        createWarningOverlay();
                     }
                 } else {
-                    devToolsOpen = false;
+                    if (devToolsOpen) {
+                        devToolsOpen = false;
+                        removeWarningOverlay();
+                    }
                 }
             };
-            setInterval(checkDevTools, 1000);
+            setInterval(checkDevTools, 500);
+
+            // Additional detection using debugger timing
+            const detectDebugger = () => {
+                const start = performance.now();
+                debugger;
+                const end = performance.now();
+                if (end - start > 100) {
+                    createWarningOverlay();
+                }
+            };
+            // Run once on load (will trigger if DevTools is already open)
+            setTimeout(detectDebugger, 1000);
 
             // Disable text selection (optional, can be removed if needed)
             document.addEventListener('selectstart', e => e.preventDefault());
