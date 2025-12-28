@@ -2582,6 +2582,52 @@
     </div>
 
     <script>
+        // =====================================================
+        // SOURCE CODE PROTECTION (deters casual viewing)
+        // =====================================================
+        (function () {
+            // Disable right-click context menu
+            document.addEventListener('contextmenu', e => e.preventDefault());
+
+            // Disable keyboard shortcuts (F12, Ctrl+Shift+I, Ctrl+U, Ctrl+S)
+            document.addEventListener('keydown', function (e) {
+                // F12
+                if (e.key === 'F12') { e.preventDefault(); return false; }
+                // Ctrl+Shift+I (DevTools)
+                if (e.ctrlKey && e.shiftKey && e.key === 'I') { e.preventDefault(); return false; }
+                // Ctrl+Shift+J (Console)
+                if (e.ctrlKey && e.shiftKey && e.key === 'J') { e.preventDefault(); return false; }
+                // Ctrl+U (View Source)
+                if (e.ctrlKey && e.key === 'u') { e.preventDefault(); return false; }
+                // Ctrl+S (Save)
+                if (e.ctrlKey && e.key === 's') { e.preventDefault(); return false; }
+            });
+
+            // DevTools detection (checks if window is resized for docked DevTools)
+            let devToolsOpen = false;
+            const threshold = 160;
+            const checkDevTools = () => {
+                const widthDiff = window.outerWidth - window.innerWidth > threshold;
+                const heightDiff = window.outerHeight - window.innerHeight > threshold;
+                if (widthDiff || heightDiff) {
+                    if (!devToolsOpen) {
+                        devToolsOpen = true;
+                        console.clear();
+                        console.log('%c⚠️ 開発者ツールの使用は検出されます', 'color: red; font-size: 20px; font-weight: bold;');
+                    }
+                } else {
+                    devToolsOpen = false;
+                }
+            };
+            setInterval(checkDevTools, 1000);
+
+            // Disable text selection (optional, can be removed if needed)
+            document.addEventListener('selectstart', e => e.preventDefault());
+
+            // Clear console on load
+            console.clear();
+        })();
+
         const SPREADSHEET_ID = '1nbmJIIUzw8n2PcHp98NaiKnaAVciBx_Egpokjjx7uW8';
         const BASE_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv`;
         const SUMMARY_URL = `${BASE_URL}&sheet=Summary`;
