@@ -3769,29 +3769,34 @@
                 if (moonTimes.setIsTomorrow) {
                     // Moonset is tomorrow - current period is from rise until midnight+setHour
                     if (currentHour >= riseHour) {
-                        // After moonrise, moon is visible
-                        isVisible = moonPos.altitude > 0;
+                        // After moonrise, moon is visible until set tomorrow
+                        isVisible = true;
                         t = (currentHour - riseHour) / duration;
                     } else {
                         // Before moonrise today
                         t = 0;
+                        isVisible = false;
                     }
                 } else if (currentHour >= riseHour && currentHour <= setHour) {
-                    // Moon is above horizon (normal case)
+                    // Moon is above horizon (normal case: between rise and set)
                     t = (currentHour - riseHour) / duration;
-                    isVisible = moonPos.altitude > 0;
+                    isVisible = true;
                 } else if (currentHour < riseHour) {
                     // Before moonrise
                     t = 0;
+                    isVisible = false;
                 } else {
                     // After moonset
                     t = 1;
+                    isVisible = false;
                 }
             } else if (riseHour !== null) {
                 // Only moonrise available (moonset next day)
                 if (currentHour >= riseHour) {
-                    isVisible = moonPos.altitude > 0;
+                    isVisible = true;
                     t = Math.min(1, (currentHour - riseHour) / 12); // Assume ~12h above horizon
+                } else {
+                    isVisible = false;
                 }
             }
 
