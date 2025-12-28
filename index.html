@@ -2615,19 +2615,34 @@
                 overlay.innerHTML = `
                     <div style="
                         position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-                        background: rgba(0, 0, 0, 0.95);
+                        background: linear-gradient(135deg, rgba(15, 0, 0, 0.98), rgba(30, 0, 0, 0.95));
                         display: flex; flex-direction: column;
                         justify-content: center; align-items: center;
                         z-index: 999999; color: white; font-family: sans-serif;
+                        animation: warningPulse 2s ease-in-out infinite;
                     ">
-                        <div style="font-size: 80px; margin-bottom: 20px;">🚫</div>
-                        <div style="font-size: 28px; font-weight: bold; margin-bottom: 15px; color: #ef4444;">
-                            開発者ツールが検出されました。
+                        <style>
+                            @keyframes warningPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.9; } }
+                            @keyframes scanline { 0% { transform: translateY(-100%); } 100% { transform: translateY(100vh); } }
+                        </style>
+                        <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #ef4444, transparent); animation: scanline 2s linear infinite;"></div>
+                        <div style="font-size: 100px; margin-bottom: 20px; filter: drop-shadow(0 0 30px rgba(239, 68, 68, 0.8));">⚠️</div>
+                        <div style="font-size: 32px; font-weight: bold; margin-bottom: 10px; color: #ef4444; text-shadow: 0 0 20px rgba(239, 68, 68, 0.6);">
+                            🔒 セキュリティ警告
                         </div>
-                        <div style="font-size: 16px; color: #94a3b8; text-align: center; line-height: 1.8;">
-                            このページのソースコードは保護されています。<br>
-                            開発者ツールを閉じてください。
-                            開発者に自動で報告されます。
+                        <div style="font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #fbbf24;">
+                            不正アクセスが検出されました
+                        </div>
+                        <div style="font-size: 14px; color: #94a3b8; text-align: center; line-height: 2; max-width: 500px; background: rgba(0,0,0,0.5); padding: 20px; border-radius: 10px; border: 1px solid rgba(239, 68, 68, 0.3);">
+                            このページのソースコードは著作権法により保護されています。<br>
+                            <span style="color: #ef4444; font-weight: bold;">⚡ 開発者ツールの使用を検出</span><br><br>
+                            📋 あなたのIPアドレス・デバイス情報は記録されました<br>
+                            📡 サーバーへのログ送信: <span style="color: #22c55e;">完了</span><br>
+                            🔍 不正アクセスとして調査対象となる場合があります<br><br>
+                            <span style="color: #fbbf24;">開発者ツールを直ちに閉じてください</span>
+                        </div>
+                        <div style="margin-top: 20px; font-size: 11px; color: #64748b;">
+                            Session ID: ${Math.random().toString(36).substring(2, 10).toUpperCase()}-${Date.now()}
                         </div>
                     </div>
                 `;
@@ -2646,7 +2661,7 @@
                     if (!devToolsOpen) {
                         devToolsOpen = true;
                         console.clear();
-                        console.log('%c⚠️ 開発者ツールの使用は検出されます', 'color: red; font-size: 20px; font-weight: bold;');
+                        console.log('%c⚠️ 開発者ツールの使用は検出されます。開発者に自動で報告されます。', 'color: red; font-size: 20px; font-weight: bold;');
                         createWarningOverlay();
                     }
                 } else {
