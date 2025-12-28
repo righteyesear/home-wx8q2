@@ -3241,6 +3241,14 @@
                     }
                     if (apiData.moonset && apiData.moonset !== '--:--') {
                         moonTimes.set = apiData.moonset;
+                        // Track if moonset is tomorrow
+                        if (apiData.moonset_is_tomorrow) {
+                            moonTimes.setIsTomorrow = true;
+                        }
+                    }
+                    // Track if moonrise is yesterday
+                    if (apiData.moonrise_is_yesterday) {
+                        moonTimes.riseIsYesterday = true;
                     }
                     // Override directions with API values
                     if (apiData.moonrise_direction) {
@@ -3530,7 +3538,12 @@
             // Parse rise and set times to get hours as decimal
             const parseTime = (timeStr) => {
                 if (!timeStr || timeStr === '--:--') return null;
-                const [h, m] = timeStr.split(':').map(Number);
+                // Remove '翌' (tomorrow) or '前日' (yesterday) prefix if present
+                let cleanTime = timeStr.replace(/^(翌|前日)/, '');
+                const match = cleanTime.match(/(\d+):(\d+)/);
+                if (!match) return null;
+                const h = parseInt(match[1], 10);
+                const m = parseInt(match[2], 10);
                 return h + m / 60;
             };
 
@@ -3544,10 +3557,28 @@
             let isVisible = false;
 
             if (riseHour !== null && setHour !== null) {
-                const duration = setHour > riseHour ? setHour - riseHour : (24 - riseHour) + setHour;
+                // Handle case where moonset is tomorrow (setHour includes +24 offset)
+                let adjustedSetHour = setHour;
+                if (moonTimes.setIsTomorrow && setHour < 24) {
+                    adjustedSetHour = setHour + 24; // Add 24 hours for tomorrow
+                }
 
-                if (currentHour >= riseHour && currentHour <= setHour) {
-                    // Moon is above horizon
+                const duration = adjustedSetHour > riseHour
+                    ? adjustedSetHour - riseHour
+                    : (24 - riseHour) + adjustedSetHour;
+
+                if (moonTimes.setIsTomorrow) {
+                    // Moonset is tomorrow - current period is from rise until midnight+setHour
+                    if (currentHour >= riseHour) {
+                        // After moonrise, moon is visible
+                        isVisible = moonPos.altitude > 0;
+                        t = (currentHour - riseHour) / duration;
+                    } else {
+                        // Before moonrise today
+                        t = 0;
+                    }
+                } else if (currentHour >= riseHour && currentHour <= setHour) {
+                    // Moon is above horizon (normal case)
                     t = (currentHour - riseHour) / duration;
                     isVisible = moonPos.altitude > 0;
                 } else if (currentHour < riseHour) {
