@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🌡️ 外気温モニター</title>
     <meta name="description" content="リアルタイム外気温ダッシュボード">
     <meta name="robots" content="noindex, nofollow">
@@ -78,6 +78,13 @@
         *::before,
         *::after {
             transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        /* Prevent pinch-zoom on mobile */
+        html,
+        body {
+            touch-action: manipulation;
+            -ms-touch-action: manipulation;
         }
 
         /* Card Hover Effects */
@@ -2687,6 +2694,28 @@
 
             // Disable text selection (optional, can be removed if needed)
             document.addEventListener('selectstart', e => e.preventDefault());
+
+            // Disable pinch-to-zoom on mobile
+            document.addEventListener('gesturestart', e => e.preventDefault());
+            document.addEventListener('gesturechange', e => e.preventDefault());
+            document.addEventListener('gestureend', e => e.preventDefault());
+
+            // Disable double-tap zoom
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', e => {
+                const now = Date.now();
+                if (now - lastTouchEnd <= 300) {
+                    e.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, { passive: false });
+
+            // Disable multi-touch zoom
+            document.addEventListener('touchstart', e => {
+                if (e.touches.length > 1) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
 
             // Clear console on load
             console.clear();
@@ -6726,18 +6755,11 @@
                     },
                     plugins: {
                         ...baseOptions.plugins,
-                        // Override tooltip to use current temperature as anchor (prevents jitter)
                         tooltip: {
                             ...baseOptions.plugins.tooltip,
-                            // Show all datasets in tooltip (filter must be function, not null)
+                            // Only trigger tooltip from 気温 (today's data)
                             filter: function (tooltipItem) {
-                                // Show all items that have data
-                                return tooltipItem.parsed.y !== null && tooltipItem.parsed.y !== undefined;
-                            },
-                            // Sort: 気温 first, then 前日の気温, then 湿度
-                            itemSort: function (a, b) {
-                                const order = { '気温': 0, '前日の気温': 1, '湿度': 2 };
-                                return (order[a.dataset.label] ?? 99) - (order[b.dataset.label] ?? 99);
+                                return tooltipItem.dataset.label === '気温' || tooltipItem.dataset.label === '湿度';
                             },
                             callbacks: {
                                 ...baseOptions.plugins.tooltip.callbacks,
@@ -6749,10 +6771,27 @@
                                         label += context.parsed.y.toFixed(1) + unit;
                                     }
                                     return label;
+                                },
+                                afterBody: function (tooltipItems) {
+                                    if (!tooltipItems.length) return '';
+
+                                    // hoveredTime is milliseconds timestamp from parsed.x
+                                    const hoveredTime = tooltipItems[0].parsed.x;
+
+                                    // Find corresponding yesterday's temp from yesterdayData
+                                    // yesterdayData has {x: Date, y: temperature}
+                                    const yesterdayPoint = yesterdayData.find(d => {
+                                        const dataTime = d.x.getTime ? d.x.getTime() : d.x;
+                                        return Math.abs(dataTime - hoveredTime) < 2 * 60 * 1000;  // 2min tolerance
+                                    });
+
+                                    if (yesterdayPoint) {
+                                        return `■ 前日の気温: ${yesterdayPoint.y.toFixed(1)}°C`;
+                                    }
+                                    return '';
                                 }
                             }
                         }
-                        // Zoom disabled - showing fixed 24h view
                     }
                 }
             });
