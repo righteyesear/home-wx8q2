@@ -1002,16 +1002,10 @@
         .comment-content {
             font-size: 0.95rem;
             color: var(--text-primary);
-            line-height: 1.5;
-            white-space: nowrap;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            padding-bottom: 4px;
-        }
-
-        .comment-content::-webkit-scrollbar {
-            display: none;
+            line-height: 1.6;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         html.light-mode .comment-card {
