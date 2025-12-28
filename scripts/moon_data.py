@@ -50,7 +50,7 @@ def fetch_moon_data():
     }
     
     try:
-        # 1. 月の出入り時刻を取得
+        # 1. 月の出入り時刻を取得（今日）
         rise_set_url = (
             f"{base_url}?mode=sun_moon_rise_set"
             f"&year={now.year}&month={now.month}&day={now.day}"
@@ -67,11 +67,54 @@ def fetch_moon_data():
         result["sunrise"] = rs.get("sunrise_hm", "--:--")
         result["sunset"] = rs.get("sunset_hm", "--:--")
         
+        # === 翌日/前日のデータを取得（月の出入りがない場合） ===
+        tomorrow = now + timedelta(days=1)
+        yesterday = now - timedelta(days=1)
+        
+        # 今日の月の入りがない場合 → 翌日の月の入りを取得
+        if not moonset_decimal:
+            tomorrow_url = (
+                f"{base_url}?mode=sun_moon_rise_set"
+                f"&year={tomorrow.year}&month={tomorrow.month}&day={tomorrow.day}"
+                f"&lat={LAT}&lng={LON}"
+            )
+            tomorrow_data = fetch_json(tomorrow_url)
+            tomorrow_rs = tomorrow_data.get("rise_and_set", {})
+            tomorrow_moonset = tomorrow_rs.get("moonset_hm")
+            tomorrow_moonset_decimal = tomorrow_rs.get("moonset")
+            
+            if tomorrow_moonset:
+                result["moonset"] = f"翌{tomorrow_moonset}"
+                result["moonset_is_tomorrow"] = True
+                moonset_decimal = tomorrow_moonset_decimal
+                # 翌日フラグ（フロントエンドで使用）
+                result["moonset_date"] = tomorrow.strftime("%Y-%m-%d")
+        
+        # 今日の月の出がない場合 → 前日の月の出を確認（通常は稀）
+        if not moonrise_decimal:
+            yesterday_url = (
+                f"{base_url}?mode=sun_moon_rise_set"
+                f"&year={yesterday.year}&month={yesterday.month}&day={yesterday.day}"
+                f"&lat={LAT}&lng={LON}"
+            )
+            yesterday_data = fetch_json(yesterday_url)
+            yesterday_rs = yesterday_data.get("rise_and_set", {})
+            yesterday_moonrise = yesterday_rs.get("moonrise_hm")
+            yesterday_moonrise_decimal = yesterday_rs.get("moonrise")
+            
+            if yesterday_moonrise:
+                result["moonrise"] = f"前日{yesterday_moonrise}"
+                result["moonrise_is_yesterday"] = True
+                moonrise_decimal = yesterday_moonrise_decimal
+                result["moonrise_date"] = yesterday.strftime("%Y-%m-%d")
+        
         # 2. 月の出時刻での方位を取得
         if moonrise_decimal:
+            # 月の出が前日の場合は前日の日付を使用
+            rise_date = yesterday if result.get("moonrise_is_yesterday") else now
             rise_pos_url = (
                 f"{base_url}?mode=sun_moon_positions"
-                f"&year={now.year}&month={now.month}&day={now.day}"
+                f"&year={rise_date.year}&month={rise_date.month}&day={rise_date.day}"
                 f"&hour={moonrise_decimal:.3f}&lat={LAT}&lng={LON}"
             )
             rise_pos_data = fetch_json(rise_pos_url)
@@ -89,9 +132,11 @@ def fetch_moon_data():
         
         # 3. 月の入り時刻での方位を取得
         if moonset_decimal:
+            # 月の入りが翌日の場合は翌日の日付を使用
+            set_date = tomorrow if result.get("moonset_is_tomorrow") else now
             set_pos_url = (
                 f"{base_url}?mode=sun_moon_positions"
-                f"&year={now.year}&month={now.month}&day={now.day}"
+                f"&year={set_date.year}&month={set_date.month}&day={set_date.day}"
                 f"&hour={moonset_decimal:.3f}&lat={LAT}&lng={LON}"
             )
             set_pos_data = fetch_json(set_pos_url)
