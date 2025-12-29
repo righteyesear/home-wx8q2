@@ -71,6 +71,14 @@ def fetch_moon_data():
         tomorrow = now + timedelta(days=1)
         yesterday = now - timedelta(days=1)
         
+        # 月の入りが翌日かどうかを判定
+        # 月の出 > 月の入り（時刻）の場合、月の入りは翌日の深夜
+        # 例：月の出12:00、月の入り0:39 → 月の入りは翌日
+        if moonrise_decimal and moonset_decimal and moonrise_decimal > moonset_decimal:
+            result["moonset"] = f"翌{result['moonset']}"
+            result["moonset_is_tomorrow"] = True
+            result["moonset_date"] = tomorrow.strftime("%Y-%m-%d")
+        
         # 今日の月の入りがない場合 → 翌日の月の入りを取得
         if not moonset_decimal:
             tomorrow_url = (
@@ -87,7 +95,6 @@ def fetch_moon_data():
                 result["moonset"] = f"翌{tomorrow_moonset}"
                 result["moonset_is_tomorrow"] = True
                 moonset_decimal = tomorrow_moonset_decimal
-                # 翌日フラグ（フロントエンドで使用）
                 result["moonset_date"] = tomorrow.strftime("%Y-%m-%d")
         
         # 今日の月の出がない場合 → 前日の月の出を確認（通常は稀）
