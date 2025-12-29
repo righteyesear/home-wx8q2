@@ -797,14 +797,18 @@
         }
 
         html.light-mode .weather-hero {
-            background: rgba(241, 245, 249, 0.85);
+            /* Base background with frost-based gray tint overlay */
+            background: linear-gradient(rgba(180, 190, 200, calc(0.15 * var(--frost-intensity, 0))),
+                    rgba(180, 190, 200, calc(0.15 * var(--frost-intensity, 0)))), rgba(241, 245, 249, 0.85);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            border-color: rgba(203, 213, 225, 0.5);
+            border-color: rgba(203, 213, 225, calc(0.5 + 0.3 * var(--frost-intensity, 0)));
             backdrop-filter: blur(8px);
         }
 
         html.light-mode .weather-hero-info {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(147, 197, 253, 0.12) 100%);
+            /* Add slight gray overlay based on frost */
+            background: linear-gradient(rgba(160, 180, 200, calc(0.1 * var(--frost-intensity, 0))),
+                    rgba(160, 180, 200, calc(0.1 * var(--frost-intensity, 0)))), linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(147, 197, 253, 0.12) 100%);
             border: 1px solid rgba(59, 130, 246, 0.1);
         }
 
@@ -875,7 +879,34 @@
             line-height: 1;
             /* Default color, will be overridden by JS for gradient effect */
             color: var(--text-primary);
-            transition: color 0.5s ease;
+            transition: color 0.5s ease, transform 0.3s ease, filter 0.3s ease;
+        }
+
+        /* Temperature update animation */
+        .hero-temp-value.temp-updated {
+            animation: tempPulse 1s ease-out;
+        }
+
+        @keyframes tempPulse {
+            0% {
+                transform: scale(1);
+                filter: brightness(1) drop-shadow(0 0 0 transparent);
+            }
+
+            20% {
+                transform: scale(1.15);
+                filter: brightness(1.4) drop-shadow(0 0 30px rgba(255, 200, 100, 0.8));
+            }
+
+            50% {
+                transform: scale(1.08);
+                filter: brightness(1.2) drop-shadow(0 0 20px rgba(255, 200, 100, 0.5));
+            }
+
+            100% {
+                transform: scale(1);
+                filter: brightness(1) drop-shadow(0 0 0 transparent);
+            }
         }
 
         /* Temperature color classes - gradient based on --temp-hue */
@@ -896,9 +927,24 @@
             transition: background 2s ease;
         }
 
-        /* < 0℃ - extra glow for freezing */
+        /* Gradual frost effect using --frost-intensity (0 to 1) */
+        /* Starts subtle at 5°C, becomes fully white/frosty at -10°C */
+        .hero-temp-value.temp-cold,
         .hero-temp-value.temp-freezing {
-            filter: drop-shadow(0 0 20px hsla(var(--temp-hue), 80%, 60%, 0.5));
+            /* Dynamic white glow based on frost intensity */
+            filter: drop-shadow(0 0 calc(15px * var(--frost-intensity, 0)) rgba(255, 255, 255, calc(0.8 * var(--frost-intensity, 0)))) drop-shadow(0 0 calc(30px * var(--frost-intensity, 0)) rgba(200, 230, 255, calc(0.6 * var(--frost-intensity, 0)))) drop-shadow(0 0 calc(50px * var(--frost-intensity, 0)) rgba(180, 220, 255, calc(0.4 * var(--frost-intensity, 0))));
+        }
+
+        /* < 0℃ - add extra frosty white tint to gradient */
+        .hero-temp-value.temp-freezing {
+            /* Whiter gradient for freezing temperatures */
+            background: linear-gradient(135deg,
+                    hsl(200, calc(70% - 30% * var(--frost-intensity, 0)), calc(60% + 20% * var(--frost-intensity, 0))) 0%,
+                    hsl(210, calc(60% - 25% * var(--frost-intensity, 0)), calc(55% + 25% * var(--frost-intensity, 0))) 50%,
+                    hsl(220, calc(50% - 20% * var(--frost-intensity, 0)), calc(65% + 20% * var(--frost-intensity, 0))) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         /* > 30℃ - extra glow for extreme heat */
@@ -4646,15 +4692,19 @@
 
             // If conditions haven't changed and we have a previous comment, reuse it with updated temperature
             if (!conditionsChanged && lastComment) {
-                document.getElementById('greetingSection').classList.add('show');
-                document.querySelector('.greeting-text .emoji').textContent = emoji;
-                document.getElementById('greetingMain').textContent = greeting;
+                document.getElementById('greetingSection')?.classList.add('show');
+                // These elements may not exist in current UI - use optional chaining
+                const emojiEl = document.querySelector('.greeting-text .emoji');
+                if (emojiEl) emojiEl.textContent = emoji;
+                const greetingMainEl = document.getElementById('greetingMain');
+                if (greetingMainEl) greetingMainEl.textContent = greeting;
                 // Update temperature in previous comment to current value
                 const updatedComment = lastComment.replace(
                     /<span class="temp-highlight">[0-9.-]+°C<\/span>/g,
                     `<span class="temp-highlight">${temp.toFixed(1)}°C</span>`
                 );
-                document.getElementById('weatherComment').innerHTML = updatedComment;
+                const weatherCommentEl = document.getElementById('weatherComment');
+                if (weatherCommentEl) weatherCommentEl.innerHTML = updatedComment;
                 return;
             }
 
@@ -6602,7 +6652,16 @@
             // Update Weather Hero Section
             const heroTempEl = document.getElementById('heroTemp');
             const tempParts = temp.toFixed(1).split('.');
-            heroTempEl.innerHTML = `${tempParts[0]}<span class="temp-decimal">.${tempParts[1]}</span>`;
+            const newTempHtml = `${tempParts[0]}<span class="temp-decimal">.${tempParts[1]}</span>`;
+
+            // Only trigger animation if temperature actually changed
+            if (heroTempEl.innerHTML !== newTempHtml) {
+                heroTempEl.innerHTML = newTempHtml;
+                // Trigger pulse animation
+                heroTempEl.classList.remove('temp-updated');
+                void heroTempEl.offsetWidth; // Force reflow to restart animation
+                heroTempEl.classList.add('temp-updated');
+            }
 
             // Apply temperature-based color
             heroTempEl.classList.remove('temp-freezing', 'temp-cold', 'temp-cool', 'temp-mild', 'temp-warm', 'temp-hot', 'temp-extreme');
@@ -6626,6 +6685,14 @@
                                         temp <= 35 ? 15 :         // Very hot: orange-red
                                             0;                        // Extreme: red
             document.documentElement.style.setProperty('--temp-hue', tempHue);
+
+            // Frost intensity: increases as temperature drops below 5°C
+            // 5°C = 0% frost, 0°C = 30% frost, -10°C = 100% frost
+            let frostIntensity = 0;
+            if (temp < 5) {
+                frostIntensity = Math.min(1, (5 - temp) / 15); // 0 at 5°C, 1 at -10°C
+            }
+            document.documentElement.style.setProperty('--frost-intensity', frostIntensity);
 
             // Update weather icon
             document.getElementById('heroWeatherIcon').textContent = emoji;
