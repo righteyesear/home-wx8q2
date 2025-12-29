@@ -1309,18 +1309,100 @@
             overflow: hidden;
         }
 
-        .ai-advisor-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
-        }
-
+        /* Gemini-style border shimmer - traces the outline once */
         .ai-advisor-section.show {
             display: block;
+            animation: fadeInUp 0.5s ease-out, aiShimmerBorder 3.5s linear;
+        }
+
+        @keyframes aiShimmerBorder {
+            0% {
+                box-shadow: 0 0 0 0 transparent;
+            }
+
+            2% {
+                box-shadow: 0 -2px 15px 1px rgba(139, 92, 246, 0.35);
+            }
+
+            5% {
+                box-shadow: 0 -4px 28px 3px rgba(139, 92, 246, 0.65);
+            }
+
+            9% {
+                box-shadow: 2px -4px 32px 4px rgba(139, 92, 246, 0.7);
+            }
+
+            14% {
+                box-shadow: 4px -2px 35px 4px rgba(99, 102, 241, 0.7);
+            }
+
+            19% {
+                box-shadow: 5px 0px 35px 4px rgba(99, 102, 241, 0.7);
+            }
+
+            24% {
+                box-shadow: 5px 2px 35px 4px rgba(129, 140, 248, 0.65);
+            }
+
+            29% {
+                box-shadow: 4px 4px 32px 4px rgba(167, 139, 250, 0.65);
+            }
+
+            34% {
+                box-shadow: 2px 5px 35px 4px rgba(192, 132, 252, 0.65);
+            }
+
+            39% {
+                box-shadow: 0px 5px 35px 4px rgba(236, 72, 153, 0.65);
+            }
+
+            44% {
+                box-shadow: -2px 5px 35px 4px rgba(236, 72, 153, 0.7);
+            }
+
+            49% {
+                box-shadow: -4px 4px 32px 4px rgba(192, 132, 252, 0.65);
+            }
+
+            54% {
+                box-shadow: -5px 2px 35px 4px rgba(167, 139, 250, 0.65);
+            }
+
+            59% {
+                box-shadow: -5px 0px 35px 4px rgba(139, 92, 246, 0.7);
+            }
+
+            64% {
+                box-shadow: -4px -2px 35px 4px rgba(139, 92, 246, 0.7);
+            }
+
+            69% {
+                box-shadow: -2px -4px 32px 4px rgba(139, 92, 246, 0.65);
+            }
+
+            74% {
+                box-shadow: 0px -4px 28px 3px rgba(139, 92, 246, 0.55);
+            }
+
+            80% {
+                box-shadow: 0px -3px 22px 2px rgba(139, 92, 246, 0.4);
+            }
+
+            86% {
+                box-shadow: 0px -2px 16px 1px rgba(139, 92, 246, 0.3);
+            }
+
+            92% {
+                box-shadow: 0px -1px 10px 0px rgba(139, 92, 246, 0.18);
+            }
+
+            96% {
+                box-shadow: 0px 0px 5px 0px rgba(139, 92, 246, 0.08);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 transparent;
+            }
         }
 
         .ai-advisor-header {
@@ -3117,21 +3199,32 @@
                     // Store full text for later
                     textEl.dataset.fullText = html;
 
+                    // Check if user has already expanded - preserve that state
+                    const wasExpanded = textEl.dataset.truncated === 'false' && textEl.dataset.fullText;
+
                     // Truncate if longer than 150 chars
                     const plainText = data.advice;
                     const TRUNCATE_LENGTH = 150;
 
                     if (plainText.length > TRUNCATE_LENGTH) {
-                        // Find good break point (word boundary)
-                        let breakPoint = TRUNCATE_LENGTH;
-                        while (breakPoint > 100 && plainText[breakPoint] !== ' ') {
-                            breakPoint--;
+                        if (wasExpanded) {
+                            // User had expanded - keep it expanded with new content
+                            textEl.innerHTML = html;
+                            textEl.dataset.truncated = 'false';
+                            expandBtn.textContent = '閉じる';
+                            expandBtn.style.display = 'inline-block';
+                        } else {
+                            // Find good break point (word boundary)
+                            let breakPoint = TRUNCATE_LENGTH;
+                            while (breakPoint > 100 && plainText[breakPoint] !== ' ') {
+                                breakPoint--;
+                            }
+                            const truncatedPlain = plainText.substring(0, breakPoint);
+                            const truncatedHtml = simpleMarkdownToHtml(truncatedPlain) + '...';
+                            textEl.innerHTML = truncatedHtml;
+                            textEl.dataset.truncated = 'true';
+                            expandBtn.style.display = 'inline-block';
                         }
-                        const truncatedPlain = plainText.substring(0, breakPoint);
-                        const truncatedHtml = simpleMarkdownToHtml(truncatedPlain) + '...';
-                        textEl.innerHTML = truncatedHtml;
-                        textEl.dataset.truncated = 'true';
-                        expandBtn.style.display = 'inline-block';
                     } else {
                         textEl.innerHTML = html;
                         textEl.dataset.truncated = 'false';
@@ -3690,11 +3783,21 @@
             if (riseAzimuth) riseDirJp = getJapaneseCompassDirection(riseAzimuth);
             if (setAzimuth) setDirJp = getJapaneseCompassDirection(setAzimuth);
 
+            // Determine if moonset is tomorrow (moon rose today but doesn't set today)
+            let setIsTomorrow = false;
+            if (rise && !set) {
+                // Moon rose today but doesn't set today - moonset is tomorrow
+                setIsTomorrow = true;
+            }
+
             return {
                 rise: formatHour(rise),
                 set: formatHour(set),
                 riseDirJp,
-                setDirJp
+                setDirJp,
+                setIsTomorrow,
+                riseDate: rise,
+                setDate: set
             };
         }
 
@@ -3755,31 +3858,12 @@
             let t = 0.5; // Default to center if no times available
             let isVisible = false;
 
-            if (riseHour !== null && setHour !== null) {
-                // Handle case where moonset is tomorrow (setHour includes +24 offset)
-                let adjustedSetHour = setHour;
-                if (moonTimes.setIsTomorrow && setHour < 24) {
-                    adjustedSetHour = setHour + 24; // Add 24 hours for tomorrow
-                }
-
-                const duration = adjustedSetHour > riseHour
-                    ? adjustedSetHour - riseHour
-                    : (24 - riseHour) + adjustedSetHour;
-
-                if (moonTimes.setIsTomorrow) {
-                    // Moonset is tomorrow - current period is from rise until midnight+setHour
-                    if (currentHour >= riseHour) {
-                        // After moonrise, moon is visible until set tomorrow
-                        isVisible = true;
-                        t = (currentHour - riseHour) / duration;
-                    } else {
-                        // Before moonrise today
-                        t = 0;
-                        isVisible = false;
-                    }
-                } else if (currentHour >= riseHour && currentHour <= setHour) {
-                    // Moon is above horizon (normal case: between rise and set)
-                    t = (currentHour - riseHour) / duration;
+            // Case 1: Both rise and set times available today
+            if (riseHour !== null && setHour !== null && !moonTimes.setIsTomorrow) {
+                if (currentHour >= riseHour && currentHour <= setHour) {
+                    // Moon is above horizon
+                    const duration = setHour - riseHour;
+                    t = duration > 0 ? (currentHour - riseHour) / duration : 0.5;
                     isVisible = true;
                 } else if (currentHour < riseHour) {
                     // Before moonrise
@@ -3790,14 +3874,37 @@
                     t = 1;
                     isVisible = false;
                 }
-            } else if (riseHour !== null) {
-                // Only moonrise available (moonset next day)
+            }
+            // Case 2: Moonset is tomorrow (or no moonset data today)
+            else if (riseHour !== null && (moonTimes.setIsTomorrow || setHour === null)) {
                 if (currentHour >= riseHour) {
+                    // After moonrise - moon is visible all night until tomorrow's set
                     isVisible = true;
-                    t = Math.min(1, (currentHour - riseHour) / 12); // Assume ~12h above horizon
+                    // Estimate progress: assume moon is visible for ~12 hours
+                    const hoursSinceRise = currentHour - riseHour;
+                    t = Math.min(0.9, hoursSinceRise / 12);
                 } else {
+                    // Before moonrise today
+                    t = 0;
                     isVisible = false;
                 }
+            }
+            // Case 3: No rise today but maybe set (moon rose yesterday, sets today)
+            else if (riseHour === null && setHour !== null) {
+                if (currentHour <= setHour) {
+                    // Moon is still up from yesterday
+                    isVisible = true;
+                    t = 0.5 + (currentHour / setHour) * 0.5; // Approaching set
+                } else {
+                    // After moonset
+                    t = 1;
+                    isVisible = false;
+                }
+            }
+            // Case 4: No data for either - use altitude calculation as fallback
+            else {
+                isVisible = moonPos.altitude > 0;
+                t = 0.5;
             }
 
             // Clamp t for position calculation
