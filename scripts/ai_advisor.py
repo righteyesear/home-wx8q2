@@ -381,7 +381,8 @@ def fetch_weather_forecast() -> Dict[str, Any]:
         f"?latitude={LATITUDE}&longitude={LONGITUDE}"
         f"&current=weather_code,temperature_2m,relative_humidity_2m,apparent_temperature,"
         f"precipitation,wind_speed_10m,wind_gusts_10m,uv_index"
-        f"&hourly=weather_code,temperature_2m,precipitation_probability,wind_speed_10m"
+        f"&hourly=weather_code,temperature_2m,precipitation_probability,wind_speed_10m,"
+        f"temperature_850hPa,temperature_925hPa,wet_bulb_temperature_2m,freezing_level_height"
         f"&daily=sunrise,sunset,uv_index_max,precipitation_probability_max"
         f"&forecast_days=2&timezone=Asia/Tokyo&wind_speed_unit=ms"
     )
@@ -412,18 +413,33 @@ def fetch_weather_forecast() -> Dict[str, Any]:
                 'uv_index': current.get('uv_index', 0)
             }
         
-        # 今後6時間の予報
+        # 今後6時間の予報 + 雪判定データ
         if 'hourly' in data:
             hourly = data['hourly']
             now_hour = datetime.now().hour
+            
+            # 現在時刻の雪判定データを追加
+            result['snow_detection'] = {
+                'temp_850hPa': hourly.get('temperature_850hPa', [None] * 24)[now_hour],
+                'temp_925hPa': hourly.get('temperature_925hPa', [None] * 24)[now_hour],
+                'wet_bulb': hourly.get('wet_bulb_temperature_2m', [None] * 24)[now_hour],
+                'freezing_level': hourly.get('freezing_level_height', [None] * 24)[now_hour]
+            }
+            
             for i in range(now_hour, min(now_hour + 6, len(hourly.get('time', [])))):
-                result['hourly_forecast'].append({
+                forecast_entry = {
                     'time': hourly['time'][i] if 'time' in hourly else None,
                     'weather_code': hourly['weather_code'][i] if 'weather_code' in hourly else None,
                     'temperature': hourly['temperature_2m'][i] if 'temperature_2m' in hourly else None,
                     'precip_prob': hourly['precipitation_probability'][i] if 'precipitation_probability' in hourly else 0,
-                    'wind_speed': hourly['wind_speed_10m'][i] if 'wind_speed_10m' in hourly else None
-                })
+                    'wind_speed': hourly['wind_speed_10m'][i] if 'wind_speed_10m' in hourly else None,
+                    # 雪判定用データ
+                    'temp_850hPa': hourly.get('temperature_850hPa', [None] * 24)[i] if i < len(hourly.get('temperature_850hPa', [])) else None,
+                    'temp_925hPa': hourly.get('temperature_925hPa', [None] * 24)[i] if i < len(hourly.get('temperature_925hPa', [])) else None,
+                    'wet_bulb': hourly.get('wet_bulb_temperature_2m', [None] * 24)[i] if i < len(hourly.get('wet_bulb_temperature_2m', [])) else None,
+                    'freezing_level': hourly.get('freezing_level_height', [None] * 24)[i] if i < len(hourly.get('freezing_level_height', [])) else None
+                }
+                result['hourly_forecast'].append(forecast_entry)
         
         # 日別データ（日の出・日の入り）
         if 'daily' in data:
@@ -482,6 +498,52 @@ def fetch_jma_alerts() -> Dict[str, Any]:
                                 
     except Exception as e:
         result['error'] = str(e)
+    
+    return result
+
+
+def fetch_yahoo_precipitation() -> Dict[str, Any]:
+    """Yahoo天気APIから降水量データを取得（Cloudflare Worker経由）"""
+    url = "https://yahoo-weather-proxy.miurayukimail.workers.dev"
+    
+    result = {
+        'data': [],
+        'current_rainfall': 0,
+        'is_raining': False,
+        'consecutive_minutes': 0,
+        'error': None
+    }
+    
+    try:
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        data = resp.json()
+        
+        result['data'] = data.get('data', [])
+        
+        # 観測データのみ抽出
+        observations = [d for d in result['data'] if d.get('type') == 'observation']
+        
+        if observations:
+            # 最新の降水量
+            latest = observations[-1]
+            result['current_rainfall'] = latest.get('rainfall', 0)
+            result['is_raining'] = result['current_rainfall'] > 0
+            
+            # 連続降水時間を計算
+            consecutive_count = 0
+            for obs in reversed(observations):
+                if obs.get('rainfall', 0) > 0:
+                    consecutive_count += 1
+                else:
+                    break
+            result['consecutive_minutes'] = consecutive_count * 5  # 5分間隔
+            
+        print(f"  → Yahoo降水データ: 現在{result['current_rainfall']}mm/h, 連続{result['consecutive_minutes']}分")
+            
+    except Exception as e:
+        result['error'] = str(e)
+        print(f"  [WARN] Yahoo降水データ取得エラー: {e}")
     
     return result
 
@@ -861,6 +923,81 @@ def analyze_with_gemini(spreadsheet_data: Dict, weather_data: Dict, alerts_data:
             prompt += f"{r['datetime']},{r['temperature']},{r['humidity']}\n"
         prompt += f"\n※ 合計 {len(spreadsheet_data['raw_records']):,} 件のデータ\n"
 
+    # ========================================
+    # 雪/みぞれ判定データを追加
+    # ========================================
+    snow_data = weather_data.get('snow_detection', {})
+    if snow_data:
+        prompt += f"""
+════════════════════════════════════════════════════════════════════════════════
+【❄️ 雪/みぞれ判定データ】（降水時の降水タイプ判定に使用）
+════════════════════════════════════════════════════════════════════════════════
+
+現在の上空データ:
+- 850hPa気温: {snow_data.get('temp_850hPa', '不明')}°C（-5°C以下で雪の可能性高）
+- 925hPa気温: {snow_data.get('temp_925hPa', '不明')}°C（-2°C以下で雪の可能性高）
+- 湿球温度: {snow_data.get('wet_bulb', '不明')}°C（1°C以下で雪、2°C以下でみぞれ）
+- 凍結高度: {snow_data.get('freezing_level', '不明')}m（500m以下で雪の可能性高）
+
+【降水タイプ判定ルール】（複合スコアシステム）
+- 湿球温度 ≤1°C + 凍結高度 ≤500m + 850hPa ≤-4°C → ❄️ 雪
+- 上記に近いが地上1.5°C以上 → 🌨️ みぞれ
+- それ以外の降水 → 🌧️ 雨
+
+※ 降水の話をするときは、気温データから「雪になるか」「みぞれか」「雨か」を判断してください。
+  地上気温1.5°C以下 + 上空データが冷えている場合は「雪」と判断。
+  地上気温2-4°C + 上空データが冷えている場合は「みぞれ」と判断。
+"""
+
+    # ========================================
+    # Yahoo降水実測データを追加
+    # ========================================
+    yahoo_precip = weather_data.get('yahoo_precip', {})
+    if yahoo_precip:
+        is_raining = yahoo_precip.get('is_raining', False)
+        current_rain = yahoo_precip.get('current_rainfall', 0)
+        consecutive = yahoo_precip.get('consecutive_minutes', 0)
+        
+        # 降水タイプを判定（上空データに基づく）
+        precip_type = "雨"
+        if snow_data:
+            temp_850 = snow_data.get('temp_850hPa')
+            wet_bulb = snow_data.get('wet_bulb')
+            freezing = snow_data.get('freezing_level')
+            ground_temp = spreadsheet_data.get('current', {}).get('temperature', 5)
+            
+            if wet_bulb is not None and wet_bulb <= 1:
+                precip_type = "❄️雪"
+            elif freezing is not None and freezing <= 500:
+                precip_type = "❄️雪" if ground_temp and ground_temp <= 1.5 else "🌨️みぞれ"
+            elif temp_850 is not None and temp_850 <= -5:
+                precip_type = "❄️雪" if ground_temp and ground_temp <= 2 else "🌨️みぞれ"
+            elif ground_temp and ground_temp <= 3:
+                precip_type = "🌨️みぞれ"
+            else:
+                precip_type = "🌧️雨"
+        
+        prompt += f"""
+════════════════════════════════════════════════════════════════════════════════
+【🌧️ Yahoo降水実測データ】（5分更新のリアルタイムデータ）
+════════════════════════════════════════════════════════════════════════════════
+
+**現在の降水状況:**
+- 降水中: {"はい" if is_raining else "いいえ"}
+- 現在の降水量: {current_rain} mm/h
+- 連続降水時間: {consecutive}分
+- 推定降水タイプ: {precip_type}
+
+【重要】このデータはOpen-Meteoの予報ではなく、Yahoo天気APIによる実測値です！
+Open-Meteoが「晴れ」でも、Yahoo実測で降水があればそちらを優先してください。
+"""
+        
+        # 観測データの時系列を追加
+        observations = [d for d in yahoo_precip.get('data', []) if d.get('type') == 'observation']
+        if observations:
+            prompt += "\n【直近の観測データ】\n時刻 | 降水量\n"
+            for obs in observations[-6:]:  # 直近6件（30分分）
+                prompt += f"{obs.get('time', '?')} | {obs.get('rainfall', 0)} mm/h\n"
 
     prompt += f"""
 ────────────────────────────────────────────────────────────────────
@@ -876,8 +1013,30 @@ def analyze_with_gemini(spreadsheet_data: Dict, weather_data: Dict, alerts_data:
 """
     
     for forecast in weather_data.get('hourly_forecast', [])[:12]:
+        precip_type = ""
+        # 降水タイプを判定
+        if forecast.get('precip_prob', 0) >= 30:
+            t850 = forecast.get('temp_850hPa')
+            wet = forecast.get('wet_bulb')
+            freeze = forecast.get('freezing_level')
+            ground = forecast.get('temperature')
+            
+            if wet is not None and wet <= 1:
+                precip_type = "❄️雪"
+            elif freeze is not None and freeze <= 500:
+                precip_type = "❄️雪" if ground and ground <= 1.5 else "🌨️みぞれ"
+            elif t850 is not None and t850 <= -5:
+                precip_type = "❄️雪" if ground and ground <= 2 else "🌨️みぞれ"
+            elif ground and ground <= 3:
+                precip_type = "🌨️みぞれ"
+            else:
+                precip_type = "🌧️雨"
+        
         prompt += f"- {forecast.get('time', '?')}: {weather_code_to_text(forecast.get('weather_code', 0))}, "
-        prompt += f"{forecast.get('temperature', '?')}°C, 降水{forecast.get('precip_prob', 0)}%\n"
+        prompt += f"{forecast.get('temperature', '?')}°C, 降水{forecast.get('precip_prob', 0)}%"
+        if precip_type:
+            prompt += f" ({precip_type})"
+        prompt += "\n"
     
     prompt += f"""
 - 日の出: {weather_data.get('daily', {}).get('sunrise', '不明')}
@@ -1215,6 +1374,14 @@ def main():
     alerts_data = fetch_jma_alerts()
     if alerts_data.get('error'):
         print(f"  [WARN] 警報APIエラー: {alerts_data['error']}")
+    
+    print("  → Yahoo降水データを取得中...")
+    precip_data = fetch_yahoo_precipitation()
+    if precip_data.get('error'):
+        print(f"  [WARN] Yahoo降水APIエラー: {precip_data['error']}")
+    
+    # Yahoo降水データをweather_dataに統合
+    weather_data['yahoo_precip'] = precip_data
     
     # 2. Gemini で分析
     print("  → Gemini Thinking で分析中...")
