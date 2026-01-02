@@ -375,15 +375,24 @@ def fetch_spreadsheet_data() -> Dict[str, Any]:
 
 
 def fetch_weather_forecast() -> Dict[str, Any]:
-    """Open-Meteo APIから天気予報を取得"""
+    """Open-Meteo APIから天気予報を取得（全パラメータ版）"""
     url = (
         f"https://api.open-meteo.com/v1/forecast"
         f"?latitude={LATITUDE}&longitude={LONGITUDE}"
-        f"&current=weather_code,temperature_2m,relative_humidity_2m,apparent_temperature,"
-        f"precipitation,wind_speed_10m,wind_gusts_10m,uv_index"
-        f"&hourly=weather_code,temperature_2m,precipitation_probability,wind_speed_10m,"
-        f"temperature_850hPa,temperature_925hPa,wet_bulb_temperature_2m,freezing_level_height"
-        f"&daily=sunrise,sunset,uv_index_max,precipitation_probability_max"
+        # Current: 全現在データ
+        f"&current=weather_code,temperature_2m,relative_humidity_2m,dew_point_2m,apparent_temperature,"
+        f"precipitation,rain,showers,snowfall,cloud_cover,pressure_msl,surface_pressure,"
+        f"wind_speed_10m,wind_direction_10m,wind_gusts_10m,visibility,uv_index,is_day"
+        # Hourly: 全時間データ
+        f"&hourly=weather_code,temperature_2m,relative_humidity_2m,dew_point_2m,apparent_temperature,"
+        f"precipitation_probability,precipitation,rain,showers,snowfall,cloud_cover,visibility,"
+        f"wind_speed_10m,wind_direction_10m,wind_gusts_10m,uv_index,"
+        f"temperature_850hPa,temperature_925hPa,wet_bulb_temperature_2m,freezing_level_height,"
+        f"cape,soil_temperature_0cm,direct_radiation,diffuse_radiation,et0_fao_evapotranspiration"
+        # Daily: 全日次データ
+        f"&daily=sunrise,sunset,sunshine_duration,uv_index_max,temperature_2m_max,temperature_2m_min,"
+        f"precipitation_sum,rain_sum,showers_sum,snowfall_sum,precipitation_probability_max,"
+        f"wind_speed_10m_max,wind_gusts_10m_max,wind_direction_10m_dominant,shortwave_radiation_sum"
         f"&forecast_days=2&timezone=Asia/Tokyo&wind_speed_unit=ms"
     )
     
@@ -399,18 +408,28 @@ def fetch_weather_forecast() -> Dict[str, Any]:
         resp.raise_for_status()
         data = resp.json()
         
-        # 現在の天気
+        # 現在の天気（全パラメータ）
         if 'current' in data:
             current = data['current']
             result['current'] = {
                 'weather_code': current.get('weather_code', 0),
                 'temperature': current.get('temperature_2m'),
                 'humidity': current.get('relative_humidity_2m'),
+                'dew_point': current.get('dew_point_2m'),
                 'feels_like': current.get('apparent_temperature'),
                 'precipitation': current.get('precipitation', 0),
+                'rain': current.get('rain', 0),
+                'showers': current.get('showers', 0),
+                'snowfall': current.get('snowfall', 0),
                 'wind_speed': current.get('wind_speed_10m'),
+                'wind_direction': current.get('wind_direction_10m'),  # 度
                 'wind_gusts': current.get('wind_gusts_10m'),
-                'uv_index': current.get('uv_index', 0)
+                'uv_index': current.get('uv_index', 0),
+                'cloud_cover': current.get('cloud_cover'),
+                'pressure_msl': current.get('pressure_msl'),  # hPa
+                'surface_pressure': current.get('surface_pressure'),  # hPa
+                'visibility': current.get('visibility'),  # メートル
+                'is_day': current.get('is_day', 1)
             }
         
         # 今後6時間の予報 + 雪判定データ
@@ -539,6 +558,20 @@ def fetch_yahoo_precipitation() -> Dict[str, Any]:
                     break
             result['consecutive_minutes'] = consecutive_count * 5  # 5分間隔
             
+            # 1時間前の降水量を取得（12個前 = 60分前）
+            if len(observations) >= 12:
+                past_1h = observations[-12]
+                result['rainfall_1h_ago'] = past_1h.get('rainfall', 0)
+            else:
+                result['rainfall_1h_ago'] = observations[0].get('rainfall', 0) if observations else 0
+        
+        # 予報データを抽出（今後1時間）
+        forecasts = [d for d in result['data'] if d.get('type') == 'forecast']
+        if forecasts:
+            # 1時間後の予報（12個先 = 60分後、または最も近い予報）
+            result['forecast_1h'] = forecasts[min(11, len(forecasts)-1)].get('rainfall', 0) if len(forecasts) > 0 else 0
+            result['forecast_30m'] = forecasts[min(5, len(forecasts)-1)].get('rainfall', 0) if len(forecasts) > 0 else 0
+            
         print(f"  → Yahoo降水データ: 現在{result['current_rainfall']}mm/h, 連続{result['consecutive_minutes']}分")
             
     except Exception as e:
@@ -546,6 +579,16 @@ def fetch_yahoo_precipitation() -> Dict[str, Any]:
         print(f"  [WARN] Yahoo降水データ取得エラー: {e}")
     
     return result
+
+
+def get_wind_direction_jp(degrees) -> str:
+    """風向の度数を日本語方位に変換"""
+    if degrees is None:
+        return "不明"
+    directions = ["北", "北北東", "北東", "東北東", "東", "東南東", "南東", "南南東",
+                  "南", "南南西", "南西", "西南西", "西", "西北西", "北西", "北北西"]
+    idx = int((degrees + 11.25) / 22.5) % 16
+    return directions[idx]
 
 
 def weather_code_to_text(code: int) -> str:
@@ -1018,26 +1061,57 @@ def analyze_with_gemini(spreadsheet_data: Dict, weather_data: Dict, alerts_data:
             else:
                 precip_type = "🌧️雨"
         
+        # 1時間前と予報を取得
+        rainfall_1h_ago = yahoo_precip.get('rainfall_1h_ago', 0)
+        forecast_30m = yahoo_precip.get('forecast_30m', 0)
+        forecast_1h = yahoo_precip.get('forecast_1h', 0)
+        
         prompt += f"""
 ════════════════════════════════════════════════════════════════════════════════
-【🌧️ 実際の降水状況】（リアルタイム観測）
+【🌧️ 降水データ】（★最優先データ：日本国内のリアルタイム観測・予報）
 ════════════════════════════════════════════════════════════════════════════════
 
-**現在の降水状況:**
+**現在の降水状況（実測）:**
 - 降水中: {"はい" if is_raining else "いいえ"}
 - 現在の降水量: {current_rain} mm/h
 - 連続降水時間: {consecutive}分
 - 降水タイプ: {precip_type}
 
-【⚠️ 表現上の注意】
-- 「Yahooの観測データでは〜」「APIによると〜」のような技術的な表現は使わないでください
-- 代わりに「現在〜が降っています」「外では〜」のように自然に表現してください
-- データソース名（Yahoo, Open-Meteo等）は絶対に出力に含めないでください
-- 「〜が記録されています」ではなく「〜が降っています」「〜となっています」と表現
+**降水の推移:**
+- 1時間前: {rainfall_1h_ago} mm/h
+- 現在: {current_rain} mm/h
+- 30分後予報: {forecast_30m} mm/h
+- 1時間後予報: {forecast_1h} mm/h
 
-例:
-✗ 「Yahooの観測データでは現在、雪が記録されています」
-○ 「外では雪がちらついています」「現在、弱い雪が降っています」
+【降水データの使い方】
+- 現在〜1時間後の降水は上記のリアルタイムデータを優先（より正確）
+- 1時間以降の予報はOpen-Meteoを参考にしてよい
+
+【📋 コメント生成時の言及優先順位】
+以下の順番で、該当するものがあればコメントに含める：
+1. 🚨 特別警報・警報：最優先で必ず言及（命に関わる情報）
+2. ⚠️ 注意報・気象警告：次に優先（熱中症警戒、凍結、大雨など）
+3. 🌧️ 現在〜1時間後の降水：上記リアルタイムデータを優先して言及
+4. 🌡️ 体感温度と健康アドバイス：風冷効果、熱中症リスク、ヒートショックなど
+5. 📅 時間帯・曜日・季節：通勤・帰宅時間、週末、イベント、旬の話題など
+6. 🔮 今後の天気変化：天気の悪化・回復の予測
+7. 🌙 天文・自然現象：月齢、星空、日の出/入り、富士山の見え方など
+
+※ 全てを含める必要はなく、状況に応じて自然に取捨選択する
+
+【⚠️ 表現上の注意】
+- データソース名（API名など）は絶対に出力に含めない
+- 「物理モデルで算出した」「計算上の」などの技術用語は使わない
+- 「体感温度は◯°C」のように、あたかも肌で感じられる値のように自然に表現
+- 専門用語を使う場合は「放射冷却」「ヒートショック」のように一般に知られた言葉を選ぶ
+- カッコは「」で統一（『』は使わない）
+- 雪/みぞれ/雨の判定は提供された判定結果をそのまま信用する
+
+【📊 データの信頼性について（回答には絶対に含めない内部情報）】
+- 降水データは日本国内のリアルタイム観測で最も信頼性が高い
+- Open-Meteoは欧州の気象モデルベースで、日本の局地的な天気では遅れや誤差がある場合がある
+- 実測と予報に矛盾がある場合は、実測を優先する
+- この信頼性の話は内部判断用であり、回答にデータの信頼性について言及してはいけない
 """
         
         # 観測データの時系列を追加
@@ -1047,15 +1121,55 @@ def analyze_with_gemini(spreadsheet_data: Dict, weather_data: Dict, alerts_data:
             for obs in observations[-6:]:  # 直近6件（30分分）
                 prompt += f"{obs.get('time', '?')} | {obs.get('rainfall', 0)} mm/h\n"
 
+    # 追加データを取得
+    visibility = current_weather.get('visibility')  # メートル
+    wind_gusts = current_weather.get('wind_gusts')  # m/s
+    cloud_cover = current_weather.get('cloud_cover')  # %
+    is_day = current_weather.get('is_day', 1)
+    
+    # 視程を分かりやすく変換
+    visibility_text = "不明"
+    if visibility is not None:
+        if visibility >= 50000:
+            visibility_text = f"非常に良好 ({visibility/1000:.0f}km) - 遠くの山も見えそう"
+        elif visibility >= 20000:
+            visibility_text = f"良好 ({visibility/1000:.0f}km)"
+        elif visibility >= 10000:
+            visibility_text = f"普通 ({visibility/1000:.0f}km)"
+        elif visibility >= 4000:
+            visibility_text = f"やや悪い ({visibility/1000:.1f}km) - もやがかかっているかも"
+        elif visibility >= 1000:
+            visibility_text = f"悪い ({visibility/1000:.1f}km) - 霧や雨の影響"
+        else:
+            visibility_text = f"非常に悪い ({visibility}m) - 濃霧注意"
+    
     prompt += f"""
 ────────────────────────────────────────────────────────────────────
-【屋外天気予報】（Open-Meteo API）
+【屋外天気予報】（詳細データ）
 ────────────────────────────────────────────────────────────────────
 - 現在の天気: {weather_code_to_text(current_weather.get('weather_code', 0))}
 - 気温(API): {api_temp}°C / 体感温度: {actual_feels_like:.1f}°C
 - 湿度: {api_humidity}%
-- 風速: {actual_wind_speed:.1f} m/s
+- 風速: {actual_wind_speed:.1f} m/s / 瞬間最大風速: {wind_gusts if wind_gusts else '不明'} m/s
+- 風向: {current_weather.get('wind_direction', '不明')}° ({get_wind_direction_jp(current_weather.get('wind_direction'))})
+- 雲量: {cloud_cover if cloud_cover is not None else '不明'}%
+- 視程: {visibility_text}
+- 気圧: {current_weather.get('pressure_msl', '不明')} hPa
 - UV指数: {current_weather.get('uv_index', 0)}
+- 昼/夜: {'昼間' if is_day else '夜間'}
+
+【📊 追加データ（関連性がある場合のみ活用してください）】
+- 露点温度: {current_weather.get('dew_point', '不明')}°C
+- 地上気圧: {current_weather.get('surface_pressure', '不明')} hPa
+- にわか雨: {current_weather.get('showers', 0)} mm
+- 降雪量: {current_weather.get('snowfall', 0)} cm
+
+※ 瞬間最大風速が8m/s超で傘が飛ばされやすく、15m/s超で歩行困難
+※ 視程が良い日（50km以上）は富士山が見える可能性あり（東京の場合）
+※ 雲量が少ない夜は放射冷却で翌朝冷え込み、月や星が見えやすい
+※ 北風→寒い、南風→暖かい、西風→乾燥、東風→湿気
+※ 気圧が急に下がると頭痛になりやすい人がいる（低気圧頭痛）
+※ 気圧1013hPa未満で低気圧、1020hPa以上で高気圧
 
 【今後12時間の予報】
 """
@@ -1223,12 +1337,12 @@ Lv.1（低〜中）: 季節のアドバイス、生活の知恵、一般的な�
 用語を説明する際は、**パターンAを基本とし、パターンBは例外的に使用**してください：
 
 ★ パターンA【推奨・デフォルト】: 説明 → 用語
-  現象や概念を先に説明してから、カギ括弧『』で用語を紹介する形式。
+  現象や概念を先に説明してから、カギ括弧「」で用語を紹介する形式。
   読者は「何が起きているか」を理解してから用語を学べるので、自然に読める。
   
-  ✓ 「大気が熱を地面へ送り返す『逆放射』により、冷え込みが緩やかになります」
-  ✓ 「地表の熱が宇宙空間へ逃げていく『放射冷却』が進んでいます」
-  ✓ 「風が体から熱を奪う『風冷効果』で体感温度が下がっています」
+  ✓ 「大気が熱を地面へ送り返す「逆放射」により、冷え込みが緩やかになります」
+  ✓ 「地表の熱が宇宙空間へ逃げていく「放射冷却」が進んでいます」
+  ✓ 「風が体から熱を奪う「風冷効果」で体感温度が下がっています」
 
 ✗ パターンB【非推奨・例外的に使用】: 用語（説明）
   括弧内に説明を入れる形式は、読みにくく教科書的になりがち。
