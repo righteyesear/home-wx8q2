@@ -3645,12 +3645,12 @@
                     if (rainfall === 0) return `rgba(148, 163, 184, ${alpha})`; // グレー（降水なし）
 
                     if (precipType === 'snow') {
-                        // 雪: 白+紫のグラデーション（強くなるほど紫が強くなる）
-                        if (rainfall < 0.3) return `rgba(240, 240, 255, ${alpha})`;     // ほぼ白（弱い雪）
-                        if (rainfall < 1) return `rgba(220, 210, 250, ${alpha})`;       // 白に薄紫（雪）
-                        if (rainfall < 3) return `rgba(200, 180, 245, ${alpha})`;       // 薄紫（やや強い雪）
-                        if (rainfall < 6) return `rgba(180, 150, 240, ${alpha})`;       // 紫（強い雪）
-                        return `rgba(160, 120, 235, ${alpha})`;                         // 濃い紫（猛烈な雪）
+                        // 雪: 白+紫のグラデーション（強くなるほど濃い紫）
+                        if (rainfall < 0.3) return `rgba(220, 200, 255, ${alpha})`;     // 薄紫（弱い雪）
+                        if (rainfall < 1) return `rgba(190, 160, 250, ${alpha})`;       // 紫（雪）
+                        if (rainfall < 3) return `rgba(160, 120, 245, ${alpha})`;       // やや濃い紫（やや強い雪）
+                        if (rainfall < 6) return `rgba(140, 90, 240, ${alpha})`;        // 濃い紫（強い雪）
+                        return `rgba(120, 60, 235, ${alpha})`;                          // 非常に濃い紫（猛烈な雪）
                     } else if (precipType === 'sleet') {
                         // みぞれ: 白の濃淡（強くなるほど明るくなる）
                         if (rainfall < 0.5) return `rgba(200, 200, 210, ${alpha})`;     // 薄いグレー白（弱いみぞれ）
@@ -6629,15 +6629,42 @@
             }
 
             // ============================================================
-            // ADD PRECIPITATION FORECAST WARNING (using snow/sleet detection)
+            // ADD PRECIPITATION WARNING (Yahoo API優先 + Open-Meteo雪判定)
             // ============================================================
             const precipType = getPrecipitationType();
             const precipEmoji = precipType === 'snow' ? '❄️' : precipType === 'sleet' ? '🌨️' : '☂️';
             const precipName = precipType === 'snow' ? '雪' : precipType === 'sleet' ? 'みぞれ' : '雨';
 
-            if (willRain && pp >= 70 && !isRaining) {
+            // Yahoo API実測データを優先
+            if (actualPrecipState.isRaining && actualPrecipState.consecutiveMinutes >= 10) {
+                // 現在降っている場合 - actualPrecipStateから情報取得
+                const intensity = getPrecipIntensityLabel(actualPrecipState.rainfall, actualPrecipState.precipType);
+                const currentEmoji = actualPrecipState.precipType === 'snow' ? '❄️' :
+                    actualPrecipState.precipType === 'sleet' ? '🌨️' : '🌧️';
+                comment += ` ${currentEmoji} ${intensity}が降っています`;
+
+                // 今後雪に変わる予報があるか確認
+                const currentHour = new Date().getHours();
+                if (actualPrecipState.precipType === 'rain' || actualPrecipState.precipType === 'sleet') {
+                    for (let i = 1; i <= 3; i++) {
+                        const futureType = getPrecipitationType(currentHour + i);
+                        if (futureType === 'snow') {
+                            comment += ` → 約${i}時間後に雪に変わる見込み`;
+                            break;
+                        }
+                    }
+                }
+            } else if (actualPrecipState.rainfall > 0) {
+                // 降り始め（10分未満）
+                const currentEmoji = actualPrecipState.precipType === 'snow' ? '❄️' :
+                    actualPrecipState.precipType === 'sleet' ? '🌨️' : '🌧️';
+                const currentName = actualPrecipState.precipType === 'snow' ? '雪' :
+                    actualPrecipState.precipType === 'sleet' ? 'みぞれ' : '雨';
+                comment += ` ${currentEmoji} ${currentName}が降り始めています`;
+            } else if (willRain && pp >= 70) {
+                // Yahoo APIでは降っていないが、Open-Meteoで高確率で降水予報
                 comment += ` ${precipEmoji} ${precipName}の予報。${precipType === 'snow' ? '外出は控えめに' : precipType === 'sleet' ? '足元に注意' : '傘を持っていきましょう'}`;
-            } else if (willRain && pp >= 50 && !isRaining) {
+            } else if (willRain && pp >= 50) {
                 comment += ` 🌂 降水確率高め。${precipType === 'snow' ? '雪に変わるかも' : '念のため傘を'}`;
             }
 
@@ -6649,16 +6676,17 @@
             const maxFuturePrecip = weatherData?.maxFuturePrecipProb || 0;
             const tempIn3h = weatherData?.tempIn3Hours;
 
-            if (willWorsen && maxFuturePrecip >= 60) {
+            if (willWorsen && maxFuturePrecip >= 60 && !actualPrecipState.isRaining) {
                 comment += ' ⚠️ 数時間後に天気が崩れそうです';
-            } else if (willWorsen && maxFuturePrecip >= 40) {
+            } else if (willWorsen && maxFuturePrecip >= 40 && !actualPrecipState.isRaining) {
                 comment += ' 🌥️ この後、雲が増えてきそう';
             }
 
-            if (willImprove && !isRaining) {
+            if (willImprove && !actualPrecipState.isRaining) {
                 comment += ' 🌤️ これから晴れてきます';
-            } else if (willImprove && isRaining) {
-                const stopMsg = precipType === 'snow' ? '雪が弱まりそう' : precipType === 'sleet' ? 'みぞれが上がりそう' : '雨が上がりそう';
+            } else if (willImprove && actualPrecipState.isRaining) {
+                const stopMsg = actualPrecipState.precipType === 'snow' ? '雪が弱まりそう' :
+                    actualPrecipState.precipType === 'sleet' ? 'みぞれが上がりそう' : '雨が上がりそう';
                 comment += ` 🌈 もう少しで${stopMsg}`;
             }
 
