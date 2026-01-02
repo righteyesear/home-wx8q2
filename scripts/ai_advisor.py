@@ -979,23 +979,30 @@ def analyze_with_gemini(spreadsheet_data: Dict, weather_data: Dict, alerts_data:
         
         prompt += f"""
 ════════════════════════════════════════════════════════════════════════════════
-【🌧️ Yahoo降水実測データ】（5分更新のリアルタイムデータ）
+【🌧️ 実際の降水状況】（リアルタイム観測）
 ════════════════════════════════════════════════════════════════════════════════
 
 **現在の降水状況:**
 - 降水中: {"はい" if is_raining else "いいえ"}
 - 現在の降水量: {current_rain} mm/h
 - 連続降水時間: {consecutive}分
-- 推定降水タイプ: {precip_type}
+- 降水タイプ: {precip_type}
 
-【重要】このデータはOpen-Meteoの予報ではなく、Yahoo天気APIによる実測値です！
-Open-Meteoが「晴れ」でも、Yahoo実測で降水があればそちらを優先してください。
+【⚠️ 表現上の注意】
+- 「Yahooの観測データでは〜」「APIによると〜」のような技術的な表現は使わないでください
+- 代わりに「現在〜が降っています」「外では〜」のように自然に表現してください
+- データソース名（Yahoo, Open-Meteo等）は絶対に出力に含めないでください
+- 「〜が記録されています」ではなく「〜が降っています」「〜となっています」と表現
+
+例:
+✗ 「Yahooの観測データでは現在、雪が記録されています」
+○ 「外では雪がちらついています」「現在、弱い雪が降っています」
 """
         
         # 観測データの時系列を追加
         observations = [d for d in yahoo_precip.get('data', []) if d.get('type') == 'observation']
         if observations:
-            prompt += "\n【直近の観測データ】\n時刻 | 降水量\n"
+            prompt += "\n【直近の観測推移】\n時刻 | 降水量\n"
             for obs in observations[-6:]:  # 直近6件（30分分）
                 prompt += f"{obs.get('time', '?')} | {obs.get('rainfall', 0)} mm/h\n"
 
