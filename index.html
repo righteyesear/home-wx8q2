@@ -2454,7 +2454,7 @@
                 <span class="legend-item"><span class="legend-forecast">○</span> 予報</span>
             </div>
             <div id="rainAlert" class="rain-alert" style="display: none;">
-                <span class="rain-alert-icon">🌧️</span>
+                <span id="rainAlertIcon" class="rain-alert-icon">🌧️</span>
                 <span id="rainAlertText"></span>
             </div>
         </div>
@@ -2850,8 +2850,8 @@
         const RECENT_URL = `${BASE_URL}&sheet=Recent`;
         const WEEKLY_URL = `${BASE_URL}&sheet=Weekly`;
 
-        // Includes: weather_code, precipitation, wind_speed, uv_index, apparent_temperature, hourly forecast, sunrise/sunset
-        const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?latitude=35.7727&longitude=139.8680&current=weather_code,precipitation,wind_speed_10m,apparent_temperature,uv_index&hourly=weather_code,precipitation_probability,uv_index,temperature_2m&daily=sunrise,sunset&forecast_days=1&timezone=Asia%2FTokyo&wind_speed_unit=ms';
+        // Includes: weather_code, precipitation, wind_speed, uv_index, apparent_temperature, cloud_cover, wet_bulb, dew_point, snowfall, freezing_level, hourly forecast, sunrise/sunset, 850hPa/925hPa temp for rain/snow detection
+        const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?latitude=35.7727&longitude=139.8680&current=weather_code,precipitation,wind_speed_10m,apparent_temperature,uv_index,temperature_2m,cloud_cover,relative_humidity_2m,dew_point_2m,rain,snowfall&hourly=weather_code,precipitation_probability,uv_index,temperature_2m,temperature_850hPa,temperature_925hPa,cloud_cover,wet_bulb_temperature_2m,dew_point_2m,freezing_level_height,snowfall,rain&daily=sunrise,sunset&forecast_days=1&timezone=Asia%2FTokyo&wind_speed_unit=ms';
 
         const UPDATE_INTERVAL = 60 * 1000;
 
@@ -3176,7 +3176,25 @@
                         willImprove: willImprove,
                         tempIn3Hours: hourlyTemp[hour + 3] || null,
                         sunrise: data.daily?.sunrise?.[0] || null,
-                        sunset: data.daily?.sunset?.[0] || null
+                        sunset: data.daily?.sunset?.[0] || null,
+                        // Rain/Snow detection data (enhanced)
+                        groundTemp: data.current?.temperature_2m ?? hourlyTemp[hour] ?? null,
+                        temp850hPa: data.hourly?.temperature_850hPa?.[hour] ?? null,
+                        temp925hPa: data.hourly?.temperature_925hPa?.[hour] ?? null,
+                        wetBulbTemp: data.hourly?.wet_bulb_temperature_2m?.[hour] ?? null,
+                        dewPoint: data.current?.dew_point_2m ?? data.hourly?.dew_point_2m?.[hour] ?? null,
+                        freezingLevelHeight: data.hourly?.freezing_level_height?.[hour] ?? null,
+                        currentSnowfall: data.current?.snowfall ?? 0,
+                        currentRain: data.current?.rain ?? 0,
+                        // Hourly data for precipitation chart coloring
+                        hourlyTemp850hPa: data.hourly?.temperature_850hPa || [],
+                        hourlyTemp925hPa: data.hourly?.temperature_925hPa || [],
+                        hourlyWetBulb: data.hourly?.wet_bulb_temperature_2m || [],
+                        hourlySnowfall: data.hourly?.snowfall || [],
+                        hourlyRain: data.hourly?.rain || [],
+                        hourlyFreezingLevel: data.hourly?.freezing_level_height || [],
+                        // Cloud cover for weather description
+                        cloudCover: data.current?.cloud_cover ?? data.hourly?.cloud_cover?.[hour] ?? null
                     };
                     applyTheme();
                     // updateWeatherEffects(); // 一旦無効化
@@ -3293,6 +3311,262 @@
             }
         }
 
+        // ============================================================
+        // Rain/Snow Detection System
+        // ============================================================
+
+        /**
+         * Determine precipitation type based on multiple factors (Enhanced)
+         * Uses: weather code, 850hPa temp, 925hPa temp, wet bulb temp, freezing level, ground temp
+         * Also references local sensor temperature for more accuracy
+         * @param {number} hourIndex - optional hour index for forecast data
+         * @returns {string} 'snow' | 'sleet' | 'rain'
+         */
+        function getPrecipitationType(hourIndex = null) {
+            const wc = weatherData?.weatherCode ?? 0;
+            const openMeteoTemp = weatherData?.groundTemp ?? null;
+
+            // Get local sensor temperature from recentData
+            const localSensorTemp = recentData?.length > 0 ? recentData[recentData.length - 1]?.temp : null;
+
+            // Use the lower of Open-Meteo temp and local sensor (more conservative for snow detection)
+            let groundTemp = openMeteoTemp;
+            if (localSensorTemp !== null && openMeteoTemp !== null) {
+                groundTemp = Math.min(openMeteoTemp, localSensorTemp);
+            } else if (localSensorTemp !== null) {
+                groundTemp = localSensorTemp;
+            }
+
+            // Get temperatures - use hourly data if hourIndex provided
+            let temp850, temp925, wetBulb, freezingLevel;
+            if (hourIndex !== null && weatherData?.hourlyTemp850hPa) {
+                temp850 = weatherData.hourlyTemp850hPa[hourIndex] ?? null;
+                temp925 = weatherData.hourlyTemp925hPa?.[hourIndex] ?? null;
+                wetBulb = weatherData.hourlyWetBulb?.[hourIndex] ?? null;
+                freezingLevel = weatherData.hourlyFreezingLevel?.[hourIndex] ?? null;
+            } else {
+                temp850 = weatherData?.temp850hPa ?? null;
+                temp925 = weatherData?.temp925hPa ?? null;
+                wetBulb = weatherData?.wetBulbTemp ?? null;
+                freezingLevel = weatherData?.freezingLevelHeight ?? null;
+            }
+
+            // Priority 1: Weather code indicates snow (71-77, 85-86)
+            if ((wc >= 71 && wc <= 77) || (wc >= 85 && wc <= 86)) {
+                return 'snow';
+            }
+
+            // Priority 2: Current snowfall detected
+            if (weatherData?.currentSnowfall > 0) {
+                return 'snow';
+            }
+
+            // ============================================================
+            // Composite scoring system for snow/sleet detection
+            // ============================================================
+            let snowScore = 0;  // Higher = more likely snow
+
+            // Factor 1: Wet bulb temperature (most reliable)
+            if (wetBulb !== null) {
+                if (wetBulb <= 0) snowScore += 3;
+                else if (wetBulb <= 1) snowScore += 2;
+                else if (wetBulb <= 2) snowScore += 1;
+            }
+
+            // Factor 2: Freezing level height
+            if (freezingLevel !== null) {
+                if (freezingLevel <= 200) snowScore += 3;
+                else if (freezingLevel <= 500) snowScore += 2;
+                else if (freezingLevel <= 800) snowScore += 1;
+            }
+
+            // Factor 3: 850hPa temperature
+            if (temp850 !== null) {
+                if (temp850 <= -6) snowScore += 3;
+                else if (temp850 <= -4) snowScore += 2;
+                else if (temp850 <= -2) snowScore += 1;
+            }
+
+            // Factor 4: 925hPa temperature
+            if (temp925 !== null) {
+                if (temp925 <= -3) snowScore += 2;
+                else if (temp925 <= -1) snowScore += 1;
+                else if (temp925 <= 1) snowScore += 0.5;
+            }
+
+            // Factor 5: Ground temperature (key factor)
+            if (groundTemp !== null) {
+                if (groundTemp <= 0) snowScore += 3;
+                else if (groundTemp <= 1.5) snowScore += 2;
+                else if (groundTemp <= 3) snowScore += 1;
+                else if (groundTemp <= 4) snowScore += 0.5;
+            }
+
+            // ============================================================
+            // Decision based on composite score + ground temperature
+            // ============================================================
+
+            // Snow: ground temp ≤ 1.5°C OR (high score AND ground temp ≤ 3°C)
+            if (groundTemp !== null && groundTemp <= 1.5) {
+                if (snowScore >= 2) return 'snow';  // Cold ground + some upper support
+            }
+            if (snowScore >= 6 && groundTemp !== null && groundTemp <= 3) {
+                return 'snow';  // Strong upper air conditions
+            }
+
+            // Sleet: some snow indicators but ground is warmer
+            if (snowScore >= 3) {
+                return 'sleet';  // Mixed conditions
+            }
+            if (freezingLevel !== null && freezingLevel <= 800 && groundTemp !== null && groundTemp <= 4) {
+                return 'sleet';  // Low freezing level
+            }
+            if (temp850 !== null && temp850 <= -3 && groundTemp !== null && groundTemp <= 4) {
+                return 'sleet';  // Cold upper air
+            }
+
+            return 'rain';
+        }
+
+        // ============================================================
+        // Actual precipitation state (from Yahoo API observation)
+        // ============================================================
+        let actualPrecipState = {
+            isRaining: false,
+            rainfall: 0,
+            precipType: 'rain',
+            consecutiveMinutes: 0  // How many consecutive minutes of rain observed
+        };
+
+        /**
+         * Update actual precipitation state from Yahoo API data
+         * Called from loadPrecipitation()
+         */
+        function updateActualPrecipState(precipData) {
+            if (!precipData || precipData.length === 0) {
+                actualPrecipState.isRaining = false;
+                actualPrecipState.rainfall = 0;
+                actualPrecipState.consecutiveMinutes = 0;
+                return;
+            }
+
+            // Get observation data only (not forecast)
+            const observations = precipData.filter(d => d.type === 'observation');
+            if (observations.length === 0) {
+                actualPrecipState.isRaining = false;
+                actualPrecipState.rainfall = 0;
+                actualPrecipState.consecutiveMinutes = 0;
+                return;
+            }
+
+            // Get latest observation
+            const latest = observations[observations.length - 1];
+            actualPrecipState.rainfall = latest.rainfall;
+            actualPrecipState.isRaining = latest.rainfall > 0;
+
+            // Count consecutive minutes of rain (each data point = 5 minutes)
+            let consecutiveCount = 0;
+            for (let i = observations.length - 1; i >= 0; i--) {
+                if (observations[i].rainfall > 0) {
+                    consecutiveCount++;
+                } else {
+                    break;
+                }
+            }
+            actualPrecipState.consecutiveMinutes = consecutiveCount * 5;  // Each point is 5 min
+
+            // Update precipitation type based on current conditions
+            actualPrecipState.precipType = getPrecipitationType();
+        }
+
+        /**
+         * Get weather display override based on actual precipitation
+         * Returns null if no override needed, otherwise {icon, condition}
+         */
+        function getWeatherOverride() {
+            // If 10+ minutes of rain observed (2+ data points), override weather
+            if (actualPrecipState.consecutiveMinutes >= 10 && actualPrecipState.rainfall > 0) {
+                const pType = actualPrecipState.precipType;
+                const rainfall = actualPrecipState.rainfall;
+                const intensity = getPrecipIntensityLabel(rainfall, pType);
+
+                let icon, condition;
+                if (pType === 'snow') {
+                    icon = '❄️';
+                    condition = intensity;
+                } else if (pType === 'sleet') {
+                    icon = '🌨️';
+                    condition = intensity;
+                } else {
+                    icon = '🌧️';
+                    condition = intensity;
+                }
+
+                return { icon, condition };
+            }
+
+            // If currently 0mm/h but weather says clear/partly cloudy, show cloudy instead
+            if (actualPrecipState.rainfall === 0 && actualPrecipState.consecutiveMinutes === 0) {
+                // No override - use Open-Meteo weather
+                return null;
+            }
+
+            return null;
+        }
+
+        /**
+         * Update weather display based on actual precipitation override
+         */
+        function updateWeatherDisplay() {
+            const override = getWeatherOverride();
+            if (override) {
+                const iconEl = document.getElementById('heroWeatherIcon');
+                const conditionEl = document.getElementById('heroCondition');
+
+                if (iconEl) iconEl.textContent = override.icon;
+                if (conditionEl) conditionEl.textContent = override.condition;
+            }
+        }
+
+        /**
+         * Get precipitation intensity label based on mm/h and type
+         * @param {number} rainfall - precipitation in mm/h
+         * @param {string} type - 'rain' | 'snow' | 'sleet'
+         * @returns {string} intensity label like "やや強い雨" or "強い雪"
+         */
+        function getPrecipIntensityLabel(rainfall, type) {
+            if (type === 'snow') {
+                // Snow uses relaxed thresholds (snow volume is ~10x water equivalent)
+                if (rainfall < 0.3) return '弱い雪';
+                if (rainfall < 1) return '雪';
+                if (rainfall < 3) return 'やや強い雪';
+                if (rainfall < 6) return '強い雪';
+                return '猛烈な雪';
+            } else if (type === 'sleet') {
+                // Sleet (みぞれ)
+                if (rainfall < 1) return 'みぞれ';
+                if (rainfall < 3) return 'やや強いみぞれ';
+                return '強いみぞれ';
+            } else {
+                // Rain uses JMA official thresholds
+                if (rainfall < 1) return '弱い雨';
+                if (rainfall < 3) return '雨';
+                if (rainfall < 10) return 'やや強い雨';
+                if (rainfall < 20) return '強い雨';
+                if (rainfall < 30) return '激しい雨';
+                return '非常に激しい雨';
+            }
+        }
+
+        /**
+         * Get emoji for precipitation type
+         */
+        function getPrecipEmoji(type) {
+            if (type === 'snow') return '❄️';
+            if (type === 'sleet') return '🌨️';
+            return '🌧️';
+        }
+
         // Load precipitation data from precipitation.json
         let precipChart = null;
         async function loadPrecipitation() {
@@ -3305,21 +3579,55 @@
                 if (!data.data || data.data.length === 0) return;
 
                 const precipData = data.data;
+
+                // Update actual precipitation state for weather display override
+                updateActualPrecipState(precipData);
+                updateWeatherDisplay();  // Refresh weather display with override
+
                 const labels = precipData.map(d => d.time);
                 const values = precipData.map(d => d.rainfall);
 
-                // 降水量に応じた色を設定
-                const getRainfallColor = (rainfall, alpha = 0.8) => {
+                // 降水量に応じた色を設定（雪/雨で色分け）
+                const getPrecipColor = (rainfall, precipType, alpha = 0.8) => {
                     if (rainfall === 0) return `rgba(148, 163, 184, ${alpha})`; // グレー（降水なし）
-                    if (rainfall < 1) return `rgba(96, 165, 250, ${alpha})`;    // 水色（弱い雨）
-                    if (rainfall < 5) return `rgba(59, 130, 246, ${alpha})`;    // 青（やや強い雨）
-                    if (rainfall < 10) return `rgba(234, 179, 8, ${alpha})`;    // 黄色（強い雨）
-                    if (rainfall < 20) return `rgba(249, 115, 22, ${alpha})`;   // オレンジ（激しい雨）
-                    return `rgba(239, 68, 68, ${alpha})`;                        // 赤（非常に激しい雨）
+
+                    if (precipType === 'snow') {
+                        // 雪: 水色〜白系のグラデーション
+                        if (rainfall < 0.3) return `rgba(147, 197, 253, ${alpha})`;   // 薄い水色（弱い雪）
+                        if (rainfall < 1) return `rgba(165, 210, 255, ${alpha})`;     // 水色（雪）
+                        if (rainfall < 3) return `rgba(186, 230, 253, ${alpha})`;     // 明るい水色（やや強い雪）
+                        if (rainfall < 6) return `rgba(224, 242, 254, ${alpha})`;     // 白っぽい水色（強い雪）
+                        return `rgba(240, 249, 255, ${alpha})`;                        // ほぼ白（猛烈な雪）
+                    } else if (precipType === 'sleet') {
+                        // みぞれ: 紫系
+                        if (rainfall < 1) return `rgba(167, 139, 250, ${alpha})`;     // 薄紫
+                        if (rainfall < 3) return `rgba(139, 92, 246, ${alpha})`;      // 紫
+                        return `rgba(124, 58, 237, ${alpha})`;                         // 濃い紫
+                    } else {
+                        // 雨: 青系のグラデーション（従来通り）
+                        if (rainfall < 1) return `rgba(96, 165, 250, ${alpha})`;      // 水色（弱い雨）
+                        if (rainfall < 5) return `rgba(59, 130, 246, ${alpha})`;      // 青（やや強い雨）
+                        if (rainfall < 10) return `rgba(234, 179, 8, ${alpha})`;      // 黄色（強い雨）
+                        if (rainfall < 20) return `rgba(249, 115, 22, ${alpha})`;     // オレンジ（激しい雨）
+                        return `rgba(239, 68, 68, ${alpha})`;                          // 赤（非常に激しい雨）
+                    }
                 };
 
-                const colors = precipData.map(d => getRainfallColor(d.rainfall, d.type === 'observation' ? 0.9 : 0.6));
-                const borderColors = precipData.map(d => getRainfallColor(d.rainfall, 1));
+                // 各時間の降水タイプを判定
+                const currentHour = new Date().getHours();
+                const precipTypes = precipData.map((d, i) => {
+                    // 時刻から何時間後かを計算してhourIndexを求める
+                    const [hh, mm] = d.time.split(':').map(Number);
+                    const hourIndex = hh >= currentHour ? hh : hh + 24;
+                    return getPrecipitationType(hourIndex);
+                });
+
+                const colors = precipData.map((d, i) =>
+                    getPrecipColor(d.rainfall, precipTypes[i], d.type === 'observation' ? 0.9 : 0.7)
+                );
+                const borderColors = precipData.map((d, i) =>
+                    getPrecipColor(d.rainfall, precipTypes[i], 1)
+                );
 
                 // すべて0mm/hの場合はカードを非表示
                 const hasAnyRain = precipData.some(d => d.rainfall > 0);
@@ -3369,7 +3677,14 @@
                                 borderColor: 'rgba(99, 102, 241, 0.3)',
                                 borderWidth: 1,
                                 callbacks: {
-                                    label: (ctx) => `${ctx.raw.toFixed(1)} mm/h`
+                                    label: (tooltipCtx) => {
+                                        const idx = tooltipCtx.dataIndex;
+                                        const rainfall = tooltipCtx.raw;
+                                        const pType = precipTypes[idx];
+                                        const emoji = getPrecipEmoji(pType);
+                                        const intensity = getPrecipIntensityLabel(rainfall, pType);
+                                        return `${emoji} ${intensity} (${rainfall.toFixed(1)} mm/h)`;
+                                    }
                                 }
                             }
                         },
@@ -3414,31 +3729,87 @@
                 const hasRainInForecast = forecastData.some(d => d.rainfall > 0);
 
                 if (isCurrentlyRaining) {
-                    // 現在降っている場合 - 雨量に応じた背景色
+                    // 現在降っている場合 - 雨/雪判定と強度ラベル
                     const rainfall = latestObservation.rainfall;
+                    const precipType = getPrecipitationType();
+                    const intensityLabel = getPrecipIntensityLabel(rainfall, precipType);
+                    const emoji = getPrecipEmoji(precipType);
+
                     let bgColor, borderColor;
-                    if (rainfall < 1) {
-                        bgColor = 'rgba(96, 165, 250, 0.15)';   // 水色（弱い雨）
-                        borderColor = 'rgba(96, 165, 250, 0.4)';
-                    } else if (rainfall < 5) {
-                        bgColor = 'rgba(59, 130, 246, 0.15)';   // 青（やや強い雨）
-                        borderColor = 'rgba(59, 130, 246, 0.4)';
-                    } else if (rainfall < 10) {
-                        bgColor = 'rgba(234, 179, 8, 0.15)';    // 黄色（強い雨）
-                        borderColor = 'rgba(234, 179, 8, 0.4)';
-                    } else if (rainfall < 20) {
-                        bgColor = 'rgba(249, 115, 22, 0.15)';   // オレンジ（激しい雨）
-                        borderColor = 'rgba(249, 115, 22, 0.4)';
+                    if (precipType === 'snow') {
+                        // 雪は水色〜白系
+                        if (rainfall < 1) {
+                            bgColor = 'rgba(147, 197, 253, 0.15)';   // 薄い水色
+                            borderColor = 'rgba(147, 197, 253, 0.4)';
+                        } else if (rainfall < 3) {
+                            bgColor = 'rgba(165, 210, 255, 0.18)';   // 水色
+                            borderColor = 'rgba(165, 210, 255, 0.5)';
+                        } else {
+                            bgColor = 'rgba(200, 225, 255, 0.2)';    // 白っぽい水色
+                            borderColor = 'rgba(200, 225, 255, 0.6)';
+                        }
+                    } else if (precipType === 'sleet') {
+                        // みぞれは青紫系
+                        bgColor = 'rgba(139, 92, 246, 0.15)';
+                        borderColor = 'rgba(139, 92, 246, 0.4)';
                     } else {
-                        bgColor = 'rgba(239, 68, 68, 0.15)';    // 赤（非常に激しい雨）
-                        borderColor = 'rgba(239, 68, 68, 0.4)';
+                        // 雨は従来通り青系
+                        if (rainfall < 1) {
+                            bgColor = 'rgba(96, 165, 250, 0.15)';   // 水色（弱い雨）
+                            borderColor = 'rgba(96, 165, 250, 0.4)';
+                        } else if (rainfall < 5) {
+                            bgColor = 'rgba(59, 130, 246, 0.15)';   // 青（やや強い雨）
+                            borderColor = 'rgba(59, 130, 246, 0.4)';
+                        } else if (rainfall < 10) {
+                            bgColor = 'rgba(234, 179, 8, 0.15)';    // 黄色（強い雨）
+                            borderColor = 'rgba(234, 179, 8, 0.4)';
+                        } else if (rainfall < 20) {
+                            bgColor = 'rgba(249, 115, 22, 0.15)';   // オレンジ（激しい雨）
+                            borderColor = 'rgba(249, 115, 22, 0.4)';
+                        } else {
+                            bgColor = 'rgba(239, 68, 68, 0.15)';    // 赤（非常に激しい雨）
+                            borderColor = 'rgba(239, 68, 68, 0.4)';
+                        }
                     }
 
                     rainAlert.style.display = 'flex';
                     rainAlert.style.background = `linear-gradient(135deg, ${bgColor}, ${bgColor})`;
                     rainAlert.style.borderColor = borderColor;
                     rainAlert.className = 'rain-alert';
-                    rainAlertText.textContent = `現在 ${rainfall.toFixed(1)}mm/h の雨が降っています`;
+                    document.getElementById('rainAlertIcon').textContent = emoji;
+
+                    // Check if precipitation type will change to snow later
+                    let transitionMessage = '';
+                    if (precipType === 'rain') {
+                        const currentHour = new Date().getHours();
+                        // Check next 6 hours for snow transition
+                        for (let i = 1; i <= 6; i++) {
+                            const futureHourIndex = currentHour + i;
+                            const futureType = getPrecipitationType(futureHourIndex);
+                            if (futureType === 'snow' || futureType === 'sleet') {
+                                const futureRainfall = weatherData?.hourlySnowfall?.[futureHourIndex] || rainfall;
+                                const futureIntensity = getPrecipIntensityLabel(futureRainfall, futureType);
+                                const futureEmoji = getPrecipEmoji(futureType);
+                                transitionMessage = ` → 約${i * 60}分後に${futureEmoji}${futureIntensity}に変わる見込み`;
+                                break;
+                            }
+                        }
+                    } else if (precipType === 'sleet') {
+                        // Check if it will become full snow
+                        const currentHour = new Date().getHours();
+                        for (let i = 1; i <= 6; i++) {
+                            const futureHourIndex = currentHour + i;
+                            const futureType = getPrecipitationType(futureHourIndex);
+                            if (futureType === 'snow') {
+                                const futureRainfall = weatherData?.hourlySnowfall?.[futureHourIndex] || rainfall;
+                                const futureIntensity = getPrecipIntensityLabel(futureRainfall, 'snow');
+                                transitionMessage = ` → 約${i * 60}分後に❄️${futureIntensity}に変わる見込み`;
+                                break;
+                            }
+                        }
+                    }
+
+                    rainAlertText.textContent = `現在 ${rainfall.toFixed(1)}mm/h の${intensityLabel}が降っています${transitionMessage}`;
                 } else if (hasRainInForecast && firstRainForecast) {
                     // これから降る場合
                     const now = new Date();
@@ -3459,9 +3830,16 @@
                     const minutesUntilRain = Math.round((rainTime - now) / 1000 / 60);
 
                     if (minutesUntilRain > 0) {
+                        // 予報の降水量から強度を判定
+                        const forecastRainfall = firstRainForecast.rainfall;
+                        const precipType = getPrecipitationType();
+                        const intensityLabel = getPrecipIntensityLabel(forecastRainfall, precipType);
+                        const emoji = getPrecipEmoji(precipType);
+
                         rainAlert.style.display = 'flex';
                         rainAlert.className = 'rain-alert';
-                        rainAlertText.textContent = `約${minutesUntilRain}分後に雨が降り始める予報です`;
+                        document.getElementById('rainAlertIcon').textContent = emoji;
+                        rainAlertText.textContent = `約${minutesUntilRain}分後に${intensityLabel}が降り始める予報です`;
                     } else {
                         rainAlert.style.display = 'none';
                     }
@@ -4547,6 +4925,7 @@
 
             // Weather API data (wind speed adjusted to 2m height: 0.6x factor)
             const wc = weatherData?.weatherCode ?? -1;
+            const cloudCover = weatherData?.cloudCover ?? null;
             const pp = weatherData?.precipProb ?? 0;
             const wsRaw = weatherData?.windSpeed ?? 0;  // 10m height from API
             const ws = wsRaw * 0.6;  // Adjusted to 2m height (0.6x factor)
@@ -6714,8 +7093,19 @@
             document.getElementById('greetingSection').classList.add('show');
         }
 
-        // Get weather condition name from WMO code (Complete)
-        function getWeatherConditionName(code) {
+        // Get weather condition name from WMO code + cloud cover (Enhanced)
+        function getWeatherConditionName(code, cloudCover = null) {
+            // For clear/cloudy conditions (codes 0-3), use cloud cover for precision
+            if (code >= 0 && code <= 3 && cloudCover !== null) {
+                if (cloudCover <= 10) return '快晴';
+                if (cloudCover <= 25) return 'ほぼ晴れ';
+                if (cloudCover <= 50) return '晴れ';
+                if (cloudCover <= 70) return '晴れ時々曇り';
+                if (cloudCover <= 85) return 'やや曇り';
+                return '曇り';
+            }
+
+            // Standard WMO code mapping for other conditions
             const conditions = {
                 0: '快晴',
                 1: 'ほぼ晴れ',
