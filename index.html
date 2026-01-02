@@ -3439,6 +3439,15 @@
             consecutiveMinutes: 0  // How many consecutive minutes of rain observed
         };
 
+        // Cache for weather override - persists between refreshes
+        let lastWeatherOverride = {
+            icon: null,
+            condition: null,
+            precipType: null,
+            timestamp: 0,
+            noRainMinutes: 0  // How long since last rain
+        };
+
         /**
          * Update actual precipitation state from Yahoo API data
          * Called from loadPrecipitation()
@@ -3482,10 +3491,18 @@
 
         /**
          * Get weather display override based on actual precipitation
+         * Priority system:
+         * 1. Yahoo observation shows precipitation → our snow/rain/sleet detection
+         * 2. Yahoo 0mm but Open-Meteo rain code → show cloudy
+         * 3. No precipitation → Open-Meteo weather
          * Returns null if no override needed, otherwise {icon, condition}
          */
         function getWeatherOverride() {
-            // If 10+ minutes of rain observed (2+ data points), override weather
+            const now = Date.now();
+            const wc = weatherData?.weatherCode ?? 0;
+            const isOpenMeteoRainCode = (wc >= 51 && wc <= 67) || (wc >= 80 && wc <= 82) || wc >= 95;
+
+            // Priority 1: Yahoo observation shows precipitation (10+ minutes)
             if (actualPrecipState.consecutiveMinutes >= 10 && actualPrecipState.rainfall > 0) {
                 const pType = actualPrecipState.precipType;
                 const rainfall = actualPrecipState.rainfall;
@@ -3503,13 +3520,48 @@
                     condition = intensity;
                 }
 
+                // Update cache
+                lastWeatherOverride = {
+                    icon,
+                    condition,
+                    precipType: pType,
+                    timestamp: now,
+                    noRainMinutes: 0
+                };
+
                 return { icon, condition };
             }
 
-            // If currently 0mm/h but weather says clear/partly cloudy, show cloudy instead
-            if (actualPrecipState.rainfall === 0 && actualPrecipState.consecutiveMinutes === 0) {
-                // No override - use Open-Meteo weather
+            // If currently no rain from Yahoo
+            if (actualPrecipState.rainfall === 0) {
+                // Check cache first
+                if (lastWeatherOverride.timestamp > 0) {
+                    lastWeatherOverride.noRainMinutes = (now - lastWeatherOverride.timestamp) / 60000;
+
+                    // Keep showing cached weather for 5 minutes after rain stops
+                    if (lastWeatherOverride.noRainMinutes < 5 && lastWeatherOverride.icon) {
+                        return {
+                            icon: lastWeatherOverride.icon,
+                            condition: lastWeatherOverride.condition
+                        };
+                    } else {
+                        // Clear cache after 5 minutes of no rain
+                        lastWeatherOverride = { icon: null, condition: null, precipType: null, timestamp: 0, noRainMinutes: 0 };
+                    }
+                }
+
+                // Priority 2: Open-Meteo says rain but Yahoo shows 0mm → show cloudy
+                if (isOpenMeteoRainCode) {
+                    return { icon: '☁️', condition: '曇り' };
+                }
+
+                // Priority 3: No precipitation → use Open-Meteo (return null)
                 return null;
+            }
+
+            // If raining but less than 10 minutes, use cache if available
+            if (lastWeatherOverride.icon && lastWeatherOverride.precipType === actualPrecipState.precipType) {
+                return { icon: lastWeatherOverride.icon, condition: lastWeatherOverride.condition };
             }
 
             return null;
@@ -3593,24 +3645,26 @@
                     if (rainfall === 0) return `rgba(148, 163, 184, ${alpha})`; // グレー（降水なし）
 
                     if (precipType === 'snow') {
-                        // 雪: 水色〜白系のグラデーション
-                        if (rainfall < 0.3) return `rgba(147, 197, 253, ${alpha})`;   // 薄い水色（弱い雪）
-                        if (rainfall < 1) return `rgba(165, 210, 255, ${alpha})`;     // 水色（雪）
-                        if (rainfall < 3) return `rgba(186, 230, 253, ${alpha})`;     // 明るい水色（やや強い雪）
-                        if (rainfall < 6) return `rgba(224, 242, 254, ${alpha})`;     // 白っぽい水色（強い雪）
-                        return `rgba(240, 249, 255, ${alpha})`;                        // ほぼ白（猛烈な雪）
+                        // 雪: 白+紫のグラデーション（強くなるほど紫が強くなる）
+                        if (rainfall < 0.3) return `rgba(240, 240, 255, ${alpha})`;     // ほぼ白（弱い雪）
+                        if (rainfall < 1) return `rgba(220, 210, 250, ${alpha})`;       // 白に薄紫（雪）
+                        if (rainfall < 3) return `rgba(200, 180, 245, ${alpha})`;       // 薄紫（やや強い雪）
+                        if (rainfall < 6) return `rgba(180, 150, 240, ${alpha})`;       // 紫（強い雪）
+                        return `rgba(160, 120, 235, ${alpha})`;                         // 濃い紫（猛烈な雪）
                     } else if (precipType === 'sleet') {
-                        // みぞれ: 紫系
-                        if (rainfall < 1) return `rgba(167, 139, 250, ${alpha})`;     // 薄紫
-                        if (rainfall < 3) return `rgba(139, 92, 246, ${alpha})`;      // 紫
-                        return `rgba(124, 58, 237, ${alpha})`;                         // 濃い紫
+                        // みぞれ: 白の濃淡（強くなるほど明るくなる）
+                        if (rainfall < 0.5) return `rgba(200, 200, 210, ${alpha})`;     // 薄いグレー白（弱いみぞれ）
+                        if (rainfall < 1) return `rgba(210, 210, 220, ${alpha})`;       // グレー白（みぞれ）
+                        if (rainfall < 3) return `rgba(225, 225, 235, ${alpha})`;       // 明るいグレー白（やや強いみぞれ）
+                        if (rainfall < 6) return `rgba(240, 240, 248, ${alpha})`;       // ほぼ白（強いみぞれ）
+                        return `rgba(250, 250, 255, ${alpha})`;                         // 白（猛烈なみぞれ）
                     } else {
                         // 雨: 青系のグラデーション（従来通り）
-                        if (rainfall < 1) return `rgba(96, 165, 250, ${alpha})`;      // 水色（弱い雨）
-                        if (rainfall < 5) return `rgba(59, 130, 246, ${alpha})`;      // 青（やや強い雨）
-                        if (rainfall < 10) return `rgba(234, 179, 8, ${alpha})`;      // 黄色（強い雨）
-                        if (rainfall < 20) return `rgba(249, 115, 22, ${alpha})`;     // オレンジ（激しい雨）
-                        return `rgba(239, 68, 68, ${alpha})`;                          // 赤（非常に激しい雨）
+                        if (rainfall < 1) return `rgba(96, 165, 250, ${alpha})`;        // 水色（弱い雨）
+                        if (rainfall < 5) return `rgba(59, 130, 246, ${alpha})`;        // 青（やや強い雨）
+                        if (rainfall < 10) return `rgba(234, 179, 8, ${alpha})`;        // 黄色（強い雨）
+                        if (rainfall < 20) return `rgba(249, 115, 22, ${alpha})`;       // オレンジ（激しい雨）
+                        return `rgba(239, 68, 68, ${alpha})`;                           // 赤（非常に激しい雨）
                     }
                 };
 
