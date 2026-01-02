@@ -940,13 +940,19 @@ def analyze_with_gemini(spreadsheet_data: Dict, weather_data: Dict, alerts_data:
 - 凍結高度: {snow_data.get('freezing_level', '不明')}m（500m以下で雪の可能性高）
 
 【降水タイプ判定ルール】（複合スコアシステム）
-- 湿球温度 ≤1°C + 凍結高度 ≤500m + 850hPa ≤-4°C → ❄️ 雪
-- 上記に近いが地上1.5°C以上 → 🌨️ みぞれ
-- それ以外の降水 → 🌧️ 雨
+各要素でポイント加算:
+- 湿球温度: ≤0°C→+3, ≤1°C→+2, ≤2°C→+1
+- 凍結高度: ≤200m→+3, ≤500m→+2, ≤800m→+1  
+- 850hPa: ≤-6°C→+3, ≤-4°C→+2, ≤-2°C→+1
+- 925hPa: ≤-3°C→+2, ≤-1°C→+1
+- 地上気温: ≤0°C→+3, ≤1.5°C→+2, ≤3°C→+1
 
-※ 降水の話をするときは、気温データから「雪になるか」「みぞれか」「雨か」を判断してください。
-  地上気温1.5°C以下 + 上空データが冷えている場合は「雪」と判断。
-  地上気温2-4°C + 上空データが冷えている場合は「みぞれ」と判断。
+判定基準:
+- ❄️雪: (地上≤1.5°C かつ スコア≥2) または (スコア≥6 かつ 地上≤3°C)
+- 🌨️みぞれ: スコア≥3
+- 🌧️雨: その他
+
+※ 降水の話をするときは、上記基準に従って「雪」「みぞれ」「雨」を判断してください。
 """
 
     # ========================================
@@ -965,14 +971,49 @@ def analyze_with_gemini(spreadsheet_data: Dict, weather_data: Dict, alerts_data:
             wet_bulb = snow_data.get('wet_bulb')
             freezing = snow_data.get('freezing_level')
             ground_temp = spreadsheet_data.get('current', {}).get('temperature', 5)
+            temp_925 = snow_data.get('temp_925hPa')
             
-            if wet_bulb is not None and wet_bulb <= 1:
+            # HTMLと同じスコアシステムを使用
+            snow_score = 0
+            
+            # Factor 1: Wet bulb temperature
+            if wet_bulb is not None:
+                if wet_bulb <= 0: snow_score += 3
+                elif wet_bulb <= 1: snow_score += 2
+                elif wet_bulb <= 2: snow_score += 1
+            
+            # Factor 2: Freezing level height
+            if freezing is not None:
+                if freezing <= 200: snow_score += 3
+                elif freezing <= 500: snow_score += 2
+                elif freezing <= 800: snow_score += 1
+            
+            # Factor 3: 850hPa temperature
+            if temp_850 is not None:
+                if temp_850 <= -6: snow_score += 3
+                elif temp_850 <= -4: snow_score += 2
+                elif temp_850 <= -2: snow_score += 1
+            
+            # Factor 4: 925hPa temperature
+            if temp_925 is not None:
+                if temp_925 <= -3: snow_score += 2
+                elif temp_925 <= -1: snow_score += 1
+                elif temp_925 <= 1: snow_score += 0.5
+            
+            # Factor 5: Ground temperature
+            if ground_temp is not None:
+                if ground_temp <= 0: snow_score += 3
+                elif ground_temp <= 1.5: snow_score += 2
+                elif ground_temp <= 3: snow_score += 1
+                elif ground_temp <= 4: snow_score += 0.5
+            
+            # 判定: HTMLと同じロジック
+            # 雪: 地上 ≤1.5°C かつ スコア≥2、または スコア≥6 かつ 地上≤3°C
+            if ground_temp is not None and ground_temp <= 1.5 and snow_score >= 2:
                 precip_type = "❄️雪"
-            elif freezing is not None and freezing <= 500:
-                precip_type = "❄️雪" if ground_temp and ground_temp <= 1.5 else "🌨️みぞれ"
-            elif temp_850 is not None and temp_850 <= -5:
-                precip_type = "❄️雪" if ground_temp and ground_temp <= 2 else "🌨️みぞれ"
-            elif ground_temp and ground_temp <= 3:
+            elif snow_score >= 6 and ground_temp is not None and ground_temp <= 3:
+                precip_type = "❄️雪"
+            elif snow_score >= 3:
                 precip_type = "🌨️みぞれ"
             else:
                 precip_type = "🌧️雨"
