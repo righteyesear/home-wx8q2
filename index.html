@@ -5001,7 +5001,9 @@
             const isOvercast = wc >= 3 && wc < 45;
             const isPartlyCloudy = wc === 2;
             const isClear = wc >= 0 && wc <= 1;
-            const isRaining = isThunderstorm || isHeavyRain || isModerateRain || isRain || isDrizzle;
+            const isRainingOpenMeteo = isThunderstorm || isHeavyRain || isModerateRain || isRain || isDrizzle;
+            // Yahoo APIの実測データを優先、なければOpen-Meteoを使用
+            const isRaining = actualPrecipState?.isRaining ?? isRainingOpenMeteo;
 
             // Wind levels (more detailed)
             const isCalm = ws < 3;
@@ -6853,9 +6855,10 @@
                 ]);
             } else if (isNewYear && isNight) {
                 comment += pick([
-                    ' 🎍 良いお年を',
-                    ' ✨ 素敵な新年を',
-                    ' 🌙 穏やかな正月の夜'
+                    ' 🎍 新年おめでとうございます',
+                    ' ✨ 素敵なお正月を',
+                    ' 🌙 穏やかな正月の夜ですね',
+                    ' 🎍 三が日をゆっくりお過ごしください'
                 ]);
             } else if (isCherryBlossom && isClear && !isNight && !isRaining) {
                 comment += pick([
