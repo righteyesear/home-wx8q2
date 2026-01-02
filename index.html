@@ -3327,7 +3327,8 @@
             const openMeteoTemp = weatherData?.groundTemp ?? null;
 
             // Get local sensor temperature from recentData
-            const localSensorTemp = recentData?.length > 0 ? recentData[recentData.length - 1]?.temp : null;
+            // recentData is sorted newest first, so [0] is the latest reading
+            const localSensorTemp = recentData?.length > 0 ? recentData[0]?.temp : null;
 
             // Use the lower of Open-Meteo temp and local sensor (more conservative for snow detection)
             let groundTemp = openMeteoTemp;
