@@ -6629,12 +6629,16 @@
             }
 
             // ============================================================
-            // ADD RAIN FORECAST WARNING (when not currently raining)
+            // ADD PRECIPITATION FORECAST WARNING (using snow/sleet detection)
             // ============================================================
+            const precipType = getPrecipitationType();
+            const precipEmoji = precipType === 'snow' ? '❄️' : precipType === 'sleet' ? '🌨️' : '☂️';
+            const precipName = precipType === 'snow' ? '雪' : precipType === 'sleet' ? 'みぞれ' : '雨';
+
             if (willRain && pp >= 70 && !isRaining) {
-                comment += ' ☂️ 雨の予報。傘を持っていきましょう';
+                comment += ` ${precipEmoji} ${precipName}の予報。${precipType === 'snow' ? '外出は控えめに' : precipType === 'sleet' ? '足元に注意' : '傘を持っていきましょう'}`;
             } else if (willRain && pp >= 50 && !isRaining) {
-                comment += ' 🌂 降水確率高め。念のため傘を';
+                comment += ` 🌂 降水確率高め。${precipType === 'snow' ? '雪に変わるかも' : '念のため傘を'}`;
             }
 
             // ============================================================
@@ -6654,7 +6658,8 @@
             if (willImprove && !isRaining) {
                 comment += ' 🌤️ これから晴れてきます';
             } else if (willImprove && isRaining) {
-                comment += ' 🌈 もう少しで雨が上がりそう';
+                const stopMsg = precipType === 'snow' ? '雪が弱まりそう' : precipType === 'sleet' ? 'みぞれが上がりそう' : '雨が上がりそう';
+                comment += ` 🌈 もう少しで${stopMsg}`;
             }
 
             // Temperature change forecast
