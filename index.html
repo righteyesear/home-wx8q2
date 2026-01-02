@@ -5323,9 +5323,9 @@
                 if (isVeryWindy) comment += ' 🌀 吹雪に注意';
             }
             // ============================================================
-            // PRIORITY 4: Heavy Rain / Showers
+            // PRIORITY 4: Heavy Rain / Showers (雪/みぞれ判定なら優先でスキップ)
             // ============================================================
-            else if (isHeavyRain || isModerateRain) {
+            else if ((isHeavyRain || isModerateRain) && !isSnowActual && !isSleetActual) {
                 if (temp >= 32 && isExtremelyHumid) {
                     comment = `🌧️ ${t}・湿度${h}% — 猛暑の中の豪雨。蒸し地獄。雨宿りして涼を`;
                 } else if (temp >= 28 && isSummer && isAfternoon) {
@@ -5354,9 +5354,9 @@
                 if (isVeryWindy) comment += ' 💨 風も強い！';
             }
             // ============================================================
-            // PRIORITY 5: Regular Rain
+            // PRIORITY 5: Regular Rain (雪/みぞれ判定なら優先でスキップ)
             // ============================================================
-            else if (isRain) {
+            else if (isRain && !isSnowActual && !isSleetActual) {
                 if (temp >= 30 && isExtremelyHumid) {
                     comment = `☔ ${t}・湿度${h}% — ムシムシした熱帯雨。不快指数MAX。エアコンを`;
                 } else if (temp >= 28 && isVeryHumid) {
@@ -5392,9 +5392,9 @@
                 }
             }
             // ============================================================
-            // PRIORITY 6: Drizzle
+            // PRIORITY 6: Drizzle (雪/みぞれ判定なら優先でスキップ)
             // ============================================================
-            else if (isDrizzle) {
+            else if (isDrizzle && !isSnowActual && !isSleetActual) {
                 if (temp >= 28 && isExtremelyHumid) {
                     comment = `🌧️ ${t}・湿度${h}% — 霧雨だけどムシムシ。汗が乾かない`;
                 } else if (temp >= 25 && isSummer) {
@@ -5416,6 +5416,41 @@
                 } else {
                     comment = `🌧️ ${t} — 凍てつく霧雨。雪に変わるかも`;
                 }
+            }
+            // ============================================================
+            // PRIORITY 6.5: Yahoo検出の雪/みぞれ（Open-Meteoが雨判定だが実際は雪/みぞれ）
+            // ============================================================
+            else if (isSnowActual && isRaining) {
+                // Open-Meteoは雨判定だが、我々の判定で雪
+                if (temp <= 0) {
+                    comment = pick([
+                        `❄️ ${t} — 雪が降っています。積もるかもしれません`,
+                        `❄️ ${t} — しんしんと雪が降っています。足元注意`,
+                        `❄️ ${t} — 粉雪がちらついています。路面凍結に注意`
+                    ]);
+                } else if (temp <= 2) {
+                    comment = pick([
+                        `❄️ ${t} — 雪が降っています。寒さに注意`,
+                        `❄️ ${t} — 湿った雪。傘があると良いかも`,
+                        `❄️ ${t} — 雪が舞っています。暖かくして`
+                    ]);
+                } else {
+                    comment = pick([
+                        `❄️ ${t} — 雪になっています。寒さ対策を`,
+                        `❄️ ${t} — べた雪が降っています。足元注意`,
+                        `❄️ ${t} — 雪が降り始めました。傘をお忘れなく`
+                    ]);
+                }
+                if (isVeryWindy) comment += ' 🌀 吹雪に注意';
+            }
+            else if (isSleetActual && isRaining) {
+                // Open-Meteoは雨判定だが、我々の判定でみぞれ
+                comment = pick([
+                    `🌨️ ${t} — みぞれが降っています。足元が滑りやすいです`,
+                    `🌨️ ${t} — 雪まじりの雨。傘と足元に注意`,
+                    `🌨️ ${t} — みぞれ模様。路面凍結の可能性あり`,
+                    `🌨️ ${t} — 冷たいみぞれ。暖かい服装で`
+                ]);
             }
             // ============================================================
             // PRIORITY 7: Fog - Expanded
