@@ -5005,6 +5005,12 @@
             // Yahoo APIの実測データを優先、なければOpen-Meteoを使用
             const isRaining = actualPrecipState?.isRaining ?? isRainingOpenMeteo;
 
+            // Yahoo API降水タイプでisSnow/isSleetを上書き（Open-Meteoより優先）
+            const isSnowYahoo = actualPrecipState?.precipType === 'snow';
+            const isSleetYahoo = actualPrecipState?.precipType === 'sleet';
+            const isSnowActual = isSnowYahoo || isHeavySnow || isSnow;
+            const isSleetActual = isSleetYahoo || isSleet;
+
             // Wind levels (more detailed)
             const isCalm = ws < 3;
             const isLightBreeze = ws >= 3 && ws < 8;
@@ -5257,7 +5263,7 @@
             // ============================================================
             // PRIORITY 3: Snow - Expanded
             // ============================================================
-            else if (isSnow || isSleet) {
+            else if (isSnowActual || isSleetActual) {
                 if (temp <= -5) {
                     comment = pick([
                         `❄️ ${t} — 厳しい寒さの中、雪が降り続いています。路面完全凍結`,
@@ -5373,10 +5379,16 @@
                     comment = `☔ ${t} — 冬の冷たい雨。みぞれになるかも`;
                 } else if (temp >= 5) {
                     comment = `☔ ${t} — 冷たい雨。濡れると一気に冷えます`;
+                } else if (isSnowActual) {
+                    // Yahoo APIで雪と判定されている場合
+                    comment = `❄️ ${t} — 雪が降っています。路面凍結に注意`;
+                } else if (isSleetActual) {
+                    // Yahoo APIでみぞれと判定されている場合
+                    comment = `🌨️ ${t} — みぞれが降っています。足元に注意`;
                 } else if (temp >= 2) {
-                    comment = `☔ ${t} — 氷雨です。雪に変わりそうな寒さ`;
+                    comment = `☔ ${t} — 雪に変わりそうな冷たい雨`;
                 } else {
-                    comment = `☔ ${t} — 氷雨が降っています。路面凍結に注意`;
+                    comment = `🌨️ ${t} — 雪まじりの冷たい雨。路面凍結に注意`;
                 }
             }
             // ============================================================
