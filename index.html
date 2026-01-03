@@ -88,76 +88,119 @@
             overscroll-behavior-y: contain;
         }
 
-        /* Pull-to-Refresh Indicator (positioned below header) */
+        /* Pull-to-Refresh Indicator - Polished Version */
         .pull-refresh-indicator {
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(180deg, rgba(59, 130, 246, 0.15) 0%, transparent 100%);
-            border-radius: 12px;
-            margin: 0 0 8px 0;
-            height: 0;
+            background: rgba(99, 102, 241, 0.08);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            border-radius: 16px;
+            margin: 0 0 12px 0;
+            max-height: 0;
+            padding: 0 16px;
             opacity: 0;
             overflow: hidden;
-            transition: all 0.3s ease;
-            pointer-events: none;
+            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                padding 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.25s ease,
+                background 0.3s ease,
+                border-color 0.3s ease;
         }
 
         .pull-refresh-indicator.visible {
-            height: auto;
-            padding: 12px;
+            max-height: 60px;
+            padding: 14px 16px;
             opacity: 1;
         }
 
+        .pull-refresh-indicator.ready {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
         .pull-refresh-indicator.refreshing {
-            background: linear-gradient(180deg, rgba(74, 222, 128, 0.2) 0%, transparent 100%);
+            background: rgba(96, 165, 250, 0.12);
+            border-color: rgba(96, 165, 250, 0.3);
         }
 
         .pull-refresh-content {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             font-size: 0.9em;
             color: var(--text-secondary);
             font-weight: 500;
         }
 
         .pull-refresh-spinner {
-            width: 24px;
-            height: 24px;
-            border: 3px solid rgba(99, 102, 241, 0.2);
-            border-top-color: #60a5fa;
+            width: 22px;
+            height: 22px;
+            border: 2.5px solid rgba(99, 102, 241, 0.25);
+            border-top-color: var(--accent-blue);
             border-radius: 50%;
-            opacity: 0;
-            transition: opacity 0.2s ease, transform 0.3s ease;
+            transition: transform 0.1s ease-out;
         }
 
         .pull-refresh-indicator.pulling .pull-refresh-spinner {
-            opacity: 1;
+            animation: none;
         }
 
         .pull-refresh-indicator.refreshing .pull-refresh-spinner {
-            opacity: 1;
-            animation: spin 0.8s linear infinite;
-            border-top-color: #4ade80;
+            animation: smoothSpin 0.7s linear infinite;
+            border-top-color: var(--accent-cyan);
         }
 
-        @keyframes spin {
+        @keyframes smoothSpin {
+            from {
+                transform: rotate(0deg);
+            }
+
             to {
                 transform: rotate(360deg);
             }
         }
 
+        .pull-refresh-arrow {
+            font-size: 1.1em;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .pull-refresh-indicator.ready .pull-refresh-arrow {
+            transform: rotate(180deg);
+        }
+
         .pull-refresh-text {
-            transition: opacity 0.2s ease;
+            transition: color 0.2s ease, opacity 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .pull-refresh-indicator.ready .pull-refresh-text {
+            color: var(--accent-blue);
+        }
+
+        .pull-refresh-indicator.refreshing .pull-refresh-text {
+            color: var(--accent-cyan);
         }
 
         html.light-mode .pull-refresh-indicator {
-            background: linear-gradient(180deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
+            background: rgba(59, 130, 246, 0.06);
+            border-color: rgba(59, 130, 246, 0.12);
+        }
+
+        html.light-mode .pull-refresh-indicator.visible {
+            background: rgba(59, 130, 246, 0.08);
+        }
+
+        html.light-mode .pull-refresh-indicator.ready {
+            background: rgba(59, 130, 246, 0.12);
+            border-color: rgba(59, 130, 246, 0.3);
         }
 
         html.light-mode .pull-refresh-indicator.refreshing {
-            background: linear-gradient(180deg, rgba(34, 197, 94, 0.15) 0%, transparent 100%);
+            background: rgba(37, 99, 235, 0.1);
         }
 
         /* Card Hover Effects */
@@ -2418,11 +2461,12 @@
             </div>
         </header>
 
-        <!-- Pull-to-Refresh Indicator (positioned below header) -->
+        <!-- Pull-to-Refresh Indicator -->
         <div id="pullRefreshIndicator" class="pull-refresh-indicator">
             <div class="pull-refresh-content">
                 <div class="pull-refresh-spinner"></div>
-                <span class="pull-refresh-text" id="pullRefreshText">↓ 引っ張って更新</span>
+                <span class="pull-refresh-arrow" id="pullRefreshArrow">↓</span>
+                <span class="pull-refresh-text" id="pullRefreshText">引っ張って更新</span>
             </div>
         </div>
 
@@ -2755,29 +2799,29 @@
                 <div class="footer-stat-value">2024/3 〜 現在</div>
             </div>
         </div>
-        <div class="version-info">v3.3.9 <span style="opacity: 0.5; font-size: 0.75em;">| 最終更新: 2026/01/03 16:36</span>
+        <div class="version-info">v3.4.0 <span style="opacity: 0.5; font-size: 0.75em;">| 最終更新: 2026/01/03 16:53</span>
         </div>
     </div>
-
     <script>
         // =====================================================
-        // PULL-TO-REFRESH (Mobile)
+        // PULL-TO-REFRESH (Mobile) - Polished Version
         // =====================================================
         (function () {
             let startY = 0;
             let currentY = 0;
             let isPulling = false;
             let isRefreshing = false;
-            const THRESHOLD = 80; // Pull distance to trigger refresh
-            const MAX_PULL = 120;
+            const THRESHOLD = 70;
+            const MAX_PULL = 100;
 
             const indicator = document.getElementById('pullRefreshIndicator');
             const textEl = document.getElementById('pullRefreshText');
+            const arrowEl = document.getElementById('pullRefreshArrow');
+            const spinnerEl = indicator?.querySelector('.pull-refresh-spinner');
 
             if (!indicator) return;
 
             document.addEventListener('touchstart', (e) => {
-                // Only start if at top of page
                 if (window.scrollY <= 0 && !isRefreshing) {
                     startY = e.touches[0].pageY;
                     isPulling = true;
@@ -2790,27 +2834,27 @@
                 currentY = e.touches[0].pageY;
                 const pullDistance = Math.min(currentY - startY, MAX_PULL);
 
-                if (pullDistance > 0 && window.scrollY <= 0) {
-                    // Prevent native scroll bounce
+                if (pullDistance > 10 && window.scrollY <= 0) {
                     e.preventDefault();
 
-                    // Show indicator with progress
                     const progress = Math.min(pullDistance / THRESHOLD, 1);
-                    indicator.classList.add('visible', 'pulling');
+                    const isReady = pullDistance >= THRESHOLD;
 
-                    // Update text based on progress
-                    if (pullDistance >= THRESHOLD) {
-                        textEl.textContent = '↑ 離して更新';
-                        textEl.style.color = '#4ade80';
-                    } else {
-                        textEl.textContent = '↓ 引っ張って更新';
-                        textEl.style.color = '';
+                    // Update classes
+                    indicator.classList.add('visible', 'pulling');
+                    indicator.classList.toggle('ready', isReady);
+
+                    // Rotate spinner based on pull progress
+                    if (spinnerEl) {
+                        spinnerEl.style.transform = `rotate(${progress * 540}deg)`;
                     }
 
-                    // Rotate spinner based on pull
-                    const spinner = indicator.querySelector('.pull-refresh-spinner');
-                    if (spinner) {
-                        spinner.style.transform = `rotate(${progress * 360}deg)`;
+                    // Update text
+                    textEl.textContent = isReady ? '離して更新' : '引っ張って更新';
+
+                    // Hide arrow when refreshing
+                    if (arrowEl) {
+                        arrowEl.style.display = 'inline';
                     }
                 }
             }, { passive: false });
@@ -2821,38 +2865,40 @@
                 const pullDistance = currentY - startY;
 
                 if (pullDistance >= THRESHOLD && window.scrollY <= 0) {
-                    // Trigger refresh
                     isRefreshing = true;
-                    indicator.classList.remove('pulling');
-                    indicator.classList.add('refreshing');
-                    textEl.textContent = '🔄 更新中...';
-                    textEl.style.color = '#4ade80';
 
-                    // Haptic feedback (if supported)
-                    if (navigator.vibrate) {
-                        navigator.vibrate(30);
-                    }
+                    // Haptic feedback
+                    if (navigator.vibrate) navigator.vibrate(25);
+
+                    indicator.classList.remove('pulling', 'ready');
+                    indicator.classList.add('refreshing');
+
+                    // Hide arrow, reset spinner
+                    if (arrowEl) arrowEl.style.display = 'none';
+                    if (spinnerEl) spinnerEl.style.transform = '';
+
+                    textEl.textContent = '更新中...';
 
                     try {
-                        // Call the existing fetchAll function
                         if (typeof fetchAll === 'function') {
                             await fetchAll();
                         }
-                        textEl.textContent = '✓ 更新完了！';
+                        textEl.textContent = '✓ 更新完了';
+                        if (navigator.vibrate) navigator.vibrate([15, 50, 15]);
                     } catch (err) {
                         textEl.textContent = '✗ エラー';
                         console.error('Pull refresh error:', err);
                     }
 
-                    // Hide after delay
                     setTimeout(() => {
                         indicator.classList.remove('visible', 'refreshing');
-                        textEl.style.color = '';
+                        textEl.textContent = '引っ張って更新';
+                        if (arrowEl) arrowEl.style.display = 'inline';
                         isRefreshing = false;
-                    }, 1000);
+                    }, 800);
                 } else {
-                    // Reset without refresh
-                    indicator.classList.remove('visible', 'pulling');
+                    indicator.classList.remove('visible', 'pulling', 'ready');
+                    if (spinnerEl) spinnerEl.style.transform = '';
                 }
 
                 isPulling = false;
