@@ -2706,7 +2706,7 @@
                 <div class="footer-stat-value">2024/3 〜 現在</div>
             </div>
         </div>
-        <div class="version-info">v3.3.2 <span style="opacity: 0.5; font-size: 0.75em;">| 最終更新: 2026/01/03 03:05</span>
+        <div class="version-info">v3.3.5 <span style="opacity: 0.5; font-size: 0.75em;">| 最終更新: 2026/01/03 14:02</span>
         </div>
     </div>
 
@@ -4030,8 +4030,21 @@
             cachedMoonTimes = moonTimes;
 
             // Display phase info
-            document.getElementById('moonIcon').textContent = moonData.emoji;
-            document.getElementById('moonPhaseName').textContent = moonData.phaseName;
+            const moonIconEl = document.getElementById('moonIcon');
+            const moonPhaseNameEl = document.getElementById('moonPhaseName');
+
+            moonIconEl.textContent = moonData.emoji;
+
+            // 満月の場合は特別な名前と色を表示
+            if (moonData.fullMoonName) {
+                moonPhaseNameEl.innerHTML = `${moonData.phaseName}<br><span style="font-size: 0.85em; color: ${moonData.fullMoonColor};">🌟 ${moonData.fullMoonName}</span>`;
+                moonIconEl.style.filter = `drop-shadow(0 0 12px ${moonData.fullMoonColor}) drop-shadow(0 0 24px ${moonData.fullMoonColor})`;
+                moonIconEl.style.color = moonData.fullMoonColor;
+            } else {
+                moonPhaseNameEl.textContent = moonData.phaseName;
+                moonIconEl.style.filter = '';
+                moonIconEl.style.color = '';
+            }
 
             // Display times in SVG
             const riseTimeEl = document.getElementById('moonRiseTimeSvg');
@@ -4142,34 +4155,101 @@
             const illumination = (1 - Math.cos(2 * Math.PI * phase)) / 2;
 
             // Phase name and emoji
-            let phaseName, emoji;
-            if (normalizedAge < 1.85) {
-                phaseName = '新月';
+            let phaseName, emoji, fullMoonName = null, fullMoonColor = null;
+
+            // Full moon names by month with themed colors
+            const fullMoonNames = {
+                1: { name: 'ウルフムーン', nameEn: 'Wolf Moon', color: '#a3c4dc' },      // 冬の青白い月
+                2: { name: 'スノームーン', nameEn: 'Snow Moon', color: '#e8f4fc' },      // 雪のような純白
+                3: { name: 'ワームムーン', nameEn: 'Worm Moon', color: '#c9a87c' },      // 土の温かみ
+                4: { name: 'ピンクムーン', nameEn: 'Pink Moon', color: '#f8b4c4' },      // 桜のピンク
+                5: { name: 'フラワームーン', nameEn: 'Flower Moon', color: '#f0e68c' },  // 花の黄色
+                6: { name: 'ストロベリームーン', nameEn: 'Strawberry Moon', color: '#ff9999' }, // イチゴ色
+                7: { name: 'バックムーン', nameEn: 'Buck Moon', color: '#daa520' },      // 鹿の角のゴールド
+                8: { name: 'スタージョンムーン', nameEn: 'Sturgeon Moon', color: '#87ceeb' }, // 湖の青
+                9: { name: 'ハーベストムーン', nameEn: 'Harvest Moon', color: '#ff8c00' }, // 収穫のオレンジ
+                10: { name: 'ハンターズムーン', nameEn: "Hunter's Moon", color: '#cd5c5c' }, // 狩りの赤茶
+                11: { name: 'ビーバームーン', nameEn: 'Beaver Moon', color: '#8b4513' },  // ビーバーの茶色
+                12: { name: 'コールドムーン', nameEn: 'Cold Moon', color: '#b0c4de' }     // 冷たい青灰色
+            };
+
+            // 月齢に基づく伝統的な和名（全30日分）
+            const moonAge = Math.floor(normalizedAge);
+
+            if (normalizedAge < 0.5) {
+                phaseName = '新月（朔）';
                 emoji = '🌑';
-            } else if (normalizedAge < 7.38) {
-                phaseName = '上弦の月';
+            } else if (normalizedAge < 1.5) {
+                phaseName = '二日月（繊月）';
+                emoji = '🌑';
+            } else if (normalizedAge < 2.5) {
+                phaseName = '三日月';
                 emoji = '🌒';
-            } else if (normalizedAge < 11.07) {
-                phaseName = '半月（上弦）';
+            } else if (normalizedAge < 6.5) {
+                phaseName = `${moonAge + 1}日月`;
+                emoji = '🌒';
+            } else if (normalizedAge < 7.5) {
+                phaseName = '上弦の月';
                 emoji = '🌓';
-            } else if (normalizedAge < 14.77) {
+            } else if (normalizedAge < 9.5) {
+                phaseName = `${moonAge + 1}日月`;
+                emoji = '🌓';
+            } else if (normalizedAge < 10.5) {
+                phaseName = '十日夜';
+                emoji = '🌔';
+            } else if (normalizedAge < 12.5) {
+                phaseName = `${moonAge + 1 === 12 ? '十二' : moonAge + 1}日月`;
+                emoji = '🌔';
+            } else if (normalizedAge < 13.5) {
                 phaseName = '十三夜';
                 emoji = '🌔';
-            } else if (normalizedAge < 16.61) {
-                phaseName = '満月';
+            } else if (normalizedAge < 14.5) {
+                phaseName = '小望月（待宵月）';
+                emoji = '🌔';
+            } else if (normalizedAge < 16.0 || illumination >= 0.98) {
+                // 満月の場合、月ごとの名前と色を取得
+                const currentMonth = date.getMonth() + 1;
+                const moonInfo = fullMoonNames[currentMonth];
+                phaseName = '満月（望月）';
                 emoji = '🌕';
-            } else if (normalizedAge < 22.14) {
-                phaseName = '下弦の月';
+                fullMoonName = moonInfo.name;
+                fullMoonColor = moonInfo.color;
+            } else if (normalizedAge < 17.0) {
+                phaseName = '十六夜（いざよい）';
+                emoji = '🌕';
+            } else if (normalizedAge < 18.0) {
+                phaseName = '立待月';
                 emoji = '🌖';
-            } else if (normalizedAge < 25.84) {
-                phaseName = '半月（下弦）';
+            } else if (normalizedAge < 19.0) {
+                phaseName = '居待月';
+                emoji = '🌖';
+            } else if (normalizedAge < 20.0) {
+                phaseName = '寝待月（臥待月）';
+                emoji = '🌖';
+            } else if (normalizedAge < 21.0) {
+                phaseName = '更待月';
+                emoji = '🌖';
+            } else if (normalizedAge < 22.5) {
+                phaseName = '下弦の月';
                 emoji = '🌗';
-            } else {
+            } else if (normalizedAge < 23.5) {
+                phaseName = '二十三夜';
+                emoji = '🌗';
+            } else if (normalizedAge < 25.5) {
+                phaseName = `二十${moonAge - 18}日月`;
+                emoji = '🌘';
+            } else if (normalizedAge < 26.5) {
                 phaseName = '二十六夜';
                 emoji = '🌘';
+            } else if (normalizedAge < 29.5) {
+                phaseName = '晦日月（三十日月）';
+                emoji = '🌘';
+            } else {
+                phaseName = '新月（朔）';
+                emoji = '🌑';
             }
 
-            return { age: normalizedAge, phase, illumination, phaseName, emoji };
+            return { age: normalizedAge, phase, illumination, phaseName, emoji, fullMoonName, fullMoonColor };
         }
 
         function calculateMoonPosition(date, lat, lon) {
@@ -5041,9 +5121,11 @@
             // Yahoo APIの実測データを優先、なければOpen-Meteoを使用
             const isRaining = actualPrecipState?.isRaining ?? isRainingOpenMeteo;
 
-            // Yahoo API降水タイプでisSnow/isSleetを上書き（Open-Meteoより優先）
-            const isSnowYahoo = actualPrecipState?.precipType === 'snow';
-            const isSleetYahoo = actualPrecipState?.precipType === 'sleet';
+            // Yahoo API降水タイプでisSnow/isSleetを判定（実際に降水がある場合のみ）
+            // actualPrecipState.isRaining が true の場合のみ precipType を考慮
+            const isActuallyPrecipitating = actualPrecipState?.isRaining === true;
+            const isSnowYahoo = isActuallyPrecipitating && actualPrecipState?.precipType === 'snow';
+            const isSleetYahoo = isActuallyPrecipitating && actualPrecipState?.precipType === 'sleet';
             const isSnowActual = isSnowYahoo || isHeavySnow || isSnow;
             const isSleetActual = isSleetYahoo || isSleet;
 
