@@ -1,19 +1,36 @@
 {
     "name": "外気温モニター",
     "short_name": "気温モニター",
-    "description": "リアルタイム外気温ダッシュボード",
+    "description": "リアルタイム外気温ダッシュボード with プッシュ通知",
     "start_url": "./index.html",
     "scope": "./",
+    "id": "temp-monitor-pwa",
     "display": "standalone",
     "background_color": "#0f172a",
     "theme_color": "#3b82f6",
     "orientation": "portrait",
+    "categories": [
+        "weather",
+        "utilities"
+    ],
     "icons": [
         {
-            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌡️</text></svg>",
-            "sizes": "any",
+            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%230f172a' width='192' height='192' rx='24'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-size='120'>🌡️</text></svg>",
+            "sizes": "192x192",
             "type": "image/svg+xml",
             "purpose": "any"
+        },
+        {
+            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%230f172a' width='512' height='512' rx='64'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-size='320'>🌡️</text></svg>",
+            "sizes": "512x512",
+            "type": "image/svg+xml",
+            "purpose": "any"
+        },
+        {
+            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%233b82f6' width='512' height='512' rx='64'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-size='320'>🌡️</text></svg>",
+            "sizes": "512x512",
+            "type": "image/svg+xml",
+            "purpose": "maskable"
         }
     ]
 }
