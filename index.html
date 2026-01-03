@@ -88,25 +88,25 @@
             overscroll-behavior-y: contain;
         }
 
-        /* Pull-to-Refresh Indicator */
+        /* Pull-to-Refresh Indicator (positioned below header) */
         .pull-refresh-indicator {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: linear-gradient(180deg, rgba(59, 130, 246, 0.15) 0%, transparent 100%);
-            transform: translateY(-100%);
-            transition: transform 0.2s ease, opacity 0.2s ease;
-            z-index: 9999;
+            border-radius: 12px;
+            margin: 0 0 8px 0;
+            height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
             pointer-events: none;
         }
 
         .pull-refresh-indicator.visible {
-            transform: translateY(0);
+            height: auto;
+            padding: 12px;
+            opacity: 1;
         }
 
         .pull-refresh-indicator.refreshing {
@@ -253,54 +253,6 @@
         .weather-hero-section {
             will-change: transform, opacity;
             backface-visibility: hidden;
-        }
-
-        /* Pull to Refresh */
-        .pull-to-refresh {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 0;
-            background: var(--bg-card);
-            border-radius: 12px;
-            margin-bottom: 0;
-            height: 0;
-            opacity: 0;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            pointer-events: none;
-        }
-
-        .pull-to-refresh.visible {
-            opacity: 1;
-            height: auto;
-            padding: 12px;
-            margin-bottom: 8px;
-        }
-
-        .pull-to-refresh.refreshing .pull-spinner {
-            animation: spin 1s linear infinite;
-        }
-
-        .pull-spinner {
-            font-size: 1.2rem;
-            color: var(--accent-blue);
-        }
-
-        .pull-to-refresh span {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
         }
 
         /* Theme Toggle Button */
@@ -2432,14 +2384,6 @@
 </head>
 
 <body>
-    <!-- Pull-to-Refresh Indicator -->
-    <div id="pullRefreshIndicator" class="pull-refresh-indicator">
-        <div class="pull-refresh-content">
-            <div class="pull-refresh-spinner"></div>
-            <span class="pull-refresh-text" id="pullRefreshText">↓ 引っ張って更新</span>
-        </div>
-    </div>
-
     <div class="background-effects">
         <div class="bg-orb bg-orb-1"></div>
         <div class="bg-orb bg-orb-2"></div>
@@ -2474,10 +2418,12 @@
             </div>
         </header>
 
-        <!-- Pull to Refresh Indicator -->
-        <div id="pullToRefresh" class="pull-to-refresh">
-            <div class="pull-spinner">↻</div>
-            <span>引っ張って更新</span>
+        <!-- Pull-to-Refresh Indicator (positioned below header) -->
+        <div id="pullRefreshIndicator" class="pull-refresh-indicator">
+            <div class="pull-refresh-content">
+                <div class="pull-refresh-spinner"></div>
+                <span class="pull-refresh-text" id="pullRefreshText">↓ 引っ張って更新</span>
+            </div>
         </div>
 
         <!-- Current Weather Hero Section (Redesigned) -->
@@ -2851,7 +2797,6 @@
                     // Show indicator with progress
                     const progress = Math.min(pullDistance / THRESHOLD, 1);
                     indicator.classList.add('visible', 'pulling');
-                    indicator.style.transform = `translateY(${Math.min(pullDistance * 0.4, 30)}px)`;
 
                     // Update text based on progress
                     if (pullDistance >= THRESHOLD) {
@@ -2880,7 +2825,6 @@
                     isRefreshing = true;
                     indicator.classList.remove('pulling');
                     indicator.classList.add('refreshing');
-                    indicator.style.transform = 'translateY(0)';
                     textEl.textContent = '🔄 更新中...';
                     textEl.style.color = '#4ade80';
 
@@ -2903,14 +2847,12 @@
                     // Hide after delay
                     setTimeout(() => {
                         indicator.classList.remove('visible', 'refreshing');
-                        indicator.style.transform = '';
                         textEl.style.color = '';
                         isRefreshing = false;
                     }, 1000);
                 } else {
                     // Reset without refresh
                     indicator.classList.remove('visible', 'pulling');
-                    indicator.style.transform = '';
                 }
 
                 isPulling = false;
@@ -8066,47 +8008,6 @@
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimeout);
                 resizeTimeout = setTimeout(() => { updateCharts(); }, 250);
-            });
-
-            // Pull-to-refresh for mobile
-            let touchStartY = 0;
-            let isPulling = false;
-            const pullIndicator = document.getElementById('pullToRefresh');
-
-            document.addEventListener('touchstart', (e) => {
-                if (window.scrollY === 0) {
-                    touchStartY = e.touches[0].clientY;
-                    isPulling = true;
-                }
-            }, { passive: true });
-
-            document.addEventListener('touchmove', (e) => {
-                if (!isPulling) return;
-                const touchY = e.touches[0].clientY;
-                const pullDistance = touchY - touchStartY;
-
-                if (pullDistance > 50 && window.scrollY === 0) {
-                    pullIndicator.classList.add('visible');
-                } else {
-                    pullIndicator.classList.remove('visible');
-                }
-            }, { passive: true });
-
-            document.addEventListener('touchend', async () => {
-                if (pullIndicator.classList.contains('visible')) {
-                    pullIndicator.classList.add('refreshing');
-                    pullIndicator.querySelector('span').textContent = '更新中...';
-
-                    await fetchAll();
-                    nextUpdateTime = Date.now() + UPDATE_INTERVAL;
-
-                    pullIndicator.querySelector('span').textContent = '更新完了！';
-                    setTimeout(() => {
-                        pullIndicator.classList.remove('visible', 'refreshing');
-                        pullIndicator.querySelector('span').textContent = '引っ張って更新';
-                    }, 1000);
-                }
-                isPulling = false;
             });
         }
 
