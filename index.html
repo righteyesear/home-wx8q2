@@ -1616,11 +1616,13 @@
 
         .status-info {
             display: flex;
-            gap: 20px;
+            gap: 8px;
             font-size: 0.85rem;
             color: var(--text-muted);
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             align-items: center;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
 
