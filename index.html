@@ -2067,6 +2067,23 @@
             border-color: rgba(217, 119, 6, 0.2);
         }
 
+        /* Moon Notice (Full Moon Tonight notification) */
+        .moon-notice {
+            padding: 10px 16px;
+            margin: 0 16px 12px;
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        html.light-mode .moon-notice {
+            background: rgba(251, 191, 36, 0.15);
+            border-color: rgba(217, 119, 6, 0.3);
+        }
+
         /* Moon Info Bar */
         .moon-info-bar {
             display: flex;
@@ -2646,6 +2663,11 @@
                         </g>
                     </svg>
                 </div>
+
+                <!-- Full Moon Tonight Notice (like precipitation notice) -->
+                <div id="fullMoonNotice" class="moon-notice" style="display: none;">
+                    <span id="fullMoonNoticeText"></span>
+                </div>
             </div>
 
             <div class="chart-card" data-chart-id="chartMonthly" draggable="true">
@@ -2706,7 +2728,7 @@
                 <div class="footer-stat-value">2024/3 〜 現在</div>
             </div>
         </div>
-        <div class="version-info">v3.3.6 <span style="opacity: 0.8; font-size: 1.00em;">| 最終更新: 2026/01/03 14:11</span>
+        <div class="version-info">v3.3.8 <span style="opacity: 0.5; font-size: 0.75em;">| 最終更新: 2026/01/03 14:27</span>
         </div>
     </div>
 
@@ -4036,52 +4058,77 @@
             moonIconEl.textContent = moonData.emoji;
 
             // 満月の場合は特別な名前と色を表示
+            const fullMoonNoticeEl = document.getElementById('fullMoonNotice');
+            const fullMoonNoticeTextEl = document.getElementById('fullMoonNoticeText');
+            const nextPhaseTextEl = document.getElementById('moonNextPhaseText');
+
+            // Full moon names by month
+            const fullMoonNames = {
+                1: { name: 'ウルフムーン', color: '#a3c4dc' },
+                2: { name: 'スノームーン', color: '#e8f4fc' },
+                3: { name: 'ワームムーン', color: '#c9a87c' },
+                4: { name: 'ピンクムーン', color: '#f8b4c4' },
+                5: { name: 'フラワームーン', color: '#f0e68c' },
+                6: { name: 'ストロベリームーン', color: '#ff9999' },
+                7: { name: 'バックムーン', color: '#daa520' },
+                8: { name: 'スタージョンムーン', color: '#87ceeb' },
+                9: { name: 'ハーベストムーン', color: '#ff8c00' },
+                10: { name: 'ハンターズムーン', color: '#cd5c5c' },
+                11: { name: 'ビーバームーン', color: '#8b4513' },
+                12: { name: 'コールドムーン', color: '#b0c4de' }
+            };
+            const month = now.getMonth() + 1;
+            const moonInfo = fullMoonNames[month];
+
+            // 満月の瞬間までの時間を計算
+            const targetFullMoonAge = 14.765;
+            const hoursToFullMoon = (targetFullMoonAge - moonData.age) * 24;
+            const isFullMoonTonight = hoursToFullMoon > 0 && hoursToFullMoon <= 18;
+
             if (moonData.fullMoonName) {
+                // 満月条件達成時: 月名にムーン名表示、バッジにムーン名とテーマカラー
                 moonPhaseNameEl.innerHTML = `${moonData.phaseName}<br><span style="font-size: 0.85em; color: ${moonData.fullMoonColor};">🌟 ${moonData.fullMoonName}</span>`;
                 moonIconEl.style.filter = `drop-shadow(0 0 12px ${moonData.fullMoonColor}) drop-shadow(0 0 24px ${moonData.fullMoonColor})`;
                 moonIconEl.style.color = moonData.fullMoonColor;
+
+                // バッジにムーン名とテーマカラー
+                if (nextPhaseTextEl) {
+                    nextPhaseTextEl.textContent = moonInfo.name;
+                    nextPhaseTextEl.style.background = moonInfo.color;
+                    nextPhaseTextEl.style.color = '#0f172a';
+                    nextPhaseTextEl.style.textShadow = `0 0 8px ${moonInfo.color}`;
+                }
+
+                // 通知エリアは非表示
+                if (fullMoonNoticeEl) fullMoonNoticeEl.style.display = 'none';
             } else {
                 moonPhaseNameEl.textContent = moonData.phaseName;
                 moonIconEl.style.filter = '';
                 moonIconEl.style.color = '';
 
-                // 満月でないが、今夜（次の24時間以内に）満月の瞬間がある場合
-                // 満月は月齢14.5-15.5頃に発生（中心は約14.765）
-                const synodic = 29.53058867;
-                const targetFullMoonAge = 14.765; // 満月の理想的な月齢
-                const hoursToFullMoon = (targetFullMoonAge - moonData.age) * 24;
+                if (isFullMoonTonight) {
+                    // 満月の日だが条件未達: 通知エリアに表示、バッジに「満月🌕」
+                    if (fullMoonNoticeEl && fullMoonNoticeTextEl) {
+                        fullMoonNoticeTextEl.innerHTML = `🌕 今夜は満月（<span style="color: ${moonInfo.color};">${moonInfo.name}</span>）が見られます`;
+                        fullMoonNoticeEl.style.display = 'block';
+                        fullMoonNoticeEl.style.borderColor = moonInfo.color;
+                    }
 
-                // 今夜見られる条件：満月まで0〜18時間（今日の夜〜明け方）
-                if (hoursToFullMoon > 0 && hoursToFullMoon <= 18) {
-                    // Full moon names by month
-                    const fullMoonNames = {
-                        1: { name: 'ウルフムーン', color: '#a3c4dc' },
-                        2: { name: 'スノームーン', color: '#e8f4fc' },
-                        3: { name: 'ワームムーン', color: '#c9a87c' },
-                        4: { name: 'ピンクムーン', color: '#f8b4c4' },
-                        5: { name: 'フラワームーン', color: '#f0e68c' },
-                        6: { name: 'ストロベリームーン', color: '#ff9999' },
-                        7: { name: 'バックムーン', color: '#daa520' },
-                        8: { name: 'スタージョンムーン', color: '#87ceeb' },
-                        9: { name: 'ハーベストムーン', color: '#ff8c00' },
-                        10: { name: 'ハンターズムーン', color: '#cd5c5c' },
-                        11: { name: 'ビーバームーン', color: '#8b4513' },
-                        12: { name: 'コールドムーン', color: '#b0c4de' }
-                    };
-                    const month = now.getMonth() + 1;
-                    const moonInfo = fullMoonNames[month];
-
-                    // 「今夜は満月が見られます」メッセージを追加
-                    const fullMoonNoticeEl = document.createElement('div');
-                    fullMoonNoticeEl.style.cssText = `
-                        font-size: 0.75em; 
-                        margin-top: 6px; 
-                        color: ${moonInfo.color}; 
-                        text-shadow: 0 0 8px ${moonInfo.color};
-                        opacity: 0.9;
-                    `;
-                    fullMoonNoticeEl.textContent = `🌕 今夜は満月（${moonInfo.name}）が見られます`;
-                    moonPhaseNameEl.appendChild(fullMoonNoticeEl);
+                    // バッジに「満月🌕」
+                    if (nextPhaseTextEl) {
+                        nextPhaseTextEl.textContent = '満月🌕';
+                        nextPhaseTextEl.style.background = '';
+                        nextPhaseTextEl.style.color = '';
+                        nextPhaseTextEl.style.textShadow = '';
+                    }
+                } else {
+                    // 通常時: 通知非表示、バッジは後で設定される（次の満月まで◯日など）
+                    if (fullMoonNoticeEl) fullMoonNoticeEl.style.display = 'none';
+                    if (nextPhaseTextEl) {
+                        nextPhaseTextEl.style.background = '';
+                        nextPhaseTextEl.style.color = '';
+                        nextPhaseTextEl.style.textShadow = '';
+                    }
                 }
             }
 
