@@ -4159,11 +4159,11 @@
                 }
             }
 
-            // Calculate next full moon
+            // Calculate next full moon (バッジが未設定の場合のみ)
             const synodic = 29.53058867;
             const daysToFull = (14.77 - moonData.age + synodic) % synodic;
-            const nextPhaseTextEl = document.getElementById('moonNextPhaseText');
-            if (nextPhaseTextEl) {
+            // 満月の場合やisFullMoonTonightの場合は上で設定済みなので、それ以外の時だけ設定
+            if (nextPhaseTextEl && !moonData.fullMoonName && !isFullMoonTonight) {
                 if (daysToFull < 1) {
                     nextPhaseTextEl.textContent = '満月 🌕';
                 } else if (moonData.age < 14.77) {
