@@ -331,6 +331,135 @@
             cursor: not-allowed;
         }
 
+        /* =====================================================
+           SVG ICON SYSTEM (Lucide-style)
+           ===================================================== */
+        .icon {
+            width: 1em;
+            height: 1em;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+            vertical-align: -0.125em;
+            flex-shrink: 0;
+        }
+
+        .icon-sm {
+            width: 0.875em;
+            height: 0.875em;
+        }
+
+        .icon-md {
+            width: 1.125em;
+            height: 1.125em;
+        }
+
+        .icon-lg {
+            width: 1.25em;
+            height: 1.25em;
+        }
+
+        .icon-xl {
+            width: 1.5em;
+            height: 1.5em;
+        }
+
+        /* Logo icon - large with glow effect */
+        .logo-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon .icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            stroke-width: 1.5;
+            color: hsl(var(--temp-hue), 85%, 60%);
+            filter: drop-shadow(0 0 12px hsla(var(--temp-hue), 90%, 60%, 0.5));
+            transition: color 2s ease, filter 2s ease;
+        }
+
+        /* Stat card icons */
+        .stat-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-icon .icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            stroke-width: 1.75;
+        }
+
+        /* Chart title icons */
+        .chart-title .icon {
+            width: 1.125em;
+            height: 1.125em;
+            margin-right: 4px;
+            vertical-align: -0.15em;
+        }
+
+        /* Section label icons */
+        .comment-label .icon,
+        .precipitation-title .icon,
+        .ai-advisor-icon .icon {
+            width: 1.1em;
+            height: 1.1em;
+            vertical-align: -0.15em;
+        }
+
+        /* Alert icon */
+        .alert-icon .icon {
+            width: 1.3rem;
+            height: 1.3rem;
+            stroke-width: 2.25;
+        }
+
+        /* Status bar icons */
+        .status-item .icon {
+            width: 1em;
+            height: 1em;
+            opacity: 0.9;
+        }
+
+        /* Drag handle icon */
+        .drag-handle .icon {
+            width: 1.1em;
+            height: 1.1em;
+            opacity: 0.4;
+            transition: opacity 0.2s ease;
+        }
+
+        .drag-handle:hover .icon {
+            opacity: 0.8;
+        }
+
+        /* Theme toggle button icon */
+        .theme-toggle .icon,
+        .notification-toggle .icon {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        /* Trending icons for high/low temp */
+        .stat-card.high .stat-icon .icon {
+            color: #f87171;
+        }
+
+        .stat-card.low .stat-icon .icon {
+            color: #60a5fa;
+        }
+
+        /* AI Advisor sparkle effect */
+        .ai-advisor-icon .icon {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            color: #8b5cf6;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -2454,7 +2583,12 @@
     <div class="container">
         <header>
             <div class="logo">
-                <span class="logo-icon">🌡️</span>
+                <span class="logo-icon">
+                    <!-- Thermometer icon (Lucide) -->
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z" />
+                    </svg>
+                </span>
                 <h1>外気温モニター</h1>
             </div>
             <div class="status-info">
@@ -2464,19 +2598,45 @@
                                 style="width:40px;height:14px"></span></strong></span>
                 </div>
                 <div class="status-item">
-                    <span>📊 <strong id="dataCount"><span class="skeleton"
+                    <!-- BarChart3 icon -->
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M3 3v18h18" />
+                        <path d="M18 17V9" />
+                        <path d="M13 17V5" />
+                        <path d="M8 17v-3" />
+                    </svg>
+                    <span><strong id="dataCount"><span class="skeleton"
                                 style="width:60px;height:14px"></span></strong></span>
                 </div>
                 <div class="status-item">
-                    <span>⏱️ 次回 <strong id="nextUpdate"><span class="skeleton"
+                    <!-- Clock icon -->
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    <span>次回 <strong id="nextUpdate"><span class="skeleton"
                                 style="width:30px;height:14px"></span></strong></span>
                 </div>
                 <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">
-                    <span id="themeIcon">🌙</span> <span id="themeText">ダーク</span>
+                    <span id="themeIcon">
+                        <!-- Moon icon (default dark mode) -->
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                        </svg>
+                    </span>
+                    <span id="themeText">ダーク</span>
                 </button>
                 <button id="notificationToggle" class="theme-toggle notification-toggle" onclick="toggleNotifications()"
                     title="プッシュ通知">
-                    <span id="notificationIcon">🔕</span>
+                    <span id="notificationIcon">
+                        <!-- BellOff icon (default disabled) -->
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M8.7 3A6 6 0 0 1 18 8a21.3 21.3 0 0 0 .6 5" />
+                            <path d="M17 17H3s3-2 3-9a4.67 4.67 0 0 1 .3-1.7" />
+                            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+                            <path d="m2 2 20 20" />
+                        </svg>
+                    </span>
                 </button>
             </div>
         </header>
@@ -2544,14 +2704,21 @@
         </div>
 
         <div id="greetingSection" class="comment-card">
-            <div class="comment-label">💬 一言コメント</div>
+            <div class="comment-label"><svg class="icon" viewBox="0 0 24 24">
+                    <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+                </svg> 一言コメント</div>
             <div class="comment-content" id="weatherComment"></div>
         </div>
 
         <!-- Precipitation Chart -->
         <div id="precipitationCard" class="precipitation-card" style="display: none;">
             <div class="precipitation-header">
-                <span class="precipitation-title">🌧️ 降水量予報</span>
+                <span class="precipitation-title"><svg class="icon" viewBox="0 0 24 24">
+                        <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
+                        <path d="M16 14v6" />
+                        <path d="M8 14v6" />
+                        <path d="M12 16v6" />
+                    </svg> 降水量予報</span>
                 <span class="precipitation-time" id="precipTime"></span>
             </div>
             <div class="precipitation-chart-container">
@@ -2567,19 +2734,33 @@
             </div>
         </div>
 
-        <!-- Warning/Alert Banner (clickable) -->
         <a id="alertBanner" class="alert-banner"
             href="https://www.jma.go.jp/bosai/warning/#area_type=class20s&area_code=1312200" target="_blank"
             rel="noopener" style="display: none; text-decoration: none;">
-            <span class="alert-icon">⚠️</span>
+            <span class="alert-icon"><svg class="icon" viewBox="0 0 24 24">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg></span>
             <span id="alertText"></span>
-            <span class="alert-link-hint">📋 詳細</span>
+            <span class="alert-link-hint"><svg class="icon icon-sm" viewBox="0 0 24 24">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg> 詳細</span>
         </a>
 
         <!-- AI Advisor Section -->
         <div id="aiAdvisorSection" class="ai-advisor-section">
             <div class="ai-advisor-header">
-                <span class="ai-advisor-icon">🤖</span>
+                <span class="ai-advisor-icon"><svg class="icon" viewBox="0 0 24 24">
+                        <path
+                            d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+                        <path d="M5 3v4" />
+                        <path d="M19 17v4" />
+                        <path d="M3 5h4" />
+                        <path d="M17 19h4" />
+                    </svg></span>
                 <span class="ai-advisor-label">AI気象アドバイザー</span>
                 <span class="ai-advisor-time" id="aiAdvisorTime"></span>
             </div>
@@ -2593,7 +2774,9 @@
         <div class="main-stats">
             <div class="stat-card temp">
                 <div class="stat-header">
-                    <span class="stat-icon">🌡️</span>
+                    <span class="stat-icon"><svg class="icon" viewBox="0 0 24 24">
+                            <path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z" />
+                        </svg></span>
                     <span id="comfortBadge" class="comfort-badge"></span>
                 </div>
                 <div class="stat-label">現在の気温</div>
@@ -2601,32 +2784,55 @@
                             style="width:80px;height:40px"></span></span><span class="stat-unit">°C</span></div>
             </div>
             <div class="stat-card humidity">
-                <div class="stat-header"><span class="stat-icon">💧</span></div>
+                <div class="stat-header"><span class="stat-icon"><svg class="icon" viewBox="0 0 24 24">
+                            <path
+                                d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z" />
+                            <path
+                                d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97" />
+                        </svg></span></div>
                 <div class="stat-label">現在の湿度</div>
                 <div class="stat-value humidity"><span id="currentHumidity"><span class="skeleton"
                             style="width:60px;height:40px"></span></span><span class="stat-unit">%</span></div>
             </div>
             <div class="stat-card feels-like">
-                <div class="stat-header"><span class="stat-icon">🌡️</span></div>
+                <div class="stat-header"><span class="stat-icon"><svg class="icon" viewBox="0 0 24 24">
+                            <path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z" />
+                        </svg></span></div>
                 <div class="stat-label">体感温度</div>
                 <div class="stat-value feels-like"><span id="feelsLike"><span class="skeleton"
                             style="width:60px;height:40px"></span></span><span class="stat-unit">°C</span></div>
             </div>
             <div class="stat-card uv">
-                <div class="stat-header"><span class="stat-icon">☀️</span><span id="uvBadge" class="uv-badge"></span>
+                <div class="stat-header"><span class="stat-icon"><svg class="icon" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="4" />
+                            <path d="M12 2v2" />
+                            <path d="M12 20v2" />
+                            <path d="m4.93 4.93 1.41 1.41" />
+                            <path d="m17.66 17.66 1.41 1.41" />
+                            <path d="M2 12h2" />
+                            <path d="M20 12h2" />
+                            <path d="m6.34 17.66-1.41 1.41" />
+                            <path d="m19.07 4.93-1.41 1.41" />
+                        </svg></span><span id="uvBadge" class="uv-badge"></span>
                 </div>
                 <div class="stat-label">紫外線指数</div>
                 <div class="stat-value uv"><span id="uvIndex"><span class="skeleton"
                             style="width:40px;height:40px"></span></span></div>
             </div>
             <div class="stat-card high">
-                <div class="stat-header"><span class="stat-icon">🔺</span></div>
+                <div class="stat-header"><span class="stat-icon"><svg class="icon" viewBox="0 0 24 24">
+                            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+                            <polyline points="16 7 22 7 22 13" />
+                        </svg></span></div>
                 <div class="stat-label">今日の最高</div>
                 <div class="stat-value high"><span id="todayHigh"><span class="skeleton"
                             style="width:80px;height:40px"></span></span><span class="stat-unit">°C</span></div>
             </div>
             <div class="stat-card low">
-                <div class="stat-header"><span class="stat-icon">🔻</span></div>
+                <div class="stat-header"><span class="stat-icon"><svg class="icon" viewBox="0 0 24 24">
+                            <polyline points="22 17 13.5 8.5 8.5 13.5 2 7" />
+                            <polyline points="16 17 22 17 22 11" />
+                        </svg></span></div>
                 <div class="stat-label">今日の最低</div>
                 <div class="stat-value low"><span id="todayLow"><span class="skeleton"
                             style="width:80px;height:40px"></span></span><span class="stat-unit">°C</span></div>
@@ -2636,8 +2842,18 @@
         <div class="charts-grid" id="chartsGrid">
             <div class="chart-card full-width" data-chart-id="chart24h" draggable="true">
                 <div class="chart-header">
-                    <span class="drag-handle" title="ドラッグして並び替え">⠿</span>
-                    <span class="chart-title">📈 直近24時間の気温・湿度</span>
+                    <span class="drag-handle" title="ドラッグして並び替え"><svg class="icon" viewBox="0 0 24 24">
+                            <circle cx="9" cy="12" r="1" />
+                            <circle cx="9" cy="5" r="1" />
+                            <circle cx="9" cy="19" r="1" />
+                            <circle cx="15" cy="12" r="1" />
+                            <circle cx="15" cy="5" r="1" />
+                            <circle cx="15" cy="19" r="1" />
+                        </svg></span>
+                    <span class="chart-title"><svg class="icon" viewBox="0 0 24 24">
+                            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+                            <polyline points="16 7 22 7 22 13" />
+                        </svg> 直近24時間の気温・湿度</span>
                     <span class="chart-badge">1分間隔</span>
                 </div>
                 <div class="chart-container">
@@ -2649,8 +2865,20 @@
             </div>
             <div class="chart-card" data-chart-id="chartWeek" draggable="true">
                 <div class="chart-header">
-                    <span class="drag-handle" title="ドラッグして並び替え">⠿</span>
-                    <span class="chart-title">📊 週間気温推移</span>
+                    <span class="drag-handle" title="ドラッグして並び替え"><svg class="icon" viewBox="0 0 24 24">
+                            <circle cx="9" cy="12" r="1" />
+                            <circle cx="9" cy="5" r="1" />
+                            <circle cx="9" cy="19" r="1" />
+                            <circle cx="15" cy="12" r="1" />
+                            <circle cx="15" cy="5" r="1" />
+                            <circle cx="15" cy="19" r="1" />
+                        </svg></span>
+                    <span class="chart-title"><svg class="icon" viewBox="0 0 24 24">
+                            <path d="M3 3v18h18" />
+                            <path d="M18 17V9" />
+                            <path d="M13 17V5" />
+                            <path d="M8 17v-3" />
+                        </svg> 週間気温推移</span>
                     <span class="chart-badge">30分平均</span>
                 </div>
                 <div class="chart-container">
@@ -2664,8 +2892,17 @@
             <!-- Moon Information Card -->
             <div class="chart-card moon-card" data-chart-id="moonCard" draggable="true">
                 <div class="chart-header">
-                    <span class="drag-handle" title="ドラッグして並び替え">⠿</span>
-                    <span class="chart-title">🌙 月情報</span>
+                    <span class="drag-handle" title="ドラッグして並び替え"><svg class="icon" viewBox="0 0 24 24">
+                            <circle cx="9" cy="12" r="1" />
+                            <circle cx="9" cy="5" r="1" />
+                            <circle cx="9" cy="19" r="1" />
+                            <circle cx="15" cy="12" r="1" />
+                            <circle cx="15" cy="5" r="1" />
+                            <circle cx="15" cy="19" r="1" />
+                        </svg></span>
+                    <span class="chart-title"><svg class="icon" viewBox="0 0 24 24">
+                            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                        </svg> 月情報</span>
                     <span class="chart-badge moon-badge" id="moonNextPhaseText">--</span>
                 </div>
 
@@ -2763,8 +3000,20 @@
 
             <div class="chart-card" data-chart-id="chartMonthly" draggable="true">
                 <div class="chart-header">
-                    <span class="drag-handle" title="ドラッグして並び替え">⠿</span>
-                    <span class="chart-title">📅 月別 最高/最低気温</span>
+                    <span class="drag-handle" title="ドラッグして並び替え"><svg class="icon" viewBox="0 0 24 24">
+                            <circle cx="9" cy="12" r="1" />
+                            <circle cx="9" cy="5" r="1" />
+                            <circle cx="9" cy="19" r="1" />
+                            <circle cx="15" cy="12" r="1" />
+                            <circle cx="15" cy="5" r="1" />
+                            <circle cx="15" cy="19" r="1" />
+                        </svg></span>
+                    <span class="chart-title"><svg class="icon" viewBox="0 0 24 24">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                            <line x1="16" x2="16" y1="2" y2="6" />
+                            <line x1="8" x2="8" y1="2" y2="6" />
+                            <line x1="3" x2="21" y1="10" y2="10" />
+                        </svg> 月別 最高/最低気温</span>
                     <span class="chart-badge">全期間</span>
                 </div>
                 <div class="chart-container">
@@ -2776,8 +3025,26 @@
             </div>
             <div class="chart-card full-width" data-chart-id="chartYearly" draggable="true">
                 <div class="chart-header">
-                    <span class="drag-handle" title="ドラッグして並び替え">⠿</span>
-                    <span class="chart-title">🗓️ 日別 最高/最低気温</span>
+                    <span class="drag-handle" title="ドラッグして並び替え"><svg class="icon" viewBox="0 0 24 24">
+                            <circle cx="9" cy="12" r="1" />
+                            <circle cx="9" cy="5" r="1" />
+                            <circle cx="9" cy="19" r="1" />
+                            <circle cx="15" cy="12" r="1" />
+                            <circle cx="15" cy="5" r="1" />
+                            <circle cx="15" cy="19" r="1" />
+                        </svg></span>
+                    <span class="chart-title"><svg class="icon" viewBox="0 0 24 24">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                            <line x1="16" x2="16" y1="2" y2="6" />
+                            <line x1="8" x2="8" y1="2" y2="6" />
+                            <line x1="3" x2="21" y1="10" y2="10" />
+                            <path d="M8 14h.01" />
+                            <path d="M12 14h.01" />
+                            <path d="M16 14h.01" />
+                            <path d="M8 18h.01" />
+                            <path d="M12 18h.01" />
+                            <path d="M16 18h.01" />
+                        </svg> 日別 最高/最低気温</span>
                     <span class="chart-badge">全期間</span>
                 </div>
                 <div class="chart-container">
