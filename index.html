@@ -22,51 +22,175 @@
     <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
     <style>
         :root {
-            --bg-primary: #030712;
+            --bg-primary: #020617;
+            /* Deepest Indigo/Black */
             --bg-secondary: #0f172a;
-            --bg-card: rgba(15, 23, 42, 0.85);
-            --border-color: rgba(99, 102, 241, 0.12);
-            --border-glow: rgba(99, 102, 241, 0.4);
+            --bg-card: rgba(15, 23, 42, 0.6);
+            /* Transparent for glass effect */
+            --glass-border: rgba(255, 255, 255, 0.08);
+            /* White border with low opacity */
+            --glass-highlight: rgba(255, 255, 255, 0.15);
+            /* Top highlight */
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
+
             --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
+            --text-secondary: #94a3b8;
             --text-muted: #64748b;
+
             --accent-orange: #fb923c;
-            --accent-red: #f87171;
-            --accent-blue: #60a5fa;
-            --accent-cyan: #22d3ee;
-            --accent-green: #4ade80;
-            --accent-purple: #a78bfa;
+            --accent-red: #ef4444;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-green: #22c55e;
+            --accent-purple: #8b5cf6;
+
             --shadow-glow: 0 0 60px rgba(99, 102, 241, 0.2);
             --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+
             --temp-hue: 30;
+            --frost-intensity: 0;
+
+            /* Spotlight effect variables */
+            --spotlight-x: 50%;
+            --spotlight-y: 50%;
         }
 
-        /* Light Mode - Premium Design */
+        /* Light Mode - Premium Design with Better Contrast */
         html.light-mode {
-            --bg-primary: linear-gradient(180deg, #dbeafe 0%, #e0f2fe 50%, #f0f9ff 100%);
-            --bg-secondary: #ffffff;
-            --bg-card: rgba(255, 255, 255, 0.85);
-            --border-color: rgba(59, 130, 246, 0.15);
-            --border-glow: rgba(59, 130, 246, 0.3);
-            --text-primary: #1e293b;
-            --text-secondary: #475569;
+            /* Background: slightly gray for better card contrast */
+            --bg-primary: #f1f5f9;
+            --bg-secondary: #e2e8f0;
+            --bg-card: rgba(255, 255, 255, 0.92);
+
+            /* Borders: visible but subtle */
+            --glass-border: rgba(100, 116, 139, 0.15);
+            --glass-highlight: rgba(255, 255, 255, 0.9);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
+            --border-color: rgba(100, 116, 139, 0.18);
+
+            /* Text: high contrast */
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
             --text-muted: #64748b;
-            --shadow-glow: 0 0 60px rgba(59, 130, 246, 0.15);
-            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+
+            /* Shadows: subtle but visible */
+            --shadow-glow: 0 0 40px rgba(59, 130, 246, 0.12);
+            --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        html {
+            height: 100%;
+            /* Noise texture overlay for entire app */
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            background-attachment: fixed;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            letter-spacing: -0.015em;
+            line-height: 1.5;
+            transition: background 1s ease;
         }
 
         html.light-mode body {
-            background: linear-gradient(180deg, #dbeafe 0%, #e0f2fe 50%, #f0f9ff 100%);
-            background-attachment: fixed;
+            background: #f1f5f9;
         }
 
         html.light-mode .bg-orb {
             opacity: 0.4;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
         }
 
         html.light-mode .grid-pattern {
             opacity: 0.02;
+        }
+
+        /* Light Mode - Card Visibility Enhancement */
+        html.light-mode .stat-card,
+        html.light-mode .chart-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(100, 116, 139, 0.15);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        html.light-mode .stat-card:hover,
+        html.light-mode .chart-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+            border-color: rgba(59, 130, 246, 0.25);
+        }
+
+        html.light-mode .weather-hero {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(100, 116, 139, 0.15);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        html.light-mode .comment-card,
+        html.light-mode .precipitation-card,
+        html.light-mode .ai-advisor-section {
+            background: rgba(255, 255, 255, 0.92);
+            border-color: rgba(100, 116, 139, 0.12);
+        }
+
+        html.light-mode .footer-stats {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(100, 116, 139, 0.12);
+        }
+
+        /* Footer Notification Button - Subtle Design */
+        .footer-notification-area {
+            display: flex;
+            justify-content: center;
+            margin: 16px 0 8px;
+        }
+
+        .footer-notification-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .footer-notification-btn:hover {
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border-color: var(--accent-cyan);
+        }
+
+        .footer-notification-btn.active {
+            background: rgba(6, 182, 212, 0.1);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .footer-notification-btn .icon {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .footer-notification-text {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        html.light-mode .footer-notification-btn {
+            border-color: rgba(100, 116, 139, 0.2);
+        }
+
+        html.light-mode .footer-notification-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
         }
 
         /* =====================================================
@@ -332,38 +456,153 @@
         }
 
         /* =====================================================
-           SVG ICON SYSTEM (Lucide-style)
+           ADVANCED GLASSMORPHISM & VISUAL SYSTEM
            ===================================================== */
+
+        /* Glassmorphism Cards */
+        .weather-hero,
+        .comment-card,
+        .stat-card,
+        .chart-card,
+        .precipitation-card,
+        .ai-advisor-section {
+            background: var(--bg-card);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid var(--glass-highlight);
+            box-shadow: var(--glass-shadow),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+                box-shadow 0.3s ease,
+                border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        /* Intelligent Spotlights */
+        .weather-hero::after,
+        .comment-card::after,
+        .stat-card::after,
+        .chart-card::after,
+        .precipitation-card::after,
+        .ai-advisor-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(800px circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%),
+                    rgba(255, 255, 255, 0.06),
+                    transparent 40%);
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .weather-hero:hover::after,
+        .comment-card:hover::after,
+        .stat-card:hover::after,
+        .chart-card:hover::after,
+        .precipitation-card:hover::after,
+        .ai-advisor-section:hover::after {
+            opacity: 1;
+        }
+
+        /* Interactive Lift */
+        .stat-card:hover,
+        .chart-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.5);
+            border-top-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Update Flash Animation */
+        @keyframes flashUpdate {
+            0% {
+                box-shadow: 0 0 0 0 hsla(var(--temp-hue), 80%, 60%, 0);
+            }
+
+            30% {
+                box-shadow: 0 0 0 4px hsla(var(--temp-hue), 80%, 60%, 0.3);
+                border-color: hsla(var(--temp-hue), 80%, 60%, 0.8);
+            }
+
+            100% {
+                box-shadow: 0 0 0 8px hsla(var(--temp-hue), 80%, 60%, 0);
+            }
+        }
+
+        .flash-active {
+            animation: flashUpdate 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* Typography Refinement */
+        h1,
+        h2,
+        h3,
+        .stat-value,
+        .hero-temp-value {
+            font-feature-settings: "tnum";
+            letter-spacing: -0.03em;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.1;
+        }
+
+        .stat-unit {
+            font-size: 0.5em;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-left: 2px;
+            vertical-align: 0.1em;
+            opacity: 0.7;
+        }
+
+        /* SVG Icon System (Lucide-style) */
         .icon {
-            width: 1em;
-            height: 1em;
+            width: 1.25rem;
+            height: 1.25rem;
             stroke: currentColor;
             stroke-width: 2;
             stroke-linecap: round;
             stroke-linejoin: round;
             fill: none;
-            vertical-align: -0.125em;
-            flex-shrink: 0;
+            display: inline-block;
+            vertical-align: middle;
+            transition: stroke 0.3s ease;
         }
 
         .icon-sm {
-            width: 0.875em;
-            height: 0.875em;
+            width: 1rem;
+            height: 1rem;
         }
 
         .icon-md {
-            width: 1.125em;
-            height: 1.125em;
+            width: 1.5rem;
+            height: 1.5rem;
         }
 
         .icon-lg {
-            width: 1.25em;
-            height: 1.25em;
+            width: 2rem;
+            height: 2rem;
         }
 
         .icon-xl {
-            width: 1.5em;
-            height: 1.5em;
+            width: 2.5rem;
+            height: 2.5rem;
+            stroke-width: 1.5;
+            color: hsl(var(--temp-hue), 85%, 60%);
+            filter: drop-shadow(0 0 12px hsla(var(--temp-hue), 90%, 60%, 0.5));
+            transition: color 2s ease, filter 2s ease;
         }
 
         /* Logo icon - large with glow effect */
@@ -382,6 +621,24 @@
             transition: color 2s ease, filter 2s ease;
         }
 
+        /* Logo container - tighter spacing */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, hsl(var(--temp-hue), 90%, 65%) 0%, hsl(calc(var(--temp-hue) + 30), 80%, 60%) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: background 2s ease;
+            margin: 0;
+        }
+
         /* Stat card icons */
         .stat-icon {
             display: flex;
@@ -394,12 +651,43 @@
             stroke-width: 1.75;
         }
 
-        /* Chart title icons */
+        /* Chart card styling */
+        .chart-card {
+            min-height: 380px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .chart-title {
+            display: flex;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            align-items: center;
+            gap: 8px;
+        }
+
         .chart-title .icon {
+            color: var(--text-muted);
             width: 1.125em;
             height: 1.125em;
-            margin-right: 4px;
-            vertical-align: -0.15em;
+        }
+
+        .chart-container {
+            flex-grow: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
         }
 
         /* Section label icons */
@@ -425,16 +713,27 @@
             opacity: 0.9;
         }
 
-        /* Drag handle icon */
+        /* Drag handle */
+        .drag-handle {
+            cursor: grab;
+            display: flex;
+            padding: 4px;
+            margin-right: 8px;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.2s, background 0.2s;
+            border-radius: 4px;
+            opacity: 0.4;
+        }
+
+        .drag-handle:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
         .drag-handle .icon {
             width: 1.1em;
             height: 1.1em;
-            opacity: 0.4;
-            transition: opacity 0.2s ease;
-        }
-
-        .drag-handle:hover .icon {
-            opacity: 0.8;
         }
 
         /* Theme toggle button icon */
@@ -444,7 +743,6 @@
             height: 1rem;
         }
 
-        /* Trending icons for high/low temp */
         .stat-card.high .stat-icon .icon {
             color: #f87171;
         }
@@ -464,16 +762,6 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Noto Sans JP', sans-serif;
-            background: var(--bg-primary);
-            min-height: 100vh;
-            color: var(--text-primary);
-            line-height: 1.5;
-            overflow-x: hidden;
-            transition: background 1s ease;
         }
 
         /* Dynamic Temperature Background */
@@ -971,28 +1259,6 @@
         html.light-mode .status-item {
             background: rgba(241, 245, 249, 0.9);
             border-color: rgba(203, 213, 225, 0.5);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .logo-icon {
-            font-size: 2.5rem;
-            filter: drop-shadow(0 0 20px hsla(var(--temp-hue), 90%, 60%, 0.5));
-            transition: filter 2s ease;
-        }
-
-        .logo h1 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, hsl(var(--temp-hue), 90%, 65%) 0%, hsl(calc(var(--temp-hue) + 30), 80%, 60%) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            transition: background 2s ease;
         }
 
         /* Weather Hero Section (Redesigned) */
@@ -2625,19 +2891,6 @@
                         </svg>
                     </span>
                     <span id="themeText">ダーク</span>
-                </button>
-                <button id="notificationToggle" class="theme-toggle notification-toggle" onclick="toggleNotifications()"
-                    title="プッシュ通知">
-                    <span id="notificationIcon">
-                        <!-- BellOff icon (default disabled) -->
-                        <svg class="icon" viewBox="0 0 24 24">
-                            <path d="M8.7 3A6 6 0 0 1 18 8a21.3 21.3 0 0 0 .6 5" />
-                            <path d="M17 17H3s3-2 3-9a4.67 4.67 0 0 1 .3-1.7" />
-                            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-                            <path d="m2 2 20 20" />
-                        </svg>
-                    </span>
-                </button>
             </div>
         </header>
 
@@ -3086,6 +3339,24 @@
                 <div class="footer-stat-value">2024/3 〜 現在</div>
             </div>
         </div>
+
+        <!-- Footer Notification Toggle (Subtle) -->
+        <div class="footer-notification-area">
+            <button id="notificationToggle" class="footer-notification-btn" onclick="toggleNotifications()"
+                title="プッシュ通知の設定">
+                <span id="notificationIcon">
+                    <!-- BellOff icon (default disabled) -->
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M8.7 3A6 6 0 0 1 18 8a21.3 21.3 0 0 0 .6 5" />
+                        <path d="M17 17H3s3-2 3-9a4.67 4.67 0 0 1 .3-1.7" />
+                        <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+                        <path d="m2 2 20 20" />
+                    </svg>
+                </span>
+                <span id="notificationText" class="footer-notification-text">通知OFF</span>
+            </button>
+        </div>
+
         <div class="version-info">v3.4.1 <span style="opacity: 0.5; font-size: 0.75em;">| 最終更新: 2026/01/03 17:09</span>
         </div>
     </div>
@@ -5485,19 +5756,32 @@
 
             const temp = summaryData.currentTemp;
 
-            document.getElementById('currentTemp').textContent = temp.toFixed(1);
-            document.getElementById('currentHumidity').textContent = Math.round(summaryData.currentHumidity);
-            document.getElementById('todayHigh').textContent = summaryData.todayHigh.toFixed(1);
-            document.getElementById('todayLow').textContent = summaryData.todayLow.toFixed(1);
-            document.getElementById('yearHigh').textContent = summaryData.yearHigh.toFixed(1);
-            document.getElementById('yearLow').textContent = summaryData.yearLow.toFixed(1);
+            if (window.animateNumber) {
+                window.animateNumber('currentTemp', temp.toFixed(1));
+                window.animateNumber('currentHumidity', Math.round(summaryData.currentHumidity));
+                window.animateNumber('todayHigh', summaryData.todayHigh.toFixed(1));
+                window.animateNumber('todayLow', summaryData.todayLow.toFixed(1));
+                window.animateNumber('yearHigh', summaryData.yearHigh.toFixed(1));
+                window.animateNumber('yearLow', summaryData.yearLow.toFixed(1));
+            } else {
+                document.getElementById('currentTemp').textContent = temp.toFixed(1);
+                document.getElementById('currentHumidity').textContent = Math.round(summaryData.currentHumidity);
+                document.getElementById('todayHigh').textContent = summaryData.todayHigh.toFixed(1);
+                document.getElementById('todayLow').textContent = summaryData.todayLow.toFixed(1);
+                document.getElementById('yearHigh').textContent = summaryData.yearHigh.toFixed(1);
+                document.getElementById('yearLow').textContent = summaryData.yearLow.toFixed(1);
+            }
             if (summaryData.dataCount) document.getElementById('dataCount').textContent = summaryData.dataCount.toLocaleString() + ' 件';
 
             // Update feels-like temperature (always use custom calculation with 3-zone physics model)
             const feelsLikeEl = document.getElementById('feelsLike');
             // Wind speed from Open-Meteo (10m height), will be adjusted to 0.6x inside calculateFeelsLike
             const fl = calculateFeelsLike(temp, summaryData.currentHumidity, weatherData?.windSpeed || 0);
-            feelsLikeEl.textContent = fl.toFixed(1);
+            if (window.animateNumber) {
+                window.animateNumber('feelsLike', fl.toFixed(1));
+            } else {
+                feelsLikeEl.textContent = fl.toFixed(1);
+            }
 
             // Color feels-like based on value
             const flParent = feelsLikeEl.closest('.stat-value');
@@ -5515,7 +5799,11 @@
 
             if (weatherData?.uvIndex != null && (hour >= 6 && hour <= 19)) {
                 const uv = weatherData.uvIndex;
-                uvIndexEl.textContent = uv.toFixed(1);
+                if (window.animateNumber) {
+                    window.animateNumber('uvIndex', uv.toFixed(1));
+                } else {
+                    uvIndexEl.textContent = uv.toFixed(1);
+                }
                 const uvLevel = getUvLevel(uv);
                 uvBadge.textContent = uvLevel.text;
                 uvBadge.className = `uv-badge ${uvLevel.class}`;
@@ -8060,10 +8348,19 @@
             document.getElementById('heroWeatherIcon').textContent = emoji;
 
             document.getElementById('heroCondition').textContent = getWeatherConditionName(wc);
-            document.getElementById('heroFeelsLike').textContent = fl.toFixed(1);
-            document.getElementById('heroHumidity').textContent = Math.round(humidity);
-            document.getElementById('heroWind').textContent = ws.toFixed(1);
-            document.getElementById('heroPrecip').textContent = pp || 0;
+
+            // Animate values
+            if (window.animateNumber) {
+                window.animateNumber('heroFeelsLike', fl.toFixed(1));
+                window.animateNumber('heroHumidity', Math.round(humidity));
+                window.animateNumber('heroWind', ws.toFixed(1));
+                window.animateNumber('heroPrecip', pp || 0);
+            } else {
+                document.getElementById('heroFeelsLike').textContent = fl.toFixed(1);
+                document.getElementById('heroHumidity').textContent = Math.round(humidity);
+                document.getElementById('heroWind').textContent = ws.toFixed(1);
+                document.getElementById('heroPrecip').textContent = pp || 0;
+            }
 
             // Update comment section (remove temperature display)
             let cleanComment = comment
@@ -8804,8 +9101,88 @@
             console.log('[Charts] Saved order:', order);
         }
 
-        // Initialize reordering after DOM is ready
-        document.addEventListener('DOMContentLoaded', initChartReordering);
+
+        // ========== ANIMATION HELPERS ==========
+
+        // Smooth count-up animation for numbers
+        window.animateNumber = function (elementId, newValue, suffix = '') {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+
+            // Parse current value (handle non-numeric explicitly)
+            const currentText = element.innerText.replace(/[^0-9.-]/g, '');
+            const startValue = parseFloat(currentText) || 0;
+            const endValue = parseFloat(newValue);
+
+            // If not a number, just update directly
+            if (isNaN(endValue)) {
+                element.innerHTML = newValue + suffix;
+                return;
+            }
+
+            // If difference is small, no animation needed
+            if (Math.abs(startValue - endValue) < 0.1) {
+                element.innerHTML = newValue + suffix;
+                return;
+            }
+
+            const duration = 1200; // Slightly slower for more "premium" feel
+            const startTime = performance.now();
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // Ease out exponential
+                const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+
+                const current = startValue + (endValue - startValue) * ease;
+
+                // Maintain decimal places based on input string
+                const decimals = (newValue.toString().split('.')[1] || '').length;
+                element.innerText = current.toFixed(decimals) + suffix;
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                } else {
+                    element.innerHTML = newValue + suffix; // Ensure final value is exact (and innerHTML to support nested spans if any)
+
+                    // Trigger flash effect on card
+                    const card = element.closest('.stat-card, .weather-hero');
+                    if (card) {
+                        card.classList.remove('flash-active');
+                        void card.offsetWidth; // Force reflow
+                        card.classList.add('flash-active');
+                    }
+                }
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        // Spotlight Effect Setup
+        function setupSpotlight() {
+            const cards = document.querySelectorAll('.stat-card, .chart-card, .weather-hero, .comment-card, .precipitation-card, .ai-advisor-section');
+
+            cards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    card.style.setProperty('--spotlight-x', `${x}px`);
+                    card.style.setProperty('--spotlight-y', `${y}px`);
+                });
+            });
+        }
+
+        // Init animations on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setupSpotlight();
+            initChartReordering();
+            // Re-setup on dynamic content changes if needed
+            setInterval(setupSpotlight, 5000);
+        });
 
         init();
     </script>
