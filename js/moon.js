@@ -1,0 +1,659 @@
+// =====================================================
+// moon.js - 月の計算・表示
+// =====================================================
+// 修正時: 月齢計算、月の出入り時刻、月弧表示など
+//
+// 主要な関数:
+// - loadMoonData() - 月データ読込・表示
+// - calculateMoonPhase() - 月齢計算
+// - calculateMoonPosition() - 月位置計算
+// - updateMoonArcPosition() - 月弧表示更新
+//
+// 依存: なし（独立したモジュール）
+
+// Global cache for moon arc real-time updates
+let cachedMoonTimes = null;
+let moonPositionInterval = null;
+
+async function loadMoonData() {
+    const now = new Date(); // Real-time mode
+    const LAT = 35.7785;
+    const LON = 139.878;
+
+    // Calculate local values (fallback)
+    const moonData = calculateMoonPhase(now);
+    const moonPos = calculateMoonPosition(now, LAT, LON);
+    let moonTimes = calculateMoonTimes(now, LAT, LON);
+
+    // Try to load API data from moon_data.json
+    try {
+        const resp = await fetch('moon_data.json?_=' + Date.now());
+        if (resp.ok) {
+            const apiData = await resp.json();
+            // Override times with API values if available
+            if (apiData.moonrise && apiData.moonrise !== '--:--') {
+                moonTimes.rise = apiData.moonrise;
+            }
+            if (apiData.moonset && apiData.moonset !== '--:--') {
+                moonTimes.set = apiData.moonset;
+                // Track if moonset is tomorrow
+                if (apiData.moonset_is_tomorrow) {
+                    moonTimes.setIsTomorrow = true;
+                }
+            }
+            // Track if moonrise is yesterday
+            if (apiData.moonrise_is_yesterday) {
+                moonTimes.riseIsYesterday = true;
+            }
+            // Override directions with API values
+            if (apiData.moonrise_direction) {
+                moonTimes.riseDirJp = apiData.moonrise_direction;
+            }
+            if (apiData.moonset_direction) {
+                moonTimes.setDirJp = apiData.moonset_direction;
+            }
+            // Use API moon age if available
+            if (apiData.moon_age !== null && apiData.moon_age !== undefined) {
+                document.getElementById('moonAge').textContent = apiData.moon_age.toFixed(1);
+            } else {
+                document.getElementById('moonAge').textContent = moonData.age.toFixed(1);
+            }
+            // Use API illumination if available
+            if (apiData.illumination !== null && apiData.illumination !== undefined) {
+                document.getElementById('moonIllumination').textContent = Math.round(apiData.illumination);
+            } else {
+                document.getElementById('moonIllumination').textContent = Math.round(moonData.illumination * 100);
+            }
+            console.log('[Moon] Using API data:', apiData.moonrise, '-', apiData.moonset,
+                'Dirs:', apiData.moonrise_direction, '-', apiData.moonset_direction,
+                'Illumination:', apiData.illumination + '%');
+        } else {
+            document.getElementById('moonAge').textContent = moonData.age.toFixed(1);
+            document.getElementById('moonIllumination').textContent = Math.round(moonData.illumination * 100);
+        }
+    } catch (e) {
+        console.log('[Moon] API data not available, using calculation:', e.message);
+        document.getElementById('moonAge').textContent = moonData.age.toFixed(1);
+        document.getElementById('moonIllumination').textContent = Math.round(moonData.illumination * 100);
+    }
+
+    // Cache moon times for real-time updates
+    cachedMoonTimes = moonTimes;
+
+    // Display phase info
+    const moonIconEl = document.getElementById('moonIcon');
+    const moonPhaseNameEl = document.getElementById('moonPhaseName');
+
+    moonIconEl.textContent = moonData.emoji;
+
+    // 満月の場合は特別な名前と色を表示
+    const fullMoonNoticeEl = document.getElementById('fullMoonNotice');
+    const fullMoonNoticeTextEl = document.getElementById('fullMoonNoticeText');
+    const nextPhaseTextEl = document.getElementById('moonNextPhaseText');
+
+    // Full moon names by month
+    const fullMoonNames = {
+        1: { name: 'ウルフムーン', color: '#a3c4dc' },
+        2: { name: 'スノームーン', color: '#e8f4fc' },
+        3: { name: 'ワームムーン', color: '#c9a87c' },
+        4: { name: 'ピンクムーン', color: '#f8b4c4' },
+        5: { name: 'フラワームーン', color: '#f0e68c' },
+        6: { name: 'ストロベリームーン', color: '#ff9999' },
+        7: { name: 'バックムーン', color: '#daa520' },
+        8: { name: 'スタージョンムーン', color: '#87ceeb' },
+        9: { name: 'ハーベストムーン', color: '#ff8c00' },
+        10: { name: 'ハンターズムーン', color: '#cd5c5c' },
+        11: { name: 'ビーバームーン', color: '#8b4513' },
+        12: { name: 'コールドムーン', color: '#b0c4de' }
+    };
+    const month = now.getMonth() + 1;
+    const moonInfo = fullMoonNames[month];
+
+    // 満月の瞬間までの時間を計算
+    const targetFullMoonAge = 14.765;
+    const hoursToFullMoon = (targetFullMoonAge - moonData.age) * 24;
+    const isFullMoonTonight = hoursToFullMoon > 0 && hoursToFullMoon <= 18;
+
+    if (moonData.fullMoonName) {
+        // 満月条件達成時: 月名にムーン名表示、バッジにムーン名とテーマカラー
+        moonPhaseNameEl.innerHTML = `${moonData.phaseName}<br><span style="font-size: 0.85em; color: ${moonData.fullMoonColor};">🌟 ${moonData.fullMoonName}</span>`;
+        moonIconEl.style.filter = `drop-shadow(0 0 12px ${moonData.fullMoonColor}) drop-shadow(0 0 24px ${moonData.fullMoonColor})`;
+        moonIconEl.style.color = moonData.fullMoonColor;
+
+        // バッジにムーン名とテーマカラー
+        if (nextPhaseTextEl) {
+            nextPhaseTextEl.textContent = moonInfo.name;
+            nextPhaseTextEl.style.background = moonInfo.color;
+            nextPhaseTextEl.style.color = '#0f172a';
+            nextPhaseTextEl.style.textShadow = `0 0 8px ${moonInfo.color}`;
+        }
+
+        // 通知エリアは非表示
+        if (fullMoonNoticeEl) fullMoonNoticeEl.style.display = 'none';
+    } else {
+        moonPhaseNameEl.textContent = moonData.phaseName;
+        moonIconEl.style.filter = '';
+        moonIconEl.style.color = '';
+
+        if (isFullMoonTonight) {
+            // 満月の日だが条件未達: 通知エリアに表示、バッジに「満月🌕」
+            if (fullMoonNoticeEl && fullMoonNoticeTextEl) {
+                fullMoonNoticeTextEl.innerHTML = `🌕 今夜は満月（<span style="color: ${moonInfo.color};">${moonInfo.name}</span>）が見られます`;
+                fullMoonNoticeEl.style.display = 'block';
+                fullMoonNoticeEl.style.borderColor = moonInfo.color;
+            }
+
+            // バッジに「満月🌕」
+            if (nextPhaseTextEl) {
+                nextPhaseTextEl.textContent = '満月🌕';
+                nextPhaseTextEl.style.background = '';
+                nextPhaseTextEl.style.color = '';
+                nextPhaseTextEl.style.textShadow = '';
+            }
+        } else {
+            // 通常時: 通知非表示、バッジは後で設定される（次の満月まで◯日など）
+            if (fullMoonNoticeEl) fullMoonNoticeEl.style.display = 'none';
+            if (nextPhaseTextEl) {
+                nextPhaseTextEl.style.background = '';
+                nextPhaseTextEl.style.color = '';
+                nextPhaseTextEl.style.textShadow = '';
+            }
+        }
+    }
+
+    // Display times in SVG
+    const riseTimeEl = document.getElementById('moonRiseTimeSvg');
+    const setTimeEl = document.getElementById('moonSetTimeSvg');
+    if (riseTimeEl) riseTimeEl.textContent = moonTimes.rise || '--:--';
+    if (setTimeEl) setTimeEl.textContent = moonTimes.set || '--:--';
+
+    // Display rise/set directions from API or fallback
+    const riseDirEl = document.getElementById('moonRiseDirSvg');
+    const setDirEl = document.getElementById('moonSetDirSvg');
+    // Show '--' if time is not available, otherwise use API direction or fallback
+    if (riseDirEl) {
+        riseDirEl.textContent = (moonTimes.rise === '--:--') ? '--' : (moonTimes.riseDirJp || '東');
+    }
+    if (setDirEl) {
+        setDirEl.textContent = (moonTimes.set === '--:--') ? '--' : (moonTimes.setDirJp || '西');
+    }
+
+    // Display current position info in SVG (only when above horizon)
+    const currentInfoEl = document.getElementById('moonCurrentInfoSvg');
+    if (currentInfoEl) {
+        if (moonPos.altitude > 0) {
+            currentInfoEl.textContent = `${getJapaneseCompassDirection(moonPos.azimuth)} ${Math.round(moonPos.altitude)}°`;
+        } else {
+            currentInfoEl.textContent = '';
+        }
+    }
+
+    // Calculate next full moon (バッジが未設定の場合のみ)
+    const synodic = 29.53058867;
+    const daysToFull = (14.77 - moonData.age + synodic) % synodic;
+    // 満月の場合やisFullMoonTonightの場合は上で設定済みなので、それ以外の時だけ設定
+    if (nextPhaseTextEl && !moonData.fullMoonName && !isFullMoonTonight) {
+        if (daysToFull < 1) {
+            nextPhaseTextEl.textContent = '満月 🌕';
+        } else if (moonData.age < 14.77) {
+            nextPhaseTextEl.textContent = `満月まで${Math.round(daysToFull)}日`;
+        } else {
+            const daysToNew = synodic - moonData.age;
+            nextPhaseTextEl.textContent = `新月まで${Math.round(daysToNew)}日`;
+        }
+    }
+
+    // Update arc position (pass current time for time-based positioning)
+    updateMoonArcPosition(moonPos, moonTimes, now);
+
+    // Start real-time position updates (every 1 minute)
+    startMoonPositionTimer();
+}
+
+// Real-time moon position update (every 1 minute)
+function startMoonPositionTimer() {
+    // Clear any existing interval
+    if (moonPositionInterval) {
+        clearInterval(moonPositionInterval);
+    }
+
+    const LAT = 35.7785;
+    const LON = 139.878;
+
+    // Update every 60 seconds
+    moonPositionInterval = setInterval(() => {
+        if (!cachedMoonTimes) return;
+
+        const now = new Date();
+        const moonPos = calculateMoonPosition(now, LAT, LON);
+
+        // Update arc position
+        updateMoonArcPosition(moonPos, cachedMoonTimes, now);
+
+        // Update current position text
+        const currentInfoEl = document.getElementById('moonCurrentInfoSvg');
+        if (currentInfoEl) {
+            if (moonPos.altitude > 0) {
+                currentInfoEl.textContent = `${getJapaneseCompassDirection(moonPos.azimuth)} ${Math.round(moonPos.altitude)}°`;
+            } else {
+                currentInfoEl.textContent = '';
+            }
+        }
+
+        console.log('[Moon] Position updated:',
+            'Alt:', moonPos.altitude.toFixed(1) + '°',
+            'Az:', moonPos.azimuth.toFixed(1) + '°',
+            'Dir:', getJapaneseCompassDirection(moonPos.azimuth));
+
+        // リアルタイムで月齢・輝面率も更新
+        const moonPhaseNow = calculateMoonPhase(now);
+        document.getElementById('moonAge').textContent = moonPhaseNow.age.toFixed(1);
+        document.getElementById('moonIllumination').textContent = Math.round(moonPhaseNow.illumination * 100);
+    }, 60000); // 60 seconds
+
+    console.log('[Moon] Real-time position updates started (60s interval)');
+}
+
+function calculateMoonPhase(date) {
+    // Reference new moon: Jan 6, 2000 18:14 UTC
+    const refNewMoon = new Date(Date.UTC(2000, 0, 6, 18, 14, 0));
+    const synodic = 29.53058867; // Synodic month in days
+
+    const daysSinceRef = (date - refNewMoon) / (1000 * 60 * 60 * 24);
+    const age = daysSinceRef % synodic;
+    const normalizedAge = age < 0 ? age + synodic : age;
+
+    // Phase (0-1)
+    const phase = normalizedAge / synodic;
+
+    // Illumination (simplified)
+    const illumination = (1 - Math.cos(2 * Math.PI * phase)) / 2;
+
+    // Phase name and emoji
+    let phaseName, emoji, fullMoonName = null, fullMoonColor = null;
+
+    // Full moon names by month with themed colors
+    const fullMoonNames = {
+        1: { name: 'ウルフムーン', nameEn: 'Wolf Moon', color: '#a3c4dc' },
+        2: { name: 'スノームーン', nameEn: 'Snow Moon', color: '#e8f4fc' },
+        3: { name: 'ワームムーン', nameEn: 'Worm Moon', color: '#c9a87c' },
+        4: { name: 'ピンクムーン', nameEn: 'Pink Moon', color: '#f8b4c4' },
+        5: { name: 'フラワームーン', nameEn: 'Flower Moon', color: '#f0e68c' },
+        6: { name: 'ストロベリームーン', nameEn: 'Strawberry Moon', color: '#ff9999' },
+        7: { name: 'バックムーン', nameEn: 'Buck Moon', color: '#daa520' },
+        8: { name: 'スタージョンムーン', nameEn: 'Sturgeon Moon', color: '#87ceeb' },
+        9: { name: 'ハーベストムーン', nameEn: 'Harvest Moon', color: '#ff8c00' },
+        10: { name: 'ハンターズムーン', nameEn: "Hunter's Moon", color: '#cd5c5c' },
+        11: { name: 'ビーバームーン', nameEn: 'Beaver Moon', color: '#8b4513' },
+        12: { name: 'コールドムーン', nameEn: 'Cold Moon', color: '#b0c4de' }
+    };
+
+    // 月齢に基づく伝統的な和名（全30日分）
+    const moonAge = Math.floor(normalizedAge);
+
+    if (normalizedAge < 0.5) {
+        phaseName = '新月（朔）';
+        emoji = '🌑';
+    } else if (normalizedAge < 1.5) {
+        phaseName = '二日月（繊月）';
+        emoji = '🌑';
+    } else if (normalizedAge < 2.5) {
+        phaseName = '三日月';
+        emoji = '🌒';
+    } else if (normalizedAge < 6.5) {
+        phaseName = `${moonAge + 1}日月`;
+        emoji = '🌒';
+    } else if (normalizedAge < 7.5) {
+        phaseName = '上弦の月';
+        emoji = '🌓';
+    } else if (normalizedAge < 9.5) {
+        phaseName = `${moonAge + 1}日月`;
+        emoji = '🌓';
+    } else if (normalizedAge < 10.5) {
+        phaseName = '十日夜';
+        emoji = '🌔';
+    } else if (normalizedAge < 12.5) {
+        phaseName = `${moonAge + 1 === 12 ? '十二' : moonAge + 1}日月`;
+        emoji = '🌔';
+    } else if (normalizedAge < 13.5) {
+        phaseName = '十三夜';
+        emoji = '🌔';
+    } else if (normalizedAge < 14.5) {
+        phaseName = '小望月（待宵月）';
+        emoji = '🌔';
+    } else if (normalizedAge < 16.0 || illumination >= 0.98) {
+        // 満月の場合、月ごとの名前と色を取得
+        const currentMonth = date.getMonth() + 1;
+        const moonInfo = fullMoonNames[currentMonth];
+        phaseName = '満月（望月）';
+        emoji = '🌕';
+        fullMoonName = moonInfo.name;
+        fullMoonColor = moonInfo.color;
+    } else if (normalizedAge < 17.0) {
+        phaseName = '十六夜（いざよい）';
+        emoji = '🌕';
+    } else if (normalizedAge < 18.0) {
+        phaseName = '立待月';
+        emoji = '🌖';
+    } else if (normalizedAge < 19.0) {
+        phaseName = '居待月';
+        emoji = '🌖';
+    } else if (normalizedAge < 20.0) {
+        phaseName = '寝待月（臥待月）';
+        emoji = '🌖';
+    } else if (normalizedAge < 21.0) {
+        phaseName = '更待月';
+        emoji = '🌖';
+    } else if (normalizedAge < 22.5) {
+        phaseName = '下弦の月';
+        emoji = '🌗';
+    } else if (normalizedAge < 23.5) {
+        phaseName = '二十三夜';
+        emoji = '🌗';
+    } else if (normalizedAge < 25.5) {
+        phaseName = `二十${moonAge - 18}日月`;
+        emoji = '🌘';
+    } else if (normalizedAge < 26.5) {
+        phaseName = '二十六夜';
+        emoji = '🌘';
+    } else if (normalizedAge < 29.5) {
+        phaseName = '晦日月（三十日月）';
+        emoji = '🌘';
+    } else {
+        phaseName = '新月（朔）';
+        emoji = '🌑';
+    }
+
+    return { age: normalizedAge, phase, illumination, phaseName, emoji, fullMoonName, fullMoonColor };
+}
+
+function calculateMoonPosition(date, lat, lon) {
+    const jd = getJulianDate(date);
+    const T = (jd - 2451545.0) / 36525;
+
+    // Moon's mean elements (simplified)
+    const L = (218.3164477 + 481267.88123421 * T) % 360;
+    const M = (134.9633964 + 477198.8675055 * T) % 360;
+    const F = (93.2720950 + 483202.0175233 * T) % 360;
+
+    // Approximate Right Ascension and Declination
+    const Lrad = L * Math.PI / 180;
+    const Mrad = M * Math.PI / 180;
+    const Frad = F * Math.PI / 180;
+
+    // Simplified ecliptic longitude
+    let lambda = L + 6.29 * Math.sin(Mrad);
+    lambda = lambda % 360;
+    const lambdaRad = lambda * Math.PI / 180;
+
+    // Approximate declination
+    const epsilon = 23.439 - 0.00000036 * T;
+    const epsilonRad = epsilon * Math.PI / 180;
+
+    const dec = Math.asin(Math.sin(epsilonRad) * Math.sin(lambdaRad)) * 180 / Math.PI;
+    const ra = Math.atan2(Math.cos(epsilonRad) * Math.sin(lambdaRad), Math.cos(lambdaRad)) * 180 / Math.PI;
+
+    // Local Sidereal Time
+    const LST = (100.46 + 0.985647 * (jd - 2451545.0) + lon + date.getUTCHours() * 15 + date.getUTCMinutes() * 0.25) % 360;
+
+    // Hour angle
+    let HA = LST - ra;
+    if (HA < 0) HA += 360;
+    const HARad = HA * Math.PI / 180;
+    const latRad = lat * Math.PI / 180;
+    const decRad = dec * Math.PI / 180;
+
+    // Altitude
+    const altitude = Math.asin(
+        Math.sin(latRad) * Math.sin(decRad) +
+        Math.cos(latRad) * Math.cos(decRad) * Math.cos(HARad)
+    ) * 180 / Math.PI;
+
+    // Azimuth
+    let azimuth = Math.atan2(
+        Math.sin(HARad),
+        Math.cos(HARad) * Math.sin(latRad) - Math.tan(decRad) * Math.cos(latRad)
+    ) * 180 / Math.PI + 180;
+
+    // Approximate max altitude for today
+    const maxAltitude = 90 - lat + dec;
+
+    return { altitude, azimuth: azimuth % 360, maxAltitude: Math.min(90, Math.max(0, maxAltitude)) };
+}
+
+function calculateMoonTimes(date, lat, lon) {
+    const dayStart = new Date(date);
+    dayStart.setHours(0, 0, 0, 0);
+
+    let rise = null;
+    let set = null;
+    let riseAzimuth = null;
+    let setAzimuth = null;
+
+    let prevPos = calculateMoonPosition(dayStart, lat, lon);
+
+    // 1-minute intervals (1440 steps) for maximum precision
+    for (let i = 1; i <= 1440; i++) {
+        const t = new Date(dayStart.getTime() + i * 60 * 1000);
+        const currPos = calculateMoonPosition(t, lat, lon);
+
+        // Apply approximate Parallax correction (-0.95 deg)
+        const alt1 = prevPos.altitude - 0.95;
+        const alt2 = currPos.altitude - 0.95;
+
+        // Check Horizon Crossing
+        if (alt1 < 0 && alt2 >= 0) {
+            // Moonrise
+            const fraction = (0 - alt1) / (alt2 - alt1);
+            const riseMs = t.getTime() - 60 * 1000 + fraction * 60 * 1000;
+            rise = new Date(riseMs);
+            riseAzimuth = prevPos.azimuth + (currPos.azimuth - prevPos.azimuth) * fraction;
+        }
+        if (alt1 >= 0 && alt2 < 0) {
+            // Moonset
+            const fraction = (0 - alt1) / (alt2 - alt1);
+            const setMs = t.getTime() - 60 * 1000 + fraction * 60 * 1000;
+            set = new Date(setMs);
+            setAzimuth = prevPos.azimuth + (currPos.azimuth - prevPos.azimuth) * fraction;
+        }
+        prevPos = currPos;
+    }
+
+    const formatHour = (d) => {
+        if (!d) return '--:--';
+        return d.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+    };
+
+    // Directions based on calculated azimuth if available
+    const moonData = calculateMoonPhase(date);
+    const age = moonData.age;
+
+    // Fallback directions (simplified) if not found
+    let riseDirJp = age < 14.77 ? '東南東' : '東北東';
+    let setDirJp = age < 14.77 ? '西南西' : '西北西';
+
+    if (riseAzimuth) riseDirJp = getJapaneseCompassDirection(riseAzimuth);
+    if (setAzimuth) setDirJp = getJapaneseCompassDirection(setAzimuth);
+
+    // Determine if moonset is tomorrow
+    let setIsTomorrow = false;
+    if (rise && !set) {
+        setIsTomorrow = true;
+    }
+
+    return {
+        rise: formatHour(rise),
+        set: formatHour(set),
+        riseDirJp,
+        setDirJp,
+        setIsTomorrow,
+        riseDate: rise,
+        setDate: set
+    };
+}
+
+function getJulianDate(date) {
+    const y = date.getUTCFullYear();
+    const m = date.getUTCMonth() + 1;
+    const d = date.getUTCDate() + date.getUTCHours() / 24 + date.getUTCMinutes() / 1440;
+
+    let Y = y, M = m;
+    if (M <= 2) { Y -= 1; M += 12; }
+
+    const A = Math.floor(Y / 100);
+    const B = 2 - A + Math.floor(A / 4);
+
+    return Math.floor(365.25 * (Y + 4716)) + Math.floor(30.6001 * (M + 1)) + d + B - 1524.5;
+}
+
+function getCompassDirection(azimuth) {
+    const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+    const idx = Math.round(azimuth / 22.5) % 16;
+    return directions[idx];
+}
+
+function getJapaneseCompassDirection(azimuth) {
+    const directions = ['北', '北北東', '北東', '東北東', '東', '東南東', '南東', '南南東', '南', '南南西', '南西', '西南西', '西', '西北西', '北西', '北北西'];
+    const idx = Math.round(azimuth / 22.5) % 16;
+    return directions[idx];
+}
+
+function updateMoonArcPosition(moonPos, moonTimes, currentTime) {
+    const moonCircle = document.getElementById('moonPosition');
+    const moonGlow = document.getElementById('moonGlowCircle');
+    const moonInfoGroup = document.getElementById('moonCurrentInfoGroup');
+    const moonInfoText = document.getElementById('moonCurrentInfoSvg');
+    const moonInfoBg = document.getElementById('moonInfoBg');
+    if (!moonCircle) return;
+
+    // Parse rise and set times to get hours as decimal
+    const parseTime = (timeStr) => {
+        if (!timeStr || timeStr === '--:--') return null;
+        let cleanTime = timeStr.replace(/^(翌|前日)/, '');
+        const match = cleanTime.match(/(\d+):(\d+)/);
+        if (!match) return null;
+        const h = parseInt(match[1], 10);
+        const m = parseInt(match[2], 10);
+        return h + m / 60;
+    };
+
+    const riseHour = parseTime(moonTimes.rise);
+    const setHour = parseTime(moonTimes.set);
+    const currentHour = currentTime.getHours() + currentTime.getMinutes() / 60;
+
+    let t = 0.5;
+    let isVisible = false;
+
+    // Case 1: Both rise and set times available today
+    if (riseHour !== null && setHour !== null && !moonTimes.setIsTomorrow) {
+        if (currentHour >= riseHour && currentHour <= setHour) {
+            const duration = setHour - riseHour;
+            t = duration > 0 ? (currentHour - riseHour) / duration : 0.5;
+            isVisible = true;
+        } else if (currentHour < riseHour) {
+            t = 0;
+            isVisible = false;
+        } else {
+            t = 1;
+            isVisible = false;
+        }
+    }
+    // Case 2: Moonset is tomorrow
+    else if (riseHour !== null && (moonTimes.setIsTomorrow || setHour === null)) {
+        if (currentHour >= riseHour) {
+            isVisible = true;
+            const hoursSinceRise = currentHour - riseHour;
+            t = Math.min(0.9, hoursSinceRise / 12);
+        } else if (moonTimes.setIsTomorrow && setHour !== null && currentHour <= setHour) {
+            isVisible = true;
+            const hoursSinceRise = (24 - riseHour) + currentHour;
+            const totalDuration = (24 - riseHour) + setHour;
+            t = Math.min(0.95, hoursSinceRise / totalDuration);
+        } else if (currentHour < riseHour && (!moonTimes.setIsTomorrow || setHour === null)) {
+            t = 0;
+            isVisible = false;
+        } else {
+            t = 1;
+            isVisible = false;
+        }
+    }
+    // Case 3: No rise today but maybe set
+    else if (riseHour === null && setHour !== null) {
+        if (currentHour <= setHour) {
+            isVisible = true;
+            t = 0.5 + (currentHour / setHour) * 0.5;
+        } else {
+            t = 1;
+            isVisible = false;
+        }
+    }
+    // Case 4: No data for either
+    else {
+        isVisible = moonPos.altitude > 0;
+        t = 0.5;
+    }
+
+    const clampedT = Math.max(0, Math.min(1, t));
+
+    // SVG Coordinates
+    const P0 = { x: 40, y: 150 };
+    const P1 = { x: 170, y: -20 };
+    const P2 = { x: 300, y: 150 };
+
+    // Quadratic bezier calculation
+    const mt = 1 - clampedT;
+    const x = mt * mt * P0.x + 2 * mt * clampedT * P1.x + clampedT * clampedT * P2.x;
+    const y = mt * mt * P0.y + 2 * mt * clampedT * P1.y + clampedT * clampedT * P2.y;
+
+    const finalY = isVisible ? y : 160;
+    const opacity = isVisible ? 1 : 0.4;
+    const fillColor = isVisible ? '#fbbf24' : '#94a3b8';
+
+    moonCircle.setAttribute('cx', x);
+    moonCircle.setAttribute('cy', finalY);
+    moonCircle.setAttribute('fill', fillColor);
+    moonCircle.style.opacity = opacity;
+
+    if (moonGlow) {
+        moonGlow.setAttribute('cx', x);
+        moonGlow.setAttribute('cy', finalY);
+        moonGlow.style.opacity = isVisible ? 1 : 0;
+    }
+
+    // Update Info Label
+    if (moonInfoGroup && moonInfoText && moonInfoBg) {
+        if (isVisible) {
+            const altText = `${Math.round(moonPos.altitude)}°`;
+            const dirText = getJapaneseCompassDirection(moonPos.azimuth);
+            moonInfoText.textContent = `${dirText} ${altText}`;
+            moonInfoBg.setAttribute('fill', 'rgba(15,23,42,0.8)');
+            moonInfoText.setAttribute('fill', '#fbbf24');
+
+            const textWidth = 80;
+            moonInfoBg.setAttribute('width', textWidth);
+            moonInfoBg.setAttribute('x', -textWidth / 2);
+            moonInfoBg.setAttribute('y', -10);
+
+            const labelY = y - 25;
+            const safeLabelY = Math.max(20, labelY);
+
+            moonInfoGroup.setAttribute('transform', `translate(${x}, ${safeLabelY})`);
+            moonInfoGroup.setAttribute('opacity', 1);
+        } else {
+            moonInfoText.textContent = '地平線下';
+            moonInfoBg.setAttribute('fill', 'rgba(30,41,59,0.9)');
+            moonInfoText.setAttribute('fill', '#94a3b8');
+
+            const textWidth = 70;
+            moonInfoBg.setAttribute('width', textWidth);
+            moonInfoBg.setAttribute('x', -textWidth / 2);
+            moonInfoBg.setAttribute('y', -10);
+
+            moonInfoGroup.setAttribute('transform', `translate(${x}, 175)`);
+            moonInfoGroup.setAttribute('opacity', 0.8);
+        }
+    }
+}
+
+// Call moon data on load
+document.addEventListener('DOMContentLoaded', loadMoonData);
