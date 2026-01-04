@@ -592,52 +592,53 @@
     </div>
 
     <!-- ====================================================================
-         JavaScript ファイル
+         JavaScript ファイル（分割版）
          ====================================================================
          
-         [main.js] 全ロジック（約6000行）
+         読み込み順序が重要！依存関係に注意:
+         1. config.js - 設定・グローバル変数（最初に読み込み必須）
+         2. notifications.js - 通知システム
+         3. utils.js - ユーティリティ関数
+         4. precipitation.js - 降水判定システム ★重要
+         5. moon.js - 月計算・表示
+         6. ui.js - UI更新処理
+         7. weather-api.js - API呼び出し（precipitation.js/ui.jsに依存）
+         8. comments.js - 一言コメント生成 ★最重要
+         9. charts.js - グラフ描画
+         10. init.js - 初期化・イベント処理（最後に読み込み）
          
-         主要な関数と修正箇所ガイド:
-         
-         ■ 初期化・イベント処理
-         - init() - アプリ初期化
-         - プルリフレッシュ（PULL-TO-REFRESH セクション）
-         - ダークモード切替（toggleTheme）
-         
-         ■ データ取得 (約3700-4200行)
-         - fetchAll() - Open-Meteo/センサーAPI呼び出し
-         - loadAIComment() - AI一言コメント取得
-         - fetchAlerts() - 気象庁警報取得
-         
-         ■ 降水判定システム ★重要 (約4200-4850行)
-         - getPrecipitationType() - 雪/みぞれ/雨のスコア判定
-           → 上空気温、湿球温度、凍結高度、地上気温を総合評価
-         - updateActualPrecipState() - Yahoo API降水状態更新
-           → hasForecastPrecip, forecastPrecipType を設定
-         - loadPrecipitation() - 降水グラフ描画
-         
-         ■ 月計算 (約4880-5560行)
-         - loadMoonData() - 月データ取得
-         - calculateMoonPhase() - 月齢計算
-         - calculateMoonPosition() - 月位置計算
-         - updateMoonArcPosition() - 月弧表示更新
-         
-         ■ 一言コメント生成 ★最重要・最大 (約6000-8580行)
-         - updateGreeting() - メインコメント生成ロジック
-           → 温度帯別（40°C以上〜-10°C以下）のコメント
-           → 季節イベント対応（正月、クリスマス等）
-           → 降水予報時は forecastPrecipType で分岐
-         
-         ■ グラフ描画 (約8600-9200行)
-         - updateCharts() - 全グラフ更新
-         - updateChart24h() - 24時間グラフ
-         
-         ■ UI更新 (約5700-5990行)
-         - updateUI() - メインUI更新
-         - updateTempTheme() - 温度テーマ適用
-         - updateWeatherEffects() - 天気エフェクト
+         ※ main.js はバックアップとして残しています
          ==================================================================== -->
-    <script src="js/main.js"></script>
+
+    <!-- 1. 設定・グローバル変数 -->
+    <script src="js/config.js"></script>
+
+    <!-- 2. 通知システム -->
+    <script src="js/notifications.js"></script>
+
+    <!-- 3. ユーティリティ関数 -->
+    <script src="js/utils.js"></script>
+
+    <!-- 4. 降水判定システム -->
+    <script src="js/precipitation.js"></script>
+
+    <!-- 5. 月計算・表示 -->
+    <script src="js/moon.js"></script>
+
+    <!-- 6. UI更新処理 -->
+    <script src="js/ui.js"></script>
+
+    <!-- 7. API呼び出し -->
+    <script src="js/weather-api.js"></script>
+
+    <!-- 8. 一言コメント生成 -->
+    <script src="js/comments.js"></script>
+
+    <!-- 9. グラフ描画 -->
+    <script src="js/charts.js"></script>
+
+    <!-- 10. 初期化・イベント処理 -->
+    <script src="js/init.js"></script>
 </body>
 
 </html>
