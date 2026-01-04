@@ -4349,7 +4349,10 @@
             isRaining: false,
             rainfall: 0,
             precipType: 'rain',
-            consecutiveMinutes: 0  // How many consecutive minutes of rain observed
+            consecutiveMinutes: 0,  // How many consecutive minutes of rain observed
+            // Yahoo API予報データ（1時間以内）
+            hasForecastPrecip: false,  // 1時間以内に降水予報があるか
+            forecastPrecipType: 'rain' // 予報される降水タイプ
         };
 
         // Cache for weather override - persists between refreshes
@@ -4370,6 +4373,8 @@
                 actualPrecipState.isRaining = false;
                 actualPrecipState.rainfall = 0;
                 actualPrecipState.consecutiveMinutes = 0;
+                actualPrecipState.hasForecastPrecip = false;
+                actualPrecipState.forecastPrecipType = 'rain';
                 return;
             }
 
@@ -4379,27 +4384,48 @@
                 actualPrecipState.isRaining = false;
                 actualPrecipState.rainfall = 0;
                 actualPrecipState.consecutiveMinutes = 0;
-                return;
-            }
+            } else {
+                // Get latest observation
+                const latest = observations[observations.length - 1];
+                actualPrecipState.rainfall = latest.rainfall;
+                actualPrecipState.isRaining = latest.rainfall > 0;
 
-            // Get latest observation
-            const latest = observations[observations.length - 1];
-            actualPrecipState.rainfall = latest.rainfall;
-            actualPrecipState.isRaining = latest.rainfall > 0;
-
-            // Count consecutive minutes of rain (each data point = 5 minutes)
-            let consecutiveCount = 0;
-            for (let i = observations.length - 1; i >= 0; i--) {
-                if (observations[i].rainfall > 0) {
-                    consecutiveCount++;
-                } else {
-                    break;
+                // Count consecutive minutes of rain (each data point = 5 minutes)
+                let consecutiveCount = 0;
+                for (let i = observations.length - 1; i >= 0; i--) {
+                    if (observations[i].rainfall > 0) {
+                        consecutiveCount++;
+                    } else {
+                        break;
+                    }
                 }
+                actualPrecipState.consecutiveMinutes = consecutiveCount * 5;  // Each point is 5 min
             }
-            actualPrecipState.consecutiveMinutes = consecutiveCount * 5;  // Each point is 5 min
 
             // Update precipitation type based on current conditions
             actualPrecipState.precipType = getPrecipitationType();
+
+            // ============================================================
+            // Check forecast data for next 1 hour (Yahoo API)
+            // ============================================================
+            const forecasts = precipData.filter(d => d.type === 'forecast');
+            // Yahoo APIの予報は10分刻み、1時間 = 6データポイント
+            const next1HourForecasts = forecasts.slice(0, 6);
+            const hasForecast = next1HourForecasts.some(d => d.rainfall > 0);
+            actualPrecipState.hasForecastPrecip = hasForecast;
+
+            // 予報がある場合、最初の降水予報時点のタイプを判定
+            if (hasForecast) {
+                const currentHour = new Date().getHours();
+                const firstPrecipForecast = next1HourForecasts.find(d => d.rainfall > 0);
+                if (firstPrecipForecast) {
+                    const [hh] = firstPrecipForecast.time.split(':').map(Number);
+                    const hourIndex = hh >= currentHour ? hh : hh + 24;
+                    actualPrecipState.forecastPrecipType = getPrecipitationType(hourIndex);
+                }
+            } else {
+                actualPrecipState.forecastPrecipType = 'rain';
+            }
         }
 
         /**
@@ -7571,10 +7597,33 @@
                             `❄️ ${t} — 冬晴れ。寒さ対策を万全に`,
                             `⛄ ${t} — 晴れでも冷える。コート必須`
                         ]);
+                    } else if ((isExtremelyHumid || isVeryHumid) && actualPrecipState.hasForecastPrecip) {
+                        // Yahoo API予報で1時間以内に降水予報あり - タイプ別コメント
+                        const fType = actualPrecipState.forecastPrecipType;
+                        if (fType === 'snow') {
+                            comment = pick([
+                                `❄️ ${t}・湿度${h}% — 湿度高く底冷え。雪の予感`,
+                                `🌨️ ${t} — じめじめして凍えそう。雪が降りそう`,
+                                `❄️ ${t} — 湿った寒さ。雪に注意`
+                            ]);
+                        } else if (fType === 'sleet') {
+                            comment = pick([
+                                `❄️ ${t}・湿度${h}% — 湿度高く底冷え。みぞれの予感`,
+                                `🌨️ ${t} — じめじめして凍えそう。みぞれが降りそう`,
+                                `❄️ ${t} — 湿った寒さ。みぞれに注意`
+                            ]);
+                        } else {
+                            comment = pick([
+                                `❄️ ${t}・湿度${h}% — 湿度高く底冷え。雨が降りそう`,
+                                `🌧️ ${t} — じめじめして凍えそう。傘を忘れずに`,
+                                `❄️ ${t} — 湿った寒さ。雨に注意`
+                            ]);
+                        }
                     } else if (isExtremelyHumid || isVeryHumid) {
+                        // 降水予報がない場合は雪への言及を避ける
                         comment = pick([
-                            `❄️ ${t}・湿度${h}% — 湿度高く底冷え。雪の予感`,
-                            `🌨️ ${t} — じめじめして凍えそう。雪か`,
+                            `❄️ ${t}・湿度${h}% — 湿度高く底冷え。暖房を`,
+                            `🥶 ${t} — じめじめして凍えそう。暖かくして`,
                             `❄️ ${t} — 湿った寒さ。体の芯から冷える`
                         ]);
                     } else if (isHumid) {
@@ -7583,10 +7632,33 @@
                             `🥶 ${t} — じめっとした寒さ。暖房が欲しい`,
                             `❄️ ${t} — 湿気で余計に寒く感じます`
                         ]);
+                    } else if (isOvercast && isWinter && actualPrecipState.hasForecastPrecip) {
+                        // Yahoo API予報で1時間以内に降水予報あり - タイプ別コメント
+                        const fType = actualPrecipState.forecastPrecipType;
+                        if (fType === 'snow') {
+                            comment = pick([
+                                `☁️ ${t} — 冬曇り。雪がちらつきそう`,
+                                `❄️ ${t} — 曇りで寒い。雪の可能性あり`,
+                                `☁️ ${t} — 冬の曇り空。雪に注意`
+                            ]);
+                        } else if (fType === 'sleet') {
+                            comment = pick([
+                                `☁️ ${t} — 冬曇り。みぞれがちらつきそう`,
+                                `🌨️ ${t} — 曇りで寒い。みぞれの可能性あり`,
+                                `☁️ ${t} — 冬の曇り空。みぞれに注意`
+                            ]);
+                        } else {
+                            comment = pick([
+                                `☁️ ${t} — 冬曇り。冷たい雨が降りそう`,
+                                `🌧️ ${t} — 曇りで寒い。傘を忘れずに`,
+                                `☁️ ${t} — 冬の曇り空。雨に注意`
+                            ]);
+                        }
                     } else if (isOvercast && isWinter) {
+                        // 降水予報がない場合は雪への言及を避ける
                         comment = pick([
-                            `☁️ ${t} — 冬曇り。雪がちらつくかも`,
-                            `❄️ ${t} — 曇りで寒い。雪の可能性あり`,
+                            `☁️ ${t} — 冬曇り。寒々しい一日`,
+                            `❄️ ${t} — 曇りで寒い。温かくして`,
                             `☁️ ${t} — 冬の曇り空。暖房をつけましょう`
                         ]);
                     } else if (isOvercast) {
@@ -7614,11 +7686,34 @@
                 }
                 // COLD 0-5 (とても寒い) - 1.5x variations
                 else if (temp >= 0) {
-                    if (isNight && isVeryHumid) {
+                    if (isNight && isVeryHumid && actualPrecipState.hasForecastPrecip) {
+                        // Yahoo API予報で1時間以内に降水予報あり - タイプ別コメント
+                        const fType = actualPrecipState.forecastPrecipType;
+                        if (fType === 'snow') {
+                            comment = pick([
+                                `🥶 ${t} — 湿った凍える夜。雪が降りそう`,
+                                `❄️ ${t} — 冷えて湿度高い夜。積雪注意`,
+                                `🥶 ${t} — 凍える夜。雪の気配`
+                            ]);
+                        } else if (fType === 'sleet') {
+                            comment = pick([
+                                `🥶 ${t} — 湿った凍える夜。みぞれが降りそう`,
+                                `🌨️ ${t} — 冷えて湿度高い夜。みぞれに注意`,
+                                `🥶 ${t} — 凍える夜。みぞれの気配`
+                            ]);
+                        } else {
+                            comment = pick([
+                                `🥶 ${t} — 湿った凍える夜。冷たい雨が降りそう`,
+                                `🌧️ ${t} — 冷えて湿度高い夜。傘を忘れずに`,
+                                `🥶 ${t} — 凍える夜。雨が降りそう`
+                            ]);
+                        }
+                    } else if (isNight && isVeryHumid) {
+                        // 降水予報がない場合は降水への言及を避ける
                         comment = pick([
-                            `🥶 ${t} — 湿った凍える夜。雪が降るかも`,
-                            `❄️ ${t} — 冷えて湿度高い夜。積雪注意`,
-                            `🥶 ${t} — 凍える夜。雪の気配`
+                            `🥶 ${t} — 湿った凍える夜。底冷えがします`,
+                            `❄️ ${t} — 湿度が高く芯から冷える夜`,
+                            `🥶 ${t} — 湿った寒さ。暖房をしっかり`
                         ]);
                     } else if (isNight) {
                         comment = pick([
@@ -7627,18 +7722,50 @@
                             `🥶 ${t} — 氷点下近い夜。暖房フル稼働で`,
                             `❄️ ${t} — 凍てつく夜。温かいものを飲んで`
                         ]);
-                    } else if (willRain && isHumid) {
-                        comment = pick([
-                            `🌨️ ${t}・湿度${h}% — 雪になりそう。積もるかも`,
-                            `❄️ ${t} — 雪の予報。積雪に注意`,
-                            `🌨️ ${t} — 雪になりそう。路面凍結警戒`
-                        ]);
-                    } else if (willRain) {
-                        comment = pick([
-                            `🌨️ ${t} — 雪になりそうな寒さ。路面凍結にご注意を`,
-                            `❄️ ${t} — 雪が降るかも。滑りやすいので注意`,
-                            `🌨️ ${t} — 雪の可能性。早めの帰宅を`
-                        ]);
+                    } else if (actualPrecipState.hasForecastPrecip && isHumid) {
+                        // Yahoo API予報で1時間以内に降水予報あり - タイプ別コメント
+                        const fType = actualPrecipState.forecastPrecipType;
+                        if (fType === 'snow') {
+                            comment = pick([
+                                `🌨️ ${t}・湿度${h}% — 雪になりそう。積もるかも`,
+                                `❄️ ${t} — 雪の予報。積雪に注意`,
+                                `🌨️ ${t} — 雪になりそう。路面凍結警戒`
+                            ]);
+                        } else if (fType === 'sleet') {
+                            comment = pick([
+                                `🌨️ ${t}・湿度${h}% — みぞれになりそう。足元注意`,
+                                `🌧️ ${t} — みぞれの予報。滑りやすいので注意`,
+                                `🌨️ ${t} — みぞれになりそう。傘を忘れずに`
+                            ]);
+                        } else {
+                            comment = pick([
+                                `🌧️ ${t}・湿度${h}% — 冷たい雨が降りそう。傘を`,
+                                `☔ ${t} — 雨の予報。濡れると冷えます`,
+                                `🌧️ ${t} — 雨が降りそう。傘と上着を`
+                            ]);
+                        }
+                    } else if (actualPrecipState.hasForecastPrecip) {
+                        // Yahoo API予報で1時間以内に降水予報あり - タイプ別コメント
+                        const fType = actualPrecipState.forecastPrecipType;
+                        if (fType === 'snow') {
+                            comment = pick([
+                                `🌨️ ${t} — 雪になりそうな寒さ。路面凍結にご注意を`,
+                                `❄️ ${t} — 雪が降りそう。滑りやすいので注意`,
+                                `🌨️ ${t} — 雪の可能性。早めの帰宅を`
+                            ]);
+                        } else if (fType === 'sleet') {
+                            comment = pick([
+                                `🌨️ ${t} — みぞれになりそう。足元にご注意を`,
+                                `🌧️ ${t} — みぞれが降りそう。傘を忘れずに`,
+                                `🌨️ ${t} — みぞれの可能性。滑りやすいので注意`
+                            ]);
+                        } else {
+                            comment = pick([
+                                `🌧️ ${t} — 冷たい雨が降りそう。傘をお忘れなく`,
+                                `☔ ${t} — 雨が降りそう。濡れると冷えます`,
+                                `🌧️ ${t} — 雨の可能性。傘を持って出かけましょう`
+                            ]);
+                        }
                     } else if (isClear && isMorning) {
                         comment = pick([
                             `❄️ ${t} — 放射冷却で凍える朝。路面凍結注意`,
@@ -7684,15 +7811,46 @@
                             `💨 ${t} — 風で体感は氷点下。マフラー必須`,
                             `🌬️ ${t} — 風が冷たい。暖かくして`
                         ]);
-                    } else if (isOvercast && isVeryHumid) {
+                    } else if (isOvercast && isVeryHumid && actualPrecipState.hasForecastPrecip) {
+                        // Yahoo API予報で1時間以内に降水予報あり
                         comment = pick([
                             `☁️ ${t} — どんより寒い。雪が近いかも`,
                             `❄️ ${t} — 曇りで底冷え。雪の予感`,
                             `☁️ ${t} — 寒々しい曇り。いつ雪が降ってもおかしくない`
                         ]);
-                    } else if (isOvercast) {
+                    } else if (isOvercast && isVeryHumid) {
+                        // 降水予報がない場合は雪への言及を避ける
                         comment = pick([
-                            `☁️ ${t} — どんより寒い。雪の気配を感じます`,
+                            `☁️ ${t} — どんより寒い。底冷えの一日`,
+                            `❄️ ${t} — 曇りで底冷え。暖房を`,
+                            `☁️ ${t} — 寒々しい曇り。暖かくして`
+                        ]);
+                    } else if (isOvercast && actualPrecipState.hasForecastPrecip) {
+                        // Yahoo API予報で1時間以内に降水予報あり - タイプ別コメント
+                        const fType = actualPrecipState.forecastPrecipType;
+                        if (fType === 'snow') {
+                            comment = pick([
+                                `☁️ ${t} — どんより寒い。雪の気配を感じます`,
+                                `⛅ ${t} — 曇りで凍える。雪が降りそう`,
+                                `☁️ ${t} — 寒々しい曇り空。雪に注意`
+                            ]);
+                        } else if (fType === 'sleet') {
+                            comment = pick([
+                                `☁️ ${t} — どんより寒い。みぞれの気配を感じます`,
+                                `⛅ ${t} — 曇りで凍える。みぞれが降りそう`,
+                                `☁️ ${t} — 寒々しい曇り空。みぞれに注意`
+                            ]);
+                        } else {
+                            comment = pick([
+                                `☁️ ${t} — どんより寒い。冷たい雨が降りそう`,
+                                `⛅ ${t} — 曇りで凍える。傘を忘れずに`,
+                                `☁️ ${t} — 寒々しい曇り空。雨に注意`
+                            ]);
+                        }
+                    } else if (isOvercast) {
+                        // 降水予報がない場合は雪への言及を避ける
+                        comment = pick([
+                            `☁️ ${t} — どんより寒い。底冷えの一日`,
                             `⛅ ${t} — 曇りで凍える。暖房が恋しい`,
                             `☁️ ${t} — 寒々しい曇り空。温かくして`
                         ]);
@@ -7709,17 +7867,63 @@
                 }
                 // FREEZING -5 to 0 - Expanded
                 else if (temp >= -5) {
-                    if (isVeryHumid || isExtremelyHumid) {
+                    if ((isVeryHumid || isExtremelyHumid) && actualPrecipState.hasForecastPrecip) {
+                        // Yahoo API予報で1時間以内に降水予報あり - タイプ別コメント
+                        const fType = actualPrecipState.forecastPrecipType;
+                        if (fType === 'snow') {
+                            comment = pick([
+                                `❄️ ${t}・湿度${h}% — 氷点下で湿度高い。大雪になりそう`,
+                                `🌨️ ${t} — 氷点下で湿気たっぷり。積雪警戒`,
+                                `❄️ ${t} — 雪が本降りになりそう。交通情報を確認`
+                            ]);
+                        } else if (fType === 'sleet') {
+                            comment = pick([
+                                `❄️ ${t}・湿度${h}% — 氷点下で湿度高い。みぞれになりそう`,
+                                `🌨️ ${t} — 氷点下で湿気たっぷり。みぞれ警戒`,
+                                `❄️ ${t} — みぞれが本降りになりそう。足元注意`
+                            ]);
+                        } else {
+                            comment = pick([
+                                `❄️ ${t}・湿度${h}% — 氷点下で湿度高い。冷たい雨に注意`,
+                                `🌧️ ${t} — 氷点下で湿気たっぷり。傘を忘れずに`,
+                                `❄️ ${t} — 冷たい雨が降りそう。濡れると危険`
+                            ]);
+                        }
+                    } else if (isVeryHumid || isExtremelyHumid) {
+                        // 降水予報がない場合は雪への言及を避ける
                         comment = pick([
-                            `❄️ ${t}・湿度${h}% — 氷点下で湿度高い。大雪になりそう`,
-                            `🌨️ ${t} — 氷点下で湿気たっぷり。積雪警戒`,
-                            `❄️ ${t} — 雪が本降りになりそう。交通情報を確認`
+                            `❄️ ${t}・湿度${h}% — 氷点下で湿度高い。極寒です`,
+                            `🧂 ${t} — 氷点下で湿気たっぷり。耐え難い寒さ`,
+                            `❄️ ${t} — 凍てつく寒さ。暖房をしっかり`
                         ]);
+                    } else if (isHumid && actualPrecipState.hasForecastPrecip) {
+                        // Yahoo API予報で1時間以内に降水予報あり - タイプ別コメント
+                        const fType = actualPrecipState.forecastPrecipType;
+                        if (fType === 'snow') {
+                            comment = pick([
+                                `❄️ ${t} — 氷点下で湿度も高い。雪が降りそう`,
+                                `🌨️ ${t} — 雪の気配。積もるかもしれません`,
+                                `❄️ ${t} — 雪が降りそう。路面凍結に注意`
+                            ]);
+                        } else if (fType === 'sleet') {
+                            comment = pick([
+                                `❄️ ${t} — 氷点下で湿度も高い。みぞれが降りそう`,
+                                `🌨️ ${t} — みぞれの気配。足元注意`,
+                                `❄️ ${t} — みぞれが降りそう。滑りやすいので注意`
+                            ]);
+                        } else {
+                            comment = pick([
+                                `❄️ ${t} — 氷点下で湿度も高い。冷たい雨が降りそう`,
+                                `🌧️ ${t} — 冷たい雨の気配。傘を忘れずに`,
+                                `❄️ ${t} — 冷たい雨が降りそう。濡れると危険`
+                            ]);
+                        }
                     } else if (isHumid) {
+                        // 降水予報がない場合は雪への言及を避ける
                         comment = pick([
-                            `❄️ ${t} — 氷点下で湿度も高い。雪が降りそう`,
-                            `🌨️ ${t} — 雪の気配。積もるかもしれません`,
-                            `❄️ ${t} — 東京で雪。珍しい光景ですね`
+                            `❄️ ${t} — 氷点下で湿度も高い。極寒です`,
+                            `🧂 ${t} — 湿った氷点下。暖かくして`,
+                            `❄️ ${t} — 凍てつく寒さ。水道管凍結に注意`
                         ]);
                     } else if (isVeryWindy) {
                         comment = pick([
