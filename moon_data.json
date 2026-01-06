@@ -1,11 +1,22 @@
 {
-  "updated": "2026-01-06 15:17:12",
+  "updated": "2026-01-06 21:20:19",
   "location": {
     "lat": 35.7785,
     "lon": 139.878
   },
   "date": "2026-01-06",
-  "error": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-  "moonrise": "--:--",
-  "moonset": "--:--"
+  "error": null,
+  "moonrise": "19:54",
+  "moonset": "翌8:58",
+  "moon_age": 17.12,
+  "sunrise": "6:50",
+  "sunset": "16:42",
+  "moonset_is_tomorrow": true,
+  "moonset_date": "2026-01-07",
+  "moonrise_azimuth": 73.2,
+  "moonrise_direction": "東北東",
+  "moon_phase_deg": 220.45,
+  "illumination": 88.0,
+  "moonset_azimuth": 278.6,
+  "moonset_direction": "西"
 }
