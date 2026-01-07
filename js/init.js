@@ -5,11 +5,116 @@
 //
 // 主要関数:
 // - init() - メイン初期化
+// - initPullToRefresh() - プルリフレッシュ（モバイル）
 // - initChartReordering() - グラフカード並べ替え
 // - setupSpotlight() - スポットライト効果
 // - animateNumber() - 数値アニメーション
 //
 // 依存: すべての他ファイル（最後に読み込み）
+
+// =====================================================
+// PULL-TO-REFRESH (Mobile) - Polished Version
+// =====================================================
+(function () {
+    let startY = 0;
+    let currentY = 0;
+    let isPulling = false;
+    let isRefreshing = false;
+    const THRESHOLD = 70;
+    const MAX_PULL = 100;
+
+    const indicator = document.getElementById('pullRefreshIndicator');
+    const textEl = document.getElementById('pullRefreshText');
+    const arrowEl = document.getElementById('pullRefreshArrow');
+    const spinnerEl = indicator?.querySelector('.pull-refresh-spinner');
+
+    if (!indicator) return;
+
+    document.addEventListener('touchstart', (e) => {
+        if (window.scrollY <= 0 && !isRefreshing) {
+            startY = e.touches[0].pageY;
+            isPulling = true;
+        }
+    }, { passive: true });
+
+    document.addEventListener('touchmove', (e) => {
+        if (!isPulling || isRefreshing) return;
+
+        currentY = e.touches[0].pageY;
+        const pullDistance = Math.min(currentY - startY, MAX_PULL);
+
+        if (pullDistance > 10 && window.scrollY <= 0) {
+            e.preventDefault();
+
+            const progress = Math.min(pullDistance / THRESHOLD, 1);
+            const isReady = pullDistance >= THRESHOLD;
+
+            // Update classes
+            indicator.classList.add('visible', 'pulling');
+            indicator.classList.toggle('ready', isReady);
+
+            // Rotate spinner based on pull progress
+            if (spinnerEl) {
+                spinnerEl.style.transform = `rotate(${progress * 540}deg)`;
+            }
+
+            // Update text
+            textEl.textContent = isReady ? '離して更新' : '引っ張って更新';
+
+            // Hide arrow when refreshing
+            if (arrowEl) {
+                arrowEl.style.display = 'inline';
+            }
+        }
+    }, { passive: false });
+
+    document.addEventListener('touchend', async () => {
+        if (!isPulling || isRefreshing) return;
+
+        const pullDistance = currentY - startY;
+
+        if (pullDistance >= THRESHOLD && window.scrollY <= 0) {
+            isRefreshing = true;
+
+            // Haptic feedback
+            if (navigator.vibrate) navigator.vibrate(25);
+
+            indicator.classList.remove('pulling', 'ready');
+            indicator.classList.add('refreshing');
+
+            // Hide arrow, reset spinner
+            if (arrowEl) arrowEl.style.display = 'none';
+            if (spinnerEl) spinnerEl.style.transform = '';
+
+            textEl.textContent = '更新中...';
+
+            try {
+                if (typeof fetchAll === 'function') {
+                    await fetchAll();
+                }
+                textEl.textContent = '✓ 更新完了';
+                if (navigator.vibrate) navigator.vibrate([15, 50, 15]);
+            } catch (err) {
+                textEl.textContent = '✗ エラー';
+                console.error('Pull refresh error:', err);
+            }
+
+            setTimeout(() => {
+                indicator.classList.remove('visible', 'refreshing');
+                textEl.textContent = '引っ張って更新';
+                if (arrowEl) arrowEl.style.display = 'inline';
+                isRefreshing = false;
+            }, 800);
+        } else {
+            indicator.classList.remove('visible', 'pulling', 'ready');
+            if (spinnerEl) spinnerEl.style.transform = '';
+        }
+
+        isPulling = false;
+        startY = 0;
+        currentY = 0;
+    }, { passive: true });
+})();
 
 async function init() {
     await fetchAll();
