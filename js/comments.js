@@ -2539,18 +2539,8 @@ function updateGreeting(temp, humidity) {
     else if (temp < 30) heroTempEl.classList.add('temp-hot');
     else heroTempEl.classList.add('temp-extreme');
 
-    // Update --temp-hue CSS variable for dynamic gradient colors
-    // Blue (220) for cold → Green (120) for mild → Orange (30) → Red (0) for hot
-    const tempHue = temp <= -10 ? 220 :      // Freezing: deep blue
-        temp <= 0 ? 200 :         // Very cold: blue
-            temp <= 10 ? 180 :        // Cold: cyan
-                temp <= 15 ? 160 :        // Cool: teal
-                    temp <= 20 ? 120 :        // Mild: green
-                        temp <= 25 ? 60 :         // Warm: yellow-green
-                            temp <= 30 ? 30 :         // Hot: orange
-                                temp <= 35 ? 15 :         // Very hot: orange-red
-                                    0;                        // Extreme: red
-    document.documentElement.style.setProperty('--temp-hue', tempHue);
+    // NOTE: --temp-hue はui.jsのupdateTempTheme()で滑らかなグラデーション方式で設定されるため、
+    // ここでは設定しない（重複設定を防ぐ）
 
     // Frost intensity: increases as temperature drops below 5°C
     // 5°C = 0% frost, 0°C = 30% frost, -10°C = 100% frost

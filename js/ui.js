@@ -207,15 +207,17 @@ function updateUI() {
         window.animateNumber('currentHumidity', Math.round(summaryData.currentHumidity));
         window.animateNumber('todayHigh', summaryData.todayHigh.toFixed(1));
         window.animateNumber('todayLow', summaryData.todayLow.toFixed(1));
-        window.animateNumber('yearHigh', summaryData.yearHigh.toFixed(1));
-        window.animateNumber('yearLow', summaryData.yearLow.toFixed(1));
+        // 年間データはPhase 2で読み込まれるのでnullチェック
+        if (summaryData.yearHigh != null) window.animateNumber('yearHigh', summaryData.yearHigh.toFixed(1));
+        if (summaryData.yearLow != null) window.animateNumber('yearLow', summaryData.yearLow.toFixed(1));
     } else {
         document.getElementById('currentTemp').textContent = temp.toFixed(1);
         document.getElementById('currentHumidity').textContent = Math.round(summaryData.currentHumidity);
         document.getElementById('todayHigh').textContent = summaryData.todayHigh.toFixed(1);
         document.getElementById('todayLow').textContent = summaryData.todayLow.toFixed(1);
-        document.getElementById('yearHigh').textContent = summaryData.yearHigh.toFixed(1);
-        document.getElementById('yearLow').textContent = summaryData.yearLow.toFixed(1);
+        // 年間データはPhase 2で読み込まれるのでnullチェック
+        if (summaryData.yearHigh != null) document.getElementById('yearHigh').textContent = summaryData.yearHigh.toFixed(1);
+        if (summaryData.yearLow != null) document.getElementById('yearLow').textContent = summaryData.yearLow.toFixed(1);
     }
     if (summaryData.dataCount) document.getElementById('dataCount').textContent = summaryData.dataCount.toLocaleString() + ' 件';
 
