@@ -179,17 +179,22 @@ function getComfortLevel(temp) {
     return { text: '🥶 寒い', class: 'cold' };
 }
 
-// Update temperature-based theme
+// Update temperature-based theme (滑らかなグラデーション)
 function updateTempTheme(temp) {
-    let hue;
-    if (temp <= 0) hue = 200;      // Blue
-    else if (temp <= 10) hue = 180; // Cyan
-    else if (temp <= 18) hue = 120; // Green
-    else if (temp <= 25) hue = 60;  // Yellow
-    else if (temp <= 30) hue = 30;  // Orange
-    else hue = 0;                   // Red
+    // 温度範囲: -10℃ ～ 40℃ をHue: 220(青) ～ 0(赤) にマッピング
+    // 線形補間で滑らかなグラデーションを実現
+    const minTemp = -10;
+    const maxTemp = 40;
+    const minHue = 0;    // 赤（40℃以上）
+    const maxHue = 220;  // 青（-10℃以下）
 
-    document.documentElement.style.setProperty('--temp-hue', hue);
+    // 温度を範囲内にクランプ
+    const clampedTemp = Math.max(minTemp, Math.min(maxTemp, temp));
+
+    // 線形補間: 温度が上がるとHueが下がる（青→シアン→緑→黄→オレンジ→赤）
+    const hue = maxHue - ((clampedTemp - minTemp) / (maxTemp - minTemp)) * (maxHue - minHue);
+
+    document.documentElement.style.setProperty('--temp-hue', Math.round(hue));
 }
 
 function updateUI() {
