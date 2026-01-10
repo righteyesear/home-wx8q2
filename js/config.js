@@ -13,11 +13,12 @@ const BASE_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/
 const ARCHIVE_SPREADSHEET_ID = '1nbmJIIUzw8n2PcHp98NaiKnaAVciBx_Egpokjjx7uW8';
 const ARCHIVE_BASE_URL = `https://docs.google.com/spreadsheets/d/${ARCHIVE_SPREADSHEET_ID}/gviz/tq?tqx=out:csv`;
 
-// 軽量シートから取得（現在の気温・湿度、直近24時間）
+// 軽量シートから取得（現在の気温・湿度、今日の最高/最低、直近24時間）
 const SUMMARY_URL = `${BASE_URL}&sheet=Summary`;
 const RECENT_URL = `${BASE_URL}&sheet=Data`;
 
-// 既存シートから取得（日別・週間データ）
+// 既存シートから取得（年間最高/最低、データ件数、日別・週間データ）
+const ARCHIVE_SUMMARY_URL = `${ARCHIVE_BASE_URL}&sheet=Summary`;
 const DAILY_URL = `${ARCHIVE_BASE_URL}&sheet=Daily`;
 const WEEKLY_URL = `${ARCHIVE_BASE_URL}&sheet=Weekly`;
 

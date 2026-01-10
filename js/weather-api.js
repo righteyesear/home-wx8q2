@@ -6,19 +6,44 @@
 // 依存: config.js, utils.js, ui.js, charts.js, precipitation.js
 
 async function fetchAll() {
-    // Progressive Loading: Phase 1 = 24h priority, Phase 2 = background week data
+    // =====================================================
+    // Progressive Loading: 軽量シート優先
+    // =====================================================
+    // Phase 1A: 軽量シート（現在値・24時間データ）- 最優先で即時表示
+    // Phase 1B: 天気API（同時に読み込み）
+    // Phase 2: 既存シート（年間データ・週間グラフ）- バックグラウンド
 
-    // Phase 1: Fast initial display with essential data
-    await Promise.all([
-        fetch(SUMMARY_URL).then(r => r.text()).then(csv => { summaryData = parseSummaryCSV(csv); updateUI(); }),
-        fetch(RECENT_URL).then(r => r.text()).then(csv => { recentData = parseRecentCSV(csv); }),
+    // Phase 1A+1B: 軽量シートと天気APIを同時に読み込み（最速で表示）
+    const phase1Promises = [
+        // 軽量シートのSummary（現在の気温・湿度・今日の最高/最低）
+        fetch(SUMMARY_URL).then(r => r.text()).then(csv => {
+            const lightData = parseSummaryCSV(csv);
+            summaryData.currentTemp = lightData.currentTemp;
+            summaryData.currentHumidity = lightData.currentHumidity;
+            summaryData.todayHigh = lightData.todayHigh;
+            summaryData.todayLow = lightData.todayLow;
+            updateUI();
+            // 軽量データが読み込めたらすぐにAIアドバイザーと警報を表示
+            loadAIComment();
+            fetchAlerts();
+            console.log('Phase 1A: Light Summary loaded');
+        }).catch(e => console.log('Light Summary error:', e)),
+
+        // 軽量シートのData（直近24時間のグラフ用）
+        fetch(RECENT_URL).then(r => r.text()).then(csv => {
+            recentData = parseRecentCSV(csv);
+            updateCharts();
+            updateDataAnalysis();
+            console.log('Phase 1A: Recent data loaded', recentData.length, 'records');
+        }).catch(e => console.log('Recent data error:', e)),
+
+        // 天気API（体感温度・風速・UV指数など）
         fetch(WEATHER_URL).then(r => r.json()).then(data => {
             const hour = new Date().getHours();
             const hourlyWeather = data.hourly?.weather_code || [];
             const hourlyPrecip = data.hourly?.precipitation_probability || [];
             const hourlyTemp = data.hourly?.temperature_2m || [];
 
-            // Check if weather will worsen in next 3 hours
             const futureWeatherCodes = hourlyWeather.slice(hour, hour + 4);
             const currentCode = data.current?.weather_code || 0;
             const maxFuturePrecipProb = Math.max(...hourlyPrecip.slice(hour, hour + 4));
@@ -40,7 +65,6 @@ async function fetchAll() {
                 tempIn3Hours: hourlyTemp[hour + 3] || null,
                 sunrise: data.daily?.sunrise?.[0] || null,
                 sunset: data.daily?.sunset?.[0] || null,
-                // Rain/Snow detection data (enhanced)
                 groundTemp: data.current?.temperature_2m ?? hourlyTemp[hour] ?? null,
                 temp850hPa: data.hourly?.temperature_850hPa?.[hour] ?? null,
                 temp925hPa: data.hourly?.temperature_925hPa?.[hour] ?? null,
@@ -49,42 +73,47 @@ async function fetchAll() {
                 freezingLevelHeight: data.hourly?.freezing_level_height?.[hour] ?? null,
                 currentSnowfall: data.current?.snowfall ?? 0,
                 currentRain: data.current?.rain ?? 0,
-                // Hourly data for precipitation chart coloring
                 hourlyTemp850hPa: data.hourly?.temperature_850hPa || [],
                 hourlyTemp925hPa: data.hourly?.temperature_925hPa || [],
                 hourlyWetBulb: data.hourly?.wet_bulb_temperature_2m || [],
                 hourlySnowfall: data.hourly?.snowfall || [],
                 hourlyRain: data.hourly?.rain || [],
                 hourlyFreezingLevel: data.hourly?.freezing_level_height || [],
-                // Cloud cover for weather description
                 cloudCover: data.current?.cloud_cover ?? data.hourly?.cloud_cover?.[hour] ?? null,
-                // Additional data for one-line comments
-                visibility: data.current?.visibility ?? null,  // メートル
-                windDirection: data.current?.wind_direction_10m ?? null,  // 度
-                windGusts: data.current?.wind_gusts_10m ?? null,  // m/s
-                pressureMsl: data.current?.pressure_msl ?? null,  // hPa
-                cape: data.hourly?.cape?.[hour] ?? null  // J/kg - 雷雨ポテンシャル
+                visibility: data.current?.visibility ?? null,
+                windDirection: data.current?.wind_direction_10m ?? null,
+                windGusts: data.current?.wind_gusts_10m ?? null,
+                pressureMsl: data.current?.pressure_msl ?? null,
+                cape: data.hourly?.cape?.[hour] ?? null
             };
             applyTheme();
-            // updateWeatherEffects(); // 一旦無効化
             updateUI();
+            loadPrecipitation();
+            console.log('Phase 1B: Weather API loaded');
         }).catch(e => { console.log('Weather API error:', e); weatherData = null; })
-    ]);
+    ];
 
-    // Immediately show 24h chart
-    updateCharts();
-    loadAIComment();
-    loadPrecipitation();
+    // Phase 1A+1Bを待機（軽量シート + 天気API）
+    await Promise.all(phase1Promises);
+
+    // 更新時刻を表示
     document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
     document.querySelectorAll('.chart-skeleton').forEach(el => el.classList.add('hidden'));
-    updateDataAnalysis();
-    fetchAlerts();
-    loadAIComment();
 
-    // Phase 2: Background loading of additional data
+    // Phase 2: 既存シートのデータをバックグラウンドで読み込み（年間データ・週間グラフ）
     setTimeout(async () => {
         try {
-            // Load daily and weekly data in background
+            // 既存シートからSummary（年間最高/最低・データ件数）
+            fetch(ARCHIVE_SUMMARY_URL).then(r => r.text()).then(csv => {
+                const archiveData = parseSummaryCSV(csv);
+                summaryData.yearHigh = archiveData.yearHigh;
+                summaryData.yearLow = archiveData.yearLow;
+                summaryData.dataCount = archiveData.dataCount;
+                updateUI();
+                console.log('Phase 2: Archive Summary loaded');
+            }).catch(e => console.log('Archive Summary error:', e));
+
+            // 既存シートからDaily/Weekly
             const [dailyCsv, weeklyCsv] = await Promise.all([
                 fetch(DAILY_URL).then(r => r.text()),
                 fetch(WEEKLY_URL).then(r => r.text()).catch(() => null)
@@ -93,7 +122,6 @@ async function fetchAll() {
             dailyData = parseDailyCSV(dailyCsv);
             if (weeklyCsv) {
                 const newWeeklyData = parseRecentCSV(weeklyCsv);
-                // Merge weekly data with recent data (avoid duplicates by timestamp)
                 const existingTimestamps = new Set(recentData.map(d => d.date.getTime()));
                 const uniqueWeekly = newWeeklyData.filter(d => !existingTimestamps.has(d.date.getTime()));
                 weeklyData = [...uniqueWeekly, ...recentData].sort((a, b) => a.date - b.date);
@@ -101,16 +129,14 @@ async function fetchAll() {
                 weeklyData = recentData;
             }
 
-            // Update charts with full data
             updateCharts();
-            // Update footer statistics with weekly data
             updateDataAnalysis();
             console.log('Phase 2: Weekly data loaded', weeklyData.length, 'records');
         } catch (e) {
             console.log('Phase 2 background load error:', e);
             weeklyData = recentData;
         }
-    }, 500); // Start Phase 2 after 500ms
+    }, 100); // Phase 2をすぐ開始（100msディレイ）
 }
 
 // Load AI advisor comment from ai_comment.json
