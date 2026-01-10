@@ -5,12 +5,21 @@
 //
 // ※このファイルはindex.htmlで最初に読み込む必要があります
 
-const SPREADSHEET_ID = '1nbmJIIUzw8n2PcHp98NaiKnaAVciBx_Egpokjjx7uW8';
+// 軽量スプレッドシート（2.5日分のみ、高速読み込み用）
+const SPREADSHEET_ID = '1Lg-d0fJU9sw8rYoCE0LhZh8bLN8ba6OthsanTM5Y5OU';
 const BASE_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv`;
+
+// 既存スプレッドシート（週間・月間・年間グラフ、AI分析用）
+const ARCHIVE_SPREADSHEET_ID = '1nbmJIIUzw8n2PcHp98NaiKnaAVciBx_Egpokjjx7uW8';
+const ARCHIVE_BASE_URL = `https://docs.google.com/spreadsheets/d/${ARCHIVE_SPREADSHEET_ID}/gviz/tq?tqx=out:csv`;
+
+// 軽量シートから取得（現在の気温・湿度、直近24時間）
 const SUMMARY_URL = `${BASE_URL}&sheet=Summary`;
-const DAILY_URL = `${BASE_URL}&sheet=Daily`;
-const RECENT_URL = `${BASE_URL}&sheet=Recent`;
-const WEEKLY_URL = `${BASE_URL}&sheet=Weekly`;
+const RECENT_URL = `${BASE_URL}&sheet=Data`;
+
+// 既存シートから取得（日別・週間データ）
+const DAILY_URL = `${ARCHIVE_BASE_URL}&sheet=Daily`;
+const WEEKLY_URL = `${ARCHIVE_BASE_URL}&sheet=Weekly`;
 
 // 全パラメータ取得: 気圧、風向、日射量、蒸発散量など全て含む
 const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?latitude=35.7727&longitude=139.8680' +
