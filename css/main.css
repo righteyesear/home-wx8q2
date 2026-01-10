@@ -2829,13 +2829,21 @@
             display: none !important;
         }
 
-        /* Simple Mode: Full width chart */
+        /* Simple Mode: Full width chart - 通常モードと同じ表示 */
         body.simple-mode .charts-grid {
             grid-template-columns: 1fr;
         }
 
         body.simple-mode .chart-card[data-chart-id="chart24h"] {
             grid-column: 1;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        /* Simple Mode: container を通常モードと同じ幅に */
+        body.simple-mode .container {
+            max-width: 100%;
+            width: 100%;
         }
 
         /* Mode Toggle Button (next to notification button) */

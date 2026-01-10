@@ -1,6 +1,6 @@
 // Service Worker for 外気温モニター PWA
-// Version 4 - Push Notification Support
-const CACHE_NAME = 'temp-monitor-v4';
+// Version 5 - Cache refresh for PWA fix
+const CACHE_NAME = 'temp-monitor-v5';
 const urlsToCache = [
     './',
     './index.html'
@@ -47,7 +47,7 @@ self.addEventListener('fetch', event => {
 // Receive push notification
 self.addEventListener('push', event => {
     console.log('[SW] Push received:', event);
-    
+
     let data = {
         title: '外気温モニター',
         body: '新しい通知があります',
@@ -57,7 +57,7 @@ self.addEventListener('push', event => {
         requireInteraction: false,
         data: { url: './' }
     };
-    
+
     // Parse push data if available
     if (event.data) {
         try {
@@ -67,7 +67,7 @@ self.addEventListener('push', event => {
             data.body = event.data.text();
         }
     }
-    
+
     event.waitUntil(
         self.registration.showNotification(data.title, {
             body: data.body,
@@ -86,9 +86,9 @@ self.addEventListener('push', event => {
 self.addEventListener('notificationclick', event => {
     console.log('[SW] Notification clicked:', event);
     event.notification.close();
-    
+
     const urlToOpen = event.notification.data?.url || './';
-    
+
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true })
             .then(windowClients => {
