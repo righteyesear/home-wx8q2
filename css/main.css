@@ -2811,3 +2811,84 @@
                 font-size: 1.3rem;
             }
         }
+
+        /* =====================================================
+   SIMPLE MODE - Simplified View
+   ===================================================== */
+
+        /* Hide elements in Simple Mode */
+        body.simple-mode .chart-card:not([data-chart-id="chart24h"]) {
+            display: none !important;
+        }
+
+        body.simple-mode .main-stats {
+            display: none !important;
+        }
+
+        body.simple-mode .footer-stats {
+            display: none !important;
+        }
+
+        /* Simple Mode: Full width chart */
+        body.simple-mode .charts-grid {
+            grid-template-columns: 1fr;
+        }
+
+        body.simple-mode .chart-card[data-chart-id="chart24h"] {
+            grid-column: 1;
+        }
+
+        /* Mode Toggle Button (next to notification button) */
+        .footer-mode-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .footer-mode-btn:hover {
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border-color: var(--accent-purple);
+        }
+
+        .footer-mode-btn .icon {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .footer-mode-text {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        /* Simple mode button active state */
+        body.simple-mode .footer-mode-btn {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+        }
+
+        html.light-mode .footer-mode-btn {
+            border-color: rgba(100, 116, 139, 0.2);
+        }
+
+        html.light-mode .footer-mode-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Footer button area - flex container */
+        .footer-notification-area {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 16px 0 8px;
+            flex-wrap: wrap;
+        }

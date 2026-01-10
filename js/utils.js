@@ -5,18 +5,19 @@
 //
 // 依存: config.js (themeSetting, weatherData, charts)
 
-// Theme toggle: auto -> light -> dark -> auto
+// Theme toggle: light <-> dark (auto mode removed)
 function toggleTheme() {
-    const modes = ['auto', 'light', 'dark'];
+    // Auto mode is commented out - only light/dark available
+    // const modes = ['auto', 'light', 'dark'];
+    const modes = ['light', 'dark'];
     const idx = modes.indexOf(themeSetting);
-    themeSetting = modes[(idx + 1) % 3];
+    themeSetting = modes[(idx + 1) % modes.length];
     localStorage.setItem('theme', themeSetting);
     applyTheme();
 }
 
-// Apply theme based on setting (uses sunrise/sunset when available)
+// Apply theme based on setting
 function applyTheme() {
-    const now = new Date();
     let isLight = false;
 
     if (themeSetting === 'light') {
@@ -24,25 +25,25 @@ function applyTheme() {
     } else if (themeSetting === 'dark') {
         isLight = false;
     } else {
-        // Auto mode: use sunrise/sunset if available, fallback to 6-18
-        if (weatherData?.sunrise && weatherData?.sunset) {
-            const sunriseTime = new Date(weatherData.sunrise);
-            const sunsetTime = new Date(weatherData.sunset);
-            isLight = (now >= sunriseTime && now < sunsetTime);
-        } else {
-            // Fallback: light 6-18, dark otherwise
-            const hour = now.getHours();
-            isLight = (hour >= 6 && hour < 18);
-        }
+        // Fallback to dark if auto was previously saved
+        themeSetting = 'dark';
+        localStorage.setItem('theme', 'dark');
+        isLight = false;
     }
 
     document.documentElement.classList.toggle('light-mode', isLight);
 
-    // Update button text
-    const icon = themeSetting === 'auto' ? '🔄' : (themeSetting === 'light' ? '☀️' : '🌙');
-    const text = themeSetting === 'auto' ? '自動' : (themeSetting === 'light' ? 'ライト' : 'ダーク');
-    document.getElementById('themeIcon').textContent = icon;
-    document.getElementById('themeText').textContent = text;
+    // Update button text - SVG icons
+    const iconEl = document.getElementById('themeIcon');
+    const textEl = document.getElementById('themeText');
+
+    if (themeSetting === 'light') {
+        iconEl.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>';
+        textEl.textContent = 'ライト';
+    } else {
+        iconEl.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
+        textEl.textContent = 'ダーク';
+    }
 
     // Update meta theme color
     document.querySelector('meta[name="theme-color"]').content = isLight ? '#f1f5f9' : '#3b82f6';
@@ -57,8 +58,48 @@ function applyTheme() {
     }, 100);
 }
 
-// Initialize theme on load
+// =====================================================
+// View Mode toggle: Normal <-> Simple
+// =====================================================
+function toggleViewMode() {
+    const isSimple = document.body.classList.toggle('simple-mode');
+    localStorage.setItem('viewMode', isSimple ? 'simple' : 'normal');
+    updateModeUI(isSimple);
+
+    // Resize charts after mode change
+    setTimeout(() => {
+        Object.values(charts).forEach(chart => {
+            if (chart && typeof chart.resize === 'function') {
+                chart.resize();
+            }
+        });
+    }, 100);
+}
+
+function updateModeUI(isSimple) {
+    const iconEl = document.getElementById('modeIcon');
+    const textEl = document.getElementById('modeText');
+
+    if (isSimple) {
+        iconEl.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/></svg>';
+        textEl.textContent = 'シンプル';
+    } else {
+        iconEl.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>';
+        textEl.textContent = '通常モード';
+    }
+}
+
+function initViewMode() {
+    const savedMode = localStorage.getItem('viewMode') || 'normal';
+    if (savedMode === 'simple') {
+        document.body.classList.add('simple-mode');
+        updateModeUI(true);
+    }
+}
+
+// Initialize theme and view mode on load
 applyTheme();
+initViewMode();
 
 // Weather effects control based on weather code
 let lightningInterval = null;
