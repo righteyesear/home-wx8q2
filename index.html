@@ -55,6 +55,15 @@
          - モバイル対応 → @media クエリセクション
          ==================================================================== -->
     <link rel="stylesheet" href="css/main.css">
+    <!-- ちらつき防止: JSより先にテーマを適用 -->
+    <script>
+        (function () {
+            var theme = localStorage.getItem('theme');
+            if (theme === 'light') {
+                document.documentElement.classList.add('light-mode');
+            }
+        })();
+    </script>
 </head>
 
 <body>
