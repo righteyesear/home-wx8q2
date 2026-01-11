@@ -108,12 +108,16 @@ function updateChart24h() {
     const cutoff24h = new Date(now - 24 * 60 * 60 * 1000);
     const cutoff48h = new Date(now - 48 * 60 * 60 * 1000);
 
+    // 48時間分のデータをソート
     let chartData = sourceData.filter(d => d.date >= cutoff48h);
     chartData.sort((a, b) => a.date - b.date);
 
-    const tempData = chartData.map(d => ({ x: d.date, y: d.temperature }));
-    const humidData = chartData.map(d => ({ x: d.date, y: d.humidity }));
+    // 今日のデータ（24時間以内）のみを気温・湿度グラフに使用
+    const todayData = chartData.filter(d => d.date >= cutoff24h);
+    const tempData = todayData.map(d => ({ x: d.date, y: d.temperature }));
+    const humidData = todayData.map(d => ({ x: d.date, y: d.humidity }));
 
+    // 前日のデータ（24-48時間前）を24時間シフトして比較用に使用
     const yesterdayData = chartData
         .filter(d => d.date < cutoff24h)
         .map(d => ({

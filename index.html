@@ -55,13 +55,21 @@
          - モバイル対応 → @media クエリセクション
          ==================================================================== -->
     <link rel="stylesheet" href="css/main.css">
-    <!-- ちらつき防止: JSより先にテーマを適用 -->
+    <!-- ちらつき防止: JSより先にテーマを適用 + 初回のtransitionを無効化 -->
     <script>
         (function () {
-            var theme = localStorage.getItem('theme');
-            if (theme === 'light') {
+            // ライトモードならクラスを追加
+            if (localStorage.getItem('theme') === 'light') {
                 document.documentElement.classList.add('light-mode');
             }
+            // 初期読み込み時はtransitionを無効化してちらつきを防ぐ
+            document.documentElement.classList.add('no-transition');
+            // ページ表示後にtransitionを有効化
+            window.addEventListener('load', function () {
+                setTimeout(function () {
+                    document.documentElement.classList.remove('no-transition');
+                }, 100);
+            });
         })();
     </script>
 </head>
