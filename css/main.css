@@ -32,6 +32,14 @@
             --spotlight-y: 50%;
         }
 
+        /* 初期読み込み時のちらつき防止: 全てのtransitionを無効化 */
+        html.no-transition,
+        html.no-transition *,
+        html.no-transition *::before,
+        html.no-transition *::after {
+            transition: none !important;
+        }
+
         /* Light Mode - Premium Design with Better Contrast */
         html.light-mode {
             /* Background: slightly gray for better card contrast */

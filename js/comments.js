@@ -5,9 +5,68 @@
 //
 // 主要関数:
 // - updateGreeting() - メインコメント生成（約2600行）
+// - updateHeroSection() - 天気カードの値を更新
 // - getWeatherConditionName() - 天気コード→日本語変換
 //
 // 依存: config.js, precipitation.js (actualPrecipState), ui.js
+
+// 天気カード（heroセクション）の値を更新する関数
+function updateHeroSection(temp, humidity, emoji, wc, fl, ws, pp) {
+    const heroTempEl = document.getElementById('heroTemp');
+    if (!heroTempEl) return;
+
+    const tempParts = temp.toFixed(1).split('.');
+    const newTempHtml = `${tempParts[0]}<span class="temp-decimal">.${tempParts[1]}</span>`;
+
+    // Only trigger animation if temperature actually changed
+    if (heroTempEl.innerHTML !== newTempHtml) {
+        heroTempEl.innerHTML = newTempHtml;
+        heroTempEl.classList.remove('temp-updated');
+        void heroTempEl.offsetWidth;
+        heroTempEl.classList.add('temp-updated');
+    }
+
+    // Apply temperature-based color
+    heroTempEl.classList.remove('temp-freezing', 'temp-cold', 'temp-cool', 'temp-mild', 'temp-warm', 'temp-hot', 'temp-extreme');
+    if (temp < 0) heroTempEl.classList.add('temp-freezing');
+    else if (temp < 10) heroTempEl.classList.add('temp-cold');
+    else if (temp < 15) heroTempEl.classList.add('temp-cool');
+    else if (temp < 20) heroTempEl.classList.add('temp-mild');
+    else if (temp < 25) heroTempEl.classList.add('temp-warm');
+    else if (temp < 30) heroTempEl.classList.add('temp-hot');
+    else heroTempEl.classList.add('temp-extreme');
+
+    // Frost intensity
+    let frostIntensity = 0;
+    if (temp < 5) {
+        frostIntensity = Math.min(1, (5 - temp) / 15);
+    }
+    document.documentElement.style.setProperty('--frost-intensity', frostIntensity);
+
+    // Update weather icon and condition
+    const heroIconEl = document.getElementById('heroWeatherIcon');
+    if (heroIconEl) heroIconEl.textContent = emoji;
+
+    const heroCondEl = document.getElementById('heroCondition');
+    if (heroCondEl) heroCondEl.textContent = getWeatherConditionName(wc);
+
+    // Animate values
+    if (window.animateNumber) {
+        window.animateNumber('heroFeelsLike', fl.toFixed(1));
+        window.animateNumber('heroHumidity', Math.round(humidity));
+        window.animateNumber('heroWind', ws.toFixed(1));
+        window.animateNumber('heroPrecip', pp || 0);
+    } else {
+        const flEl = document.getElementById('heroFeelsLike');
+        if (flEl) flEl.textContent = fl.toFixed(1);
+        const humEl = document.getElementById('heroHumidity');
+        if (humEl) humEl.textContent = Math.round(humidity);
+        const windEl = document.getElementById('heroWind');
+        if (windEl) windEl.textContent = ws.toFixed(1);
+        const precipEl = document.getElementById('heroPrecip');
+        if (precipEl) precipEl.textContent = pp || 0;
+    }
+}
 
 // Generate time-based greeting and weather comment
 function updateGreeting(temp, humidity) {
@@ -296,6 +355,9 @@ function updateGreeting(temp, humidity) {
 
     // If conditions haven't changed and we have a previous comment, reuse it with updated temperature
     if (!conditionsChanged && lastComment) {
+        // 条件が変わらなくても、天気カードの値は常に更新する
+        updateHeroSection(temp, humidity, emoji, wc, fl, ws, pp);
+
         document.getElementById('greetingSection')?.classList.add('show');
         // These elements may not exist in current UI - use optional chaining
         const emojiEl = document.querySelector('.greeting-text .emoji');
@@ -2515,58 +2577,8 @@ function updateGreeting(temp, humidity) {
     lastComment = comment;
     lastConditionKey = conditionKey;
 
-    // Update Weather Hero Section
-    const heroTempEl = document.getElementById('heroTemp');
-    const tempParts = temp.toFixed(1).split('.');
-    const newTempHtml = `${tempParts[0]}<span class="temp-decimal">.${tempParts[1]}</span>`;
-
-    // Only trigger animation if temperature actually changed
-    if (heroTempEl.innerHTML !== newTempHtml) {
-        heroTempEl.innerHTML = newTempHtml;
-        // Trigger pulse animation
-        heroTempEl.classList.remove('temp-updated');
-        void heroTempEl.offsetWidth; // Force reflow to restart animation
-        heroTempEl.classList.add('temp-updated');
-    }
-
-    // Apply temperature-based color
-    heroTempEl.classList.remove('temp-freezing', 'temp-cold', 'temp-cool', 'temp-mild', 'temp-warm', 'temp-hot', 'temp-extreme');
-    if (temp < 0) heroTempEl.classList.add('temp-freezing');
-    else if (temp < 10) heroTempEl.classList.add('temp-cold');
-    else if (temp < 15) heroTempEl.classList.add('temp-cool');
-    else if (temp < 20) heroTempEl.classList.add('temp-mild');
-    else if (temp < 25) heroTempEl.classList.add('temp-warm');
-    else if (temp < 30) heroTempEl.classList.add('temp-hot');
-    else heroTempEl.classList.add('temp-extreme');
-
-    // NOTE: --temp-hue はui.jsのupdateTempTheme()で滑らかなグラデーション方式で設定されるため、
-    // ここでは設定しない（重複設定を防ぐ）
-
-    // Frost intensity: increases as temperature drops below 5°C
-    // 5°C = 0% frost, 0°C = 30% frost, -10°C = 100% frost
-    let frostIntensity = 0;
-    if (temp < 5) {
-        frostIntensity = Math.min(1, (5 - temp) / 15); // 0 at 5°C, 1 at -10°C
-    }
-    document.documentElement.style.setProperty('--frost-intensity', frostIntensity);
-
-    // Update weather icon
-    document.getElementById('heroWeatherIcon').textContent = emoji;
-
-    document.getElementById('heroCondition').textContent = getWeatherConditionName(wc);
-
-    // Animate values
-    if (window.animateNumber) {
-        window.animateNumber('heroFeelsLike', fl.toFixed(1));
-        window.animateNumber('heroHumidity', Math.round(humidity));
-        window.animateNumber('heroWind', ws.toFixed(1));
-        window.animateNumber('heroPrecip', pp || 0);
-    } else {
-        document.getElementById('heroFeelsLike').textContent = fl.toFixed(1);
-        document.getElementById('heroHumidity').textContent = Math.round(humidity);
-        document.getElementById('heroWind').textContent = ws.toFixed(1);
-        document.getElementById('heroPrecip').textContent = pp || 0;
-    }
+    // Update Weather Hero Section（天気カードを更新）
+    updateHeroSection(temp, humidity, emoji, wc, fl, ws, pp);
 
     // Update comment section (remove temperature display)
     let cleanComment = comment
