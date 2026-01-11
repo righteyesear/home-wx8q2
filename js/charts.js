@@ -174,6 +174,7 @@ function updateChart24h() {
                     borderWidth: 0,
                     pointRadius: 0,
                     pointHoverRadius: 0,
+                    pointHitRadius: 0,  // ホバーイベントを無効化
                     yAxisID: 'y1',
                     order: 3
                 }
