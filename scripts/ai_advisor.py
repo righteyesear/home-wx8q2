@@ -955,16 +955,11 @@ def analyze_with_gemini(spreadsheet_data: Dict, weather_data: Dict, alerts_data:
 → 今日の気温がこれらの値に対してどう位置づけられるか分析に活用してください。
   例: 「今日は記録的な寒さ/暖かさ」「平均より〇度低い/高い」など。
 """
-
     # ========================================
-    # 生データ全件（12,000件）を追加
+    # 生データ全件は削除（分析結果のみを使用）
     # ========================================
-    if spreadsheet_data.get('raw_records'):
-        prompt += "\n====================================\n【センサー生データ（1分毎×約8日分）】\n====================================\n"
-        prompt += "日時,気温(°C),湿度(%)\n"
-        for r in spreadsheet_data['raw_records']:
-            prompt += f"{r['datetime']},{r['temperature']},{r['humidity']}\n"
-        prompt += f"\n※ 合計 {len(spreadsheet_data['raw_records']):,} 件のデータ\n"
+    # 注: 12,000件の生データは503エラーの原因となるため削除
+    # 代わりに analyze_data_comprehensive() による分析結果を使用
 
     # ========================================
     # 雪/みぞれ判定データを追加
