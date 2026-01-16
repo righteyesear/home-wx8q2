@@ -351,7 +351,10 @@ function calculateMoonPhase(date) {
         phaseName = '二十三夜';
         emoji = '🌗';
     } else if (normalizedAge < 25.5) {
-        phaseName = `二十${moonAge - 18}日月`;
+        // 二十四日月、二十五日月
+        const dayNum = moonAge + 1;  // 24 or 25
+        const tensMap = { 24: '二十四', 25: '二十五' };
+        phaseName = `${tensMap[dayNum] || dayNum}日月`;
         emoji = '🌘';
     } else if (normalizedAge < 26.5) {
         phaseName = '二十六夜';
