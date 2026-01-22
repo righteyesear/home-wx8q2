@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-01-23T01:45:37.279391+09:00",
-  "advice": "⚠️ 分析エラー: Server disconnected without sending a response.",
+  "generated_at": "2026-01-23T04:28:04.819408+09:00",
+  "advice": "⚠️ 分析エラー: 'NoneType' object has no attribute 'strip'",
   "data_summary": {
-    "outdoor_temp": 0.0,
-    "weather_temp": -0.9,
+    "outdoor_temp": -2.0,
+    "weather_temp": -1.4,
     "weather": "快晴",
     "alerts_count": 0
   }
