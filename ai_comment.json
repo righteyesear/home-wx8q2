@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-01-23T21:36:23.145702+09:00",
-  "advice": "⚠️ 分析エラー: 'NoneType' object has no attribute 'strip'",
+  "generated_at": "2026-01-23T22:36:44.573115+09:00",
+  "advice": "thought\nWeather Concierge (friendly, accurate, supportive).\nJanuary 23, 2026 (Friday), 22:36 (Night).\nWinter, \"Daikan\" (Great Cold).\n\n        *   Current Outdoor Temp: 2.1°C\n        *   Humidity: 60.0%\n        *   Feel-like Temp (Calculated): 1.7°C (Wind 0.9m/s)\n        *   Today's High (recorded so far): 7.8°C\n        *   Today's Low (recorded so far): -3.2°C (Records since midnight)\n        *   Historical Low: -3.2°C (Today matched the historical record low since tracking started 678 days ago!).\n        *   Trend: Cold week (highs dropping from 13.9°C to 7.8°C).\n        *   Upper Air: Very cold (-7.5°C at 850hPa). Snow/Sleet score is high, but cur...",
   "data_summary": {
-    "outdoor_temp": null,
+    "outdoor_temp": 2.1,
     "weather_temp": 3.0,
     "weather": "快晴",
     "alerts_count": 0
