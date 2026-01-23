@@ -20,62 +20,86 @@ async function loadMoonData() {
     const LAT = 35.7785;
     const LON = 139.878;
 
-    // Calculate local values (fallback)
+    // Calculate local values (fallback - only used when API fails)
     const moonData = calculateMoonPhase(now);
     const moonPos = calculateMoonPosition(now, LAT, LON);
     let moonTimes = calculateMoonTimes(now, LAT, LON);
 
-    // Try to load API data from moon_data.json
+    // Data source tracking
+    let dataSource = 'calculation'; // 'api' or 'calculation'
+    let apiSuccess = false;
+    let displayAge = moonData.age;
+    let displayIllumination = moonData.illumination * 100;
+
+    // Try to load API data from moon_data.json (PRIMARY SOURCE)
     try {
         const resp = await fetch('moon_data.json?_=' + Date.now());
         if (resp.ok) {
             const apiData = await resp.json();
-            // Override times with API values if available
-            if (apiData.moonrise && apiData.moonrise !== '--:--') {
-                moonTimes.rise = apiData.moonrise;
-            }
-            if (apiData.moonset && apiData.moonset !== '--:--') {
-                moonTimes.set = apiData.moonset;
-                // Track if moonset is tomorrow
-                if (apiData.moonset_is_tomorrow) {
-                    moonTimes.setIsTomorrow = true;
+
+            // Check if API data is complete (all required fields present)
+            const hasCompleteData = (
+                apiData.moon_age !== null && apiData.moon_age !== undefined &&
+                apiData.illumination !== null && apiData.illumination !== undefined
+            );
+
+            if (hasCompleteData) {
+                // Use API data exclusively (no mixing)
+                apiSuccess = true;
+                dataSource = 'api';
+                displayAge = apiData.moon_age;
+                displayIllumination = apiData.illumination;
+
+                // Override times with API values
+                if (apiData.moonrise && apiData.moonrise !== '--:--') {
+                    moonTimes.rise = apiData.moonrise;
                 }
-            }
-            // Track if moonrise is yesterday
-            if (apiData.moonrise_is_yesterday) {
-                moonTimes.riseIsYesterday = true;
-            }
-            // Override directions with API values
-            if (apiData.moonrise_direction) {
-                moonTimes.riseDirJp = apiData.moonrise_direction;
-            }
-            if (apiData.moonset_direction) {
-                moonTimes.setDirJp = apiData.moonset_direction;
-            }
-            // Use API moon age if available
-            if (apiData.moon_age !== null && apiData.moon_age !== undefined) {
-                document.getElementById('moonAge').textContent = apiData.moon_age.toFixed(1);
+                if (apiData.moonset && apiData.moonset !== '--:--') {
+                    moonTimes.set = apiData.moonset;
+                    if (apiData.moonset_is_tomorrow) {
+                        moonTimes.setIsTomorrow = true;
+                    }
+                }
+                if (apiData.moonrise_is_yesterday) {
+                    moonTimes.riseIsYesterday = true;
+                }
+                // Override directions with API values
+                if (apiData.moonrise_direction) {
+                    moonTimes.riseDirJp = apiData.moonrise_direction;
+                }
+                if (apiData.moonset_direction) {
+                    moonTimes.setDirJp = apiData.moonset_direction;
+                }
+
+                console.log('[Moon] ✅ Using API data:',
+                    'Age:', displayAge.toFixed(1),
+                    'Illumination:', displayIllumination + '%',
+                    'Rise:', apiData.moonrise, '(' + apiData.moonrise_direction + ')',
+                    'Set:', apiData.moonset, '(' + apiData.moonset_direction + ')');
             } else {
-                document.getElementById('moonAge').textContent = moonData.age.toFixed(1);
+                console.log('[Moon] ⚠️ API data incomplete, falling back to calculation');
             }
-            // Use API illumination if available
-            if (apiData.illumination !== null && apiData.illumination !== undefined) {
-                document.getElementById('moonIllumination').textContent = Math.round(apiData.illumination);
-            } else {
-                document.getElementById('moonIllumination').textContent = Math.round(moonData.illumination * 100);
-            }
-            console.log('[Moon] Using API data:', apiData.moonrise, '-', apiData.moonset,
-                'Dirs:', apiData.moonrise_direction, '-', apiData.moonset_direction,
-                'Illumination:', apiData.illumination + '%');
-        } else {
-            document.getElementById('moonAge').textContent = moonData.age.toFixed(1);
-            document.getElementById('moonIllumination').textContent = Math.round(moonData.illumination * 100);
         }
     } catch (e) {
-        console.log('[Moon] API data not available, using calculation:', e.message);
-        document.getElementById('moonAge').textContent = moonData.age.toFixed(1);
-        document.getElementById('moonIllumination').textContent = Math.round(moonData.illumination * 100);
+        console.log('[Moon] ❌ API fetch failed:', e.message);
     }
+
+    // If API failed or data incomplete, use calculation (FALLBACK)
+    if (!apiSuccess) {
+        dataSource = 'calculation';
+        displayAge = moonData.age;
+        displayIllumination = moonData.illumination * 100;
+        console.log('[Moon] 📐 Using calculated data:',
+            'Age:', displayAge.toFixed(1),
+            'Illumination:', displayIllumination.toFixed(1) + '%');
+    }
+
+    // Display values (consistent source - no mixing)
+    document.getElementById('moonAge').textContent = displayAge.toFixed(1);
+    document.getElementById('moonIllumination').textContent = Math.round(displayIllumination);
+
+    // Add data source indicator to console for debugging
+    console.log('[Moon] Data source:', dataSource.toUpperCase());
 
     // Cache moon times for real-time updates
     cachedMoonTimes = moonTimes;
@@ -245,10 +269,9 @@ function startMoonPositionTimer() {
             'Az:', moonPos.azimuth.toFixed(1) + '°',
             'Dir:', getJapaneseCompassDirection(moonPos.azimuth));
 
-        // リアルタイムで月齢・輝面率も更新
-        const moonPhaseNow = calculateMoonPhase(now);
-        document.getElementById('moonAge').textContent = moonPhaseNow.age.toFixed(1);
-        document.getElementById('moonIllumination').textContent = Math.round(moonPhaseNow.illumination * 100);
+        // リアルタイムで月齢・輝面率も更新（APIデータがない場合のみ）
+        // 注意: APIからのデータがloadMoonData()で設定されていればそちらを優先
+        // ここでは位置更新のみ行い、月齢・輝面率はAPIからのデータを維持
     }, 60000); // 60 seconds
 
     console.log('[Moon] Real-time position updates started (60s interval)');
@@ -266,8 +289,21 @@ function calculateMoonPhase(date) {
     // Phase (0-1)
     const phase = normalizedAge / synodic;
 
-    // Illumination (simplified)
-    const illumination = (1 - Math.cos(2 * Math.PI * phase)) / 2;
+    // ========================================
+    // Improved illumination calculation
+    // Using elongation angle (more accurate than simple cosine)
+    // ========================================
+    // Moon phase angle in degrees (0° = new moon, 180° = full moon)
+    const phaseAngleDeg = phase * 360;
+
+    // Elongation: angle between Sun and Moon as seen from Earth
+    // At new moon = 0°, at full moon = 180°
+    // This is more accurate as it matches how APIs calculate it
+    const elongationDeg = Math.abs(180 - Math.abs(phaseAngleDeg - 180));
+
+    // Illumination based on elongation (same formula as API uses)
+    // illumination = (1 - cos(elongation)) / 2
+    const illumination = (1 - Math.cos(elongationDeg * Math.PI / 180)) / 2;
 
     // Phase name and emoji
     let phaseName, emoji, fullMoonName = null, fullMoonColor = null;
@@ -291,6 +327,16 @@ function calculateMoonPhase(date) {
     // 月齢に基づく伝統的な和名（全30日分）
     const moonAge = Math.floor(normalizedAge);
 
+    // 月齢から日数への漢数字マッピング
+    const moonDayNames = {
+        1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六', 7: '七',
+        8: '八', 9: '九', 10: '十', 11: '十一', 12: '十二', 13: '十三',
+        14: '十四', 15: '十五', 16: '十六', 17: '十七', 18: '十八',
+        19: '十九', 20: '二十', 21: '二十一', 22: '二十二', 23: '二十三',
+        24: '二十四', 25: '二十五', 26: '二十六', 27: '二十七', 28: '二十八',
+        29: '二十九', 30: '三十'
+    };
+
     if (normalizedAge < 0.5) {
         phaseName = '新月（朔）';
         emoji = '🌑';
@@ -300,20 +346,35 @@ function calculateMoonPhase(date) {
     } else if (normalizedAge < 2.5) {
         phaseName = '三日月';
         emoji = '🌒';
+    } else if (normalizedAge < 3.5) {
+        phaseName = '四日月';
+        emoji = '🌒';
+    } else if (normalizedAge < 4.5) {
+        phaseName = '五日月';
+        emoji = '🌒';
+    } else if (normalizedAge < 5.5) {
+        phaseName = '六日月';
+        emoji = '🌒';
     } else if (normalizedAge < 6.5) {
-        phaseName = `${moonAge + 1}日月`;
+        phaseName = '七日月（弓張月）';
         emoji = '🌒';
     } else if (normalizedAge < 7.5) {
         phaseName = '上弦の月';
         emoji = '🌓';
+    } else if (normalizedAge < 8.5) {
+        phaseName = '八日月';
+        emoji = '🌓';
     } else if (normalizedAge < 9.5) {
-        phaseName = `${moonAge + 1}日月`;
+        phaseName = '九日月';
         emoji = '🌓';
     } else if (normalizedAge < 10.5) {
-        phaseName = '十日夜';
+        phaseName = '十日夜（とおかんや）';
+        emoji = '🌔';
+    } else if (normalizedAge < 11.5) {
+        phaseName = '十一日月';
         emoji = '🌔';
     } else if (normalizedAge < 12.5) {
-        phaseName = `${moonAge + 1 === 12 ? '十二' : moonAge + 1}日月`;
+        phaseName = '十二日月';
         emoji = '🌔';
     } else if (normalizedAge < 13.5) {
         phaseName = '十三夜';
@@ -333,16 +394,16 @@ function calculateMoonPhase(date) {
         phaseName = '十六夜（いざよい）';
         emoji = '🌕';
     } else if (normalizedAge < 18.0) {
-        phaseName = '立待月';
+        phaseName = '立待月（たちまちづき）';
         emoji = '🌖';
     } else if (normalizedAge < 19.0) {
-        phaseName = '居待月';
+        phaseName = '居待月（いまちづき）';
         emoji = '🌖';
     } else if (normalizedAge < 20.0) {
         phaseName = '寝待月（臥待月）';
         emoji = '🌖';
     } else if (normalizedAge < 21.0) {
-        phaseName = '更待月';
+        phaseName = '更待月（ふけまちづき）';
         emoji = '🌖';
     } else if (normalizedAge < 22.5) {
         phaseName = '下弦の月';
@@ -350,14 +411,20 @@ function calculateMoonPhase(date) {
     } else if (normalizedAge < 23.5) {
         phaseName = '二十三夜';
         emoji = '🌗';
+    } else if (normalizedAge < 24.5) {
+        phaseName = '二十四日月';
+        emoji = '🌘';
     } else if (normalizedAge < 25.5) {
-        // 二十四日月、二十五日月
-        const dayNum = moonAge + 1;  // 24 or 25
-        const tensMap = { 24: '二十四', 25: '二十五' };
-        phaseName = `${tensMap[dayNum] || dayNum}日月`;
+        phaseName = '二十五日月';
         emoji = '🌘';
     } else if (normalizedAge < 26.5) {
-        phaseName = '二十六夜';
+        phaseName = '二十六夜（有明の月）';
+        emoji = '🌘';
+    } else if (normalizedAge < 27.5) {
+        phaseName = '二十七日月';
+        emoji = '🌘';
+    } else if (normalizedAge < 28.5) {
+        phaseName = '二十八日月';
         emoji = '🌘';
     } else if (normalizedAge < 29.5) {
         phaseName = '晦日月（三十日月）';
