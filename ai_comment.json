@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-01-26T21:37:32.973639+09:00",
+  "generated_at": "2026-01-26T22:38:14.939782+09:00",
   "advice": "⚠️ 分析エラー: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'The model is overloaded. Pl",
   "data_summary": {
-    "outdoor_temp": 5.0,
-    "weather_temp": 3.5,
-    "weather": "晴れ",
+    "outdoor_temp": 4.9,
+    "weather_temp": 2.9,
+    "weather": "薄曇り",
     "alerts_count": 0
   }
 }
