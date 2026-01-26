@@ -115,23 +115,9 @@ async function loadMoonData() {
     const fullMoonNoticeTextEl = document.getElementById('fullMoonNoticeText');
     const nextPhaseTextEl = document.getElementById('moonNextPhaseText');
 
-    // Full moon names by month
-    const fullMoonNames = {
-        1: { name: 'ウルフムーン', color: '#a3c4dc' },
-        2: { name: 'スノームーン', color: '#e8f4fc' },
-        3: { name: 'ワームムーン', color: '#c9a87c' },
-        4: { name: 'ピンクムーン', color: '#f8b4c4' },
-        5: { name: 'フラワームーン', color: '#f0e68c' },
-        6: { name: 'ストロベリームーン', color: '#ff9999' },
-        7: { name: 'バックムーン', color: '#daa520' },
-        8: { name: 'スタージョンムーン', color: '#87ceeb' },
-        9: { name: 'ハーベストムーン', color: '#ff8c00' },
-        10: { name: 'ハンターズムーン', color: '#cd5c5c' },
-        11: { name: 'ビーバームーン', color: '#8b4513' },
-        12: { name: 'コールドムーン', color: '#b0c4de' }
-    };
+    // 満月名はcalculateMoonPhase()からの結果を使用（一元管理）
     const month = now.getMonth() + 1;
-    const moonInfo = fullMoonNames[month];
+    // moonDataにはfullMoonName/fullMoonColorが含まれる（満月時のみ）
 
     // 満月の瞬間までの時間を計算
     const targetFullMoonAge = 14.765;
@@ -144,12 +130,12 @@ async function loadMoonData() {
         moonIconEl.style.filter = `drop-shadow(0 0 12px ${moonData.fullMoonColor}) drop-shadow(0 0 24px ${moonData.fullMoonColor})`;
         moonIconEl.style.color = moonData.fullMoonColor;
 
-        // バッジにムーン名とテーマカラー
+        // バッジにムーン名とテーマカラー（calculateMoonPhaseからの結果を使用）
         if (nextPhaseTextEl) {
-            nextPhaseTextEl.textContent = moonInfo.name;
-            nextPhaseTextEl.style.background = moonInfo.color;
+            nextPhaseTextEl.textContent = moonData.fullMoonName;
+            nextPhaseTextEl.style.background = moonData.fullMoonColor;
             nextPhaseTextEl.style.color = '#0f172a';
-            nextPhaseTextEl.style.textShadow = `0 0 8px ${moonInfo.color}`;
+            nextPhaseTextEl.style.textShadow = `0 0 8px ${moonData.fullMoonColor}`;
         }
 
         // 通知エリアは非表示
@@ -161,10 +147,12 @@ async function loadMoonData() {
 
         if (isFullMoonTonight) {
             // 満月の日だが条件未達: 通知エリアに表示、バッジに「満月🌕」
-            if (fullMoonNoticeEl && fullMoonNoticeTextEl) {
-                fullMoonNoticeTextEl.innerHTML = `🌕 今夜は満月（<span style="color: ${moonInfo.color};">${moonInfo.name}</span>）が見られます`;
+            // 今夜の満月情報を取得（FULL_MOON_NAMESから）
+            const tonightMoonInfo = FULL_MOON_NAMES[month];
+            if (fullMoonNoticeEl && fullMoonNoticeTextEl && tonightMoonInfo) {
+                fullMoonNoticeTextEl.innerHTML = `🌕 今夜は満月（<span style="color: ${tonightMoonInfo.color};">${tonightMoonInfo.name}</span>）が見られます`;
                 fullMoonNoticeEl.style.display = 'block';
-                fullMoonNoticeEl.style.borderColor = moonInfo.color;
+                fullMoonNoticeEl.style.borderColor = tonightMoonInfo.color;
             }
 
             // バッジに「満月🌕」
@@ -277,6 +265,24 @@ function startMoonPositionTimer() {
     console.log('[Moon] Real-time position updates started (60s interval)');
 }
 
+// =====================================================
+// 満月名の定義（一元管理）
+// =====================================================
+const FULL_MOON_NAMES = {
+    1: { name: 'ウルフムーン', nameEn: 'Wolf Moon', color: '#a3c4dc' },
+    2: { name: 'スノームーン', nameEn: 'Snow Moon', color: '#e8f4fc' },
+    3: { name: 'ワームムーン', nameEn: 'Worm Moon', color: '#c9a87c' },
+    4: { name: 'ピンクムーン', nameEn: 'Pink Moon', color: '#f8b4c4' },
+    5: { name: 'フラワームーン', nameEn: 'Flower Moon', color: '#f0e68c' },
+    6: { name: 'ストロベリームーン', nameEn: 'Strawberry Moon', color: '#ff9999' },
+    7: { name: 'バックムーン', nameEn: 'Buck Moon', color: '#daa520' },
+    8: { name: 'スタージョンムーン', nameEn: 'Sturgeon Moon', color: '#87ceeb' },
+    9: { name: 'ハーベストムーン', nameEn: 'Harvest Moon', color: '#ff8c00' },
+    10: { name: 'ハンターズムーン', nameEn: "Hunter's Moon", color: '#cd5c5c' },
+    11: { name: 'ビーバームーン', nameEn: 'Beaver Moon', color: '#8b4513' },
+    12: { name: 'コールドムーン', nameEn: 'Cold Moon', color: '#b0c4de' }
+};
+
 function calculateMoonPhase(date) {
     // Reference new moon: Jan 6, 2000 18:14 UTC
     const refNewMoon = new Date(Date.UTC(2000, 0, 6, 18, 14, 0));
@@ -307,22 +313,6 @@ function calculateMoonPhase(date) {
 
     // Phase name and emoji
     let phaseName, emoji, fullMoonName = null, fullMoonColor = null;
-
-    // Full moon names by month with themed colors
-    const fullMoonNames = {
-        1: { name: 'ウルフムーン', nameEn: 'Wolf Moon', color: '#a3c4dc' },
-        2: { name: 'スノームーン', nameEn: 'Snow Moon', color: '#e8f4fc' },
-        3: { name: 'ワームムーン', nameEn: 'Worm Moon', color: '#c9a87c' },
-        4: { name: 'ピンクムーン', nameEn: 'Pink Moon', color: '#f8b4c4' },
-        5: { name: 'フラワームーン', nameEn: 'Flower Moon', color: '#f0e68c' },
-        6: { name: 'ストロベリームーン', nameEn: 'Strawberry Moon', color: '#ff9999' },
-        7: { name: 'バックムーン', nameEn: 'Buck Moon', color: '#daa520' },
-        8: { name: 'スタージョンムーン', nameEn: 'Sturgeon Moon', color: '#87ceeb' },
-        9: { name: 'ハーベストムーン', nameEn: 'Harvest Moon', color: '#ff8c00' },
-        10: { name: 'ハンターズムーン', nameEn: "Hunter's Moon", color: '#cd5c5c' },
-        11: { name: 'ビーバームーン', nameEn: 'Beaver Moon', color: '#8b4513' },
-        12: { name: 'コールドムーン', nameEn: 'Cold Moon', color: '#b0c4de' }
-    };
 
     // 月齢に基づく伝統的な和名（全30日分）
     const moonAge = Math.floor(normalizedAge);
@@ -382,15 +372,17 @@ function calculateMoonPhase(date) {
     } else if (normalizedAge < 14.5) {
         phaseName = '小望月（待宵月）';
         emoji = '🌔';
-    } else if (normalizedAge < 16.0 || illumination >= 0.98) {
-        // 満月の場合、月ごとの名前と色を取得
+    } else if (normalizedAge >= 14.5 && normalizedAge < 15.5 && illumination >= 0.95) {
+        // 満月判定: 月齢14.5〜15.5かつ輝面率95%以上
+        // この条件により、月齢と輝面率の両方を考慮した正確な判定が可能
         const currentMonth = date.getMonth() + 1;
-        const moonInfo = fullMoonNames[currentMonth];
+        const moonInfo = FULL_MOON_NAMES[currentMonth];
         phaseName = '満月（望月）';
         emoji = '🌕';
         fullMoonName = moonInfo.name;
         fullMoonColor = moonInfo.color;
     } else if (normalizedAge < 17.0) {
+        // 月齢15.5以上17未満で輝面率が95%未満の場合（満月直後）
         phaseName = '十六夜（いざよい）';
         emoji = '🌕';
     } else if (normalizedAge < 18.0) {
@@ -661,6 +653,26 @@ function updateMoonArcPosition(moonPos, moonTimes, currentTime) {
     else {
         isVisible = moonPos.altitude > 0;
         t = 0.5;
+    }
+
+    // =====================================================
+    // 重要: 高度による最終判定（時間ベースの判定を上書き）
+    // =====================================================
+    // 時間ベースの判定では月が出ているはずでも、
+    // 実際の高度が負の場合は地平線下として扱う
+    // これによりAPIデータと計算データの不整合を解消
+    if (moonPos.altitude <= 0) {
+        isVisible = false;
+        // 高度に基づいて弧上のおおよその位置を推定
+        // 地平線下の場合、月の出前か月の入り後かを高度から推測
+        if (riseHour !== null && currentHour < riseHour) {
+            t = 0; // 月の出前
+        } else if (setHour !== null && currentHour > setHour) {
+            t = 1; // 月の入り後
+        }
+    } else {
+        // 高度が正の場合は可視とする（時間ベースの判定を上書き）
+        isVisible = true;
     }
 
     const clampedT = Math.max(0, Math.min(1, t));
