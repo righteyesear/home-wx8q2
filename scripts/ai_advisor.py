@@ -87,6 +87,80 @@ def get_moon_phase(date: datetime = None) -> Dict[str, Any]:
     }
 
 
+def get_phase_name_from_age(age: float) -> tuple:
+    """月齢から月相名と絵文字を取得"""
+    if age is None:
+        return "不明", "🌑"
+    
+    if age < 1.85:
+        return "新月", "🌑"
+    elif age < 5.53:
+        return "三日月", "🌒"
+    elif age < 9.22:
+        return "上弦の月", "🌓"
+    elif age < 12.91:
+        return "十三夜月", "🌔"
+    elif age < 16.61:
+        return "満月", "🌕"
+    elif age < 20.30:
+        return "十八夜月", "🌖"
+    elif age < 23.99:
+        return "下弦の月", "🌗"
+    else:
+        return "二十六夜月", "🌘"
+
+
+def load_moon_data() -> Dict[str, Any]:
+    """
+    moon_data.json から月データを読み込む。
+    APIデータが利用可能で新鮮な場合はそれを使用、
+    そうでない場合は内部計算にフォールバック。
+    """
+    try:
+        json_path = Path(__file__).parent.parent / 'moon_data.json'
+        with open(json_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        
+        # データが古すぎる場合はフォールバック (2時間以上前)
+        updated_str = data.get('updated', '')
+        if updated_str:
+            updated = datetime.strptime(updated_str, '%Y-%m-%d %H:%M:%S')
+            updated = updated.replace(tzinfo=JST)
+            age_hours = (datetime.now(JST) - updated).total_seconds() / 3600
+            if age_hours > 2:
+                print(f"  [WARN] moon_data.json is {age_hours:.1f} hours old, using calculation fallback")
+                raise ValueError("Moon data is stale")
+        
+        moon_age = data.get('moon_age')
+        phase_name, emoji = get_phase_name_from_age(moon_age)
+        
+        result = {
+            'age': moon_age,
+            'illumination': data.get('illumination'),
+            'moonrise': data.get('moonrise', '--:--'),
+            'moonset': data.get('moonset', '--:--'),
+            'moonrise_direction': data.get('moonrise_direction', ''),
+            'moonset_direction': data.get('moonset_direction', ''),
+            'phase': phase_name,
+            'emoji': emoji,
+            'source': 'api'
+        }
+        print(f"  → 月データ(API): 月齢{moon_age}, 輝面率{data.get('illumination')}%, {phase_name}")
+        return result
+        
+    except Exception as e:
+        print(f"  [INFO] moon_data.json load failed ({e}), using calculation")
+        # フォールバック：既存の計算関数を使用
+        fallback = get_moon_phase()
+        fallback['illumination'] = None
+        fallback['moonrise'] = '--:--'
+        fallback['moonset'] = '--:--'
+        fallback['moonrise_direction'] = ''
+        fallback['moonset_direction'] = ''
+        fallback['source'] = 'calculation'
+        return fallback
+
+
 def get_solar_term(date: datetime = None) -> Dict[str, Any]:
     """二十四節気を取得"""
     if date is None:
@@ -710,8 +784,8 @@ def analyze_with_gemini(spreadsheet_data: Dict, weather_data: Dict, alerts_data:
     sensor_humidity = spreadsheet_data.get('current', {}).get('humidity', api_humidity) or api_humidity
     sensor_feels_like = calculate_feels_like(sensor_temp, sensor_humidity, api_wind_speed)
     
-    # 月齢・暦情報を取得
-    moon_info = get_moon_phase(now)
+    # 月齢・暦情報を取得（moon_data.json から優先的に読み込み）
+    moon_info = load_moon_data()
     solar_term = get_solar_term(now)
     
     # プロンプト構築開始
@@ -744,7 +818,8 @@ def analyze_with_gemini(spreadsheet_data: Dict, weather_data: Dict, alerts_data:
 - 時間帯: {time_period}
 - 季節: {season}
 - 二十四節気: {solar_term['current']}（次は{solar_term['next']}まであと{solar_term['days_until_next']}日）
-- 月齢: {moon_info['age']}（{moon_info['phase']}{moon_info['emoji']}）
+- 月齢: {moon_info['age']}（{moon_info['phase']}{moon_info['emoji']}）{f"、輝面率{moon_info['illumination']}%" if moon_info.get('illumination') else ''}
+- 月の出: {moon_info.get('moonrise', '--:--')}{f"({moon_info.get('moonrise_direction', '')})" if moon_info.get('moonrise_direction') else ''} / 月の入り: {moon_info.get('moonset', '--:--')}{f"({moon_info.get('moonset_direction', '')})" if moon_info.get('moonset_direction') else ''}
 - 次回更新: {next_update_str}頃（約{hours_until_next}時間後）
 
 ────────────────────────────────────────────────────────────────────
