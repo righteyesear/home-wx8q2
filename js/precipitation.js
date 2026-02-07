@@ -224,8 +224,8 @@ function getWeatherOverride() {
     const wc = weatherData?.weatherCode ?? 0;
     const isOpenMeteoRainCode = (wc >= 51 && wc <= 67) || (wc >= 80 && wc <= 82) || wc >= 95;
 
-    // Priority 1: Yahoo observation shows precipitation (10+ minutes)
-    if (actualPrecipState.consecutiveMinutes >= 10 && actualPrecipState.rainfall > 0) {
+    // Priority 1: Yahoo observation shows precipitation → 即座に上書き（10分制限撤廃）
+    if (actualPrecipState.rainfall > 0) {
         const pType = actualPrecipState.precipType;
         const rainfall = actualPrecipState.rainfall;
         const intensity = getPrecipIntensityLabel(rainfall, pType);
@@ -255,37 +255,28 @@ function getWeatherOverride() {
     }
 
     // If currently no rain from Yahoo
-    if (actualPrecipState.rainfall === 0) {
-        // Check cache first
-        if (lastWeatherOverride.timestamp > 0) {
-            lastWeatherOverride.noRainMinutes = (now - lastWeatherOverride.timestamp) / 60000;
+    // Check cache first
+    if (lastWeatherOverride.timestamp > 0) {
+        lastWeatherOverride.noRainMinutes = (now - lastWeatherOverride.timestamp) / 60000;
 
-            // Keep showing cached weather for 5 minutes after rain stops
-            if (lastWeatherOverride.noRainMinutes < 5 && lastWeatherOverride.icon) {
-                return {
-                    icon: lastWeatherOverride.icon,
-                    condition: lastWeatherOverride.condition
-                };
-            } else {
-                // Clear cache after 5 minutes of no rain
-                lastWeatherOverride = { icon: null, condition: null, precipType: null, timestamp: 0, noRainMinutes: 0 };
-            }
+        // Keep showing cached weather for 5 minutes after rain stops
+        if (lastWeatherOverride.noRainMinutes < 5 && lastWeatherOverride.icon) {
+            return {
+                icon: lastWeatherOverride.icon,
+                condition: lastWeatherOverride.condition
+            };
+        } else {
+            // Clear cache after 5 minutes of no rain
+            lastWeatherOverride = { icon: null, condition: null, precipType: null, timestamp: 0, noRainMinutes: 0 };
         }
-
-        // Priority 2: Open-Meteo says rain but Yahoo shows 0mm → show cloudy
-        if (isOpenMeteoRainCode) {
-            return { icon: '☁️', condition: '曇り' };
-        }
-
-        // Priority 3: No precipitation → use Open-Meteo (return null)
-        return null;
     }
 
-    // If raining but less than 10 minutes, use cache if available
-    if (lastWeatherOverride.icon && lastWeatherOverride.precipType === actualPrecipState.precipType) {
-        return { icon: lastWeatherOverride.icon, condition: lastWeatherOverride.condition };
+    // Priority 2: Open-Meteo says rain but Yahoo shows 0mm → show cloudy
+    if (isOpenMeteoRainCode) {
+        return { icon: '☁️', condition: '曇り' };
     }
 
+    // Priority 3: No precipitation → use Open-Meteo (return null)
     return null;
 }
 
@@ -301,6 +292,34 @@ function updateWeatherDisplay() {
         if (iconEl) iconEl.textContent = override.icon;
         if (conditionEl) conditionEl.textContent = override.condition;
     }
+}
+
+/**
+ * Get current weather override info for external use (e.g., comments.js)
+ * @returns {Object|null} Override info with icon, condition, precipType, isActive
+ */
+function getCurrentWeatherOverride() {
+    // 現在降水がある場合は即座に上書き情報を返す
+    if (actualPrecipState.rainfall > 0) {
+        const pType = actualPrecipState.precipType;
+        const rainfall = actualPrecipState.rainfall;
+        const intensity = getPrecipIntensityLabel(rainfall, pType);
+        let icon;
+        if (pType === 'snow') {
+            icon = '❄️';
+        } else if (pType === 'sleet') {
+            icon = '🌨️';
+        } else {
+            icon = '🌧️';
+        }
+        return {
+            icon: icon,
+            condition: intensity,
+            precipType: pType,
+            isActive: true
+        };
+    }
+    return null;
 }
 
 /**

@@ -43,12 +43,23 @@ function updateHeroSection(temp, humidity, emoji, wc, fl, ws, pp) {
     }
     document.documentElement.style.setProperty('--frost-intensity', frostIntensity);
 
-    // Update weather icon and condition
+    // Update weather icon and condition - 降水APIデータがあれば優先
     const heroIconEl = document.getElementById('heroWeatherIcon');
-    if (heroIconEl) heroIconEl.textContent = emoji;
-
     const heroCondEl = document.getElementById('heroCondition');
-    if (heroCondEl) heroCondEl.textContent = getWeatherConditionName(wc);
+
+    const precipOverride = typeof getCurrentWeatherOverride === 'function'
+        ? getCurrentWeatherOverride()
+        : null;
+
+    if (precipOverride && precipOverride.isActive) {
+        // 現在降水あり → 降水判定に基づく表示
+        if (heroIconEl) heroIconEl.textContent = precipOverride.icon;
+        if (heroCondEl) heroCondEl.textContent = precipOverride.condition;
+    } else {
+        // 降水なし → Open-Meteoの天気コード使用
+        if (heroIconEl) heroIconEl.textContent = emoji;
+        if (heroCondEl) heroCondEl.textContent = getWeatherConditionName(wc);
+    }
 
     // Animate values
     if (window.animateNumber) {
@@ -348,7 +359,9 @@ function updateGreeting(temp, humidity) {
     };
 
     const alertKey = currentAlerts.map(a => a.name).sort().join(',');
-    const conditionKey = `${getTempBand(temp)}|${wc}|${getTimePeriod(hour)}|${alertKey}`;
+    // 降水状態も条件キーに含める（降水開始/終了でコメント更新）
+    const precipState = actualPrecipState?.isRaining ? `precip-${actualPrecipState.precipType}` : 'no-precip';
+    const conditionKey = `${getTempBand(temp)}|${wc}|${getTimePeriod(hour)}|${alertKey}|${precipState}`;
 
     // Check if conditions changed
     const conditionsChanged = conditionKey !== lastConditionKey;
