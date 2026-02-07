@@ -109,7 +109,19 @@ async function fetchAll() {
                 summaryData.yearHigh = archiveData.yearHigh;
                 summaryData.yearLow = archiveData.yearLow;
                 summaryData.dataCount = archiveData.dataCount;
-                updateUI();
+                // Phase 2では年間データのみ更新（天気カードは再上書きしない）
+                if (summaryData.yearHigh != null) {
+                    const yearHighEl = document.getElementById('yearHigh');
+                    if (yearHighEl) yearHighEl.textContent = summaryData.yearHigh.toFixed(1);
+                }
+                if (summaryData.yearLow != null) {
+                    const yearLowEl = document.getElementById('yearLow');
+                    if (yearLowEl) yearLowEl.textContent = summaryData.yearLow.toFixed(1);
+                }
+                if (summaryData.dataCount) {
+                    const dataCountEl = document.getElementById('dataCount');
+                    if (dataCountEl) dataCountEl.textContent = summaryData.dataCount.toLocaleString() + ' 件';
+                }
                 console.log('Phase 2: Archive Summary loaded');
             }).catch(e => console.log('Archive Summary error:', e));
 
