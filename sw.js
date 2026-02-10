@@ -1,6 +1,6 @@
 // Service Worker for 外気温モニター PWA
 // Version 4 - Push Notification Support
-const CACHE_NAME = 'temp-monitor-v4';
+const CACHE_NAME = 'temp-monitor-v5';
 const urlsToCache = [
     './',
     './index.html'
