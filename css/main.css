@@ -2333,6 +2333,56 @@
             border: 1px solid rgba(139, 92, 246, 0.2);
         }
 
+        /* 時間範囲切り替えボタン */
+        .chart-range-selector {
+            display: flex;
+            gap: 4px;
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: 100px;
+            padding: 3px;
+        }
+
+        .range-btn {
+            font-size: 0.65rem;
+            padding: 4px 12px;
+            border-radius: 100px;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            line-height: 1.2;
+        }
+
+        .range-btn:hover {
+            color: var(--text-secondary);
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .range-btn.active {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--accent-purple);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            box-shadow: 0 0 8px rgba(139, 92, 246, 0.15);
+        }
+
+        html.light-mode .chart-range-selector {
+            background: rgba(241, 245, 249, 0.6);
+            border-color: rgba(139, 92, 246, 0.12);
+        }
+
+        html.light-mode .range-btn:hover {
+            background: rgba(139, 92, 246, 0.08);
+        }
+
+        html.light-mode .range-btn.active {
+            background: rgba(139, 92, 246, 0.15);
+            border-color: rgba(139, 92, 246, 0.25);
+        }
+
         .chart-container {
             height: 300px;
             width: 100%;
