@@ -1,18 +1,21 @@
 // =====================================================
 // charts.js - グラフ描画
 // =====================================================
-// 修正時: 24時間・週間・月間・年間グラフの表示設定
+// 修正時: 時間範囲切替・週間・月間・年間グラフの表示設定
 //
 // 主要関数:
 // - updateCharts() - 全グラフ更新
-// - updateChart24h() - 24時間グラフ（前日比較付き）
+// - updateChart24h(hours) - 時間範囲グラフ（前の時間帯比較付き）
 // - updateChartWeek() - 週間グラフ
 // - updateChartMonthly() - 月間グラフ
 // - updateChartYearly() - 年間グラフ
 //
 // 依存: config.js (recentData, weeklyData, dailyData, charts)
 
-function updateCharts() { updateChart24h(); updateChartWeek(); updateChartMonthly(); updateChartYearly(); }
+// 現在選択中の時間範囲（localStorage から復元）
+let currentChartHours = parseInt(localStorage.getItem('chartHours')) || 24;
+
+function updateCharts() { updateChart24h(currentChartHours); updateChartWeek(); updateChartMonthly(); updateChartYearly(); }
 
 const baseOptions = {
     responsive: true,
@@ -100,34 +103,54 @@ const crosshairPlugin = {
     }
 };
 
-function updateChart24h() {
+function updateChart24h(hours = 24) {
     const sourceData = weeklyData.length > 0 ? weeklyData : recentData;
     if (!sourceData.length) return;
 
-    const now = Date.now();
-    const cutoff24h = new Date(now - 24 * 60 * 60 * 1000);
-    const cutoff48h = new Date(now - 48 * 60 * 60 * 1000);
+    // 現在の選択状態を保存
+    currentChartHours = hours;
 
-    // 48時間分のデータをソート
-    let chartData = sourceData.filter(d => d.date >= cutoff48h);
+    const now = Date.now();
+    const cutoffMain = new Date(now - hours * 60 * 60 * 1000);
+    const cutoffPrev = new Date(now - hours * 2 * 60 * 60 * 1000);
+
+    // 選択範囲の2倍分のデータをソート
+    let chartData = sourceData.filter(d => d.date >= cutoffPrev);
     chartData.sort((a, b) => a.date - b.date);
 
-    // 今日のデータ（24時間以内）のみを気温・湿度グラフに使用
-    const todayData = chartData.filter(d => d.date >= cutoff24h);
-    const tempData = todayData.map(d => ({ x: d.date, y: d.temperature }));
-    const humidData = todayData.map(d => ({ x: d.date, y: d.humidity }));
+    // 表示範囲のデータ
+    const mainData = chartData.filter(d => d.date >= cutoffMain);
+    const tempData = mainData.map(d => ({ x: d.date, y: d.temperature }));
+    const humidData = mainData.map(d => ({ x: d.date, y: d.humidity }));
 
-    // 前日のデータ（24-48時間前）を24時間シフトして比較用に使用
-    const yesterdayData = chartData
-        .filter(d => d.date < cutoff24h)
+    // 前の時間帯のデータ（選択範囲分だけシフトして比較用に使用）
+    const prevData = chartData
+        .filter(d => d.date < cutoffMain)
         .map(d => ({
-            x: new Date(d.date.getTime() + 24 * 60 * 60 * 1000),
+            x: new Date(d.date.getTime() + hours * 60 * 60 * 1000),
             y: d.temperature
         }));
+
+    // 時間範囲に応じたラベル設定
+    const prevLabel = hours === 24 ? '前日の気温' : `前の${hours}時間の気温`;
+    const titleText = `直近${hours}時間の気温・湿度`;
+
+    // タイトル更新
+    const titleEl = document.getElementById('chart24hTitle');
+    if (titleEl) titleEl.textContent = titleText;
 
     const isMobile = window.innerWidth <= 600;
     const tickFontSize = isMobile ? 8 : 10;
     const showAxisTitle = !isMobile;
+
+    // 時間範囲に応じたX軸設定
+    const ticksConfig = {
+        3: { maxTicks: isMobile ? 4 : 7, format: 'H:mm' },
+        6: { maxTicks: isMobile ? 4 : 7, format: 'H:mm' },
+        12: { maxTicks: isMobile ? 5 : 8, format: 'H:mm' },
+        24: { maxTicks: isMobile ? 6 : 12, format: 'M/d H時' }
+    };
+    const xConfig = ticksConfig[hours] || ticksConfig[24];
 
     const ctx = document.getElementById('chart24h').getContext('2d');
     if (charts.chart24h) charts.chart24h.destroy();
@@ -150,8 +173,8 @@ function updateChart24h() {
                     order: 1
                 },
                 {
-                    label: '前日の気温',
-                    data: yesterdayData,
+                    label: prevLabel,
+                    data: prevData,
                     borderColor: '#94a3b8',
                     borderDash: [4, 4],
                     backgroundColor: 'transparent',
@@ -174,7 +197,7 @@ function updateChart24h() {
                     borderWidth: 0,
                     pointRadius: 0,
                     pointHoverRadius: 0,
-                    pointHitRadius: 0,  // ホバーイベントを無効化
+                    pointHitRadius: 0,
                     yAxisID: 'y1',
                     order: 3
                 }
@@ -188,17 +211,17 @@ function updateChart24h() {
                     time: {
                         unit: 'hour',
                         displayFormats: {
-                            hour: 'M/d H時',
+                            hour: xConfig.format,
                             day: 'M/d'
                         },
                         tooltipFormat: 'M/d H:mm'
                     },
-                    min: cutoff24h,
+                    min: cutoffMain,
                     max: new Date(now),
                     ticks: {
                         color: '#94a3b8',
                         font: { size: tickFontSize },
-                        maxTicksLimit: isMobile ? 6 : 12,
+                        maxTicksLimit: xConfig.maxTicks,
                         maxRotation: 0
                     },
                     grid: { color: 'rgba(148, 163, 184, 0.06)' }
@@ -245,12 +268,12 @@ function updateChart24h() {
                         afterBody: function (tooltipItems) {
                             if (!tooltipItems.length) return '';
                             const hoveredTime = tooltipItems[0].parsed.x;
-                            const yesterdayPoint = yesterdayData.find(d => {
+                            const prevPoint = prevData.find(d => {
                                 const dataTime = d.x.getTime ? d.x.getTime() : d.x;
                                 return Math.abs(dataTime - hoveredTime) < 2 * 60 * 1000;
                             });
-                            if (yesterdayPoint) {
-                                return `■ 前日の気温: ${yesterdayPoint.y.toFixed(1)}°C`;
+                            if (prevPoint) {
+                                return `■ ${prevLabel}: ${prevPoint.y.toFixed(1)}°C`;
                             }
                             return '';
                         }

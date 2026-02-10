@@ -459,6 +459,35 @@ document.addEventListener('DOMContentLoaded', () => {
     setupSpotlight();
     initChartReordering();
     setInterval(setupSpotlight, 5000);
+
+    // 時間範囲切り替えボタンの初期化
+    const selector = document.getElementById('chartRangeSelector');
+    if (selector) {
+        // localStorage から復元してアクティブボタンを設定
+        const savedHours = parseInt(localStorage.getItem('chartHours')) || 24;
+        const buttons = selector.querySelectorAll('.range-btn');
+        buttons.forEach(btn => {
+            const h = parseInt(btn.dataset.hours);
+            btn.classList.toggle('active', h === savedHours);
+        });
+
+        // クリックイベント登録
+        selector.addEventListener('click', (e) => {
+            const btn = e.target.closest('.range-btn');
+            if (!btn) return;
+
+            const hours = parseInt(btn.dataset.hours);
+            if (hours === currentChartHours) return;
+
+            // アクティブ状態の切り替え
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // localStorage に保存してチャート再描画
+            localStorage.setItem('chartHours', hours);
+            updateChart24h(hours);
+        });
+    }
 });
 
 // Start the app
