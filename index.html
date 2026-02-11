@@ -350,18 +350,20 @@
                             <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
                             <polyline points="16 7 22 7 22 13" />
                         </svg> <span id="chart24hTitle">直近24時間の気温・湿度</span></span>
-                    <div class="chart-range-selector" id="chartRangeSelector">
-                        <button class="range-btn" data-hours="3">3h</button>
-                        <button class="range-btn" data-hours="6">6h</button>
-                        <button class="range-btn" data-hours="12">12h</button>
-                        <button class="range-btn active" data-hours="24">24h</button>
-                    </div>
                 </div>
                 <div class="chart-container">
                     <div id="chartSkeleton1" class="chart-skeleton">
                         <div class="skeleton" style="width:100%;height:100%;border-radius:8px"></div>
                     </div>
                     <canvas id="chart24h"></canvas>
+                </div>
+                <div class="chart-controls">
+                    <div class="chart-range-selector" id="chartRangeSelector">
+                        <button class="range-btn" data-hours="3">3h</button>
+                        <button class="range-btn" data-hours="6">6h</button>
+                        <button class="range-btn" data-hours="12">12h</button>
+                        <button class="range-btn active" data-hours="24">24h</button>
+                    </div>
                 </div>
             </div>
 
