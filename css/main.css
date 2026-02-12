@@ -645,11 +645,24 @@
 
         .chart-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
             margin-bottom: 16px;
             padding-bottom: 12px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .chart-header .drag-handle {
+            flex: 0 0 auto;
+        }
+
+        .chart-header .chart-title {
+            flex: 1 1 0;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .chart-header .chart-badge {
+            flex: 0 0 auto;
         }
 
         .chart-title {
@@ -2275,9 +2288,6 @@
         }
 
         .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             margin-bottom: 20px;
             gap: 8px;
         }
@@ -2381,6 +2391,20 @@
         html.light-mode .range-btn.active {
             background: rgba(139, 92, 246, 0.15);
             border-color: rgba(139, 92, 246, 0.25);
+        }
+
+        .chart-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 16px 0;
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        html.light-mode .chart-controls {
+            border-top-color: rgba(100, 116, 139, 0.1);
         }
 
         .chart-container {
