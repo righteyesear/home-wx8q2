@@ -413,20 +413,20 @@ function renderBaseline(baseline) {
     const titleEl = document.getElementById('baselineTitle');
     if (titleEl) titleEl.textContent = `📏 ${yearsLabel}との比較`;
 
-    // 縦積みレイアウト: 偏差値→バー→軸ラベル
-    // バーは常にwidth:100%で、どの画面サイズでも同じ見た目
+    const deviationStr = `${isPositive ? '+' : ''}${Number(deviation).toFixed(1)}℃`;
+
+    // 「今」マーカーの上に偏差チップを浮かせるシンプルなデザイン
     container.innerHTML = `
-        <div class="baseline-deviation" style="color:${color}">
-            ${isPositive ? '+' : ''}${Number(deviation).toFixed(1)}℃
-            <span class="baseline-desc">（${yearsLabel} ${Number(avg).toFixed(1)}℃ からの偏差）</span>
-        </div>
         <div class="baseline-bar">
-            <div class="baseline-marker" style="left:50%; background: var(--text-muted);">基</div>
-            <div class="baseline-marker" style="left:${position}%; background: ${color};">今</div>
+            <div class="baseline-marker baseline-marker--base" style="left:50%;">基</div>
+            <div class="baseline-marker baseline-marker--now" style="left:${position}%; background:${color};">
+                <span class="baseline-chip" style="color:${color}; border-color:${color};">${deviationStr}</span>
+                今
+            </div>
         </div>
         <div class="baseline-axis">
             <span>← 低い</span>
-            <span>${yearsLabel}</span>
+            <span>${yearsLabel} ${Number(avg).toFixed(1)}℃</span>
             <span>高い →</span>
         </div>
     `;

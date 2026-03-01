@@ -485,70 +485,77 @@ html.light-mode .trend-indicator {
     color: var(--text-muted);
 }
 
-/* ===== ベースライン比較 ===== */
 /* ===== 過去平均との比較 ===== */
-/* 縦積みレイアウト: 偏差値 → バー → 軸ラベル
-   メディアクエリ不要。バーは常にwidth:100%のブロック要素 */
 .baseline-display {
-    padding: 8px 16px 16px;
-}
-
-.baseline-deviation {
-    font-size: 2rem;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
+    padding: 8px 16px 20px;
 }
 
 .baseline-bar {
     display: block;
     width: 100%;
-    height: 18px;
+    height: 8px;
     background: linear-gradient(90deg,
-            rgba(59, 130, 246, 0.25) 0%,
-            rgba(255, 255, 255, 0.08) 40%,
-            rgba(255, 255, 255, 0.08) 60%,
-            rgba(239, 68, 68, 0.25) 100%);
-    border-radius: 9px;
+            rgba(59, 130, 246, 0.3) 0%,
+            rgba(255, 255, 255, 0.06) 42%,
+            rgba(255, 255, 255, 0.06) 58%,
+            rgba(239, 68, 68, 0.3) 100%);
+    border-radius: 4px;
     position: relative;
     overflow: visible;
-    margin: 20px 0 24px;
+    margin: 44px 0 20px;
 }
 
 html.light-mode .baseline-bar {
     background: linear-gradient(90deg,
             rgba(59, 130, 246, 0.2) 0%,
-            rgba(0, 0, 0, 0.04) 40%,
-            rgba(0, 0, 0, 0.04) 60%,
+            rgba(0, 0, 0, 0.04) 42%,
+            rgba(0, 0, 0, 0.04) 58%,
             rgba(239, 68, 68, 0.2) 100%);
 }
 
 .baseline-marker {
     position: absolute;
-    top: -9px;
-    width: 36px;
-    height: 36px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     font-weight: 700;
     color: white;
-    transform: translateX(-50%);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     z-index: 1;
+}
+
+.baseline-marker--base {
+    background: var(--text-muted);
+    opacity: 0.65;
+}
+
+/* 「今」マーカーの真上に浮く偏差チップ */
+.baseline-chip {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-card);
+    border: 1.5px solid currentColor;
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    pointer-events: none;
 }
 
 .baseline-axis {
     display: flex;
     justify-content: space-between;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     color: var(--text-muted);
 }
 
