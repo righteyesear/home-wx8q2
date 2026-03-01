@@ -401,7 +401,9 @@ function renderBaseline(baseline) {
 
     const isPositive = deviation > 0;
     const color = isPositive ? 'var(--accent-red)' : 'var(--accent-blue)';
-    const position = Math.min(90, Math.max(10, 50 + deviation * 5));
+    // ±3℃で端（10%/90%）まで到達するスケール（+1.3℃が視覚的に大きく見える）
+    const scale = 40 / 3; // 3℃で40%分移動
+    const position = Math.min(90, Math.max(10, 50 + deviation * scale));
 
     const yearsCount = baseline.years_count;
     const yearsLabel = yearsCount != null ? `${yearsCount}年平均` : '過去平均';
