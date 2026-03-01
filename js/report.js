@@ -401,8 +401,9 @@ function renderBaseline(baseline) {
 
     const isPositive = deviation > 0;
     const color = isPositive ? 'var(--accent-red)' : 'var(--accent-blue)';
-    // ±3℃で端（10%/90%）まで到達するスケール（+1.3℃が視覚的に大きく見える）
-    const scale = 40 / 3; // 3℃で40%分移動
+
+    // ±3℃で端（10%/90%）に到達するスケール
+    const scale = 40 / 3;
     const position = Math.min(90, Math.max(10, 50 + deviation * scale));
 
     const yearsCount = baseline.years_count;
@@ -412,24 +413,25 @@ function renderBaseline(baseline) {
     const titleEl = document.getElementById('baselineTitle');
     if (titleEl) titleEl.textContent = `📏 ${yearsLabel}との比較`;
 
+    // 縦積みレイアウト: 偏差値→バー→軸ラベル
+    // バーは常にwidth:100%で、どの画面サイズでも同じ見た目
     container.innerHTML = `
-        <div style="flex:1;">
-            <div class="baseline-bar">
-                <div class="baseline-marker" style="left:50%; background: var(--text-muted);">基</div>
-                <div class="baseline-marker" style="left:${position}%; background: ${color};">今</div>
-            </div>
-            <div style="display:flex; justify-content:space-between; margin-top:16px; font-size:0.75rem; color:var(--text-muted);">
-                <span>低い</span>
-                <span>${yearsLabel} ${Number(avg).toFixed(1)}℃</span>
-                <span>高い</span>
-            </div>
+        <div class="baseline-deviation" style="color:${color}">
+            ${isPositive ? '+' : ''}${Number(deviation).toFixed(1)}℃
+            <span class="baseline-desc">（${yearsLabel} ${Number(avg).toFixed(1)}℃ からの偏差）</span>
         </div>
-        <div class="baseline-label">
-            <div class="baseline-value" style="color:${color}">${isPositive ? '+' : ''}${Number(deviation).toFixed(1)}℃</div>
-            <div class="baseline-desc">平均からの偏差</div>
+        <div class="baseline-bar">
+            <div class="baseline-marker" style="left:50%; background: var(--text-muted);">基</div>
+            <div class="baseline-marker" style="left:${position}%; background: ${color};">今</div>
+        </div>
+        <div class="baseline-axis">
+            <span>← 低い</span>
+            <span>${yearsLabel}</span>
+            <span>高い →</span>
         </div>
     `;
 }
+
 
 
 function renderEvents(events) {

@@ -486,15 +486,28 @@ html.light-mode .trend-indicator {
 }
 
 /* ===== ベースライン比較 ===== */
+/* ===== 過去平均との比較 ===== */
+/* 縦積みレイアウト: 偏差値 → バー → 軸ラベル
+   メディアクエリ不要。バーは常にwidth:100%のブロック要素 */
 .baseline-display {
+    padding: 8px 16px 16px;
+}
+
+.baseline-deviation {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 12px;
     display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 16px;
+    align-items: baseline;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 .baseline-bar {
-    flex: 1;
+    display: block;
+    width: 100%;
     height: 18px;
     background: linear-gradient(90deg,
             rgba(59, 130, 246, 0.25) 0%,
@@ -504,6 +517,7 @@ html.light-mode .trend-indicator {
     border-radius: 9px;
     position: relative;
     overflow: visible;
+    margin: 20px 0 24px;
 }
 
 html.light-mode .baseline-bar {
@@ -531,18 +545,9 @@ html.light-mode .baseline-bar {
     z-index: 1;
 }
 
-.baseline-label {
-    text-align: right;
-    min-width: 100px;
-}
-
-.baseline-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
-}
-
-.baseline-desc {
+.baseline-axis {
+    display: flex;
+    justify-content: space-between;
     font-size: 0.75rem;
     color: var(--text-muted);
 }
@@ -873,20 +878,6 @@ html.light-mode .milestone-item {
     .ai-comment p {
         font-size: 0.85rem;
         line-height: 1.6;
-    }
-
-    /* --- ベースライン比較 --- */
-    .baseline-display {
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .baseline-label {
-        text-align: center;
-    }
-
-    .baseline-value {
-        font-size: 1.3rem;
     }
 
     /* --- イベントタイムライン --- */
