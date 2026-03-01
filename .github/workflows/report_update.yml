@@ -1,16 +1,20 @@
-# 分析レポート生成ワークフロー
-# 週次: 毎週月曜 6:00 JST、月次: 毎月1日 6:00 JST
+# 分析レポート自動更新ワークフロー
+# ① 3時間ごと: データのみ更新（AIなし）
+# ② 毎週月曜 6:00 JST: 週次レポート（AI分析付き）
+# ③ 毎月1日 9:00 JST: 月次レポート（AI分析付き）
 
 name: Report Generator
 
 on:
   schedule:
-    # 毎週月曜 6:00 JST = 日曜 21:00 UTC
+    # 3時間ごとのデータ更新（UTC: 0,3,6,9,12,15,18,21時）
+    - cron: '0 */3 * * *'
+    # 毎週月曜 6:00 JST = 日曜 21:00 UTC（AI付き週次）
     - cron: '0 21 * * 0'
-    # 毎月1日 9:00 JST = 当月1日 0:00 UTC
+    # 毎月1日 9:00 JST = 1日 0:00 UTC（AI付き月次）
     - cron: '0 0 1 * *'
-  
-  # 手動実行も可能
+
+  # 手動実行
   workflow_dispatch:
     inputs:
       report_type:
@@ -32,19 +36,23 @@ on:
         default: false
         type: boolean
 
-# 同時実行を防ぐ
 concurrency:
   group: report-generator
   cancel-in-progress: false
 
-# 権限設定
 permissions:
   contents: write
 
 jobs:
-  generate-report:
+  # ─── ① 3時間ごとのデータ更新（AIなし）─────────────────────
+  data-update:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # スケジュール実行で、AI付きタイミング以外のとき
+    if: >-
+      github.event_name == 'schedule' &&
+      github.event.schedule != '0 21 * * 0' &&
+      github.event.schedule != '0 0 1 * *'
 
     steps:
       - name: Checkout repository
@@ -61,56 +69,193 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Generate Report
+      - name: Generate weekly report (no AI)
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
         run: |
-          # JSTでの日付情報
-          DAY_OF_MONTH=$(TZ=Asia/Tokyo date +%d)
-          DAY_OF_WEEK=$(TZ=Asia/Tokyo date +%u)
-          
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            # 手動実行
-            TYPE="${{ github.event.inputs.report_type }}"
-            DATE="${{ github.event.inputs.target_date }}"
-            SKIP_AI="${{ github.event.inputs.skip_ai }}"
-            
-            AI_FLAG=""
-            if [ "$SKIP_AI" = "true" ]; then
-              AI_FLAG="--no-ai"
-            fi
-            
-            if [ "$TYPE" = "backfill" ]; then
-              python scripts/report_generator.py --backfill $AI_FLAG
-            elif [ -n "$DATE" ]; then
-              python scripts/report_generator.py --type "$TYPE" --date "$DATE" $AI_FLAG
-            else
-              python scripts/report_generator.py --type "$TYPE" $AI_FLAG
-            fi
-          elif [ "$DAY_OF_MONTH" = "01" ]; then
-            # 月初 → 月次 + 週次
-            echo "=== 月初: 月次レポート + 週次レポートを生成 ==="
-            python scripts/report_generator.py --type monthly
-            python scripts/report_generator.py --type weekly
+          echo "=== 定期更新: 週次レポート（AIなし）==="
+          python scripts/report_generator.py --type weekly --no-ai
+
+      - name: Generate monthly report (no AI)
+        env:
+          SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+        run: |
+          CURRENT_MONTH=$(TZ=Asia/Tokyo date +%Y-%m)
+          echo "=== 定期更新: 月次レポート（AIなし）==="
+          python scripts/report_generator.py --type monthly --date "$CURRENT_MONTH" --no-ai
+
+      - name: Commit and push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add reports/
+          if ! git diff --staged --quiet; then
+            git commit -m "📊 Update report data [$(TZ=Asia/Tokyo date +'%Y-%m-%d %H:%M JST')]"
+            git pull --rebase origin main || true
+            git push
+            echo "✅ Data update committed"
           else
-            # 月曜 → 週次のみ
-            echo "=== 月曜: 週次レポートを生成 ==="
-            python scripts/report_generator.py --type weekly
+            echo "No changes to commit"
+          fi
+
+  # ─── ② 毎週月曜: 週次レポート（AI分析付き）──────────────────
+  weekly-ai:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: >-
+      (github.event_name == 'schedule' && github.event.schedule == '0 21 * * 0') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.report_type == 'weekly')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate weekly report with AI
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY_REPORT }}
+          SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+        run: |
+          TYPE="weekly"
+          DATE="${{ github.event.inputs.target_date }}"
+          SKIP_AI="${{ github.event.inputs.skip_ai }}"
+          AI_FLAG=""
+          if [ "$SKIP_AI" = "true" ]; then
+            AI_FLAG="--no-ai"
+          fi
+
+          echo "=== 週次レポート生成（AI分析付き）==="
+          if [ -n "$DATE" ]; then
+            python scripts/report_generator.py --type "$TYPE" --date "$DATE" $AI_FLAG
+          else
+            python scripts/report_generator.py --type "$TYPE" $AI_FLAG
           fi
 
       - name: Commit and push
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          
           git add reports/
-          
           if ! git diff --staged --quiet; then
-            git commit -m "📊 Generate analysis report [$(TZ=Asia/Tokyo date +'%Y-%m-%d %H:%M JST')]"
+            git commit -m "📊🤖 Weekly report with AI analysis [$(TZ=Asia/Tokyo date +'%Y-%m-%d %H:%M JST')]"
             git pull --rebase origin main || true
             git push
-            echo "✅ Report committed and pushed successfully"
+            echo "✅ Weekly AI report committed"
           else
-            echo "No new reports to commit"
+            echo "No changes to commit"
+          fi
+
+  # ─── ③ 毎月1日: 月次レポート（AI分析付き）──────────────────
+  monthly-ai:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: >-
+      (github.event_name == 'schedule' && github.event.schedule == '0 0 1 * *') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.report_type == 'monthly')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate monthly report with AI
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY_REPORT }}
+          SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+        run: |
+          TYPE="monthly"
+          DATE="${{ github.event.inputs.target_date }}"
+          SKIP_AI="${{ github.event.inputs.skip_ai }}"
+          AI_FLAG=""
+          if [ "$SKIP_AI" = "true" ]; then
+            AI_FLAG="--no-ai"
+          fi
+
+          echo "=== 月次レポート生成（AI分析付き）==="
+          if [ -n "$DATE" ]; then
+            python scripts/report_generator.py --type "$TYPE" --date "$DATE" $AI_FLAG
+          else
+            python scripts/report_generator.py --type "$TYPE" $AI_FLAG
+          fi
+
+      - name: Commit and push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add reports/
+          if ! git diff --staged --quiet; then
+            git commit -m "📊🤖 Monthly report with AI analysis [$(TZ=Asia/Tokyo date +'%Y-%m-%d %H:%M JST')]"
+            git pull --rebase origin main || true
+            git push
+            echo "✅ Monthly AI report committed"
+          else
+            echo "No changes to commit"
+          fi
+
+  # ─── backfill（手動実行のみ）────────────────────────────
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.report_type == 'backfill'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run backfill
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY_REPORT }}
+          SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+        run: |
+          AI_FLAG=""
+          if [ "${{ github.event.inputs.skip_ai }}" = "true" ]; then
+            AI_FLAG="--no-ai"
+          fi
+          python scripts/report_generator.py --backfill $AI_FLAG
+
+      - name: Commit and push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add reports/
+          if ! git diff --staged --quiet; then
+            git commit -m "📊 Backfill reports [$(TZ=Asia/Tokyo date +'%Y-%m-%d %H:%M JST')]"
+            git pull --rebase origin main || true
+            git push
+            echo "✅ Backfill committed"
+          else
+            echo "No changes to commit"
           fi
