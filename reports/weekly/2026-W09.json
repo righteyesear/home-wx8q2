@@ -7,11 +7,11 @@
     "end_date": "2026-03-01",
     "label": "2026年 第9週（2/23 〜 3/1）"
   },
-  "generated_at": "2026-03-02T07:01:20.865073+09:00",
+  "generated_at": "2026-03-02T08:54:48.257500+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "冬の終わりを告げる足音が、今年は驚くほど軽やかで力強いものとなりました。今期間の平均気温は12.1度と、例年の7.0度を大幅に上回り、まるで時計の針を一ヶ月ほど進めてしまったかのような暖かさです。特に週の始まりには最高気温が21度を超えるという、春本番を通り越して初夏の陽気さえ感じさせる異例の幕開けとなりました。しかし、そのまま春へ直行とはいかず、週の中盤には最低気温が5度台まで急降下しています。このジェットコースターのような激しい温度変化こそが、今年の冬が私たちに投げかけた大きな特徴と言えるでしょう。\n\n前年はこの時期、まだ5度前後の凍えるような寒さが支配的だったことを思うと、今年の季節の進み方は非常にスピーディーです。直近4週間の推移を見ても、週を追うごとに平均気温が段階的に、かつ確実に底上げされており、寒暖を繰り返しながらも着実に春の領域へと足を踏み入れています。ただ、一日の寒暖差が10度近くに達する日もあり、体への負担は無視できません。昼間のポカポカ陽気に誘われて薄着で出かけると、日が落ちてからの急な冷え込みに体温を奪われてしまう、そんな油断できない一週間でした。\n\nこれからの生活では、重ね着を基本にした調整力の高い服装が欠かせません。脱ぎ着しやすいカーディガンや春物のコートを主役に、ストールなどで首元をガードできる準備をしておきましょう。また、これだけ気温が上がると花粉の飛散も気になり始める頃ですので、早めの対策が安心に繋がります。室内では暖房を控えめにできる日も増えますが、空気の乾燥は依然として続いています。加湿を忘れず、喉のケアを大切にしてくださいね。季節の変わり目、心躍る暖かさを楽しみつつ、無理のないペースで過ごしていきましょう。🌸✨",
+      "ai_comment": "分析中にエラーが発生しました: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}",
       "highlights": [
         "最高気温 21.9℃",
         "最低気温 5.4℃",
@@ -112,7 +112,7 @@
       "max_temp_diff": 3.0,
       "min_temp_diff": 5.3,
       "avg_daily_range_diff": -2.8,
-      "ai_comment": "今年は、昨年と比べて「春の訪れが一段と早い年」と言えます。昨年の同時期は最低気温が0.1度まで下がり、朝晩の冷え込みと日中の寒暖差が激しい時期でした。対して今年は、週明けから16.0度を記録するなど全体的に気温のベースが高く、最低気温も5度を下回っていません。昨年のような凍える寒さは影を潜め、季節が1ヶ月ほど先取りされている印象です。\n\n日別の推移を見ると、昨年は週の後半にかけて徐々に気温が上がる「尻上がり」のパターンでしたが、今年は週の初めから安定して暖かく、大きな変動が少ないのが特徴です。日較差が昨年より小さいため、一日のうちでの体温調節は昨年より容易ですが、常に春本番のような陽気が続いています。\n\nこの暖かさにより、昨年より早めに厚手のコートを片付けられる一方で、花粉の飛散や植物の芽吹きも早まりそうです。外出時は軽装で過ごせますが、春の体調管理には例年より早めに意識を向けたほうが良いでしょう。🌸"
+      "ai_comment": "分析中にエラーが発生しました: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}"
     },
     "baseline": {
       "title": "2年平均との比較",
@@ -200,13 +200,13 @@
         "2026": {
           "1": 5.5,
           "2": 7.6,
-          "3": 11.6
+          "3": 11.4
         }
       }
     },
     "trend_analysis": {
       "title": "気温推移の分析",
-      "ai_comment": "今週は週明けに21.9度を記録したあと中盤に11度台まで急降下し、週末に再び20度を超えるという、非常に寒暖差の激しい一週間となりました。この激しい乱高下は、冬の冷たい空気と春の暖かい空気が交互に入れ替わったことが要因と考えられます。\n\n前年の同時期は平均気温が8.6度と冬らしい寒さが続いていたのに対し、今年は平均12.1度とかなり高く、季節の歩みが例年より早く進んでいるようです。体調を崩しやすい不安定な気候ですので、服装で上手に調節しながら過ごすと良いかもしれません🌡️"
+      "ai_comment": "分析中にエラーが発生しました: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}"
     }
   },
   "chart_data": {
