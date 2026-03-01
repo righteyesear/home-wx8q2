@@ -1,0 +1,9 @@
+# AI気象アドバイザー - ローカル環境
+.env
+
+# Python
+__pycache__/
+*.pyc
+
+# Note: ai_comment.json is NOT excluded
+# It is committed and updated by GitHub Actions

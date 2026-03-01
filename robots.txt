@@ -1,0 +1,3 @@
+# 検索エンジンからのクロールを禁止
+User-agent: *
+Disallow: /

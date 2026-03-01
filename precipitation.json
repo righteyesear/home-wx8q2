@@ -1,0 +1,159 @@
+{
+  "updated_at": "2026-02-10T21:26:35.669853",
+  "location": {
+    "latitude": 35.77877,
+    "longitude": 139.87817
+  },
+  "data": [
+    {
+      "time": "20:20",
+      "datetime": "2026-02-10T20:20:00",
+      "rainfall": 0.0,
+      "type": "observation"
+    },
+    {
+      "time": "20:25",
+      "datetime": "2026-02-10T20:25:00",
+      "rainfall": 0.0,
+      "type": "observation"
+    },
+    {
+      "time": "20:30",
+      "datetime": "2026-02-10T20:30:00",
+      "rainfall": 0.0,
+      "type": "observation"
+    },
+    {
+      "time": "20:35",
+      "datetime": "2026-02-10T20:35:00",
+      "rainfall": 0.0,
+      "type": "observation"
+    },
+    {
+      "time": "20:40",
+      "datetime": "2026-02-10T20:40:00",
+      "rainfall": 0.0,
+      "type": "observation"
+    },
+    {
+      "time": "20:45",
+      "datetime": "2026-02-10T20:45:00",
+      "rainfall": 0.0,
+      "type": "observation"
+    },
+    {
+      "time": "20:50",
+      "datetime": "2026-02-10T20:50:00",
+      "rainfall": 0.0,
+      "type": "observation"
+    },
+    {
+      "time": "20:55",
+      "datetime": "2026-02-10T20:55:00",
+      "rainfall": 0.0,
+      "type": "observation"
+    },
+    {
+      "time": "21:00",
+      "datetime": "2026-02-10T21:00:00",
+      "rainfall": 0.0,
+      "type": "observation"
+    },
+    {
+      "time": "21:05",
+      "datetime": "2026-02-10T21:05:00",
+      "rainfall": 0.0,
+      "type": "observation"
+    },
+    {
+      "time": "21:10",
+      "datetime": "2026-02-10T21:10:00",
+      "rainfall": 0.0,
+      "type": "observation"
+    },
+    {
+      "time": "21:15",
+      "datetime": "2026-02-10T21:15:00",
+      "rainfall": 0.0,
+      "type": "observation"
+    },
+    {
+      "time": "21:20",
+      "datetime": "2026-02-10T21:20:00",
+      "rainfall": 0.0,
+      "type": "observation"
+    },
+    {
+      "time": "21:25",
+      "datetime": "2026-02-10T21:25:00",
+      "rainfall": 0.0,
+      "type": "forecast"
+    },
+    {
+      "time": "21:30",
+      "datetime": "2026-02-10T21:30:00",
+      "rainfall": 0.0,
+      "type": "forecast"
+    },
+    {
+      "time": "21:35",
+      "datetime": "2026-02-10T21:35:00",
+      "rainfall": 0.0,
+      "type": "forecast"
+    },
+    {
+      "time": "21:40",
+      "datetime": "2026-02-10T21:40:00",
+      "rainfall": 0.0,
+      "type": "forecast"
+    },
+    {
+      "time": "21:45",
+      "datetime": "2026-02-10T21:45:00",
+      "rainfall": 0.0,
+      "type": "forecast"
+    },
+    {
+      "time": "21:50",
+      "datetime": "2026-02-10T21:50:00",
+      "rainfall": 0.0,
+      "type": "forecast"
+    },
+    {
+      "time": "21:55",
+      "datetime": "2026-02-10T21:55:00",
+      "rainfall": 0.0,
+      "type": "forecast"
+    },
+    {
+      "time": "22:00",
+      "datetime": "2026-02-10T22:00:00",
+      "rainfall": 0.0,
+      "type": "forecast"
+    },
+    {
+      "time": "22:05",
+      "datetime": "2026-02-10T22:05:00",
+      "rainfall": 0.0,
+      "type": "forecast"
+    },
+    {
+      "time": "22:10",
+      "datetime": "2026-02-10T22:10:00",
+      "rainfall": 0.0,
+      "type": "forecast"
+    },
+    {
+      "time": "22:15",
+      "datetime": "2026-02-10T22:15:00",
+      "rainfall": 0.0,
+      "type": "forecast"
+    },
+    {
+      "time": "22:20",
+      "datetime": "2026-02-10T22:20:00",
+      "rainfall": 0.0,
+      "type": "forecast"
+    }
+  ]
+}

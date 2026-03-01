@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🌡️ 外気温モニター</title>
+    <meta name="description" content="リアルタイム外気温ダッシュボード">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌡️</text></svg>">
+
+    <!-- ====================================================================
+         外部ライブラリ (CDN)
+         ====================================================================
+         
+         変更時の影響:
+         - Chart.js: グラフ描画全般に影響
+         - chartjs-adapter-date-fns: グラフの日付軸処理
+         - chartjs-plugin-zoom: グラフのズーム/パン機能
+         - hammerjs: タッチジェスチャー（モバイル）
+         ==================================================================== -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.2.0/dist/chartjs-plugin-zoom.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+
+    <!-- ====================================================================
+         CSS ファイル
+         ====================================================================
+         
+         [main.css] 全スタイル定義（約2800行）
+         
+         内容:
+         - CSS変数（ダーク/ライトモード色定義）
+         - 基本レイアウト（body, container, header）
+         - カード・ボタン等のコンポーネント
+         - 天気UI（ヒーローセクション、降水量等）
+         - グラフスタイル
+         - アニメーション
+         - レスポンシブ対応
+         
+         修正時:
+         - テーマカラーや配色 → :root, html.light-mode セクション
+         - レイアウト全般 → body, .container セクション
+         - カードデザイン → .weather-hero, .stat-card 等
+         - グラフ表示 → .chart-card, .chart-container セクション
+         - モバイル対応 → @media クエリセクション
+         ==================================================================== -->
+    <link rel="stylesheet" href="css/main.css">
+    <!-- ちらつき防止: JSより先にテーマを適用 + 初回のtransitionを無効化 -->
+    <script>
+        (function () {
+            // ライトモードならクラスを追加
+            if (localStorage.getItem('theme') === 'light') {
+                document.documentElement.classList.add('light-mode');
+            }
+            // 初期読み込み時はtransitionを無効化してちらつきを防ぐ
+            document.documentElement.classList.add('no-transition');
+            // ページ表示後にtransitionを有効化
+            window.addEventListener('load', function () {
+                setTimeout(function () {
+                    document.documentElement.classList.remove('no-transition');
+                }, 100);
+            });
+        })();
+    </script>
+</head>
+
+<body>
+    <!-- 背景エフェクト（温度に応じた色変化） -->
+    <div class="background-effects">
+        <div class="bg-orb bg-orb-1"></div>
+        <div class="bg-orb bg-orb-2"></div>
+    </div>
+
+    <!-- グリッドパターン背景 -->
+    <div class="grid-pattern"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <span class="logo-icon">
+                    <!-- Thermometer icon (Lucide) -->
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z" />
+                    </svg>
+                </span>
+                <h1>外気温モニター</h1>
+            </div>
+            <div class="status-info">
+                <div class="status-item">
+                    <div class="status-dot"></div>
+                    <span>更新 <strong id="lastUpdate"><span class="skeleton"
+                                style="width:40px;height:14px"></span></strong></span>
+                </div>
+                <div class="status-item">
+                    <!-- BarChart3 icon -->
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M3 3v18h18" />
+                        <path d="M18 17V9" />
+                        <path d="M13 17V5" />
+                        <path d="M8 17v-3" />
+                    </svg>
+                    <span><strong id="dataCount"><span class="skeleton"
+                                style="width:60px;height:14px"></span></strong></span>
+                </div>
+                <div class="status-item">
+                    <!-- Clock icon -->
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    <span>次回 <strong id="nextUpdate"><span class="skeleton"
+                                style="width:30px;height:14px"></span></strong></span>
+                </div>
+                <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()">
+                    <span id="themeIcon">
+                        <!-- Moon icon (default dark mode) -->
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                        </svg>
+                    </span>
+                    <span id="themeText">ダーク</span>
+            </div>
+        </header>
+
+        <!-- Pull-to-Refresh Indicator -->
+        <div id="pullRefreshIndicator" class="pull-refresh-indicator">
+            <div class="pull-refresh-content">
+                <div class="pull-refresh-spinner"></div>
+                <span class="pull-refresh-arrow" id="pullRefreshArrow">↓</span>
+                <span class="pull-refresh-text" id="pullRefreshText">引っ張って更新</span>
+            </div>
+        </div>
+
+        <!-- Current Weather Hero Section -->
+        <div id="weatherHero" class="weather-hero">
+            <div class="sun-times">
+                <div class="sun-time-item">
+                    <span class="sun-label">日の出</span>
+                    <span class="sun-value" id="sunriseTime">--:--</span>
+                </div>
+                <div class="sun-time-item">
+                    <span class="sun-label">日の入</span>
+                    <span class="sun-value" id="sunsetTime">--:--</span>
+                </div>
+            </div>
+            <div class="weather-hero-center">
+                <div class="weather-hero-icon" id="heroWeatherIcon">☀️</div>
+                <div class="weather-hero-temp" id="heroTempContainer">
+                    <span id="heroTemp" class="hero-temp-value">--</span>
+                    <span class="hero-temp-unit">℃</span>
+                </div>
+                <div class="weather-hero-condition" id="heroCondition">--</div>
+            </div>
+            <div class="weather-hero-info">
+                <div class="weather-hero-info-item">
+                    <span class="info-label">体感</span>
+                    <span class="info-value" id="heroFeelsLike">--</span>
+                    <span class="info-unit">℃</span>
+                </div>
+                <div class="weather-hero-info-divider"></div>
+                <div class="weather-hero-info-item">
+                    <span class="info-label">湿度</span>
+                    <span class="info-value" id="heroHumidity">--</span>
+                    <span class="info-unit">%</span>
+                </div>
+                <div class="weather-hero-info-divider"></div>
+                <div class="weather-hero-info-item">
+                    <span class="info-label">風速</span>
+                    <span class="info-value" id="heroWind">--</span>
+                    <span class="info-unit">m/s</span>
+                </div>
+                <div class="weather-hero-info-divider"></div>
+                <div class="weather-hero-info-item">
+                    <span class="info-label">降水</span>
+                    <span class="info-value" id="heroPrecip">--</span>
+                    <span class="info-unit">%</span>
+                </div>
+                <div class="weather-hero-info-divider"></div>
+                <div class="weather-hero-info-item">
+                    <span class="info-label">気圧</span>
+                    <span class="info-value" id="heroPressure">--</span>
+                    <span class="info-unit">hPa</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 一言コメント -->
+        <div id="greetingSection" class="comment-card">
+            <div class="comment-label"><svg class="icon" viewBox="0 0 24 24">
+                    <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+                </svg> 一言コメント</div>
+            <div class="comment-content" id="weatherComment"></div>
+        </div>
+
+        <!-- Precipitation Chart -->
+        <div id="precipitationCard" class="precipitation-card" style="display: none;">
+            <div class="precipitation-header">
+                <span class="precipitation-title"><svg class="icon" viewBox="0 0 24 24">
+                        <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
+                        <path d="M16 14v6" />
+                        <path d="M8 14v6" />
+                        <path d="M12 16v6" />
+                    </svg> 降水量予報</span>
+                <span class="precipitation-time" id="precipTime"></span>
+            </div>
+            <div class="precipitation-chart-container">
+                <canvas id="precipChart"></canvas>
+            </div>
+            <div class="precipitation-legend">
+                <span class="legend-item"><span class="legend-obs">●</span> 実測</span>
+                <span class="legend-item"><span class="legend-forecast">○</span> 予報</span>
+            </div>
+            <div id="rainAlert" class="rain-alert" style="display: none;">
+                <span id="rainAlertIcon" class="rain-alert-icon">🌧️</span>
+                <span id="rainAlertText"></span>
+            </div>
+        </div>
+
+        <!-- 気象警報バナー -->
+        <a id="alertBanner" class="alert-banner"
+            href="https://www.jma.go.jp/bosai/warning/#area_type=class20s&area_code=1312200" target="_blank"
+            rel="noopener" style="display: none; text-decoration: none;">
+            <span class="alert-icon"><svg class="icon" viewBox="0 0 24 24">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg></span>
+            <span id="alertText"></span>
+            <span class="alert-link-hint"><svg class="icon icon-sm" viewBox="0 0 24 24">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" x2="21" y1="14" y2="3" />
+                </svg> 詳細</span>
+        </a>
+
+        <!-- AI Advisor Section -->
+        <div id="aiAdvisorSection" class="ai-advisor-section">
+            <div class="ai-advisor-header">
+                <span class="ai-advisor-icon"><svg class="icon" viewBox="0 0 24 24">
+                        <path
+                            d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+                        <path d="M5 3v4" />
+                        <path d="M19 17v4" />
+                        <path d="M3 5h4" />
+                        <path d="M17 19h4" />
+                    </svg></span>
+                <span class="ai-advisor-label">AI気象アドバイザー</span>
+                <span class="ai-advisor-time" id="aiAdvisorTime"></span>
+            </div>
+            <div class="ai-advisor-content" id="aiAdvisorContent">
+                <span class="ai-advisor-text" id="aiAdvisorText">分析中...</span>
+                <button class="ai-advisor-expand" id="aiAdvisorExpand" style="display: none;"
+                    onclick="toggleAiAdvisor()">続きを表示</button>
+            </div>
+        </div>
+
+        <!-- Main Stats -->
+        <div class="main-stats">
+            <div class="stat-card temp">
+                <div class="stat-header">
+                    <span class="stat-icon"><svg class="icon" viewBox="0 0 24 24">
+                            <path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z" />
+                        </svg></span>
+                    <span id="comfortBadge" class="comfort-badge"></span>
+                </div>
+                <div class="stat-label">現在の気温</div>
+                <div class="stat-value temp"><span id="currentTemp"><span class="skeleton"
+                            style="width:80px;height:40px"></span></span><span class="stat-unit">°C</span></div>
+            </div>
+            <div class="stat-card humidity">
+                <div class="stat-header"><span class="stat-icon"><svg class="icon" viewBox="0 0 24 24">
+                            <path
+                                d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z" />
+                            <path
+                                d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97" />
+                        </svg></span></div>
+                <div class="stat-label">現在の湿度</div>
+                <div class="stat-value humidity"><span id="currentHumidity"><span class="skeleton"
+                            style="width:60px;height:40px"></span></span><span class="stat-unit">%</span></div>
+            </div>
+            <div class="stat-card feels-like">
+                <div class="stat-header"><span class="stat-icon"><svg class="icon" viewBox="0 0 24 24">
+                            <path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z" />
+                        </svg></span></div>
+                <div class="stat-label">体感温度</div>
+                <div class="stat-value feels-like"><span id="feelsLike"><span class="skeleton"
+                            style="width:60px;height:40px"></span></span><span class="stat-unit">°C</span></div>
+            </div>
+            <div class="stat-card uv">
+                <div class="stat-header"><span class="stat-icon"><svg class="icon" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="4" />
+                            <path d="M12 2v2" />
+                            <path d="M12 20v2" />
+                            <path d="m4.93 4.93 1.41 1.41" />
+                            <path d="m17.66 17.66 1.41 1.41" />
+                            <path d="M2 12h2" />
+                            <path d="M20 12h2" />
+                            <path d="m6.34 17.66-1.41 1.41" />
+                            <path d="m19.07 4.93-1.41 1.41" />
+                        </svg></span><span id="uvBadge" class="uv-badge"></span>
+                </div>
+                <div class="stat-label">紫外線指数</div>
+                <div class="stat-value uv"><span id="uvIndex"><span class="skeleton"
+                            style="width:40px;height:40px"></span></span></div>
+            </div>
+            <div class="stat-card high">
+                <div class="stat-header"><span class="stat-icon"><svg class="icon" viewBox="0 0 24 24">
+                            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+                            <polyline points="16 7 22 7 22 13" />
+                        </svg></span></div>
+                <div class="stat-label">今日の最高</div>
+                <div class="stat-value high"><span id="todayHigh"><span class="skeleton"
+                            style="width:80px;height:40px"></span></span><span class="stat-unit">°C</span></div>
+            </div>
+            <div class="stat-card low">
+                <div class="stat-header"><span class="stat-icon"><svg class="icon" viewBox="0 0 24 24">
+                            <polyline points="22 17 13.5 8.5 8.5 13.5 2 7" />
+                            <polyline points="16 17 22 17 22 11" />
+                        </svg></span></div>
+                <div class="stat-label">今日の最低</div>
+                <div class="stat-value low"><span id="todayLow"><span class="skeleton"
+                            style="width:80px;height:40px"></span></span><span class="stat-unit">°C</span></div>
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="charts-grid" id="chartsGrid">
+            <!-- 24時間グラフ -->
+            <div class="chart-card full-width" data-chart-id="chart24h" draggable="true">
+                <div class="chart-header">
+                    <span class="drag-handle" title="ドラッグして並び替え"><svg class="icon" viewBox="0 0 24 24">
+                            <circle cx="9" cy="12" r="1" />
+                            <circle cx="9" cy="5" r="1" />
+                            <circle cx="9" cy="19" r="1" />
+                            <circle cx="15" cy="12" r="1" />
+                            <circle cx="15" cy="5" r="1" />
+                            <circle cx="15" cy="19" r="1" />
+                        </svg></span>
+                    <span class="chart-title"><svg class="icon" viewBox="0 0 24 24">
+                            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+                            <polyline points="16 7 22 7 22 13" />
+                        </svg> <span id="chart24hTitle">直近24時間の気温・湿度</span></span>
+                </div>
+                <div class="chart-container">
+                    <div id="chartSkeleton1" class="chart-skeleton">
+                        <div class="skeleton" style="width:100%;height:100%;border-radius:8px"></div>
+                    </div>
+                    <canvas id="chart24h"></canvas>
+                </div>
+                <div class="chart-controls">
+                    <div class="chart-range-selector" id="chartRangeSelector">
+                        <button class="range-btn" data-hours="3">3h</button>
+                        <button class="range-btn" data-hours="6">6h</button>
+                        <button class="range-btn" data-hours="12">12h</button>
+                        <button class="range-btn active" data-hours="24">24h</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 週間グラフ -->
+            <div class="chart-card" data-chart-id="chartWeek" draggable="true">
+                <div class="chart-header">
+                    <span class="drag-handle" title="ドラッグして並び替え"><svg class="icon" viewBox="0 0 24 24">
+                            <circle cx="9" cy="12" r="1" />
+                            <circle cx="9" cy="5" r="1" />
+                            <circle cx="9" cy="19" r="1" />
+                            <circle cx="15" cy="12" r="1" />
+                            <circle cx="15" cy="5" r="1" />
+                            <circle cx="15" cy="19" r="1" />
+                        </svg></span>
+                    <span class="chart-title"><svg class="icon" viewBox="0 0 24 24">
+                            <path d="M3 3v18h18" />
+                            <path d="M18 17V9" />
+                            <path d="M13 17V5" />
+                            <path d="M8 17v-3" />
+                        </svg> 週間気温推移</span>
+                    <span class="chart-badge">30分平均</span>
+                </div>
+                <div class="chart-container">
+                    <div id="chartSkeleton2" class="chart-skeleton">
+                        <div class="skeleton" style="width:100%;height:100%;border-radius:8px"></div>
+                    </div>
+                    <canvas id="chartWeek"></canvas>
+                </div>
+            </div>
+
+            <!-- 月情報カード -->
+            <div class="chart-card moon-card" data-chart-id="moonCard" draggable="true">
+                <div class="chart-header">
+                    <span class="drag-handle" title="ドラッグして並び替え"><svg class="icon" viewBox="0 0 24 24">
+                            <circle cx="9" cy="12" r="1" />
+                            <circle cx="9" cy="5" r="1" />
+                            <circle cx="9" cy="19" r="1" />
+                            <circle cx="15" cy="12" r="1" />
+                            <circle cx="15" cy="5" r="1" />
+                            <circle cx="15" cy="19" r="1" />
+                        </svg></span>
+                    <span class="chart-title"><svg class="icon" viewBox="0 0 24 24">
+                            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                        </svg> 月情報</span>
+                    <span class="chart-badge moon-badge" id="moonNextPhaseText">--</span>
+                </div>
+
+                <!-- Moon Info Row -->
+                <div class="moon-info-bar">
+                    <div class="moon-info-group">
+                        <span class="moon-icon" id="moonIcon">🌕</span>
+                        <span class="moon-phase-name" id="moonPhaseName">--</span>
+                    </div>
+                    <div class="moon-info-group">
+                        <span class="moon-stat-label">月齢</span>
+                        <span class="moon-stat-value" id="moonAge">--</span>
+                    </div>
+                    <div class="moon-info-group">
+                        <span class="moon-stat-label">輝面率</span>
+                        <span class="moon-stat-value" id="moonIllumination">--</span><span
+                            class="moon-stat-unit">%</span>
+                    </div>
+                </div>
+
+                <!-- Moon Arc Visualization -->
+                <div class="moon-arc-main">
+                    <svg viewBox="0 0 340 200" class="moon-arc-svg" style="min-height: 200px;"
+                        preserveAspectRatio="xMidYMid meet">
+                        <defs>
+                            <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.7" />
+                                <stop offset="100%" stop-color="#fbbf24" stop-opacity="0" />
+                            </radialGradient>
+                            <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#60a5fa" />
+                                <stop offset="50%" stop-color="#fbbf24" />
+                                <stop offset="100%" stop-color="#f97316" />
+                            </linearGradient>
+                            <filter id="textShadow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="rgba(0,0,0,0.8)" />
+                            </filter>
+                        </defs>
+
+                        <!-- Horizon line -->
+                        <line x1="20" y1="150" x2="320" y2="150" stroke="rgba(148,163,184,0.2)" stroke-width="1"
+                            stroke-dasharray="2,2" />
+                        <text x="170" y="148" text-anchor="middle" fill="rgba(148,163,184,0.4)" font-size="9">地平線</text>
+
+                        <!-- Arc path -->
+                        <path d="M 40 150 Q 170 -20 300 150" fill="none" stroke="url(#arcGrad)" stroke-width="3"
+                            stroke-linecap="round" />
+
+                        <!-- Rise Group (Left) -->
+                        <g class="moon-label-group">
+                            <circle cx="40" cy="150" r="5" fill="#60a5fa" stroke="#0f172a" stroke-width="2" />
+                            <text x="40" y="170" text-anchor="middle" fill="#60a5fa" font-size="10" font-weight="600"
+                                id="moonRiseDirSvg">--</text>
+                            <text x="40" y="184" text-anchor="middle" fill="var(--text-primary)" font-size="13"
+                                font-weight="700" id="moonRiseTimeSvg" filter="url(#textShadow)">--:--</text>
+                            <text x="40" y="196" text-anchor="middle" fill="var(--text-muted)" font-size="9">月の出</text>
+                        </g>
+
+                        <!-- Transit Label (Top Center) -->
+                        <text x="170" y="15" text-anchor="middle" fill="#fbbf24" font-size="10" font-weight="500"
+                            style="opacity: 0.8;">南中</text>
+
+                        <!-- Set Group (Right) -->
+                        <g class="moon-label-group">
+                            <circle cx="300" cy="150" r="5" fill="#f97316" stroke="#0f172a" stroke-width="2" />
+                            <text x="300" y="170" text-anchor="middle" fill="#f97316" font-size="10" font-weight="600"
+                                id="moonSetDirSvg">--</text>
+                            <text x="300" y="184" text-anchor="middle" fill="var(--text-primary)" font-size="13"
+                                font-weight="700" id="moonSetTimeSvg" filter="url(#textShadow)">--:--</text>
+                            <text x="300" y="196" text-anchor="middle" fill="var(--text-muted)" font-size="9">月の入</text>
+                        </g>
+
+                        <!-- Current Moon Marker & Glow -->
+                        <circle id="moonGlowCircle" cx="170" cy="70" r="22" fill="url(#moonGlow)" />
+                        <circle id="moonPosition" cx="170" cy="70" r="9" fill="#fbbf24" stroke="#0f172a"
+                            stroke-width="1.5" />
+
+                        <!-- Current Position Info (Floating) -->
+                        <g id="moonCurrentInfoGroup" opacity="0">
+                            <rect id="moonInfoBg" x="0" y="0" width="60" height="20" rx="4" fill="rgba(15,23,42,0.8)"
+                                stroke="rgba(251,191,36,0.3)" stroke-width="1" />
+                            <text id="moonCurrentInfoSvg" x="0" y="0" text-anchor="middle" fill="#fbbf24" font-size="10"
+                                font-weight="600" dy="4">--</text>
+                        </g>
+                    </svg>
+                </div>
+
+                <!-- Full Moon Notice -->
+                <div id="fullMoonNotice" class="moon-notice" style="display: none;">
+                    <span id="fullMoonNoticeText"></span>
+                </div>
+            </div>
+
+            <!-- 月別グラフ -->
+            <div class="chart-card" data-chart-id="chartMonthly" draggable="true">
+                <div class="chart-header">
+                    <span class="drag-handle" title="ドラッグして並び替え"><svg class="icon" viewBox="0 0 24 24">
+                            <circle cx="9" cy="12" r="1" />
+                            <circle cx="9" cy="5" r="1" />
+                            <circle cx="9" cy="19" r="1" />
+                            <circle cx="15" cy="12" r="1" />
+                            <circle cx="15" cy="5" r="1" />
+                            <circle cx="15" cy="19" r="1" />
+                        </svg></span>
+                    <span class="chart-title"><svg class="icon" viewBox="0 0 24 24">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                            <line x1="16" x2="16" y1="2" y2="6" />
+                            <line x1="8" x2="8" y1="2" y2="6" />
+                            <line x1="3" x2="21" y1="10" y2="10" />
+                        </svg> 月別 最高/最低気温</span>
+                    <span class="chart-badge">全期間</span>
+                </div>
+                <div class="chart-container">
+                    <div id="chartSkeleton3" class="chart-skeleton">
+                        <div class="skeleton" style="width:100%;height:100%;border-radius:8px"></div>
+                    </div>
+                    <canvas id="chartMonthly"></canvas>
+                </div>
+            </div>
+
+            <!-- 日別グラフ -->
+            <div class="chart-card full-width" data-chart-id="chartYearly" draggable="true">
+                <div class="chart-header">
+                    <span class="drag-handle" title="ドラッグして並び替え"><svg class="icon" viewBox="0 0 24 24">
+                            <circle cx="9" cy="12" r="1" />
+                            <circle cx="9" cy="5" r="1" />
+                            <circle cx="9" cy="19" r="1" />
+                            <circle cx="15" cy="12" r="1" />
+                            <circle cx="15" cy="5" r="1" />
+                            <circle cx="15" cy="19" r="1" />
+                        </svg></span>
+                    <span class="chart-title"><svg class="icon" viewBox="0 0 24 24">
+                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                            <line x1="16" x2="16" y1="2" y2="6" />
+                            <line x1="8" x2="8" y1="2" y2="6" />
+                            <line x1="3" x2="21" y1="10" y2="10" />
+                            <path d="M8 14h.01" />
+                            <path d="M12 14h.01" />
+                            <path d="M16 14h.01" />
+                            <path d="M8 18h.01" />
+                            <path d="M12 18h.01" />
+                            <path d="M16 18h.01" />
+                        </svg> 日別 最高/最低気温</span>
+                    <span class="chart-badge">全期間</span>
+                </div>
+                <div class="chart-container">
+                    <div id="chartSkeleton4" class="chart-skeleton">
+                        <div class="skeleton" style="width:100%;height:100%;border-radius:8px"></div>
+                    </div>
+                    <canvas id="chartYearly"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Link -->
+        <a href="report.html" class="report-link-card" id="reportLinkCard">
+            <div class="report-link-content">
+                <span class="report-link-icon">
+                    <svg class="icon icon-md" viewBox="0 0 24 24">
+                        <path d="M3 3v18h18" />
+                        <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
+                    </svg>
+                </span>
+                <div>
+                    <span class="report-link-title">分析レポート</span>
+                    <span class="report-link-subtitle">週次・月次の詳細な気象分析</span>
+                </div>
+            </div>
+            <span class="report-link-arrow">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <polyline points="9 18 15 12 9 6" />
+                </svg>
+            </span>
+        </a>
+
+        <!-- Footer Stats -->
+        <div class="footer-stats">
+            <div class="footer-stat">
+                <div class="footer-stat-label">年間最高</div>
+                <div class="footer-stat-value highlight"><span id="yearHigh">--</span>°C</div>
+            </div>
+            <div class="footer-stat">
+                <div class="footer-stat-label">年間最低</div>
+                <div class="footer-stat-value cool"><span id="yearLow">--</span>°C</div>
+            </div>
+            <div class="footer-stat">
+                <div class="footer-stat-label">今週平均</div>
+                <div class="footer-stat-value"><span id="weekAvg">--</span>°C</div>
+            </div>
+            <div class="footer-stat">
+                <div class="footer-stat-label">前週比</div>
+                <div class="footer-stat-value" id="weekDiff"><span id="weekDiffValue">--</span></div>
+            </div>
+            <div class="footer-stat">
+                <div class="footer-stat-label">24h最高</div>
+                <div class="footer-stat-value highlight"><span id="last24hHigh">--</span>°C</div>
+            </div>
+            <div class="footer-stat">
+                <div class="footer-stat-label">24h最低</div>
+                <div class="footer-stat-value cool"><span id="last24hLow">--</span>°C</div>
+            </div>
+            <div class="footer-stat">
+                <div class="footer-stat-label">データ期間</div>
+                <div class="footer-stat-value">2024/3 〜 現在</div>
+            </div>
+        </div>
+
+        <!-- Footer Notification Toggle -->
+        <div class="footer-notification-area">
+            <button id="notificationToggle" class="footer-notification-btn" onclick="toggleNotifications()"
+                title="プッシュ通知の設定">
+                <span id="notificationIcon">
+                    <!-- BellOff icon (default disabled) -->
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M8.7 3A6 6 0 0 1 18 8a21.3 21.3 0 0 0 .6 5" />
+                        <path d="M17 17H3s3-2 3-9a4.67 4.67 0 0 1 .3-1.7" />
+                        <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+                        <path d="m2 2 20 20" />
+                    </svg>
+                </span>
+                <span id="notificationText" class="footer-notification-text">通知OFF</span>
+            </button>
+            <button id="modeToggle" class="footer-mode-btn" onclick="toggleViewMode()" title="表示モード切替">
+                <span id="modeIcon">
+                    <!-- LayoutGrid icon (normal mode) -->
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <rect width="7" height="7" x="3" y="3" rx="1" />
+                        <rect width="7" height="7" x="14" y="3" rx="1" />
+                        <rect width="7" height="7" x="14" y="14" rx="1" />
+                        <rect width="7" height="7" x="3" y="14" rx="1" />
+                    </svg>
+                </span>
+                <span id="modeText" class="footer-mode-text">通常モード</span>
+            </button>
+        </div>
+
+        <div class="version-info">v3.5.0 <span style="opacity: 0.5; font-size: 0.75em;">| 最終更新: 2026/01/05</span>
+        </div>
+    </div>
+
+    <!-- ====================================================================
+         JavaScript ファイル（分割版）
+         ====================================================================
+         
+         読み込み順序が重要！依存関係に注意:
+         1. config.js - 設定・グローバル変数（最初に読み込み必須）
+         2. notifications.js - 通知システム
+         3. utils.js - ユーティリティ関数
+         4. precipitation.js - 降水判定システム ★重要
+         5. moon.js - 月計算・表示
+         6. ui.js - UI更新処理
+         7. weather-api.js - API呼び出し（precipitation.js/ui.jsに依存）
+         8. comments.js - 一言コメント生成 ★最重要
+         9. charts.js - グラフ描画
+         10. init.js - 初期化・イベント処理（最後に読み込み）
+         
+         ※ main.js はバックアップとして残しています
+         ==================================================================== -->
+
+    <!-- 1. 設定・グローバル変数 -->
+    <script src="js/config.js"></script>
+
+    <!-- 2. 通知システム -->
+    <script src="js/notifications.js"></script>
+
+    <!-- 3. ユーティリティ関数 -->
+    <script src="js/utils.js"></script>
+
+    <!-- 4. 降水判定システム -->
+    <script src="js/precipitation.js"></script>
+
+    <!-- 5. 月計算・表示 -->
+    <script src="js/moon.js"></script>
+
+    <!-- 6. UI更新処理 -->
+    <script src="js/ui.js"></script>
+
+    <!-- 7. API呼び出し -->
+    <script src="js/weather-api.js"></script>
+
+    <!-- 8. 一言コメント生成 -->
+    <script src="js/comments.js"></script>
+
+    <!-- 9. グラフ描画 -->
+    <script src="js/charts.js"></script>
+
+    <!-- 10. 初期化・イベント処理 -->
+    <script src="js/init.js"></script>
+</body>
+
+</html>

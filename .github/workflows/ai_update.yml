@@ -1,0 +1,131 @@
+# AI気象アドバイザー 定期更新ワークフロー
+# 昼間（7-22時）: 毎時、夜間: 1時, 4時 = 計18回/日
+
+name: AI Weather Advisor Update
+
+on:
+  schedule:
+    # UTC時間で設定（JST = UTC + 9）
+    # 夜間
+    - cron: '0 16 * * *'   # JST 1:00
+    - cron: '0 19 * * *'   # JST 4:00
+    # 昼間（7:00-22:00 JST = 22:00-13:00 UTC）
+    - cron: '0 22 * * *'   # JST 7:00
+    - cron: '0 23 * * *'   # JST 8:00
+    - cron: '0 0 * * *'    # JST 9:00
+    - cron: '0 1 * * *'    # JST 10:00
+    - cron: '0 2 * * *'    # JST 11:00
+    - cron: '0 3 * * *'    # JST 12:00
+    - cron: '0 4 * * *'    # JST 13:00
+    - cron: '0 5 * * *'    # JST 14:00
+    - cron: '0 6 * * *'    # JST 15:00
+    - cron: '0 7 * * *'    # JST 16:00
+    - cron: '0 8 * * *'    # JST 17:00
+    - cron: '0 9 * * *'    # JST 18:00
+    - cron: '0 10 * * *'   # JST 19:00
+    - cron: '0 11 * * *'   # JST 20:00
+    - cron: '0 12 * * *'   # JST 21:00
+    - cron: '0 13 * * *'   # JST 22:00
+  
+  # 手動実行も可能
+  workflow_dispatch:
+
+# 同時実行を防ぐ
+concurrency:
+  group: ai-advisor-update
+  cancel-in-progress: false
+
+# 権限設定（リポジトリへの書き込みを明示的に許可）
+permissions:
+  contents: write
+
+jobs:
+  update-ai-comment:
+    runs-on: ubuntu-latest
+    
+    # タイムアウト設定（5分）
+    timeout-minutes: 5
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      
+      - name: Backup previous ai_comment.json
+        run: |
+          if [ -f ai_comment.json ]; then
+            cp ai_comment.json ai_comment.backup.json
+            echo "Backup created"
+          else
+            echo "No previous ai_comment.json to backup"
+          fi
+      
+      - name: Run AI Advisor Script
+        id: run_script
+        env:
+          # GitHub Secretsから安全にAPIキーを読み込み
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+        run: |
+          python scripts/ai_advisor.py
+        continue-on-error: true
+      
+      - name: Verify output and handle errors
+        run: |
+          if [ -f ai_comment.json ]; then
+            # JSONが有効か確認
+            if python -c "import json; json.load(open('ai_comment.json'))" 2>/dev/null; then
+              echo "✅ ai_comment.json is valid"
+              
+              # adviceフィールドが存在するか確認
+              if python -c "import json; data=json.load(open('ai_comment.json')); assert data.get('advice') and len(data['advice']) > 10" 2>/dev/null; then
+                echo "✅ Advice content is valid"
+              else
+                echo "⚠️ Advice content is missing or too short, restoring backup"
+                if [ -f ai_comment.backup.json ]; then
+                  cp ai_comment.backup.json ai_comment.json
+                fi
+              fi
+            else
+              echo "⚠️ Invalid JSON, restoring backup"
+              if [ -f ai_comment.backup.json ]; then
+                cp ai_comment.backup.json ai_comment.json
+              fi
+            fi
+          else
+            echo "⚠️ ai_comment.json not created, restoring backup"
+            if [ -f ai_comment.backup.json ]; then
+              cp ai_comment.backup.json ai_comment.json
+            fi
+          fi
+      
+      - name: Cleanup backup
+        run: |
+          rm -f ai_comment.backup.json
+      
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # 変更があればコミット
+          if git diff --quiet ai_comment.json 2>/dev/null; then
+            echo "No changes to commit"
+          else
+            git add ai_comment.json
+            git commit -m "🤖 Update AI weather advice [$(date +'%Y-%m-%d %H:%M JST')]"
+            git pull --rebase origin main || true
+            git push
+            echo "✅ Changes pushed successfully"
+          fi

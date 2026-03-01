@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>📊 分析レポート - 外気温モニター</title>
+    <meta name="description" content="週次・月次の気象分析レポート">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#3b82f6">
+
+    <!-- Fonts & Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css?v=20260301b">
+    <link rel="stylesheet" href="css/report.css?v=20260301b">
+
+    <!-- Theme initialization (prevent flicker) -->
+    <script>
+        (function () {
+            const saved = localStorage.getItem('theme');
+            if (saved === 'light') {
+                document.documentElement.classList.add('light-mode');
+            }
+            document.documentElement.classList.add('no-transition');
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    document.documentElement.classList.remove('no-transition');
+                });
+            });
+        })();
+    </script>
+</head>
+
+<body>
+    <!-- Background Effects -->
+    <div class="background-effects">
+        <div class="bg-orb bg-orb-1"></div>
+        <div class="bg-orb bg-orb-2"></div>
+    </div>
+
+    <div class="container report-container">
+        <!-- Header: title → back-link → theme-toggle の視覚順 (gridで制御) -->
+        <header class="report-header">
+            <a href="index.html" class="back-link">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <polyline points="15 18 9 12 15 6" />
+                </svg>
+                ダッシュボード
+            </a>
+            <h1 class="report-title">
+                <svg class="icon icon-md" viewBox="0 0 24 24">
+                    <path d="M3 3v18h18" />
+                    <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
+                </svg>
+                分析レポート
+            </h1>
+            <button class="theme-toggle" onclick="toggleReportTheme()" id="themeToggle">
+                <svg class="icon" viewBox="0 0 24 24" id="themeIcon">
+                    <circle cx="12" cy="12" r="4" />
+                    <path
+                        d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+                </svg>
+            </button>
+        </header>
+
+        <!-- Report Type Tabs -->
+        <div class="report-tabs">
+            <button class="report-tab active" data-type="weekly" onclick="switchReportType('weekly')">
+                📅 週次レポート
+            </button>
+            <button class="report-tab" data-type="monthly" onclick="switchReportType('monthly')">
+                📆 月次レポート
+            </button>
+        </div>
+
+        <!-- Period Navigation -->
+        <div class="period-nav">
+            <button class="nav-btn" id="prevBtn" onclick="navigateReport(-1)">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <polyline points="15 18 9 12 15 6" />
+                </svg>
+            </button>
+            <div class="period-selector">
+                <span class="period-label" id="periodLabel">読み込み中...</span>
+                <button class="history-btn" onclick="toggleReportList()" id="historyBtn">
+                    過去のレポート ▾
+                </button>
+            </div>
+            <button class="nav-btn" id="nextBtn" onclick="navigateReport(1)">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <polyline points="9 18 15 12 9 6" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Report List Dropdown -->
+        <div class="report-list-dropdown" id="reportListDropdown" style="display:none;">
+            <div class="report-list-content" id="reportListContent"></div>
+        </div>
+
+        <!-- Loading State -->
+        <div class="report-loading" id="reportLoading">
+            <div class="loading-spinner"></div>
+            <p>レポートを読み込み中...</p>
+        </div>
+
+        <!-- Error State -->
+        <div class="report-error" id="reportError" style="display:none;">
+            <div class="error-icon">📭</div>
+            <h3>レポートが見つかりません</h3>
+            <p id="errorMessage">この期間のレポートはまだ生成されていません。</p>
+        </div>
+
+        <!-- Report Content -->
+        <div class="report-content" id="reportContent" style="display:none;">
+
+            <!-- Section 1: Summary -->
+            <section class="report-section summary-section">
+                <div class="section-header">
+                    <h2>📝 <span id="summaryTitle">サマリー</span></h2>
+                </div>
+                <div class="summary-highlights" id="summaryHighlights"></div>
+                <div class="ai-comment" id="summaryComment">
+                    <div class="ai-badge">🤖 AI分析</div>
+                    <p id="summaryAiText"></p>
+                </div>
+            </section>
+
+            <!-- Section 2: Statistics -->
+            <section class="report-section">
+                <div class="section-header">
+                    <h2>📊 統計データ</h2>
+                </div>
+                <div class="stats-grid" id="statsGrid"></div>
+            </section>
+
+            <!-- Section 3: Daily Temperature Chart -->
+            <section class="report-section">
+                <div class="section-header">
+                    <h2>📈 気温推移</h2>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="dailyTempChart"></canvas>
+                </div>
+                <div class="ai-comment" id="trendComment" style="display:none;">
+                    <div class="ai-badge">🤖 AI分析</div>
+                    <p id="trendAiText"></p>
+                </div>
+            </section>
+
+
+            <!-- Section 4: Year-over-Year Comparison -->
+            <section class="report-section" id="comparisonSection">
+                <div class="section-header"
+                    style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+                    <h2 id="comparisonTitle">📆 前年比較（平均気温）</h2>
+                    <div class="comparison-toggle" id="comparisonToggle">
+                        <button class="toggle-btn active" data-mode="avg"
+                            onclick="switchComparisonMode('avg')">平均気温</button>
+                        <button class="toggle-btn" data-mode="high" onclick="switchComparisonMode('high')">最高気温</button>
+                        <button class="toggle-btn" data-mode="low" onclick="switchComparisonMode('low')">最低気温</button>
+                    </div>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="comparisonChart"></canvas>
+                </div>
+                <div class="ai-comment" id="comparisonComment">
+                    <div class="ai-badge">🤖 AI分析</div>
+                    <p id="comparisonAiText"></p>
+                </div>
+            </section>
+
+            <!-- Section 6: Baseline Comparison -->
+            <section class="report-section" id="baselineSection">
+                <div class="section-header">
+                    <h2 id="baselineTitle">📏 過去平均との比較</h2>
+                </div>
+                <div class="baseline-display" id="baselineDisplay"></div>
+            </section>
+
+            <!-- Section 7: Notable Events -->
+            <section class="report-section" id="eventsSection">
+                <div class="section-header">
+                    <h2>⚡ 特筆イベント</h2>
+                </div>
+                <div class="events-timeline" id="eventsTimeline"></div>
+            </section>
+
+            <!-- Section 8: Season Progress -->
+            <section class="report-section">
+                <div class="section-header">
+                    <h2>🌸 季節の進み具合</h2>
+                </div>
+                <div class="milestones-list" id="milestonesList"></div>
+            </section>
+
+            <!-- Section 9: Heatmap -->
+            <section class="report-section">
+                <div class="section-header">
+                    <h2>🗓️ 気温ヒートマップ</h2>
+                </div>
+                <div class="heatmap-container" id="heatmapContainer"></div>
+                <div class="heatmap-legend" id="heatmapLegend"></div>
+            </section>
+
+
+            <!-- Footer -->
+            <footer class="report-footer">
+                <p>生成日時: <span id="generatedAt">--</span></p>
+                <p>外気温モニター v3.5.0</p>
+            </footer>
+        </div>
+    </div>
+
+    <script src="js/report.js?v=20260301c"></script>
+</body>
+
+</html>

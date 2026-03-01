@@ -1,0 +1,116 @@
+# 分析レポート生成ワークフロー
+# 週次: 毎週月曜 6:00 JST、月次: 毎月1日 6:00 JST
+
+name: Report Generator
+
+on:
+  schedule:
+    # 毎週月曜 6:00 JST = 日曜 21:00 UTC
+    - cron: '0 21 * * 0'
+    # 毎月1日 9:00 JST = 当月1日 0:00 UTC
+    - cron: '0 0 1 * *'
+  
+  # 手動実行も可能
+  workflow_dispatch:
+    inputs:
+      report_type:
+        description: 'Report type (weekly/monthly/backfill)'
+        required: true
+        default: 'weekly'
+        type: choice
+        options:
+          - weekly
+          - monthly
+          - backfill
+      target_date:
+        description: 'Target date (YYYY-MM-DD or YYYY-MM, optional)'
+        required: false
+        type: string
+      skip_ai:
+        description: 'Skip AI analysis'
+        required: false
+        default: false
+        type: boolean
+
+# 同時実行を防ぐ
+concurrency:
+  group: report-generator
+  cancel-in-progress: false
+
+# 権限設定
+permissions:
+  contents: write
+
+jobs:
+  generate-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate Report
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+        run: |
+          # JSTでの日付情報
+          DAY_OF_MONTH=$(TZ=Asia/Tokyo date +%d)
+          DAY_OF_WEEK=$(TZ=Asia/Tokyo date +%u)
+          
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            # 手動実行
+            TYPE="${{ github.event.inputs.report_type }}"
+            DATE="${{ github.event.inputs.target_date }}"
+            SKIP_AI="${{ github.event.inputs.skip_ai }}"
+            
+            AI_FLAG=""
+            if [ "$SKIP_AI" = "true" ]; then
+              AI_FLAG="--no-ai"
+            fi
+            
+            if [ "$TYPE" = "backfill" ]; then
+              python scripts/report_generator.py --backfill $AI_FLAG
+            elif [ -n "$DATE" ]; then
+              python scripts/report_generator.py --type "$TYPE" --date "$DATE" $AI_FLAG
+            else
+              python scripts/report_generator.py --type "$TYPE" $AI_FLAG
+            fi
+          elif [ "$DAY_OF_MONTH" = "01" ]; then
+            # 月初 → 月次 + 週次
+            echo "=== 月初: 月次レポート + 週次レポートを生成 ==="
+            python scripts/report_generator.py --type monthly
+            python scripts/report_generator.py --type weekly
+          else
+            # 月曜 → 週次のみ
+            echo "=== 月曜: 週次レポートを生成 ==="
+            python scripts/report_generator.py --type weekly
+          fi
+
+      - name: Commit and push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          git add reports/
+          
+          if ! git diff --staged --quiet; then
+            git commit -m "📊 Generate analysis report [$(TZ=Asia/Tokyo date +'%Y-%m-%d %H:%M JST')]"
+            git pull --rebase origin main || true
+            git push
+            echo "✅ Report committed and pushed successfully"
+          else
+            echo "No new reports to commit"
+          fi

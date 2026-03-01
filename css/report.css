@@ -1,0 +1,944 @@
+/* =============================================================================
+   分析レポートページ専用スタイル
+   main.css の CSS変数（:root, html.light-mode）を継承して使用
+   ============================================================================= */
+
+/* ===== レイアウト ===== */
+.report-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+}
+
+/* ===== ヘッダー ===== */
+.report-header {
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr !important;
+    grid-template-areas: "back title theme" !important;
+    align-items: center;
+    padding: 16px 0;
+    margin-bottom: 8px;
+}
+
+.back-link {
+    grid-area: back;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 100px;
+    border: 1px solid var(--glass-border);
+    background: var(--bg-card);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    justify-self: start;
+}
+
+.back-link:hover {
+    color: var(--text-primary);
+    border-color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+/* タイトルを常に中央セルの中心に */
+.report-title {
+    grid-area: title;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    white-space: nowrap;
+    text-align: center;
+}
+
+/* テーマトグルを右端に揃える */
+.theme-toggle {
+    grid-area: theme;
+    justify-self: end;
+}
+
+/* ===== タブ ===== */
+.report-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 4px;
+    margin-bottom: 12px;
+}
+
+.report-tab {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.report-tab:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.report-tab.active {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--accent-blue);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+html.light-mode .report-tab.active {
+    background: rgba(59, 130, 246, 0.12);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.12);
+}
+
+/* ===== 期間ナビゲーション ===== */
+.period-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* 前年比較 モード切り替えトグル */
+.comparison-toggle {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.comparison-toggle .toggle-btn {
+    padding: 5px 14px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+
+.comparison-toggle .toggle-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.comparison-toggle .toggle-btn.active {
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+}
+
+
+.period-selector {
+    text-align: center;
+}
+
+.period-label {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.history-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.history-btn:hover {
+    color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+/* ===== レポート一覧ドロップダウン ===== */
+.report-list-dropdown {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    margin-bottom: 16px;
+    max-height: 300px;
+    overflow-y: auto;
+    backdrop-filter: blur(24px);
+}
+
+.report-list-content {
+    padding: 8px;
+}
+
+.report-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.report-list-item:hover {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--text-primary);
+}
+
+.report-list-item.active {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--accent-blue);
+    font-weight: 600;
+}
+
+/* ===== ローディング / エラー ===== */
+.report-loading,
+.report-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(59, 130, 246, 0.2);
+    border-top-color: var(--accent-blue);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.error-icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+}
+
+.report-error h3 {
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+/* ===== レポートセクション（共通） ===== */
+.report-section {
+    background: var(--bg-card);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-top: 1px solid var(--glass-highlight);
+    box-shadow: var(--glass-shadow);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 16px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.report-section:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--glass-shadow), 0 12px 40px rgba(99, 102, 241, 0.1);
+}
+
+html.light-mode .report-section {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(100, 116, 139, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+html.light-mode .report-section:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.section-header {
+    margin-bottom: 16px;
+}
+
+.section-header h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* ===== AIコメント ===== */
+.ai-comment {
+    background: rgba(99, 102, 241, 0.08);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    border-radius: 14px;
+    padding: 16px;
+    margin-top: 16px;
+    position: relative;
+}
+
+.ai-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent-purple);
+    margin-bottom: 8px;
+    letter-spacing: 0.02em;
+}
+
+.ai-comment p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+html.light-mode .ai-comment {
+    background: rgba(99, 102, 241, 0.06);
+    border-color: rgba(99, 102, 241, 0.12);
+}
+
+/* ===== サマリー ===== */
+.summary-highlights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.highlight-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 14px;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent-blue);
+    white-space: nowrap;
+}
+
+html.light-mode .highlight-chip {
+    background: rgba(59, 130, 246, 0.08);
+    border-color: rgba(59, 130, 246, 0.15);
+}
+
+/* ===== 統計グリッド ===== */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.stat-item {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    padding: 16px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+html.light-mode .stat-item {
+    background: rgba(241, 245, 249, 0.8);
+    border-color: rgba(100, 116, 139, 0.1);
+}
+
+.stat-item-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.stat-item-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-feature-settings: "tnum";
+}
+
+.stat-item-unit {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-left: 2px;
+}
+
+.stat-item-sub {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.stat-diff-positive {
+    color: var(--accent-red);
+}
+
+.stat-diff-negative {
+    color: var(--accent-blue);
+}
+
+/* ===== グラフ ===== */
+.chart-wrapper {
+    position: relative;
+    width: 100%;
+    height: 280px;
+}
+
+.chart-wrapper canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* ===== トレンド ===== */
+.trend-indicator {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 14px;
+    margin-bottom: 8px;
+}
+
+html.light-mode .trend-indicator {
+    background: rgba(241, 245, 249, 0.8);
+}
+
+.trend-arrow {
+    font-size: 2.5rem;
+    line-height: 1;
+}
+
+.trend-info {
+    flex: 1;
+}
+
+.trend-direction {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.trend-detail {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* ===== ベースライン比較 ===== */
+.baseline-display {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 16px;
+}
+
+.baseline-bar {
+    flex: 1;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    position: relative;
+    overflow: visible;
+}
+
+html.light-mode .baseline-bar {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.baseline-marker {
+    position: absolute;
+    top: -8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: white;
+    transform: translateX(-50%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.baseline-label {
+    text-align: right;
+    min-width: 100px;
+}
+
+.baseline-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.baseline-desc {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* ===== イベントタイムライン ===== */
+.events-timeline {
+    position: relative;
+}
+
+.event-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.event-item:last-child {
+    border-bottom: none;
+}
+
+html.light-mode .event-item {
+    border-bottom-color: rgba(0, 0, 0, 0.05);
+}
+
+.event-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+
+.event-dot.rapid_change {
+    background: var(--accent-orange);
+}
+
+.event-dot.large_range {
+    background: var(--accent-purple);
+}
+
+.event-dot.near_record_high {
+    background: var(--accent-red);
+}
+
+.event-dot.near_record_low {
+    background: var(--accent-blue);
+}
+
+.event-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    min-width: 60px;
+}
+
+.event-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.no-events {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* ===== マイルストーン ===== */
+.milestones-list {
+    margin-bottom: 12px;
+}
+
+.milestone-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    margin-bottom: 6px;
+    transition: background 0.2s ease;
+}
+
+.milestone-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+html.light-mode .milestone-item {
+    background: rgba(241, 245, 249, 0.6);
+}
+
+.milestone-label {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    min-width: 140px;
+}
+
+.milestone-years {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.milestone-year {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.milestone-year strong {
+    color: var(--text-secondary);
+}
+
+/* ===== ヒートマップ ===== */
+.heatmap-container {
+    overflow-x: auto;
+    padding-bottom: 8px;
+}
+
+.heatmap-grid {
+    display: grid;
+    gap: 3px;
+    min-width: 600px;
+}
+
+.heatmap-cell {
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    min-height: 36px;
+    transition: transform 0.2s ease;
+}
+
+.heatmap-cell:hover {
+    transform: scale(1.1);
+    z-index: 1;
+}
+
+.heatmap-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.heatmap-legend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 12px;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.heatmap-legend-cell {
+    width: 20px;
+    height: 12px;
+    border-radius: 2px;
+}
+
+/* ===== フッター ===== */
+.report-footer {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.report-footer p {
+    margin-bottom: 4px;
+}
+
+/* =============================================================================
+   レスポンシブ: タブレット (768px以下)
+   ============================================================================= */
+@media (max-width: 768px) {
+    .report-container {
+        max-width: 100%;
+        padding: 16px 12px 40px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .chart-wrapper {
+        height: 240px;
+    }
+
+    .report-section {
+        padding: 20px;
+        border-radius: 18px;
+    }
+}
+
+/* =============================================================================
+   レスポンシブ: スマホ (600px以下)
+   - メインの温湿度計ページと同等のモバイル最適化
+   - タップターゲット44px以上を保証
+   - grid-template-areasで配置順を確実に制御
+   ============================================================================= */
+@media (max-width: 600px) {
+
+    /* --- レイアウト --- */
+    .report-container {
+        padding: 8px 10px 40px;
+    }
+
+    /* --- ヘッダー: 2行構成 ---
+       1行目: タイトル（全幅・中央）
+       2行目: 戻るリンク（左）＋テーマボタン（右） */
+    .report-header {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        grid-template-rows: auto auto !important;
+        grid-template-areas:
+            "title title"
+            "back  theme" !important;
+        row-gap: 8px;
+        padding: 10px 0;
+    }
+
+    .report-title {
+        grid-area: title !important;
+        font-size: 1.1rem;
+        justify-content: center;
+    }
+
+    .back-link {
+        grid-area: back !important;
+        justify-self: start;
+        font-size: 0.75rem;
+        padding: 6px 10px;
+    }
+
+    .theme-toggle {
+        grid-area: theme !important;
+        justify-self: end;
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    /* --- タブ（タップしやすく） --- */
+    .report-tabs {
+        margin-bottom: 8px;
+    }
+
+    .report-tab {
+        padding: 12px 8px;
+        font-size: 0.85rem;
+    }
+
+    /* --- ナビゲーション --- */
+    .period-nav {
+        gap: 8px;
+    }
+
+    .nav-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+    }
+
+    .period-label {
+        font-size: 0.9rem;
+    }
+
+    .history-btn {
+        font-size: 0.75rem;
+        padding: 6px 8px;
+    }
+
+    /* --- セクション --- */
+    .report-section {
+        padding: 16px;
+        border-radius: 16px;
+        margin-bottom: 12px;
+    }
+
+    .report-section:hover {
+        transform: none;
+    }
+
+    .section-header h2 {
+        font-size: 1rem;
+    }
+
+    /* --- 統計グリッド（2列） --- */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .stat-item {
+        padding: 12px;
+    }
+
+    .stat-item-value {
+        font-size: 1.3rem;
+    }
+
+    /* --- グラフ --- */
+    .chart-wrapper {
+        height: 200px;
+    }
+
+    /* --- サマリーチップ --- */
+    .summary-highlights {
+        gap: 6px;
+    }
+
+    .highlight-chip {
+        font-size: 0.75rem;
+        padding: 5px 10px;
+    }
+
+    /* --- AIコメント --- */
+    .ai-comment {
+        padding: 14px;
+    }
+
+    .ai-comment p {
+        font-size: 0.85rem;
+        line-height: 1.6;
+    }
+
+    /* --- ベースライン比較 --- */
+    .baseline-display {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .baseline-label {
+        text-align: center;
+    }
+
+    .baseline-value {
+        font-size: 1.3rem;
+    }
+
+    /* --- イベントタイムライン --- */
+    .event-item {
+        gap: 8px;
+        padding: 10px 0;
+    }
+
+    .event-date {
+        min-width: 50px;
+        font-size: 0.75rem;
+    }
+
+    .event-desc {
+        font-size: 0.8rem;
+    }
+
+    /* --- マイルストーン --- */
+    .milestone-item {
+        flex-direction: column;
+        gap: 4px;
+        padding: 10px 12px;
+    }
+
+    .milestone-label {
+        min-width: auto;
+        font-size: 0.8rem;
+    }
+
+    .milestone-years {
+        gap: 8px;
+    }
+
+    /* --- ヒートマップ --- */
+    .heatmap-grid {
+        min-width: 500px;
+    }
+
+    .heatmap-cell {
+        font-size: 0.6rem;
+        min-height: 30px;
+    }
+
+    /* --- ドロップダウン --- */
+    .report-list-dropdown {
+        max-height: 250px;
+    }
+
+    .report-list-item {
+        padding: 12px 14px;
+        font-size: 0.85rem;
+    }
+
+    /* --- ローディング/エラー --- */
+    .report-loading,
+    .report-error {
+        padding: 60px 16px;
+    }
+
+    /* --- フッター --- */
+    .report-footer {
+        padding: 16px;
+    }
+}
