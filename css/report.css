@@ -710,16 +710,26 @@ html.light-mode .milestone-item {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 8px;
     margin-top: 12px;
     font-size: 0.7rem;
     color: var(--text-muted);
 }
 
-.heatmap-legend-cell {
-    width: 20px;
+.heatmap-legend-bar {
+    width: 200px;
     height: 12px;
-    border-radius: 2px;
+    border-radius: 6px;
+    background: linear-gradient(to right,
+            hsl(240, 65%, 35%),
+            hsl(200, 72%, 42%),
+            hsl(160, 78%, 48%),
+            hsl(120, 80%, 50%),
+            hsl(80, 82%, 52%),
+            hsl(50, 83%, 54%),
+            hsl(25, 84%, 53%),
+            hsl(10, 85%, 50%),
+            hsl(0, 85%, 45%));
 }
 
 /* ===== フッター ===== */

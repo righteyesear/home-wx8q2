@@ -539,11 +539,8 @@ function _buildHeatmap(data, mode) {
     html += '</div>';
     container.innerHTML = html;
 
-    // 凡例
-    const legendTemps = [-5, 0, 5, 10, 15, 20, 25, 30, 35];
-    legend.innerHTML = '<span>低</span>' +
-        legendTemps.map(t => `<div class="heatmap-legend-cell" style="background:${tempToColor(t)}" title="${t}℃"></div>`).join('') +
-        '<span>高</span>';
+    // 凡例（滑らかなグラデーションバー）
+    legend.innerHTML = '<span>低</span><div class="heatmap-legend-bar"></div><span>高</span>';
 }
 
 
