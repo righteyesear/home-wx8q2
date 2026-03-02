@@ -7,7 +7,7 @@
     "end_date": "2026-03-08",
     "label": "2026年 第10週（3/2 〜 3/8）"
   },
-  "generated_at": "2026-03-02T21:38:43.468831+09:00",
+  "generated_at": "2026-03-03T00:34:53.084867+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -15,24 +15,24 @@
       "highlights": [
         "最高気温 13.4℃",
         "最低気温 8.9℃",
-        "前週比 -0.8℃",
-        "前年比 +4.4℃"
+        "前週比 -1.0℃",
+        "前年比 +4.2℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
-      "days": 1,
-      "avg_temp": 11.3,
-      "avg_temp_stdev": 0,
+      "days": 2,
+      "avg_temp": 11.1,
+      "avg_temp_stdev": 0.3,
       "max_temp": 13.4,
       "max_temp_date": "2026/03/02",
-      "avg_high": 13.4,
+      "avg_high": 12.2,
       "min_temp": 8.9,
       "min_temp_date": "2026/03/02",
-      "avg_low": 8.9,
-      "avg_daily_range": 4.5,
-      "prev_week_diff": -0.8,
-      "prev_year_diff": 4.4
+      "avg_low": 9.8,
+      "avg_daily_range": 2.5,
+      "prev_week_diff": -1.0,
+      "prev_year_diff": 4.2
     },
     "daily_data": [
       {
@@ -42,6 +42,14 @@
         "low": 8.9,
         "avg": 11.3,
         "range": 4.5
+      },
+      {
+        "date": "2026/03/03",
+        "weekday": "火",
+        "high": 11.1,
+        "low": 10.7,
+        "avg": 10.9,
+        "range": 0.4
       }
     ],
     "comparison": {
@@ -60,16 +68,16 @@
         "avg_low": 3.3,
         "avg_daily_range": 7.7
       },
-      "avg_temp_diff": 4.4,
+      "avg_temp_diff": 4.2,
       "max_temp_diff": -6.8,
       "min_temp_diff": 8.1,
-      "avg_daily_range_diff": -3.2,
+      "avg_daily_range_diff": -5.2,
       "ai_comment": "今年の第10週は、昨年と比較して「安定した暖かさ」が際立つ一週間です。平均気温は昨年の6.9度から10.2度へと大幅に上昇していますが、注目すべきは日較差の小ささです。昨年は最高20度超えから氷点下寸前まで激しく変動する乱高下型でしたが、今年は最低気温が8.9度と底上げされ、一日を通して温度変化が少ない穏やかなパターンとなっています。\n\nこの変化は、冬から春への移行の仕方の違いを表しています。昨年は三寒四温が極端で体調管理が難しい時期でしたが、今年は極端な冷え込みがない分、春の訪れをじわじわと実感できるでしょう。朝晩の冷え込みが緩いため、厚手のコートを脱ぐタイミングが昨年より早まり、暖房器具の出番も一気に減りそうです。軽やかな装いで外出を楽しめる、過ごしやすい春の始まりといえます 🌸"
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 6.9,
-      "current_deviation": 4.4,
+      "current_deviation": 4.2,
       "years_count": 1,
       "ai_comment": ""
     },
@@ -249,7 +257,7 @@
             "low": -2.2
           },
           "3": {
-            "avg": 11.9,
+            "avg": 11.6,
             "high": 17.3,
             "low": 8.3
           }
@@ -263,24 +271,30 @@
   "chart_data": {
     "daily_temps": {
       "labels": [
-        "3/2(月)"
+        "3/2(月)",
+        "3/3(火)"
       ],
       "highs": [
-        13.4
+        13.4,
+        11.1
       ],
       "lows": [
-        8.9
+        8.9,
+        10.7
       ],
       "avgs": [
-        11.3
+        11.3,
+        10.9
       ]
     },
     "prev_year_comparison": {
       "labels": [
-        "月"
+        "月",
+        "火"
       ],
       "this_year": [
-        11.3
+        11.3,
+        10.9
       ],
       "last_year": [
         14.3,
@@ -292,7 +306,8 @@
         3.6
       ],
       "this_year_high": [
-        13.4
+        13.4,
+        11.1
       ],
       "last_year_high": [
         20.2,
@@ -304,7 +319,8 @@
         7.0
       ],
       "this_year_low": [
-        8.9
+        8.9,
+        10.7
       ],
       "last_year_low": [
         8.1,
@@ -318,10 +334,12 @@
     },
     "deviation": {
       "labels": [
-        "3/2(月)"
+        "3/2(月)",
+        "3/3(火)"
       ],
       "deviations": [
-        4.4
+        4.4,
+        4.0
       ],
       "baseline_avg": 6.9
     }
