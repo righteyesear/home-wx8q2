@@ -326,8 +326,8 @@ def generate_heatmap_data(all_records: List[Dict]) -> Dict:
         result[year] = {}
         for month in [str(m) for m in range(1, 13)]:
             avg_val  = round(statistics.mean(avgs[year][month]), 1)  if avgs.get(year, {}).get(month)  else None
-            high_val = round(statistics.mean(highs[year][month]), 1) if highs.get(year, {}).get(month) else None
-            low_val  = round(statistics.mean(lows[year][month]), 1)  if lows.get(year, {}).get(month)  else None
+            high_val = round(max(highs[year][month]), 1)              if highs.get(year, {}).get(month) else None  # 月の最高記録
+            low_val  = round(min(lows[year][month]), 1)               if lows.get(year, {}).get(month)  else None  # 月の最低記録
             if avg_val is not None or high_val is not None or low_val is not None:
                 result[year][month] = {'avg': avg_val, 'high': high_val, 'low': low_val}
 

@@ -548,17 +548,17 @@ function _buildHeatmap(data, mode) {
 
 
 function tempToColor(temp) {
-    // 気温に応じた色を返す（寒色→暖色）
-    if (temp <= -5) return 'hsl(240, 70%, 35%)';
-    if (temp <= 0) return 'hsl(220, 70%, 45%)';
-    if (temp <= 5) return 'hsl(200, 65%, 50%)';
-    if (temp <= 10) return 'hsl(180, 55%, 50%)';
-    if (temp <= 15) return 'hsl(120, 45%, 50%)';
-    if (temp <= 20) return 'hsl(80, 55%, 50%)';
-    if (temp <= 25) return 'hsl(50, 70%, 55%)';
-    if (temp <= 30) return 'hsl(30, 80%, 55%)';
-    if (temp <= 35) return 'hsl(15, 85%, 50%)';
-    return 'hsl(0, 90%, 45%)';
+    // -10℃（青:240°、明度35%）〜 +40℃（赤:0°、明度45%）の滑らかなHSLグラデーション
+    const minTemp = -10, maxTemp = 40;
+    const minHue = 240, maxHue = 0;
+    const minL = 35, maxL = 55;
+
+    const ratio = Math.max(0, Math.min(1, (temp - minTemp) / (maxTemp - minTemp)));
+    const hue = Math.round(minHue + (maxHue - minHue) * ratio);
+    const sat = Math.round(65 + ratio * 20);            // 65%〜85%
+    const lig = Math.round(minL + (maxL - minL) * ratio); // 35%〜55%
+
+    return `hsl(${hue}, ${sat}%, ${lig}%)`;
 }
 
 
