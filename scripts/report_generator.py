@@ -381,9 +381,13 @@ def detect_notable_events(records: List[Dict], all_records: List[Dict]) -> List[
         if not d:
             continue
 
+        high = r.get('high')
+        low = r.get('low')
+        avg = r.get('avg')
+
         # 急激な気温変動（前日比 ±5℃以上）
-        if i > 0 and records[i - 1].get('avg') is not None and r.get('avg') is not None:
-            diff = r['avg'] - records[i - 1]['avg']
+        if i > 0 and records[i - 1].get('avg') is not None and avg is not None:
+            diff = avg - records[i - 1]['avg']
             if abs(diff) >= 5:
                 direction = '急上昇' if diff > 0 else '急低下'
                 events.append({
@@ -397,26 +401,116 @@ def detect_notable_events(records: List[Dict], all_records: List[Dict]) -> List[
             events.append({
                 'date': r['date'],
                 'type': 'large_range',
-                'description': f'日較差{r["range"]:.1f}℃（高{r["high"]:.1f}℃ / 低{r["low"]:.1f}℃）',
+                'description': f'日較差{r["range"]:.1f}℃（高{high:.1f}℃ / 低{low:.1f}℃）',
             })
 
         # 観測史上最高/最低に迫る
-        if r.get('high') is not None and all_time_high is not None:
-            if r['high'] >= all_time_high - 0.5:
+        if high is not None and all_time_high is not None:
+            if high >= all_time_high - 0.5:
                 events.append({
                     'date': r['date'],
                     'type': 'near_record_high',
-                    'description': f'最高気温{r["high"]:.1f}℃（観測最高{all_time_high:.1f}℃）',
+                    'description': f'最高気温{high:.1f}℃（観測最高{all_time_high:.1f}℃）',
                 })
-        if r.get('low') is not None and all_time_low is not None:
-            if r['low'] <= all_time_low + 0.5:
+        if low is not None and all_time_low is not None:
+            if low <= all_time_low + 0.5:
                 events.append({
                     'date': r['date'],
                     'type': 'near_record_low',
-                    'description': f'最低気温{r["low"]:.1f}℃（観測最低{all_time_low:.1f}℃）',
+                    'description': f'最低気温{low:.1f}℃（観測最低{all_time_low:.1f}℃）',
                 })
 
-    return events
+        # ── 閾値イベント ──
+        # 冬日（最低気温 < 0℃）
+        if low is not None and low < 0:
+            events.append({
+                'date': r['date'],
+                'type': 'frost_day',
+                'description': f'冬日: 最低気温{low:.1f}℃',
+            })
+        # 真冬日（最高気温 < 0℃）
+        if high is not None and high < 0:
+            events.append({
+                'date': r['date'],
+                'type': 'ice_day',
+                'description': f'真冬日: 最高気温{high:.1f}℃（終日氷点下）',
+            })
+        # 猛暑日（最高気温 ≥ 35℃）
+        if high is not None and high >= 35:
+            events.append({
+                'date': r['date'],
+                'type': 'extreme_heat',
+                'description': f'猛暑日: 最高気温{high:.1f}℃',
+            })
+        # 酷暑日（最高気温 ≥ 40℃）
+        if high is not None and high >= 40:
+            events.append({
+                'date': r['date'],
+                'type': 'dangerous_heat',
+                'description': f'酷暑日: 最高気温{high:.1f}℃（危険な暑さ）',
+            })
+
+    # 同種イベントが連続する場合は1件にまとめる
+    return _merge_consecutive_events(events)
+
+
+def _merge_consecutive_events(events: List[Dict]) -> List[Dict]:
+    """同じtypeのイベントが連続日に発生している場合、1件にまとめる。
+    
+    例: 3/1, 3/2, 3/3 の冬日 → 「3/1〜3/3: 冬日3連続」
+    rapid_change, large_range, near_record_* はまとめない（個別に意味があるため）
+    """
+    # まとめ対象のイベントタイプ
+    mergeable_types = {'frost_day', 'ice_day', 'extreme_heat', 'dangerous_heat'}
+
+    # まとめ対象外のイベントをそのまま保持
+    non_mergeable = [e for e in events if e['type'] not in mergeable_types]
+
+    # まとめ対象を type ごとにグルーピング
+    from collections import defaultdict
+    by_type: Dict[str, List[Dict]] = defaultdict(list)
+    for e in events:
+        if e['type'] in mergeable_types:
+            by_type[e['type']].append(e)
+
+    merged = []
+    for etype, items in by_type.items():
+        # 日付でソート
+        items.sort(key=lambda x: x['date'])
+
+        # 連続日の検出
+        runs = []
+        current_run = [items[0]]
+        for j in range(1, len(items)):
+            prev_d = parse_date(items[j - 1]['date'])
+            curr_d = parse_date(items[j]['date'])
+            if prev_d and curr_d and (curr_d - prev_d).days == 1:
+                current_run.append(items[j])
+            else:
+                runs.append(current_run)
+                current_run = [items[j]]
+        runs.append(current_run)
+
+        for run in runs:
+            if len(run) >= 3:
+                # 3日以上連続 → まとめる
+                type_labels = {
+                    'frost_day': '冬日', 'ice_day': '真冬日',
+                    'extreme_heat': '猛暑日', 'dangerous_heat': '酷暑日',
+                }
+                label = type_labels.get(etype, etype)
+                merged.append({
+                    'date': f'{run[0]["date"]}〜{run[-1]["date"]}',
+                    'type': etype,
+                    'description': f'{label}{len(run)}日連続（{run[0]["description"].split(": ")[-1]}〜{run[-1]["description"].split(": ")[-1]}）',
+                })
+            else:
+                merged.extend(run)
+
+    result = non_mergeable + merged
+    result.sort(key=lambda x: x['date'].split('〜')[0])
+    return result
+
 
 
 # =============================================================================
@@ -464,6 +558,25 @@ def generate_chart_data_weekly(records: List[Dict], prev_year_records: List[Dict
         }
 
     return chart
+
+
+def _generate_deviation_data(records: List[Dict], baseline_avg: float) -> Dict:
+    """偏差チャートデータを生成（各日の平均気温 - baseline平均）"""
+    labels = []
+    deviations = []
+    for r in records:
+        d = parse_date(r['date'])
+        if d:
+            wd = WEEKDAY_NAMES[d.weekday()]
+            labels.append(f"{d.month}/{d.day}({wd})")
+        else:
+            labels.append(r['date'])
+        avg = r.get('avg')
+        if avg is not None:
+            deviations.append(round(avg - baseline_avg, 1))
+        else:
+            deviations.append(None)
+    return {'labels': labels, 'deviations': deviations, 'baseline_avg': round(baseline_avg, 1)}
 
 
 def generate_chart_data_monthly(records: List[Dict], prev_year_records: List[Dict]) -> Dict:
@@ -866,6 +979,11 @@ def build_events_prompt(period_label: str, events: List[Dict],
   large_range = 1日の最高-最低の差が15℃以上
   near_record_high = 全観測期間の最高気温に0.5℃以内に迫った
   near_record_low = 全観測期間の最低気温に0.5℃以内に迫った
+  frost_day = 冬日（最低気温が0℃未満）
+  ice_day = 真冬日（最高気温が0℃未満、終日氷点下）
+  extreme_heat = 猛暑日（最高気温35℃以上）
+  dangerous_heat = 酷暑日（最高気温40℃以上、危険な暑さ）
+  ※ 同種イベントが3日以上連続した場合はまとめて表示されます
 
 {event_text}
 
@@ -1083,6 +1201,12 @@ def generate_weekly_report(all_records: List[Dict], target_date: date,
         'years_count': baseline_years_count,
     }
 
+    # 偏差チャートデータ（baseline_avg があれば生成）
+    if baseline_info.get('baseline_avg') is not None:
+        chart_data['deviation'] = _generate_deviation_data(
+            current_records, baseline_info['baseline_avg']
+        )
+
     sections = {
         'summary': {
             'title': '週間サマリー',
@@ -1271,6 +1395,12 @@ def generate_monthly_report(all_records: List[Dict], target_date: date,
 
     # グラフデータ
     chart_data = generate_chart_data_monthly(current_records, prev_year_records)
+
+    # 偏差チャートデータ
+    if baseline_stats.get('avg_temp') is not None:
+        chart_data['deviation'] = _generate_deviation_data(
+            current_records, baseline_stats['avg_temp']
+        )
 
     # 週ごとの推移グラフデータ
     if weekly_breakdown:

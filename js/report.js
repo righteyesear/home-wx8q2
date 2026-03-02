@@ -264,6 +264,7 @@ function renderReport(data) {
     const compSection = document.getElementById('comparisonSection');
     if (data.chart_data?.prev_year_comparison) {
         compSection.style.display = 'block';
+        state.deviationChartData = data.chart_data.deviation || null;
         renderComparisonChart(data.chart_data.prev_year_comparison);
         renderAiComment('comparisonAiText', sections.comparison?.ai_comment);
     } else {
@@ -745,7 +746,7 @@ function switchComparisonMode(mode) {
     state.comparisonMode = mode;
 
     // タイトルを更新
-    const titleMap = { avg: '平均気温', high: '最高気温', low: '最低気温' };
+    const titleMap = { avg: '平均気温', high: '最高気温', low: '最低気温', deviation: '平年偏差' };
     const titleEl = document.getElementById('comparisonTitle');
     if (titleEl) titleEl.textContent = `📆 前年比較（${titleMap[mode] || ''}）`;
 
@@ -754,7 +755,89 @@ function switchComparisonMode(mode) {
         btn.classList.toggle('active', btn.dataset.mode === mode);
     });
 
-    // グラフを再描画
-    _buildComparisonChart(state.comparisonChartData, mode);
+    // 偏差モードの表示切り替え
+    const compWrapper = document.getElementById('comparisonChartWrapper');
+    const devWrapper = document.getElementById('deviationChartWrapper');
+
+    if (mode === 'deviation') {
+        compWrapper.style.display = 'none';
+        devWrapper.style.display = 'block';
+        _buildDeviationChart(state.deviationChartData);
+    } else {
+        compWrapper.style.display = 'block';
+        devWrapper.style.display = 'none';
+        _buildComparisonChart(state.comparisonChartData, mode);
+    }
+}
+
+
+function _buildDeviationChart(deviationData) {
+    destroyChart('deviation');
+
+    if (!deviationData || !deviationData.deviations) {
+        const ctx = document.getElementById('deviationChart').getContext('2d');
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        return;
+    }
+
+    const ctx = document.getElementById('deviationChart').getContext('2d');
+    const textColor = getChartTextColor();
+    const gridColor = getChartGridColor();
+
+    // 正の偏差=赤系、負の偏差=青系
+    const barColors = deviationData.deviations.map(v =>
+        v == null ? 'transparent' : v >= 0 ? 'rgba(239, 68, 68, 0.75)' : 'rgba(59, 130, 246, 0.75)'
+    );
+    const borderColors = deviationData.deviations.map(v =>
+        v == null ? 'transparent' : v >= 0 ? '#ef4444' : '#3b82f6'
+    );
+
+    state.charts.deviation = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: deviationData.labels,
+            datasets: [{
+                label: `平年偏差（基準: ${deviationData.baseline_avg}℃）`,
+                data: deviationData.deviations,
+                backgroundColor: barColors,
+                borderColor: borderColors,
+                borderWidth: 1,
+                borderRadius: 3,
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { intersect: false, mode: 'index' },
+            plugins: {
+                legend: {
+                    labels: { color: textColor, usePointStyle: true, padding: 16 },
+                },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => {
+                            const v = ctx.parsed.y;
+                            if (v == null) return '--';
+                            const sign = v >= 0 ? '+' : '';
+                            return `偏差: ${sign}${v.toFixed(1)}℃`;
+                        },
+                    },
+                },
+            },
+            scales: {
+                x: { ticks: { color: textColor }, grid: { color: gridColor } },
+                y: {
+                    ticks: {
+                        color: textColor,
+                        callback: v => (v >= 0 ? '+' : '') + v + '℃',
+                    },
+                    grid: {
+                        color: (ctx) => ctx.tick.value === 0 ? textColor : gridColor,
+                        lineWidth: (ctx) => ctx.tick.value === 0 ? 2 : 1,
+                    },
+                },
+            },
+        },
+    });
 }
 
