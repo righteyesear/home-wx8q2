@@ -302,27 +302,37 @@ def compute_comparison(current: Dict, previous: Dict) -> Dict:
 
 
 def generate_heatmap_data(all_records: List[Dict]) -> Dict:
-    """月×年のヒートマップデータを生成"""
-    data = {}
+    """月×年のヒートマップデータを生成（平均/最高/最低）"""
+    avgs:  Dict[str, Dict[str, list]] = {}
+    highs: Dict[str, Dict[str, list]] = {}
+    lows:  Dict[str, Dict[str, list]] = {}
+
     for r in all_records:
         d = parse_date(r['date'])
-        if d and r.get('avg') is not None:
-            year = str(d.year)
-            month = str(d.month)
-            if year not in data:
-                data[year] = {}
-            if month not in data[year]:
-                data[year][month] = []
-            data[year][month].append(r['avg'])
+        if not d:
+            continue
+        year = str(d.year)
+        month = str(d.month)
+        if r.get('avg') is not None:
+            avgs.setdefault(year, {}).setdefault(month, []).append(r['avg'])
+        if r.get('high') is not None:
+            highs.setdefault(year, {}).setdefault(month, []).append(r['high'])
+        if r.get('low') is not None:
+            lows.setdefault(year, {}).setdefault(month, []).append(r['low'])
 
-    # 月平均を計算
+    all_years = sorted(set(list(avgs.keys()) + list(highs.keys()) + list(lows.keys())))
     result = {}
-    for year, months in data.items():
+    for year in all_years:
         result[year] = {}
-        for month, temps in months.items():
-            result[year][month] = round(statistics.mean(temps), 1)
+        for month in [str(m) for m in range(1, 13)]:
+            avg_val  = round(statistics.mean(avgs[year][month]), 1)  if avgs.get(year, {}).get(month)  else None
+            high_val = round(statistics.mean(highs[year][month]), 1) if highs.get(year, {}).get(month) else None
+            low_val  = round(statistics.mean(lows[year][month]), 1)  if lows.get(year, {}).get(month)  else None
+            if avg_val is not None or high_val is not None or low_val is not None:
+                result[year][month] = {'avg': avg_val, 'high': high_val, 'low': low_val}
 
     return result
+
 
 
 def detect_season_milestones(all_records: List[Dict]) -> List[Dict]:

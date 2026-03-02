@@ -481,6 +481,21 @@ function renderMilestones(milestones) {
 
 
 function renderHeatmap(data) {
+    // データをstateに保存して切り替え時に参照
+    state.heatmapData = data;
+    state.heatmapMode = state.heatmapMode || 'avg';
+    _buildHeatmap(data, state.heatmapMode);
+}
+
+function switchHeatmapMode(mode) {
+    state.heatmapMode = mode;
+    document.querySelectorAll('#heatmapToggle .toggle-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.mode === mode);
+    });
+    _buildHeatmap(state.heatmapData, mode);
+}
+
+function _buildHeatmap(data, mode) {
     const container = document.getElementById('heatmapContainer');
     const legend = document.getElementById('heatmapLegend');
 
@@ -492,7 +507,7 @@ function renderHeatmap(data) {
     }
 
     const months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
-    const cols = months.length + 1; // +1 for year label
+    const modeLabels = { avg: '平均', high: '最高', low: '最低' };
 
     let html = `<div class="heatmap-grid" style="grid-template-columns: 60px repeat(${months.length}, 1fr);">`;
 
@@ -506,11 +521,15 @@ function renderHeatmap(data) {
     years.forEach(year => {
         html += `<div class="heatmap-label">${year}</div>`;
         for (let m = 1; m <= 12; m++) {
-            const val = data[year]?.[String(m)];
+            const cell = data[year]?.[String(m)];
+            // 旧形式（数値）と新形式（オブジェクト）の両対応
+            const val = cell != null
+                ? (typeof cell === 'object' ? cell[mode] : cell)
+                : null;
             if (val != null) {
                 const bg = tempToColor(val);
                 const textColor = val > 20 ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.9)';
-                html += `<div class="heatmap-cell" style="background:${bg}; color:${textColor};" title="${year}年${m}月: ${val}℃">${val}</div>`;
+                html += `<div class="heatmap-cell" style="background:${bg}; color:${textColor};" title="${year}年${m}月(${modeLabels[mode]}): ${val}℃">${val}</div>`;
             } else {
                 html += `<div class="heatmap-cell" style="background:rgba(128,128,128,0.1); color:var(--text-muted);">-</div>`;
             }

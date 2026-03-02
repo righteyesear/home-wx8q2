@@ -207,8 +207,15 @@
 
             <!-- Section 9: Heatmap -->
             <section class="report-section">
-                <div class="section-header">
+                <div class="section-header"
+                    style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
                     <h2>🗓️ 気温ヒートマップ</h2>
+                    <div class="comparison-toggle" id="heatmapToggle">
+                        <button class="toggle-btn active" data-mode="avg"
+                            onclick="switchHeatmapMode('avg')">平均気温</button>
+                        <button class="toggle-btn" data-mode="high" onclick="switchHeatmapMode('high')">最高気温</button>
+                        <button class="toggle-btn" data-mode="low" onclick="switchHeatmapMode('low')">最低気温</button>
+                    </div>
                 </div>
                 <div class="heatmap-container" id="heatmapContainer"></div>
                 <div class="heatmap-legend" id="heatmapLegend"></div>
