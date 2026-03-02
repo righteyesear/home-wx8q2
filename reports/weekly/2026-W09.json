@@ -7,11 +7,11 @@
     "end_date": "2026-03-01",
     "label": "2026年 第9週（2/23 〜 3/1）"
   },
-  "generated_at": "2026-03-02T08:54:48.257500+09:00",
+  "generated_at": "2026-03-02T10:42:16.139160+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "分析中にエラーが発生しました: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}",
+      "ai_comment": "2026年の2月最終週、私たちは冬の終わりを飛び越えて、一足早い春の洗礼を受けたような一週間を過ごしました。週明けに記録した21.9度という気温は、本来のこの時期なら考えられないほどの暖かさで、前年の同じ時期と比べても平均で4度以上も高くなっています。2月の初頭から一歩ずつ階段を登るように上がってきた気温が、今週ついに一気に跳ね上がり、季節の大きな転換点を感じさせるストーリーとなりました。\n\nしかし、春への道のりは平坦ではありません。週の中盤には気温が急降下し、最低気温が5度台まで冷え込むなど、冬の寒さが意地を見せる場面もありました。週の前半と後半で春が顔を出し、中盤に冬が戻るという、まさに気温の乱高下に見舞われた一週間です。週末にかけて再び20度を超える上昇を見せるなど、この激しいV字回復の動きは、私たちの体に少なからず負担を強いたはずです。\n\nこのような変動期には、服装での細かな調整が何よりの防衛策になります。日中のポカポカ陽気に惑わされず、朝晩の冷え込みに対応できるよう、ストールやカーディガンなどの羽織ものを必ず準備してください。また、急激な気温上昇は花粉の飛散を早めるサインでもあります。暖房による乾燥対策と並行して、早めの花粉症ケアを始めるのが賢明です。ジェットコースターのような気象変化に負けないよう、体調を整えていきましょう。🌸🌿✨",
       "highlights": [
         "最高気温 21.9℃",
         "最低気温 5.4℃",
@@ -112,7 +112,7 @@
       "max_temp_diff": 3.0,
       "min_temp_diff": 5.3,
       "avg_daily_range_diff": -2.8,
-      "ai_comment": "分析中にエラーが発生しました: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}"
+      "ai_comment": "今年の第9週は、昨年と比較して「季節の時計が2週間ほど早く進んでいる」ような暖かさが特徴です。平均気温は3.5度高く、特に最低気温が昨年より5度以上も底上げされています。昨年は週明けに真冬並みの冷え込みがあり、そこから徐々に気温を上げる右肩上がりの推移でしたが、今年は週初めに20度を超えるピークが来て、中盤に少し落ち着くという、春先取りのパターンとなりました。\n\n日中の寒暖差（日較差）が昨年より小さく、夜間の冷え込みが穏やかなのも今年の特徴です。昨年は朝晩の凍えるような寒さに耐える必要がありましたが、今年は厚手の重いコートを脱ぎ、軽めの外出着を選べる日が増えています。\n\nただ、この急な暖かさは植物の芽吹きや花粉の飛散を早める大きな要因となります。昨年のような厳しい冬の名残を感じる場面は少なく、生活のあらゆる面で一気に春本番への備えが必要になる1週間といえるでしょう 🌸。"
     },
     "baseline": {
       "title": "2年平均との比較",
@@ -200,13 +200,13 @@
         "2026": {
           "1": 5.5,
           "2": 7.6,
-          "3": 11.4
+          "3": 11.3
         }
       }
     },
     "trend_analysis": {
       "title": "気温推移の分析",
-      "ai_comment": "分析中にエラーが発生しました: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}"
+      "ai_comment": "週の始まりは21.9度と春本番のような暖かさでしたが、週半ばにかけて気温が急降下しており、まさに三寒四温を地で行くような激しい変動が特徴的です。この乱高下は、低気圧の通過に伴って暖かい空気と冷たい空気が交互に流れ込んだことが影響しているのかもしれません。\n\n前年と比較すると全体的に3.5度ほど気温が高く過ごしやすいものの、一日の寒暖差が10度に達する日もあり、体調管理には注意が必要でしょう。週末にかけて再び20度近くまで上がるなど変化が大きいため、脱ぎ着しやすい服装で上手に調節してください☀️"
     }
   },
   "chart_data": {
