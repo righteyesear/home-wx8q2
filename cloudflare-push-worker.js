@@ -54,10 +54,7 @@ export default {
                 if (request.method === 'POST') return this.checkWeather(env, corsHeaders);
                 break;
             case '/api/status':
-                const count = await this.getSubscriberCount(env);
-                return new Response(JSON.stringify({ subscribers: count }), {
-                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-                });
+                return this.getDetailedStatus(env, corsHeaders);
         }
 
         return new Response(JSON.stringify({
@@ -954,7 +951,7 @@ export default {
         // 特定時刻のチェック
         // ================================================================
 
-        // 朝7時0分: デイリーサマリー
+        // 朝7時0分: デイリーサマリー（洗濯日和も含む）
         if (hour === 7 && minute === 0) {
             try {
                 await this.sendDailySummary(env);
@@ -973,7 +970,17 @@ export default {
             }
         }
 
-        // 夜10時0分: 凍結先行アラート
+        // 夕方17時0分: 日没時刻通知
+        if (hour === 17 && minute === 0) {
+            try {
+                await this.checkSunset(env);
+                console.log('[Cron] Sunset check done');
+            } catch (e) {
+                console.error('[Cron] Sunset error:', e.message);
+            }
+        }
+
+        // 夜10時0分: 凍結先行アラート（露点チェックも含む）
         if (hour === 22 && minute === 0) {
             try {
                 await this.checkFrostAlert(env);
@@ -983,8 +990,18 @@ export default {
             }
         }
 
+        // 日曜夜20時0分: 週間サマリー
+        if (jstNow.getDay() === 0 && hour === 20 && minute === 0) {
+            try {
+                await this.sendWeeklySummary(env);
+                console.log('[Cron] Weekly summary sent');
+            } catch (e) {
+                console.error('[Cron] Weekly summary error:', e.message);
+            }
+        }
+
         // ================================================================
-        // 5分ごとのチェック（気象警報・雨雲）- 24時間稼働
+        // 5分ごとのチェック（気象警報・雨雲・雨止み）- 24時間稼働
         // ================================================================
         if (minute % 5 === 0) {
             const urgentChecks = [
@@ -994,6 +1011,10 @@ export default {
                 }),
                 this.checkYahooRain(env).catch(e => {
                     console.error('[Cron] Yahoo rain check error:', e.message);
+                    return null;
+                }),
+                this.checkRainStopped(env).catch(e => {
+                    console.error('[Cron] Rain stopped check error:', e.message);
                     return null;
                 })
             ];
@@ -1014,6 +1035,10 @@ export default {
                 this.checkTemperatureChange(env).catch(e => {
                     console.error('[Cron] Temp change check error:', e.message);
                     return null;
+                }),
+                this.checkRapidTempChange(env).catch(e => {
+                    console.error('[Cron] Rapid temp change error:', e.message);
+                    return null;
                 })
             ];
 
@@ -1033,12 +1058,13 @@ export default {
 
             // 1. OpenMeteo で翌日の最低気温予報を取得（東京）
             const meteoResp = await fetch(
-                'https://api.open-meteo.com/v1/forecast?latitude=35.6895&longitude=139.6917&daily=temperature_2m_min&timezone=Asia%2FTokyo&forecast_days=2'
+                'https://api.open-meteo.com/v1/forecast?latitude=35.6895&longitude=139.6917&daily=temperature_2m_min,relative_humidity_2m_mean&timezone=Asia%2FTokyo&forecast_days=2'
             );
             if (!meteoResp.ok) return null;
 
             const meteoData = await meteoResp.json();
             const tomorrowMinTemp = meteoData.daily?.temperature_2m_min?.[1];
+            const tomorrowHumidity = meteoData.daily?.relative_humidity_2m_mean?.[1] ?? null;
             if (tomorrowMinTemp === undefined || tomorrowMinTemp === null) return null;
 
             // 2. 現在の実測気温を取得（Google Spreadsheets）
@@ -1065,13 +1091,22 @@ export default {
             let message = '';
 
             if (tomorrowMinTemp <= -3) {
-                // 予報が-3°C以下 → 実測条件に関係なく通知
                 shouldNotify = true;
                 message = `明日の最低気温: ${tomorrowMinTemp.toFixed(1)}°C ❄️\n厳しい冷え込みに注意`;
             } else if (tomorrowMinTemp <= 0 && currentTemp !== null && currentTemp <= 5) {
-                // 予報0°C以下 かつ 今夜の実測が5°C以下
                 shouldNotify = true;
                 message = `明日の最低${tomorrowMinTemp.toFixed(1)}°C予報 / 現在${currentTemp.toFixed(1)}°C\n路面凍結・水道凍結に注意`;
+            }
+
+            // ⑥ 露点アラート（露点 ≈ 気温 - (100 - 湿度) / 5）
+            if (tomorrowHumidity !== null && tomorrowMinTemp !== null) {
+                const dewPoint = tomorrowMinTemp - (100 - tomorrowHumidity) / 5;
+                if (dewPoint <= 0 && !shouldNotify) {
+                    shouldNotify = true;
+                    message = `明日の露点: ${dewPoint.toFixed(1)}°C\n朝露が凍結する可能性があります🌫️`;
+                } else if (dewPoint <= 0 && shouldNotify) {
+                    message += `\n露点${dewPoint.toFixed(1)}°C：朝露凍結にも注意`;
+                }
             }
 
             if (!shouldNotify) return { tomorrowMinTemp, currentTemp, skipped: 'no_risk' };
@@ -1137,20 +1172,31 @@ export default {
             // 2. 現在の気温と今日の予報気温
             try {
                 const meteoResp = await fetch(
-                    'https://api.open-meteo.com/v1/forecast?latitude=35.6895&longitude=139.6917&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&current=temperature_2m&timezone=Asia%2FTokyo&forecast_days=1'
+                    'https://api.open-meteo.com/v1/forecast?latitude=35.6895&longitude=139.6917&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max&timezone=Asia%2FTokyo&forecast_days=1'
                 );
                 if (meteoResp.ok) {
                     const meteo = await meteoResp.json();
-                    const current = meteo.current?.temperature_2m;
                     const todayMax = meteo.daily?.temperature_2m_max?.[0];
                     const todayMin = meteo.daily?.temperature_2m_min?.[0];
-                    const precipProb = meteo.daily?.precipitation_probability_max?.[0];
+                    const precipProb = meteo.daily?.precipitation_probability_max?.[0] ?? null;
+                    const windMax = meteo.daily?.wind_speed_10m_max?.[0] ?? null;
 
                     if (todayMax !== null && todayMin !== null) {
-                        summaryParts.push(`🌡️ ${todayMin?.toFixed(0)}°C〜${todayMax?.toFixed(0)}°Cの見込み`);
+                        summaryParts.push(`🌡️ ${todayMin?.toFixed(0)}°C～${todayMax?.toFixed(0)}°Cの見込み`);
                     }
                     if (precipProb !== null && precipProb >= 30) {
                         summaryParts.push(`☔ 降水確率 ${precipProb}%`);
+                    }
+
+                    // ① 洗澯日和判定
+                    if (precipProb !== null && windMax !== null && todayMax !== null) {
+                        if (precipProb <= 20 && todayMax >= 10 && windMax <= 15) {
+                            summaryParts.push('👕 洗澯日和です！屋外干しがおすすめ');
+                        } else if (precipProb >= 50) {
+                            summaryParts.push('🏠 室内干しをおすすめします');
+                        } else if (windMax > 15) {
+                            summaryParts.push('💨 風が強いので洗澯物の扱いに注意');
+                        }
                     }
                 }
             } catch (e) {
@@ -1195,6 +1241,234 @@ export default {
         } catch (e) {
             console.error('[DailySummary Error]', e.message);
             return null;
+        }
+    },
+
+    // ② 雨が止んだ通知
+    async checkRainStopped(env) {
+        try {
+            const response = env.YAHOO_PROXY
+                ? await env.YAHOO_PROXY.fetch('https://yahoo-weather-proxy.miurayukimail.workers.dev')
+                : await fetch('https://yahoo-weather-proxy.miurayukimail.workers.dev');
+            if (!response.ok) return null;
+
+            const data = await response.json();
+            if (!data.data || data.data.length === 0) return null;
+
+            // 現在の実況値（最新のobservation）
+            const jstNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+            const nowMinutes = jstNow.getHours() * 60 + jstNow.getMinutes();
+            let currentObs = null, bestDiff = Infinity;
+            for (const point of data.data) {
+                if (point.type === 'forecast' || !point.time) continue;
+                const [hh, mm] = point.time.split(':').map(Number);
+                const pm = hh * 60 + mm;
+                let diff = Math.abs(pm - nowMinutes);
+                if (diff > 720) diff = 1440 - diff;
+                if (diff < bestDiff) { bestDiff = diff; currentObs = point; }
+            }
+            if (!currentObs) return null;
+
+            const isRaining = currentObs.rainfall > 0;
+            const wasRaining = !!(await env.KV.get('rain_was_raining'));
+
+            if (isRaining) {
+                // 雨が降っている間はフラグをセット（TTL 3時間）
+                await env.KV.put('rain_was_raining', 'true', { expirationTtl: 10800 });
+                return { isRaining, rainfall: currentObs.rainfall };
+            }
+
+            if (!isRaining && wasRaining) {
+                // 次1時間の予報も雨なしか確認
+                const nextRain = data.data.find((d, i) => i <= 6 && d.type === 'forecast' && d.rainfall > 0);
+                if (!nextRain) {
+                    // 雨止みクールダウン（2時間）
+                    const stopKey = 'notify_rain_stopped';
+                    if (!await env.KV.get(stopKey)) {
+                        await this.sendToAll(env, {
+                            title: '🌤️ 雨が上がりました',
+                            body: `雨が止んで、この先1時間は降水の予報がありません`,
+                            data: { url: './#precipitationCard' }
+                        });
+                        await env.KV.put(stopKey, 'true', { expirationTtl: 7200 });
+                        await env.KV.delete('rain_was_raining');
+                    }
+                }
+            }
+            return { isRaining, wasRaining };
+        } catch (e) {
+            console.error('[RainStopped Error]', e.message);
+            return null;
+        }
+    },
+
+    // ③ 急な気温変化通知（15分で±5℃以上）
+    async checkRapidTempChange(env) {
+        try {
+            const SPREADSHEET_ID = '1nbmJIIUzw8n2PcHp98NaiKnaAVciBx_Egpokjjx7uW8';
+            const resp = await fetch(
+                `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=Summary`
+            );
+            if (!resp.ok) return null;
+
+            const csv = await resp.text();
+            const rows = csv.split('\n').filter(r => r.trim());
+            const tempRow = rows.find(r => r.includes('現在の気温'));
+            if (!tempRow) return null;
+            const cols = tempRow.match(/(\".*?\"|[^,]+)/g) || [];
+            const currentTemp = parseFloat(cols[1]?.trim().replace(/"/g, ''));
+            if (isNaN(currentTemp) || currentTemp < -60 || currentTemp > 80) return null;
+
+            // 前回値をKVから取得（TTL 20分）
+            const prevStr = await env.KV.get('rapid_temp_prev');
+            await env.KV.put('rapid_temp_prev', String(currentTemp), { expirationTtl: 1200 });
+
+            if (prevStr === null) return { currentTemp, status: 'first_reading' };
+
+            const prevTemp = parseFloat(prevStr);
+            if (isNaN(prevTemp)) return null;
+
+            const diff = currentTemp - prevTemp;
+            if (Math.abs(diff) < 5) return { currentTemp, diff, status: 'stable' };
+
+            const key = 'notify_rapid_temp';
+            if (await env.KV.get(key)) return { currentTemp, diff, skipped: 'cooldown' };
+
+            const isRising = diff > 0;
+            await this.sendToAll(env, {
+                title: `🌡️ 急な気温${isRising ? '上昇' : '低下'}`,
+                body: `${Math.abs(diff).toFixed(1)}°C${isRising ? '上昇' : '低下'}して現在${currentTemp.toFixed(1)}°C\n服装・体調管理に注意してください`,
+                data: { url: './#weatherHero' }
+            });
+            await env.KV.put(key, 'true', { expirationTtl: 10800 }); // 3時間
+            return { currentTemp, diff, alerted: true };
+        } catch (e) {
+            console.error('[RapidTemp Error]', e.message);
+            return null;
+        }
+    },
+
+    // ④ 日没時刻通知（NOAA式簡易計算）
+    async checkSunset(env) {
+        try {
+            const jstToday = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+            const dateKey = `${jstToday.getFullYear()}-${String(jstToday.getMonth() + 1).padStart(2, '0')}-${String(jstToday.getDate()).padStart(2, '0')}`;
+            if (await env.KV.get('sunset_' + dateKey)) return { skipped: 'already_sent' };
+
+            const lat = 35.77877, lon = 139.87817;
+            const tzOffset = 9; // JST
+            const JD = jstToday.getTime() / 86400000 + 2440587.5;
+            const n = Math.floor(JD - 2451545.0 + 0.5) + 0.5;
+            const L = (280.46 + 0.9856474 * n) % 360;
+            const g = ((357.528 + 0.9856003 * n) % 360) * Math.PI / 180;
+            const lambda = (L + 1.915 * Math.sin(g) + 0.02 * Math.sin(2 * g)) * Math.PI / 180;
+            const delta = Math.asin(Math.sin(23.439 * Math.PI / 180) * Math.sin(lambda));
+            const cosH = (Math.sin(-0.0145) - Math.sin(lat * Math.PI / 180) * Math.sin(delta))
+                / (Math.cos(lat * Math.PI / 180) * Math.cos(delta));
+            if (cosH < -1 || cosH > 1) return null; // 白夜・極夜
+            const H = Math.acos(cosH) * 180 / Math.PI;
+            const RA = Math.atan2(Math.cos(23.439 * Math.PI / 180) * Math.sin(lambda), Math.cos(lambda)) * 180 / Math.PI / 15;
+            const EqT = (L / 15 - ((RA + 720) % 24));
+            const sunsetUTC = 12 + H / 15 - EqT - lon / 15;
+            const sunsetJST = ((sunsetUTC + tzOffset) % 24 + 24) % 24;
+            const hh = Math.floor(sunsetJST);
+            const mm = Math.round((sunsetJST - hh) * 60);
+            const timeStr = `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
+
+            await this.sendToAll(env, {
+                title: '🌇 今日の日没時刻',
+                body: `今日の日没は ${timeStr} です\n洗濯物の取り込みをお忘れなく`,
+                data: { url: './#weatherHero' }
+            });
+            await env.KV.put('sunset_' + dateKey, 'true', { expirationTtl: 86400 });
+            return { sunset: timeStr };
+        } catch (e) {
+            console.error('[Sunset Error]', e.message);
+            return null;
+        }
+    },
+
+    // ⑥ 週間サマリー通知（毎週日曜20時）
+    async sendWeeklySummary(env) {
+        try {
+            const jstNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+            const weekKey = `weekly_${jstNow.getFullYear()}_W${Math.ceil(jstNow.getDate() / 7)}`;
+            if (await env.KV.get(weekKey)) return { skipped: 'already_sent' };
+
+            const SPREADSHEET_ID = '1nbmJIIUzw8n2PcHp98NaiKnaAVciBx_Egpokjjx7uW8';
+            const resp = await fetch(
+                `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=Daily`
+            );
+            if (!resp.ok) return null;
+
+            const csv = await resp.text();
+            const rows = csv.split('\n').slice(1).filter(r => r.trim());
+            const recent = rows.slice(-7); // 直近7行
+            if (recent.length === 0) return null;
+
+            const temps = recent.map(r => {
+                const cols = r.match(/(\".*?\"|[^,]+)/g) || [];
+                const hi = parseFloat(cols[1]?.trim().replace(/"/g, ''));
+                const lo = parseFloat(cols[2]?.trim().replace(/"/g, ''));
+                return { hi: isNaN(hi) ? null : hi, lo: isNaN(lo) ? null : lo };
+            }).filter(t => t.hi !== null && t.lo !== null);
+
+            if (temps.length === 0) return null;
+
+            const weekHigh = Math.max(...temps.map(t => t.hi)).toFixed(1);
+            const weekLow = Math.min(...temps.map(t => t.lo)).toFixed(1);
+            const avgHigh = (temps.reduce((s, t) => s + t.hi, 0) / temps.length).toFixed(1);
+
+            await this.sendToAll(env, {
+                title: '📊 今週の気温まとめ',
+                body: `最高: ${weekHigh}°C / 最低: ${weekLow}°C\n平均最高: ${avgHigh}°C（直近${temps.length}日）`,
+                data: { url: './#temperatureChart' }
+            });
+            await env.KV.put(weekKey, 'true', { expirationTtl: 604800 }); // 7日
+            return { weekHigh, weekLow, avgHigh };
+        } catch (e) {
+            console.error('[WeeklySummary Error]', e.message);
+            return null;
+        }
+    },
+
+    // ⑦ /api/status 充実版
+    async getDetailedStatus(env, corsHeaders) {
+        try {
+            const subscribers = await this.getSubscriberCount(env);
+
+            // クールダウンKVの状態を確認
+            const cooldownKeys = [
+                'notify_rain_lv1', 'notify_rain_lv2', 'notify_rain_lv3', 'notify_rain_lv4',
+                'notify_rain_stopped', 'notify_rapid_temp',
+                'notify_temp_freezing', 'notify_temp_cold', 'notify_temp_hot', 'notify_temp_heatwave',
+                'notify_tempchange_warmer_than_high', 'notify_tempchange_colder_than_low',
+                'rain_was_raining', 'rapid_temp_prev'
+            ];
+
+            const cooldowns = {};
+            for (const key of cooldownKeys) {
+                const val = await env.KV.get(key);
+                cooldowns[key] = val !== null;
+            }
+
+            const jstNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+            const jstStr = `${jstNow.getFullYear()}-${String(jstNow.getMonth() + 1).padStart(2, '0')}-${String(jstNow.getDate()).padStart(2, '0')} ${String(jstNow.getHours()).padStart(2, '0')}:${String(jstNow.getMinutes()).padStart(2, '0')} JST`;
+
+            return new Response(JSON.stringify({
+                checkedAt: jstStr,
+                subscribers,
+                activeCooldowns: Object.fromEntries(
+                    Object.entries(cooldowns).filter(([, v]) => v)
+                ),
+                allCooldowns: cooldowns
+            }, null, 2), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            });
+        } catch (e) {
+            return new Response(JSON.stringify({ error: e.message }), {
+                status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            });
         }
     },
 
