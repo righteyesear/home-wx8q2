@@ -170,8 +170,10 @@ export default {
     // 実況の雨をチェックして即座に通知を送信する（手動テスト用）
     async sendRealtimeRainNotification(env, corsHeaders) {
         try {
-            const proxyUrl = 'https://yahoo-weather-proxy.miurayukimail.workers.dev';
-            const response = await fetch(proxyUrl);
+            // Service Binding経由でYahooプロキシにアクセス（Worker間こ乱回避）
+            const response = env.YAHOO_PROXY
+                ? await env.YAHOO_PROXY.fetch('https://yahoo-weather-proxy.miurayukimail.workers.dev')
+                : await fetch('https://yahoo-weather-proxy.miurayukimail.workers.dev');
 
             // エラー時は詳細を返す（デバッグ用）
             if (!response.ok) {
@@ -349,7 +351,10 @@ export default {
     // Yahoo雨雲チェック
     async checkYahooRain(env) {
         try {
-            const response = await fetch('https://yahoo-weather-proxy.miurayukimail.workers.dev');
+            // Service Binding経由でYahooプロキシにアクセス（Worker間こ乱回避）
+            const response = env.YAHOO_PROXY
+                ? await env.YAHOO_PROXY.fetch('https://yahoo-weather-proxy.miurayukimail.workers.dev')
+                : await fetch('https://yahoo-weather-proxy.miurayukimail.workers.dev');
             if (!response.ok) return null;
 
             const data = await response.json();
