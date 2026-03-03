@@ -390,57 +390,61 @@ export default {
             if (!data.data || data.data.length === 0) return null;
 
             const precipData = data.data;
-            const now = new Date();
-            const hour = now.getHours();
-            const isNight = hour >= 22 || hour < 6; // 22:00-6:00 は夜間
+            const jstNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+            const hour = jstNow.getHours();
+            const isNight = hour >= 22 || hour < 6;
 
-            // 1時間以内の雨を探す
+            // 1時間以内の予報雨を探す（forecastのみ）
             const upcomingRain = precipData.find((d, i) => {
-                if (i > 6) return false; // 60分以内（10分刻みで6つ）
-                return d.rainfall > 0 && d.type === 'forecast';
+                if (i > 6) return false; // 60分以内
+                return d.rainfall >= 20 && d.type === 'forecast';
             });
 
             if (upcomingRain) {
                 const [hh, mm] = upcomingRain.time.split(':').map(Number);
-                const rainTime = new Date(now);
+                const rainTime = new Date(jstNow);
                 rainTime.setHours(hh, mm, 0, 0);
-                if (rainTime < now) rainTime.setDate(rainTime.getDate() + 1);
+                if (rainTime < jstNow) rainTime.setDate(rainTime.getDate() + 1);
 
-                const minsUntilRain = Math.round((rainTime - now) / 60000);
+                const minsUntilRain = Math.round((rainTime - jstNow) / 60000);
                 const rainfall = upcomingRain.rainfall;
 
-                // 夜間: 30mm/h以上のみ、日中: 20mm/h以上で豪雨、それ以下で雨雲接近
-                const heavyRainThreshold = isNight ? 30 : 20;
-                const isHeavyRain = rainfall >= heavyRainThreshold;
-
-                // 夜間は豪雨のみ通知
-                if (isNight && !isHeavyRain) {
-                    return { minsUntilRain, rainfall, skipped: 'night_mode' };
+                // 4段階雨量レベル別の文言とクールダウンキー
+                let level, title, body, rainKey;
+                if (rainfall >= 80) {
+                    level = 4;
+                    title = '🆆 猛烈な雨予報';
+                    body = `約${minsUntilRain}分後に${rainfall}mm/hの猛烈な雨\n再大な被害がおそれのある大雨—命を守る行動を！`;
+                    rainKey = 'notify_rain_lv4';
+                } else if (rainfall >= 50) {
+                    level = 3;
+                    title = '🚨 非常に激しい雨予報';
+                    body = `約${minsUntilRain}分後に${rainfall}mm/hの激しい雨\n屋外での行動は危险—すぐ非難して！`;
+                    rainKey = 'notify_rain_lv3';
+                } else if (rainfall >= 30) {
+                    level = 2;
+                    title = '⛈️ 豪雨予報';
+                    body = `約${minsUntilRain}分後に${rainfall}mm/hの強い雨\n業流・土砂災害に注意してください`;
+                    rainKey = 'notify_rain_lv2';
+                } else { // 20mm以上
+                    level = 1;
+                    title = '🌧️ 強雨予報';
+                    body = `約${minsUntilRain}分後に${rainfall}mm/hの強い雨\n屋外での行動に注意してください`;
+                    rainKey = 'notify_rain_lv1';
                 }
 
-                // クールダウン: 雨雲接近と豪雨予報は別（各1時間）
-                const rainKey = isHeavyRain ? 'notify_heavyrain' : 'notify_rain';
+                // 夜間はレベル3以上のみ通知
+                if (isNight && level < 3) {
+                    return { minsUntilRain, rainfall, level, skipped: 'night_mode' };
+                }
+
                 const lastNotify = await env.KV.get(rainKey);
-
                 if (!lastNotify) {
-                    if (isHeavyRain) {
-                        await this.sendToAll(env, {
-                            title: '⛈️ 豪雨予報',
-                            body: `約${minsUntilRain}分後に${rainfall}mm/hの強い雨が降りそうです`,
-                            data: { url: './#precipitationCard' }
-                        });
-                    } else {
-                        await this.sendToAll(env, {
-                            title: '🌧️ 雨雲接近',
-                            body: `約${minsUntilRain}分後に雨が降りそうです ☔`,
-                            data: { url: './#precipitationCard' }
-                        });
-                    }
-                    // クールダウン: 1時間
-                    await env.KV.put(rainKey, 'true', { expirationTtl: 3600 });
+                    await this.sendToAll(env, { title, body, data: { url: './#precipitationCard' } });
+                    await env.KV.put(rainKey, 'true', { expirationTtl: 3600 }); // 1時間クールダウン
                 }
 
-                return { minsUntilRain, rainfall };
+                return { minsUntilRain, rainfall, level };
             }
 
             return null;
@@ -963,6 +967,15 @@ export default {
 
             const results = await Promise.allSettled(urgentChecks);
             console.log('[Cron] Urgent checks done:', results.map(r => r.status));
+
+            // テスト用: 5分毎に自発通知（Cron自動実行の確認用）
+            const jstTime = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+            const timeLabel = `${String(jstTime.getHours()).padStart(2, '0')}:${String(jstTime.getMinutes()).padStart(2, '0')}`;
+            await this.sendToAll(env, {
+                title: '🔔 自発テスト５分毎',
+                body: `クロンは正常動作中です！（JST ${timeLabel}）`,
+                data: { url: './' }
+            });
         }
 
         // ================================================================
