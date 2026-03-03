@@ -194,8 +194,36 @@ export default {
                 });
             }
 
-            const currentRain = data.data[0].rainfall ?? data.data[0].rainfall_mm ?? 0;
-            const measureTime = data.data[0].time ?? '';
+            // 現在時刻に最も近い実況データを探す
+            const now = new Date();
+            const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+            let bestPoint = data.data[0];
+            let bestDiff = Infinity;
+
+            for (const point of data.data) {
+                // 予報データは除外し、実況データのみ対象
+                if (point.type === 'forecast') continue;
+                if (!point.time) continue;
+
+                const [hh, mm] = point.time.split(':').map(Number);
+                const pointMinutes = hh * 60 + mm;
+
+                // 日をまたぐ場合を考慮（例: 23:50 → 0:00）
+                let diff = Math.abs(pointMinutes - nowMinutes);
+                if (diff > 720) diff = 1440 - diff; // 24時間 = 1440分
+
+                if (diff < bestDiff) {
+                    bestDiff = diff;
+                    bestPoint = point;
+                }
+            }
+
+            // 実況データが見つからなかった場合は最初のデータを使用
+            if (!bestPoint) bestPoint = data.data[0];
+
+            const currentRain = bestPoint.rainfall ?? bestPoint.rainfall_mm ?? 0;
+            const measureTime = bestPoint.time ?? '';
 
             let title = '🌧️ 【実況】現在の降水量';
             let body = currentRain > 0
