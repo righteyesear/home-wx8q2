@@ -1348,32 +1348,24 @@ export default {
         }
     },
 
-    // ④ 日没時刻通知（NOAA式簡易計算）
+    // ④ 日没時刻通知（OpenMeteo API）
     async checkSunset(env) {
         try {
             const jstToday = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
             const dateKey = `${jstToday.getFullYear()}-${String(jstToday.getMonth() + 1).padStart(2, '0')}-${String(jstToday.getDate()).padStart(2, '0')}`;
             if (await env.KV.get('sunset_' + dateKey)) return { skipped: 'already_sent' };
 
-            const lat = 35.77877, lon = 139.87817;
-            const tzOffset = 9; // JST
-            const JD = jstToday.getTime() / 86400000 + 2440587.5;
-            const n = Math.floor(JD - 2451545.0 + 0.5) + 0.5;
-            const L = (280.46 + 0.9856474 * n) % 360;
-            const g = ((357.528 + 0.9856003 * n) % 360) * Math.PI / 180;
-            const lambda = (L + 1.915 * Math.sin(g) + 0.02 * Math.sin(2 * g)) * Math.PI / 180;
-            const delta = Math.asin(Math.sin(23.439 * Math.PI / 180) * Math.sin(lambda));
-            const cosH = (Math.sin(-0.0145) - Math.sin(lat * Math.PI / 180) * Math.sin(delta))
-                / (Math.cos(lat * Math.PI / 180) * Math.cos(delta));
-            if (cosH < -1 || cosH > 1) return null; // 白夜・極夜
-            const H = Math.acos(cosH) * 180 / Math.PI;
-            const RA = Math.atan2(Math.cos(23.439 * Math.PI / 180) * Math.sin(lambda), Math.cos(lambda)) * 180 / Math.PI / 15;
-            const EqT = (L / 15 - ((RA + 720) % 24));
-            const sunsetUTC = 12 + H / 15 - EqT - lon / 15;
-            const sunsetJST = ((sunsetUTC + tzOffset) % 24 + 24) % 24;
-            const hh = Math.floor(sunsetJST);
-            const mm = Math.round((sunsetJST - hh) * 60);
-            const timeStr = `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
+            // OpenMeteo から日没時刻を取得（本家ページと同じデータソース）
+            const resp = await fetch(
+                'https://api.open-meteo.com/v1/forecast?latitude=35.77877&longitude=139.87817&daily=sunset&timezone=Asia%2FTokyo&forecast_days=1'
+            );
+            if (!resp.ok) return null;
+
+            const data = await resp.json();
+            const sunsetISO = data.daily?.sunset?.[0]; // 例: "2026-03-04T17:42"
+            if (!sunsetISO) return null;
+
+            const timeStr = sunsetISO.slice(11, 16); // "HH:MM" 部分を切り出す
 
             await this.sendToAll(env, {
                 title: '🌇 今日の日没時刻',
