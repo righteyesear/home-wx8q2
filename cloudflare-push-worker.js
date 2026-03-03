@@ -194,9 +194,9 @@ export default {
                 });
             }
 
-            // 現在時刻に最も近い実況データを探す
-            const now = new Date();
-            const nowMinutes = now.getHours() * 60 + now.getMinutes();
+            // 現在時刻に最も近い実況データを探す（JST基準）
+            const jstNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+            const nowMinutes = jstNow.getHours() * 60 + jstNow.getMinutes();
 
             let bestPoint = data.data[0];
             let bestDiff = Infinity;
