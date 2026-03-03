@@ -7,7 +7,7 @@
     "end_date": "2026-03-31",
     "label": "2026年3月"
   },
-  "generated_at": "2026-03-03T13:42:44.130304+09:00",
+  "generated_at": "2026-03-03T15:40:47.954045+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -23,7 +23,7 @@
       "title": "月間統計",
       "days": 3,
       "avg_temp": 10.9,
-      "avg_temp_stdev": 1.8,
+      "avg_temp_stdev": 1.9,
       "max_temp": 17.3,
       "max_temp_date": "2026/03/01",
       "avg_high": 13.9,
@@ -56,7 +56,7 @@
         "weekday": "火",
         "high": 11.1,
         "low": 7.2,
-        "avg": 9.0,
+        "avg": 8.8,
         "range": 3.9
       }
     ],
@@ -67,7 +67,7 @@
         "label": "3/1〜3/7",
         "days": 3,
         "avg_temp": 10.9,
-        "avg_temp_stdev": 1.8,
+        "avg_temp_stdev": 1.9,
         "max_temp": 17.3,
         "max_temp_date": "2026/03/01",
         "avg_high": 13.9,
@@ -330,7 +330,7 @@
       "avgs": [
         12.5,
         11.3,
-        9.0
+        8.8
       ]
     },
     "prev_year_comparison": {
@@ -342,7 +342,7 @@
       "this_year": [
         12.5,
         11.3,
-        9.0
+        8.8
       ],
       "last_year": [
         12.6,
@@ -463,7 +463,7 @@
       "deviations": [
         1.7,
         0.5,
-        -1.8
+        -2.0
       ],
       "baseline_avg": 10.8
     },
