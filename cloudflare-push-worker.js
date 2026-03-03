@@ -46,6 +46,9 @@ export default {
             case '/api/test/tempchange':
                 if (request.method === 'POST') return this.sendTestNotification(env, corsHeaders, 'tempchange');
                 break;
+            case '/api/test/real-rain':
+                if (request.method === 'POST') return this.sendRealtimeRainNotification(env, corsHeaders);
+                break;
             case '/api/check':
                 // 手動で天気チェックをトリガー
                 if (request.method === 'POST') return this.checkWeather(env, corsHeaders);
@@ -65,7 +68,7 @@ export default {
                 '/api/test', '/api/test/warning', '/api/test/special',
                 '/api/test/rain', '/api/test/heavyrain',
                 '/api/test/fullmoon', '/api/test/temperature',
-                '/api/test/heatwave', '/api/test/tempchange'
+                '/api/test/heatwave', '/api/test/tempchange', '/api/test/real-rain'
             ]
         }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -159,6 +162,38 @@ export default {
             });
         } catch (error) {
             return new Response(JSON.stringify({ error: error.message, stack: error.stack }), {
+                status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            });
+        }
+    },
+
+    // 実況の雨をチェックして即座に通知を送信する（手動テスト用）
+    async sendRealtimeRainNotification(env, corsHeaders) {
+        try {
+            const response = await fetch('https://yahoo-weather-proxy.miurayukimail.workers.dev');
+            if (!response.ok) throw new Error('Proxy error');
+
+            const data = await response.json();
+            if (!data.data || data.data.length === 0) throw new Error('No data');
+
+            const currentRain = data.data[0].rainfall;
+
+            let title = '🌧️ 【実況】現在の降水量';
+            let body = currentRain > 0
+                ? `現在、${currentRain}mm/hの雨が降っています`
+                : '現在は雨は降っていません';
+
+            const results = await this.sendToAll(env, {
+                title,
+                body,
+                data: { url: './#precipitationCard' }
+            });
+
+            return new Response(JSON.stringify({ success: true, currentRain, results }), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            });
+        } catch (error) {
+            return new Response(JSON.stringify({ error: error.message }), {
                 status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
             });
         }
@@ -309,24 +344,9 @@ export default {
             const hour = now.getHours();
             const isNight = hour >= 22 || hour < 6; // 22:00-6:00 は夜間
 
-            // 0. 現在の降水量をチェック（テスト用追加）
-            const currentRain = precipData[0].rainfall;
-            if (currentRain > 0) {
-                const currentRainKey = 'notify_current_rain';
-                if (!await env.KV.get(currentRainKey)) {
-                    await this.sendToAll(env, {
-                        title: '🌧️ 現在の降水量',
-                        body: `現在、${currentRain}mm/hの雨が降っています`,
-                        data: { url: './#precipitationCard' }
-                    });
-                    // クールダウン: 15分間隔（テストしやすいよう短めに設定）
-                    await env.KV.put(currentRainKey, 'true', { expirationTtl: 900 });
-                }
-            }
-
             // 1時間以内の雨を探す
             const upcomingRain = precipData.find((d, i) => {
-                if (i === 0 || i > 6) return false; // 0（実況）は除外、60分以内（10分刻みで6つ）
+                if (i > 6) return false; // 60分以内（10分刻みで6つ）
                 return d.rainfall > 0 && d.type === 'forecast';
             });
 
