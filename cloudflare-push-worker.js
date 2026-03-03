@@ -195,11 +195,12 @@ export default {
             }
 
             const currentRain = data.data[0].rainfall ?? data.data[0].rainfall_mm ?? 0;
+            const measureTime = data.data[0].time ?? '';
 
             let title = '🌧️ 【実況】現在の降水量';
             let body = currentRain > 0
-                ? `現在、${currentRain}mm/hの雨が降っています`
-                : '現在は雨は降っていません';
+                ? `現在、${currentRain}mm/hの雨が降っています${measureTime ? `（${measureTime}時点）` : ''}`
+                : `現在は雨は降っていません${measureTime ? `（${measureTime}時点）` : ''}`;
 
             const results = await this.sendToAll(env, {
                 title,
