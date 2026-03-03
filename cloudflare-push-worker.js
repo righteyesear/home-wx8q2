@@ -309,9 +309,24 @@ export default {
             const hour = now.getHours();
             const isNight = hour >= 22 || hour < 6; // 22:00-6:00 は夜間
 
+            // 0. 現在の降水量をチェック（テスト用追加）
+            const currentRain = precipData[0].rainfall;
+            if (currentRain > 0) {
+                const currentRainKey = 'notify_current_rain';
+                if (!await env.KV.get(currentRainKey)) {
+                    await this.sendToAll(env, {
+                        title: '🌧️ 現在の降水量',
+                        body: `現在、${currentRain}mm/hの雨が降っています`,
+                        data: { url: './#precipitationCard' }
+                    });
+                    // クールダウン: 15分間隔（テストしやすいよう短めに設定）
+                    await env.KV.put(currentRainKey, 'true', { expirationTtl: 900 });
+                }
+            }
+
             // 1時間以内の雨を探す
             const upcomingRain = precipData.find((d, i) => {
-                if (i > 6) return false; // 60分以内（10分刻みで6つ）
+                if (i === 0 || i > 6) return false; // 0（実況）は除外、60分以内（10分刻みで6つ）
                 return d.rainfall > 0 && d.type === 'forecast';
             });
 
