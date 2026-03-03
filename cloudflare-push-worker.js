@@ -414,17 +414,17 @@ export default {
                 if (rainfall >= 80) {
                     level = 4;
                     title = '🆆 猛烈な雨予報';
-                    body = `約${minsUntilRain}分後に${rainfall}mm/hの猛烈な雨\n再大な被害がおそれのある大雨—命を守る行動を！`;
+                    body = `約${minsUntilRain}分後に${rainfall}mm/hの猛烈な雨\n甚大な被害のおそれがある大雨—命を守る行動を！`;
                     rainKey = 'notify_rain_lv4';
                 } else if (rainfall >= 50) {
                     level = 3;
                     title = '🚨 非常に激しい雨予報';
-                    body = `約${minsUntilRain}分後に${rainfall}mm/hの激しい雨\n屋外での行動は危险—すぐ非難して！`;
+                    body = `約${minsUntilRain}分後に${rainfall}mm/hの激しい雨\n屋外での行動は危険—すぐ避難して！`;
                     rainKey = 'notify_rain_lv3';
                 } else if (rainfall >= 30) {
                     level = 2;
                     title = '⛈️ 豪雨予報';
-                    body = `約${minsUntilRain}分後に${rainfall}mm/hの強い雨\n業流・土砂災害に注意してください`;
+                    body = `約${minsUntilRain}分後に${rainfall}mm/hの強い雨\n急な増水・土砂災害に注意してください`;
                     rainKey = 'notify_rain_lv2';
                 } else { // 20mm以上
                     level = 1;
@@ -467,8 +467,8 @@ export default {
         const isFullMoon = moonAge >= 13.5 && moonAge < 15.5;
 
         if (isFullMoon) {
-            const today = now.toISOString().split('T')[0];
-            const notified = await env.KV.get('fullmoon_' + today);
+            const jstDate = `${jstNow.getFullYear()}-${String(jstNow.getMonth() + 1).padStart(2, '0')}-${String(jstNow.getDate()).padStart(2, '0')}`;
+            const notified = await env.KV.get('fullmoon_' + jstDate);
 
             if (!notified) {
                 const moonNames = {
@@ -477,7 +477,7 @@ export default {
                     7: 'バックムーン', 8: 'スタージョンムーン', 9: 'ハーベストムーン',
                     10: 'ハンターズムーン', 11: 'ビーバームーン', 12: 'コールドムーン'
                 };
-                const moonName = moonNames[now.getMonth() + 1];
+                const moonName = moonNames[jstNow.getMonth() + 1];
 
                 await this.sendToAll(env, {
                     title: '🌕 今夜は満月',
@@ -485,7 +485,7 @@ export default {
                     data: { url: './#moonCard' }
                 });
 
-                await env.KV.put('fullmoon_' + today, 'true', { expirationTtl: 86400 });
+                await env.KV.put('fullmoon_' + jstDate, 'true', { expirationTtl: 86400 });
                 return true;
             }
         }
@@ -657,11 +657,13 @@ export default {
             const yesterdayRow = dailyRows[dailyRows.length - 2];
             if (!yesterdayRow) return null;
 
-            const dailyCols = yesterdayRow.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
-            const yesterdayHigh = parseFloat(dailyCols[1]?.replace(/"/g, '')) || null;
-            const yesterdayLow = parseFloat(dailyCols[2]?.replace(/"/g, '')) || null;
+            const dailyCols = yesterdayRow.match(/(".*?"|[^,]+)/g) || [];
+            const parsedHigh = parseFloat(dailyCols[1]?.trim().replace(/"/g, ''));
+            const parsedLow = parseFloat(dailyCols[2]?.trim().replace(/"/g, ''));
+            const yesterdayHigh = !isNaN(parsedHigh) ? parsedHigh : null;
+            const yesterdayLow = !isNaN(parsedLow) ? parsedLow : null;
 
-            if (!yesterdayHigh || !yesterdayLow) return null;
+            if (yesterdayHigh === null || yesterdayLow === null) return null;
 
             // 3. 比較して通知
             const highDiff = currentTemp - yesterdayHigh;
@@ -1048,10 +1050,13 @@ export default {
             if (summaryResp.ok) {
                 const csv = await summaryResp.text();
                 const rows = csv.split('\n').filter(r => r.trim());
-                if (rows.length >= 2) {
-                    const lastRow = rows[rows.length - 1];
-                    const cols = lastRow.match(/(\".*?\"|[^\",\s]+)(?=\s*,|\s*$)/g) || [];
-                    currentTemp = parseFloat(cols[1]?.replace(/"/g, '')) || null;
+                const tempRow = rows.find(r => r.includes('現在の気温'));
+                if (tempRow) {
+                    const cols = tempRow.match(/(".*?"|[^,]+)/g) || [];
+                    const parsed = parseFloat(cols[1]?.trim().replace(/"/g, ''));
+                    if (!isNaN(parsed) && parsed >= -60 && parsed <= 80) {
+                        currentTemp = parsed;
+                    }
                 }
             }
 
