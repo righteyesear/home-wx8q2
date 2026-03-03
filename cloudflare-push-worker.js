@@ -170,13 +170,29 @@ export default {
     // 実況の雨をチェックして即座に通知を送信する（手動テスト用）
     async sendRealtimeRainNotification(env, corsHeaders) {
         try {
-            const response = await fetch('https://yahoo-weather-proxy.miurayukimail.workers.dev');
-            if (!response.ok) throw new Error('Proxy error');
+            const proxyUrl = 'https://yahoo-weather-proxy.miurayukimail.workers.dev';
+            const response = await fetch(proxyUrl);
+
+            // エラー時は詳細を返す（デバッグ用）
+            if (!response.ok) {
+                const errText = await response.text().catch(() => '(no body)');
+                return new Response(JSON.stringify({
+                    error: 'Proxy error',
+                    status: response.status,
+                    detail: errText.slice(0, 200)
+                }), {
+                    status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
 
             const data = await response.json();
-            if (!data.data || data.data.length === 0) throw new Error('No data');
+            if (!data.data || data.data.length === 0) {
+                return new Response(JSON.stringify({ error: 'No rain data', raw: JSON.stringify(data).slice(0, 300) }), {
+                    status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
 
-            const currentRain = data.data[0].rainfall;
+            const currentRain = data.data[0].rainfall ?? data.data[0].rainfall_mm ?? 0;
 
             let title = '🌧️ 【実況】現在の降水量';
             let body = currentRain > 0
@@ -193,7 +209,7 @@ export default {
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' }
             });
         } catch (error) {
-            return new Response(JSON.stringify({ error: error.message }), {
+            return new Response(JSON.stringify({ error: error.message, stack: error.stack?.slice(0, 300) }), {
                 status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
             });
         }
