@@ -403,7 +403,8 @@ export default {
     // 満月チェック
     async checkFullMoon(env) {
         const now = new Date();
-        const hour = now.getHours();
+        const jstNow = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+        const hour = jstNow.getHours();
 
         // 朝8時のみチェック
         if (hour !== 8) return false;
@@ -937,7 +938,9 @@ export default {
     // 凍結先行アラート（前日22時にOpenMeteo予報 + 実測気温で判定）
     async checkFrostAlert(env) {
         try {
-            const today = new Date().toISOString().split('T')[0];
+            // JST基準の日付でKVキーを生成
+            const jstToday = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+            const today = `${jstToday.getFullYear()}-${String(jstToday.getMonth() + 1).padStart(2, '0')}-${String(jstToday.getDate()).padStart(2, '0')}`;
             const notified = await env.KV.get('frost_alert_' + today);
             if (notified) return { skipped: 'already_sent' };
 
@@ -1001,7 +1004,9 @@ export default {
     // デイリーサマリー（朝7時の天気まとめ通知）
     async sendDailySummary(env) {
         try {
-            const today = new Date().toISOString().split('T')[0];
+            // JST基準の日付でKVキーを生成
+            const jstToday = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+            const today = `${jstToday.getFullYear()}-${String(jstToday.getMonth() + 1).padStart(2, '0')}-${String(jstToday.getDate()).padStart(2, '0')}`;
             const notified = await env.KV.get('daily_summary_' + today);
             if (notified) return { skipped: 'already_sent' };
 
@@ -1112,3 +1117,4 @@ export default {
         return ((jd - 2451550.1) % 29.53058867 + 29.53058867) % 29.53058867;
     }
 };
+
