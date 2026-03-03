@@ -515,17 +515,18 @@ export default {
             const rows = csv.split('\n').filter(r => r.trim());
             if (rows.length < 2) return null;
 
-            // 最新の気温を取得（Summary シートの最新行）
-            const lastRow = rows[rows.length - 1];
-            const cols = lastRow.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
-            const parsedTemp = parseFloat(cols[1]?.replace(/"/g, ''));
+            // CSVは「キー,値」形式なので「現在の気温」の行をキー名で検索する
+            const tempRow = rows.find(r => r.includes('現在の気温'));
+            if (!tempRow) return null;
+            const cols = tempRow.match(/(".*?"|[^,]+)/g) || [];
+            const parsedTemp = parseFloat(cols[1]?.trim().replace(/"/g, ''));
 
-            // 現実的な気温範囲（-60。100℃）のバリデーション—异常値・パース失敗を防ぐ
-            const currentTemp = (!isNaN(parsedTemp) && parsedTemp >= -60 && parsedTemp <= 100)
+            // 現実的な気温範囲チェック（念のため）
+            const currentTemp = (!isNaN(parsedTemp) && parsedTemp >= -60 && parsedTemp <= 80)
                 ? parsedTemp : null;
 
             if (currentTemp === null) {
-                console.warn('[Temp] Skipping invalid temperature value:', parsedTemp);
+                console.warn('[Temp] Invalid temperature value:', parsedTemp);
                 return null;
             }
 
@@ -629,14 +630,16 @@ export default {
             const summaryRows = summaryCSV.split('\n').filter(r => r.trim());
             if (summaryRows.length < 2) return null;
 
-            const lastSummaryRow = summaryRows[summaryRows.length - 1];
-            const summaryCols = lastSummaryRow.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
-            const parsedCurrentTemp = parseFloat(summaryCols[1]?.replace(/"/g, ''));
-            const currentTemp = (!isNaN(parsedCurrentTemp) && parsedCurrentTemp >= -60 && parsedCurrentTemp <= 100)
+            // キー名「現在の気温」の行を検索して取得
+            const tempRow = summaryRows.find(r => r.includes('現在の気温'));
+            if (!tempRow) return null;
+            const summaryCols = tempRow.match(/(".*?"|[^,]+)/g) || [];
+            const parsedCurrentTemp = parseFloat(summaryCols[1]?.trim().replace(/"/g, ''));
+            const currentTemp = (!isNaN(parsedCurrentTemp) && parsedCurrentTemp >= -60 && parsedCurrentTemp <= 80)
                 ? parsedCurrentTemp : null;
 
             if (currentTemp === null) {
-                console.warn('[TempChange] Skipping invalid temperature value:', parsedCurrentTemp);
+                console.warn('[TempChange] Invalid temperature value:', parsedCurrentTemp);
                 return null;
             }
 
@@ -1142,11 +1145,11 @@ export default {
                 if (summaryResp.ok) {
                     const csv = await summaryResp.text();
                     const rows = csv.split('\n').filter(r => r.trim());
-                    if (rows.length >= 2) {
-                        const lastRow = rows[rows.length - 1];
-                        const cols = lastRow.match(/(\".*?\"|[^\",\s]+)(?=\s*,|\s*$)/g) || [];
-                        const currentTemp = parseFloat(cols[1]?.replace(/"/g, ''));
-                        if (!isNaN(currentTemp)) {
+                    const tempRow = rows.find(r => r.includes('現在の気温'));
+                    if (tempRow) {
+                        const cols = tempRow.match(/(\".*?\"|[^,]+)/g) || [];
+                        const currentTemp = parseFloat(cols[1]?.trim().replace(/"/g, ''));
+                        if (!isNaN(currentTemp) && currentTemp >= -60 && currentTemp <= 80) {
                             summaryParts.push(`📍 現在の外気温: ${currentTemp.toFixed(1)}°C`);
                         }
                     }
