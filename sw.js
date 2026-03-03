@@ -95,6 +95,12 @@ self.addEventListener('notificationclick', event => {
                 // Check if app is already open
                 for (const client of windowClients) {
                     if (client.url.includes('index.html') && 'focus' in client) {
+                        // ディープリンクURLがある場合はナビゲート
+                        if (urlToOpen !== './' && 'navigate' in client) {
+                            return client.navigate(urlToOpen).then(() => client.focus());
+                        }
+                        // navigateが使えない場合はpostMessageでフロントに通知
+                        client.postMessage({ type: 'NOTIFICATION_CLICK', url: urlToOpen });
                         return client.focus();
                     }
                 }
