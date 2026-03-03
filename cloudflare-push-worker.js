@@ -518,9 +518,16 @@ export default {
             // 最新の気温を取得（Summary シートの最新行）
             const lastRow = rows[rows.length - 1];
             const cols = lastRow.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
-            const currentTemp = parseFloat(cols[1]?.replace(/"/g, '')) || null;
+            const parsedTemp = parseFloat(cols[1]?.replace(/"/g, ''));
 
-            if (currentTemp === null) return null;
+            // 現実的な気温範囲（-60。100℃）のバリデーション—异常値・パース失敗を防ぐ
+            const currentTemp = (!isNaN(parsedTemp) && parsedTemp >= -60 && parsedTemp <= 100)
+                ? parsedTemp : null;
+
+            if (currentTemp === null) {
+                console.warn('[Temp] Skipping invalid temperature value:', parsedTemp);
+                return null;
+            }
 
             // 月ごとの閾値設定
             const month = new Date().getMonth() + 1;
@@ -624,9 +631,14 @@ export default {
 
             const lastSummaryRow = summaryRows[summaryRows.length - 1];
             const summaryCols = lastSummaryRow.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
-            const currentTemp = parseFloat(summaryCols[1]?.replace(/"/g, '')) || null;
+            const parsedCurrentTemp = parseFloat(summaryCols[1]?.replace(/"/g, ''));
+            const currentTemp = (!isNaN(parsedCurrentTemp) && parsedCurrentTemp >= -60 && parsedCurrentTemp <= 100)
+                ? parsedCurrentTemp : null;
 
-            if (currentTemp === null) return null;
+            if (currentTemp === null) {
+                console.warn('[TempChange] Skipping invalid temperature value:', parsedCurrentTemp);
+                return null;
+            }
 
             // 2. 昨日の最高/最低を取得（Dailyシート）
             const dailyResp = await fetch(
