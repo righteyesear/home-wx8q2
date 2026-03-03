@@ -704,17 +704,26 @@ export default {
 
     async sendToAll(env, payload) {
         const list = await env.KV.list({ prefix: 'sub_' });
-        let sent = 0, failed = 0;
+        let sent = 0, failed = 0, cleaned = 0;
 
         for (const key of list.keys) {
             const data = await env.KV.get(key.name);
             if (data) {
                 const { subscription } = JSON.parse(data);
-                const success = await this.sendWebPush(env, subscription, payload);
-                if (success) sent++; else failed++;
+                const result = await this.sendWebPush(env, subscription, payload);
+                if (result.success) {
+                    sent++;
+                } else if (result.gone) {
+                    // 410 Gone: サブスクリプションが完全に無効（端末側で解除済み）
+                    await env.KV.delete(key.name);
+                    cleaned++;
+                    console.log('[Push] Cleaned expired subscription:', key.name);
+                } else {
+                    failed++;
+                }
             }
         }
-        return { sent, failed };
+        return { sent, failed, cleaned };
     },
 
     async sendWebPush(env, subscription, payload) {
@@ -749,10 +758,17 @@ export default {
             const responseText = await response.text();
             console.log('[Push] Response:', response.status, responseText.slice(0, 100));
 
-            return response.status >= 200 && response.status < 300;
+            if (response.status >= 200 && response.status < 300) {
+                return { success: true, gone: false };
+            }
+            // 410 Gone = サブスクリプションが完全に無効化された
+            if (response.status === 410) {
+                return { success: false, gone: true };
+            }
+            return { success: false, gone: false };
         } catch (error) {
             console.error('[Push Error]', error.message, error.stack);
-            return false;
+            return { success: false, gone: false };
         }
     },
 
