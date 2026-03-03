@@ -967,15 +967,6 @@ export default {
 
             const results = await Promise.allSettled(urgentChecks);
             console.log('[Cron] Urgent checks done:', results.map(r => r.status));
-
-            // テスト用: 5分毎に自発通知（Cron自動実行の確認用）
-            const jstTime = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
-            const timeLabel = `${String(jstTime.getHours()).padStart(2, '0')}:${String(jstTime.getMinutes()).padStart(2, '0')}`;
-            await this.sendToAll(env, {
-                title: '🔔 自発テスト５分毎',
-                body: `クロンは正常動作中です！（JST ${timeLabel}）`,
-                data: { url: './' }
-            });
         }
 
         // ================================================================
