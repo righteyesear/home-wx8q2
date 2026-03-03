@@ -189,19 +189,21 @@ function updateGreeting(temp, humidity) {
     const fl = calculateFeelsLike(temp, humidity, wsRaw);
 
     // Weather state detection (detailed)
-    const isThunderstorm = wc >= 95;
-    const isHeavySnow = wc >= 75 && wc < 80;
-    const isSnow = wc >= 71 && wc < 75;
-    const isSleet = wc >= 80 && wc < 82;
-    const isHeavyRain = wc >= 82 && wc < 95;
-    const isModerateRain = wc >= 63 && wc < 67;
-    const isRain = wc >= 61 && wc < 63;
-    const isDrizzle = wc >= 51 && wc < 61;
-    const isFog = wc >= 45 && wc < 51;
-    const isOvercast = wc >= 3 && wc < 45;
-    const isPartlyCloudy = wc === 2;
-    const isClear = wc >= 0 && wc <= 1;
-    const isRainingOpenMeteo = isThunderstorm || isHeavyRain || isModerateRain || isRain || isDrizzle;
+    // WMO Weather interpretation codes: https://open-meteo.com/en/docs
+    const isThunderstorm = wc >= 95;           // 95-99: 雷雨
+    const isHeavySnow = wc === 75 || wc === 77; // 75: 大雪, 77: 雪あられ
+    const isSnow = wc >= 71 && wc <= 73;       // 71: 弱い雪, 73: 中程度の雪
+    const isSnowShower = wc === 85 || wc === 86; // 85-86: にわか雪
+    const isShower = wc >= 80 && wc <= 82;     // 80: 弱いにわか雨, 81: 中, 82: 激しい
+    const isHeavyRain = wc === 82;             // 82: 激しいにわか雨
+    const isModerateRain = wc >= 63 && wc <= 67; // 63: 中程度の雨, 65: 強い雨, 66-67: 凍雨
+    const isRain = wc === 61;                  // 61: 弱い雨
+    const isDrizzle = wc >= 51 && wc <= 57;    // 51-57: 霧雨（凍霧雨含む）
+    const isFog = wc === 45 || wc === 48;      // 45: 霧, 48: 着氷性の霧
+    const isOvercast = wc === 3;               // 3: 曇り（WMOコード3のみ）
+    const isPartlyCloudy = wc === 2;           // 2: 晴れ時々曇り
+    const isClear = wc >= 0 && wc <= 1;        // 0: 快晴, 1: 晴れ
+    const isRainingOpenMeteo = isThunderstorm || isHeavyRain || isShower || isModerateRain || isRain || isDrizzle;
     // Yahoo APIの実測データを優先、なければOpen-Meteoを使用
     const isRaining = actualPrecipState?.isRaining ?? isRainingOpenMeteo;
 
@@ -210,8 +212,8 @@ function updateGreeting(temp, humidity) {
     const isActuallyPrecipitating = actualPrecipState?.isRaining === true;
     const isSnowYahoo = isActuallyPrecipitating && actualPrecipState?.precipType === 'snow';
     const isSleetYahoo = isActuallyPrecipitating && actualPrecipState?.precipType === 'sleet';
-    const isSnowActual = isSnowYahoo || isHeavySnow || isSnow;
-    const isSleetActual = isSleetYahoo || isSleet;
+    const isSnowActual = isSnowYahoo || isHeavySnow || isSnow || isSnowShower;
+    const isSleetActual = isSleetYahoo; // みぞれ判定はYahoo API実測のみに依存
 
     // Wind levels (more detailed)
     const isCalm = ws < 3;
@@ -278,7 +280,7 @@ function updateGreeting(temp, humidity) {
     // Season detection
     const isSummer = month >= 6 && month <= 8;
     const isWinter = month === 12 || month <= 2;
-    const isRainy = month === 6 || month === 7;
+    const isRainySeason = month === 6 || month === 7;  // 梴雨シーズン
     const isSpring = month >= 3 && month <= 5;
     const isAutumn = month >= 9 && month <= 11;
 
@@ -313,11 +315,12 @@ function updateGreeting(temp, humidity) {
     const isYearEnd = month === 12 && dayOfMonth >= 28;  // 28日以降
 
     // Health conditions
-    const isPollenSeason = (month >= 2 && month <= 5) && !isRaining && isClear;
+    const isPollenSeason = (month >= 2 && month <= 5) && !isRaining;  // 曇りの日も花粉は飛散する
     const isDrySkinRisk = isExtremelyDry || isVeryDry;
     const isHeatstrokeRisk = temp >= 28 && (humidity >= 60 || wbgt >= 25);
     const isColdRisk = (isWinter || temp < 10) && (isDrySkinRisk || isVeryWindy);
     const isDehydrationRisk = temp >= 25 || (temp >= 20 && humidity < 40);
+    const isTropicalNight = isNight && temp >= 25;  // 気象庁定義：最低気温25°C以上
 
     // Clothing suggestions based on temp
     const clothingSuggestion = temp >= 28 ? '半袖1枚' :
@@ -525,7 +528,7 @@ function updateGreeting(temp, humidity) {
                 `❄️ ${t} — 静かに雪が降っています。積雪注意`,
                 `❄️ ${t} — 雪化粧の街。滑りにくい靴で出かけて`
             ]);
-        } else if (temp <= 2 && isSleet) {
+        } else if (temp <= 2 && isSleetActual) {
             comment = pick([
                 `🌨️ ${t} — みぞれが降っています。傘が必須。滑りやすいので注意`,
                 `🌨️ ${t} — 雨と雪が混じったみぞれ。傘をさしても濡れます`,
@@ -562,14 +565,14 @@ function updateGreeting(temp, humidity) {
     // ============================================================
     // PRIORITY 4: Heavy Rain / Showers (雪/みぞれ判定なら優先でスキップ)
     // ============================================================
-    else if ((isHeavyRain || isModerateRain) && !isSnowActual && !isSleetActual) {
+    else if ((isHeavyRain || isShower || isModerateRain) && !isSnowActual && !isSleetActual) {
         if (temp >= 32 && isExtremelyHumid) {
-            comment = `🌧️ ${t}・湿度${h}% — 猛暑の中の豪雨。蒸し地獄。雨宿りして涼を`;
-        } else if (temp >= 28 && isSummer && isAfternoon) {
+            comment = `🌧️ ${t}・湿度${h}% — 猛暑の中の豪雨。蒸し暑さが極限レベル。雨宿りして涼を`;
+        } else if (temp >= 28 && isSummer && isAfternoon && hour >= 15) {
             comment = `🌧️ ${t} — 夏の夕立が激しいです。1時間もすれば止むかも`;
         } else if (temp >= 28 && isExtremelyHumid) {
             comment = `🌧️ ${t}・湿度${h}% — 熱帯のようなスコール。ジメジメします`;
-        } else if (temp >= 25 && isRainy) {
+        } else if (temp >= 25 && isRainySeason) {
             comment = `🌧️ ${t} — 梅雨の本降り。じめじめ蒸し暑い。除湿器を`;
         } else if (temp >= 25) {
             comment = `🌧️ ${t} — 蒸し暑い中、激しい雨。雨宿りして涼みましょう`;
@@ -584,7 +587,7 @@ function updateGreeting(temp, humidity) {
         } else if (temp >= 10) {
             comment = `🌧️ ${t} — 冷たい雨が激しく降っています。濡れると冷えます`;
         } else if (temp >= 5) {
-            comment = `🌧️ ${t} — 凍えるような冷たい豪雨。濡れたらすぐ着替えを`;
+            comment = `🌧️ ${t} — 身にしみる冷たい豪雨。濡れたらすぐ着替えを`;
         } else {
             comment = `🌧️ ${t} — 冷たい雨が激しい。雪に変わるかも。暖かい屋内へ`;
         }
@@ -595,14 +598,14 @@ function updateGreeting(temp, humidity) {
     // ============================================================
     else if (isRain && !isSnowActual && !isSleetActual) {
         if (temp >= 30 && isExtremelyHumid) {
-            comment = `☔ ${t}・湿度${h}% — ムシムシした熱帯雨。不快指数MAX。エアコンを`;
+            comment = `☔ ${t}・湿度${h}% — ムシムシした熱帯雨。不快指数が極めて高い。エアコンを`;
         } else if (temp >= 28 && isVeryHumid) {
             comment = `☔ ${t}・湿度${h}% — 蒸し暑い雨。汗が止まらない。こまめに水分補給`;
         } else if (temp >= 25 && isMorning) {
             comment = `☔ ${t} — 朝から雨。傘を忘れずに。蒸し暑くなりそう`;
         } else if (temp >= 25) {
             comment = `☔ ${t} — 暖かい雨が降っています。傘をお持ちください`;
-        } else if (temp >= 20 && isRainy) {
+        } else if (temp >= 20 && isRainySeason) {
             comment = `☔ ${t} — 梅雨らしいしとしと雨。カビ対策を忘れずに`;
         } else if (temp >= 18 && isSpring) {
             comment = `☔ ${t} — 春雨ですね。花粉が流れるのは嬉しいかも`;
@@ -616,12 +619,6 @@ function updateGreeting(temp, humidity) {
             comment = `☔ ${t} — 冬の冷たい雨。みぞれになるかも`;
         } else if (temp >= 5) {
             comment = `☔ ${t} — 冷たい雨。濡れると一気に冷えます`;
-        } else if (isSnowActual) {
-            // Yahoo APIで雪と判定されている場合
-            comment = `❄️ ${t} — 雪が降っています。路面凍結に注意`;
-        } else if (isSleetActual) {
-            // Yahoo APIでみぞれと判定されている場合
-            comment = `🌨️ ${t} — みぞれが降っています。足元に注意`;
         } else if (temp >= 2) {
             comment = `☔ ${t} — 冷たい雨。暖かくして`;
         } else {
@@ -639,7 +636,7 @@ function updateGreeting(temp, humidity) {
             comment = `🌧️ ${t} — 少しだけパラついています。傘なしでも大丈夫かも？`;
         } else if (temp >= 25) {
             comment = `🌧️ ${t} — 小雨がパラついています。折りたたみ傘があると安心`;
-        } else if (temp >= 20 && isRainy) {
+        } else if (temp >= 20 && isRainySeason) {
             comment = `🌧️ ${t} — 梅雨のしっとり霧雨。髪がまとまらない季節`;
         } else if (temp >= 18 && isSpring) {
             comment = `🌧️ ${t} — 春の霧雨。新緑が潤う良い雨`;
@@ -698,7 +695,7 @@ function updateGreeting(temp, humidity) {
             comment = pick([
                 `🌫️ ${t}・湿度${h}% — 蒸し霧。サウナのような空気`,
                 `🌫️ ${t} — 湿度が高くて霧が濃い。視界不良`,
-                `🌫️ ${t}・湿度${h}% — 蒸し暑い霧。不快指数MAX`
+                `🌫️ ${t}・湿度${h}% — 蒸し暑い霧。不快指数が極めて高い`
             ]);
         } else if (temp >= 20 && isMorning) {
             comment = pick([
@@ -710,7 +707,7 @@ function updateGreeting(temp, humidity) {
             comment = pick([
                 `🌫️ ${t} — 夜霧が立ち込めています。車の運転は注意`,
                 `🌫️ ${t} — 暖かい夜霧。ミステリアスな雰囲気`,
-                `🌫️ ${t} — 霧の夜。ヘッドライトを落として運転を`
+                `🌫️ ${t} — 霧の夜。ロービームで慎重に運転を`
             ]);
         } else if (temp >= 20) {
             comment = pick([
@@ -744,9 +741,9 @@ function updateGreeting(temp, humidity) {
             ]);
         } else if (temp >= 0) {
             comment = pick([
-                `🌫️ ${t} — 凍霧です。路面がアイスバーン状態かも`,
-                `🌫️ ${t} — 氷点下の霧。すべてが凍りつきます`,
-                `🌫️ ${t} — 凍霧注意。ブラックアイスに警戒`
+                `🌫️ ${t} — 冷たい霧。路面凍結に注意`,
+                `🌫️ ${t} — 冷たく湿った霧。足元が滑りやすい`,
+                `🌫️ ${t} — 凍結の恐れがある霧。運転は特に注意`
             ]);
         } else {
             comment = pick([
@@ -877,7 +874,7 @@ function updateGreeting(temp, humidity) {
             if (isNight && isExtremelyHumid) {
                 comment = `🚨 ${t}・湿度${h}% — 【命の危険】夜間も危険な蒸し暑さ。エアコン必須。119番を意識して`;
             } else if (isNight && isVeryHumid) {
-                comment = `� ${t}・湿度${h}% — 【危険】熱帯夜×高湿度。脱水に注意。寝る前に水を`;
+                comment = `🚨 ${t}・湿度${h}% — 【危険】熱帯夜×高湿度。脱水に注意。寝る前に水を`;
             } else if (isNight) {
                 comment = `⚠️ ${t} — 【熱中症危険】異常な熱帯夜。エアコンなしでは命に関わります`;
             } else if (isExtremelyHumid && isAfternoon) {
@@ -1016,7 +1013,7 @@ function updateGreeting(temp, humidity) {
                     `💧 ${t} — ジメジメ蒸し暑い。不快指数高め`,
                     `💧 ${t}・湿度${h}% — 湿度が高すぎ。エアコン推奨`
                 ]);
-            } else if (isVeryHumid && isRainy) {
+            } else if (isVeryHumid && isRainySeason) {
                 comment = pick([
                     `💧 ${t}・湿度${h}% — 梅雨らしいジメジメ。カビ対策を`,
                     `💧 ${t} — 梅雨の蒸し暑さ。除湿器が活躍`,
@@ -1078,7 +1075,7 @@ function updateGreeting(temp, humidity) {
                 comment = pick([
                     `🌙 ${t} — 暖かい夜。窓を開けて寝ると気持ちいいかも`,
                     `🌙 ${t} — 過ごしやすい夜。窓を開けて夜風を`,
-                    `🌙 ${t} — 暖かい夜。虫の声が聞こえそう`
+                    `🌙 ${t} — 暖かい夜。夜風が心地よい`
                 ]);
             } else if (isClear && isDry && isMorning) {
                 comment = pick([
@@ -1134,10 +1131,10 @@ function updateGreeting(temp, humidity) {
                     `💧 ${t} — ジメジメ。除湿器があると楽`,
                     `💧 ${t}・湿度${h}% — 湿度高め。髪がまとまらない季節`
                 ]);
-            } else if (isPartlyCloudy && isSpring && !isNight) {
+            } else if (isPartlyCloudy && isCherryBlossom && !isNight) {
                 comment = pick([
-                    `🌸 ${t} — 春らしい陽気。お花見にぴったり`,
-                    `🌸 ${t} — 春の暖かさ。桜は見頃かも`,
+                    `🌸 ${t} — お花見にぴったりの陽気`,
+                    `🌸 ${t} — 桜は見頃かも`,
                     `🌸 ${t} — 春爛漫。外でランチがしたくなる`
                 ]);
             } else if (isPartlyCloudy && !isNight) {
@@ -1486,9 +1483,9 @@ function updateGreeting(temp, humidity) {
                 ]);
             } else if (isOvercast) {
                 comment = pick([
-                    `⛅ ${t} — 曇りで少し肌寒い。長袖がちょうどいい`,
+                    `☁️ ${t} — 曇りで少し肌寒い。長袖がちょうどいい`,
                     `☁️ ${t} — 曇り空で涼しい。上着を`,
-                    `⛅ ${t} — 曇りですが過ごしやすい気温`
+                    `☁️ ${t} — 曇りですが過ごしやすい気温`
                 ]);
             } else if (isLightBreeze && !isNight) {
                 comment = pick([
@@ -1503,12 +1500,22 @@ function updateGreeting(temp, humidity) {
                     `🌆 ${t} — 夕暮れの涼しさ。羽織るものを`
                 ]);
             } else {
-                comment = pick([
-                    `🍂 ${t} — 秋の空気。温かい飲み物が恋しくなりますね`,
-                    `🧥 ${t} — 涼しい気温。上着があると快適`,
-                    `🍂 ${t} — 秋らしい涼しさ。ホットドリンクでも`,
-                    `🧥 ${t} — 少し肌寒い。羽織るものがあると安心`
-                ]);
+                if (isAutumn) {
+                    comment = pick([
+                        `🍂 ${t} — 秋の空気。温かい飲み物が恋しくなりますね`,
+                        `🍂 ${t} — 秋らしい涼しさ。ホットドリンクでも`,
+                    ]);
+                } else if (isSpring) {
+                    comment = pick([
+                        `🌷 ${t} — 春の涼しさ。上着があると快適`,
+                        `🌿 ${t} — 過ごしやすい気温。羽織るものがあると安心`,
+                    ]);
+                } else {
+                    comment = pick([
+                        `🧥 ${t} — 涼しい気温。上着があると快適`,
+                        `🧥 ${t} — 少し肌寒い。羽織るものがあると安心`,
+                    ]);
+                }
             }
         }
         // COOL 10-14 (肌寒い) - 1.5x variations
@@ -1609,9 +1616,9 @@ function updateGreeting(temp, humidity) {
                 ]);
             } else if (isOvercast) {
                 comment = pick([
-                    `⛅ ${t} — 曇りで肌寒い。セーターやカーディガンを`,
+                    `☁️ ${t} — 曇りで肌寒い。セーターやカーディガンを`,
                     `☁️ ${t} — 曇り空で寒々しい。暖かく`,
-                    `⛅ ${t} — 曇りで冷える。上着を忘れずに`
+                    `☁️ ${t} — 曇りで冷える。上着を忘れずに`
                 ]);
             } else if (feelsColder) {
                 comment = `🧥 ${t}（体感${fl.toFixed(0)}°C）— 風で体感温度は低め`;
@@ -1659,7 +1666,7 @@ function updateGreeting(temp, humidity) {
                 ]);
             } else if (isClear && isMorning) {
                 comment = pick([
-                    `❄️ ${t} — 霜が降りるような朝。日中も寒い`,
+                    `❄️ ${t} — 冷え込んだ朝。日中も寒い`,
                     `🌅 ${t} — 凍える朝。暖かくして出かけて`,
                     `❄️ ${t} — 冷え込んだ朝。車のフロントガラスに霜`,
                     `🌅 ${t} — 寒い朝。温かい朝食で体を温めて`
@@ -1751,14 +1758,14 @@ function updateGreeting(temp, humidity) {
             } else if (isOvercast) {
                 comment = pick([
                     `☁️ ${t} — 曇りで寒々しい。温かい飲み物で一息を`,
-                    `⛅ ${t} — 曇りで冷える。ホットドリンクで温まって`,
+                    `☁️ ${t} — 曇りで冷える。ホットドリンクで温まって`,
                     `☁️ ${t} — 寒々しい曇り空。暖かくして`
                 ]);
             } else if (isWindy || isVeryWindy) {
                 comment = pick([
                     `🌬️ ${t} — 風が冷たい。体感温度はもっと低い`,
                     `💨 ${t} — 強い風で凍えそう。マフラー必須`,
-                    `🌬️ ${t} — 風で体感は氷点下かも`
+                    `🌬️ ${t} — 風で体感温度がぐっと下がります`
                 ]);
             } else if (feelsColder) {
                 comment = `🧣 ${t}（体感${fl.toFixed(0)}°C）— 風で体感はもっと寒い`;
@@ -1766,7 +1773,7 @@ function updateGreeting(temp, humidity) {
                 comment = pick([
                     `🧣 ${t} — コートとマフラーの季節ですね`,
                     `🧥 ${t} — しっかり防寒。風邪に注意`,
-                    `🧣 ${t} — 冬本番。暖かくしてお出かけを`,
+                    `🧣 ${t} — 寒い季節。暖かくしてお出かけを`,
                     `🧥 ${t} — 寒い。温かい飲み物が恋しい`
                 ]);
             }
@@ -1938,7 +1945,7 @@ function updateGreeting(temp, humidity) {
                 // 降水予報がない場合は雪への言及を避ける
                 comment = pick([
                     `☁️ ${t} — どんより寒い。底冷えの一日`,
-                    `⛅ ${t} — 曇りで凍える。暖房が恋しい`,
+                    `☁️ ${t} — 曇りで凍える。暖房が恋しい`,
                     `☁️ ${t} — 寒々しい曇り空。温かくして`
                 ]);
             } else if (feelsColder) {
@@ -2040,7 +2047,7 @@ function updateGreeting(temp, humidity) {
                 comment = pick([
                     `🧊 ${t} — 氷点下です。水道管凍結にご注意を`,
                     `❄️ ${t} — 路面凍結に厳重注意。滑りやすい`,
-                    `🧊 ${t} — 東京では珍しい寒さ。暖かくして`,
+                    `🧊 ${t} — しっかり防寒を。暖かくして`,
                     `❄️ ${t} — 凍える寒さ。ホットドリンクで温まって`
                 ]);
             }
@@ -2119,8 +2126,8 @@ function updateGreeting(temp, humidity) {
             const warningNames = severeWarnings.slice(0, 2).map(a => a.name).join('・');
             comment += ` ⚠️ ${warningNames}発令中`;
         }
-        // 注意報（警報がなければ表示、ただし確率50%）
-        else if (advisories.length > 0 && Math.random() < 0.5) {
+        // 注意報（警報がなければ表示）
+        else if (advisories.length > 0) {
             const advName = advisories[0].name;
             comment += ` ℹ️ ${advName}`;
         }
@@ -2234,79 +2241,7 @@ function updateGreeting(temp, humidity) {
         }
     }
 
-    // ============================================================
-    // SEASONAL EVENT COMMENTS
-    // ============================================================
-    const day = now.getDate();
-
-    // クリスマス (12/24-25)
-    if (month === 12 && (day === 24 || day === 25)) {
-        comment += pick([
-            ' 🎄 メリークリスマス！素敵な1日を',
-            ' 🎅 クリスマス！温かく過ごしてね',
-            ' 🌟 聖夜に幸せが訪れますように'
-        ]);
-    }
-    // 大晦日 (12/31)
-    else if (month === 12 && day === 31) {
-        comment += pick([
-            ' 🎊 大晦日！今年もお疲れさまでした',
-            ' 🔔 年越しまであと少し！',
-            ' ✨ 良いお年をお迎えください'
-        ]);
-    }
-    // 元日 (1/1)
-    else if (month === 1 && day === 1) {
-        comment += pick([
-            ' 🎍 あけましておめでとうございます！',
-            ' 🌅 新年おめでとう！素敵な1年に',
-            ' 🐉 今年もよろしくお願いします'
-        ]);
-    }
-    // バレンタイン (2/14)
-    else if (month === 2 && day === 14) {
-        comment += pick([
-            ' 💝 ハッピーバレンタイン！',
-            ' 🍫 今日はバレンタインデー',
-            ' 💕 素敵なバレンタインを'
-        ]);
-    }
-    // ひな祭り (3/3)
-    else if (month === 3 && day === 3) {
-        comment += ' 🎎 ひな祭り！お雛様を飾りましたか？';
-    }
-    // GW (4/29-5/5)
-    else if ((month === 4 && day >= 29) || (month === 5 && day <= 5)) {
-        comment += pick([
-            ' 🌸 GW！お出かけ日和ですね',
-            ' 🎏 ゴールデンウィーク！',
-            ' 🌿 連休を楽しんで'
-        ]);
-    }
-    // 七夕 (7/7)
-    else if (month === 7 && day === 7) {
-        comment += pick([
-            ' 🎋 七夕！願い事は何ですか？',
-            ' ⭐ 織姫と彦星が出会う日',
-            ' 🌌 晴れたら天の川が見えるかな'
-        ]);
-    }
-    // お盆 (8/13-16)
-    else if (month === 8 && day >= 13 && day <= 16) {
-        comment += pick([
-            ' 🏮 お盆ですね。ご先祖様に感謝を',
-            ' 🎆 お盆休み、ゆっくり過ごして',
-            ' 🍉 夏真っ盛りのお盆です'
-        ]);
-    }
-    // ハロウィン (10/31)
-    else if (month === 10 && day === 31) {
-        comment += pick([
-            ' 🎃 ハッピーハロウィン！',
-            ' 👻 トリックオアトリート！',
-            ' 🦇 ハロウィンの夜、楽しんで'
-        ]);
-    }
+    // 季節イベントコメントは下部の SEASONAL EVENT SUFFIXES セクションで一元管理
 
     // ============================================================
     // HEALTH ADVICE SUFFIXES (expanded x2)
@@ -2372,6 +2307,30 @@ function updateGreeting(temp, humidity) {
             ' ⚡ 運動時は水分補給を忘れずに',
             ' ⚡ 日陰での休憩を心がけて'
         ]);
+    }
+
+    // ============================================================
+    // LOW PRESSURE & ATMOSPHERIC INSTABILITY SUFFIXES
+    // ============================================================
+    if (isLowPressure && !isRaining && optionalSuffixCount < MAX_OPTIONAL_SUFFIXES && Math.random() < 0.4) {
+        comment += pick([
+            ' 🌀 気圧低め。頭痛持ちの方はご注意を',
+            ' 📉 低気圧。体調に気をつけて',
+            ' 🌀 気圧が下がっています。無理せずに'
+        ]);
+        optionalSuffixCount++;
+    }
+
+    if (isVeryUnstable && !isRaining && isAfternoon && optionalSuffixCount < MAX_OPTIONAL_SUFFIXES) {
+        comment += pick([
+            ' ⚡ 大気が不安定。午後は天気の急変に注意',
+            ' 🌩️ 急な雷雨の可能性。洗濯物は早めに取り込んで',
+            ' ⚡ 午後から天気が崩れるかも。傘をお忘れなく'
+        ]);
+        optionalSuffixCount++;
+    } else if (isUnstableAtmosphere && !isRaining && isAfternoon && optionalSuffixCount < MAX_OPTIONAL_SUFFIXES && Math.random() < 0.3) {
+        comment += ' ⚡ 大気がやや不安定。にわか雨に注意';
+        optionalSuffixCount++;
     }
 
     // ============================================================
@@ -2475,6 +2434,43 @@ function updateGreeting(temp, humidity) {
         ]);
     }
 
+    // 節分 (2/3)
+    if (month === 2 && dayOfMonth === 3) {
+        comment += pick([
+            ' 👹 今日は節分！福は内！',
+            ' 🥜 節分です。恵方巻は食べましたか？',
+            ' 👹 鬼は外！福は内！'
+        ]);
+    }
+    // 春の彼岸 (3/18-24頃)
+    else if (month === 3 && dayOfMonth >= 18 && dayOfMonth <= 24) {
+        comment += pick([
+            ' 🌸 春のお彼岸。春らしい陽気になりますように',
+            ' 🌼 お彼岸ですね。「暑さ寒さも彼岸まで」'
+        ]);
+    }
+    // 秋の彼岸 (9/20-26頃)
+    else if (month === 9 && dayOfMonth >= 20 && dayOfMonth <= 26) {
+        comment += pick([
+            ' 🍁 秋のお彼岸。過ごしやすくなりますように',
+            ' 🌾 お彼岸ですね。「暑さ寒さも彼岸まで」'
+        ]);
+    }
+    // 夏至 (6/21頃)
+    else if (month === 6 && dayOfMonth === 21) {
+        comment += pick([
+            ' ☀️ 今日は夏至。1年で最も日が長い日',
+            ' 🌞 夏至です。これから本格的な夏が始まります'
+        ]);
+    }
+    // 冬至 (12/22頃)
+    else if (month === 12 && dayOfMonth === 22) {
+        comment += pick([
+            ' 🌙 今日は冬至。1年で最も夜が長い日',
+            ' 🪷 冬至です。かぼちゃで温まりましょう'
+        ]);
+    }
+
     // ============================================================
     // DAY OF WEEK SUFFIXES (expanded x2)
     // 任意情報なので確率制限（50%）とサフィックス数制限を適用
@@ -2501,7 +2497,8 @@ function updateGreeting(temp, humidity) {
         ];
         comment += pick(weekendAfternoonTips);
         optionalSuffixCount++;
-    } else if (isWeekend && isEvening && !isRaining && temp >= 10) {
+    } else if (isWeekend && isEvening && !isRaining && temp >= 10 &&
+        optionalSuffixCount < MAX_OPTIONAL_SUFFIXES && Math.random() < 0.5) {
         const weekendEveningTips = [
             ' 🍽️ 外食日和かも',
             ' 🌃 夜景を見に行くのもいい',
@@ -2534,7 +2531,7 @@ function updateGreeting(temp, humidity) {
     } else if (isFriday && isEvening) {
         comment += pick([
             ' 🍻 週末ですね',
-            ' 🎊 TGIF！週末を楽しんで',
+            ' 🎊 花金！週末を楽しんで',
             ' 🍺 お疲れ様でした！',
             ' 🎉 週末の始まり！',
             ' 🌃 金曜の夜を満喫しましょう',
