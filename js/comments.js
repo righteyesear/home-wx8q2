@@ -2113,23 +2113,61 @@ function updateGreeting(temp, humidity) {
         const severeWarnings = currentAlerts.filter(a => a.name?.includes('警報') && !a.name?.includes('特別'));
         const advisories = currentAlerts.filter(a => a.name?.includes('注意報'));
 
+        // 注意報の種別ごとの行動メッセージ
+        const advisoryMessages = {
+            '大雨': '大雨に注意してください。側溝や川の増水に気をつけて',
+            '大雪': '大雪に注意。雪道の転倒や交通障害にお気をつけて',
+            '強風': '強風注意報が出ています。飛来物や転倒に注意',
+            '風雪': '風雪注意報が出ています。視界不良と凍結に注意',
+            '雷': '雷注意報が出ています。外出中は頑丈な建物の中へ',
+            '濃霧': '濃霧注意報が出ています。車の運転は特に慎重に',
+            '乾燥': '乾燥注意報が出ています。火の取り扱いと肌ケアに注意',
+            '低温': '低温注意報が出ています。農作物や水道管の凍結に注意',
+            '霜': '霜注意報が出ています。農作物の霜害に注意',
+            '洪水': '洪水注意報が出ています。低い土地や川沿いは避けて',
+            '高潮': '高潮注意報が出ています。海岸や低地にご注意を',
+            '波浪': '波浪注意報が出ています。海での活動は危険です',
+        };
+
+        // 警報の種別ごとの行動メッセージ
+        const warningMessages = {
+            '大雨': '大雨警報！土砂災害・浸水に厳重警戒を',
+            '洪水': '洪水警報！川の増水と氾濫に警戒。低い土地から避難を',
+            '暴風雪': '暴風雪警報！外出厳禁。吹雪で視界ゼロになる危険',
+            '暴風': '暴風警報！外出は極力控えて。飛来物や倒木に注意',
+            '大雪': '大雪警報！交通機関の乱れ必至。早めの帰宅・外出自粛を',
+            '波浪': '波浪警報！海岸付近は危険です。絶対に近づかないで',
+            '高潮': '高潮警報！沿岸・低地は今すぐ避難を',
+        };
+
         // 特別警報（最優先）
         if (specialWarnings.length > 0) {
             const names = specialWarnings.slice(0, 2).map(a => a.name).join('・');
             comment += pick([
-                ` 🚨 ${names}発令中！命を守る行動を`,
-                ` 🆘 ${names}！直ちに安全確保を`
+                ` 🚨 ${names}発令中！命を守る行動を今すぐ`,
+                ` 🆘 ${names}！直ちに安全な場所へ避難を`
             ]);
         }
         // 警報（特別警報がなければ表示）
         else if (severeWarnings.length > 0) {
-            const warningNames = severeWarnings.slice(0, 2).map(a => a.name).join('・');
-            comment += ` ⚠️ ${warningNames}発令中`;
+            const first = severeWarnings[0];
+            // 警報名から種別キーワードを探してメッセージを決定
+            const msgKey = Object.keys(warningMessages).find(k => first.name.includes(k));
+            const msg = msgKey ? warningMessages[msgKey] : `${first.name}が発令されています。十分にご注意を`;
+            const extra = severeWarnings.length > 1
+                ? `（他 ${severeWarnings.slice(1).map(a => a.name).join('・')} も）`
+                : '';
+            comment += ` ⚠️ ${msg}${extra}`;
         }
         // 注意報（警報がなければ表示）
         else if (advisories.length > 0) {
-            const advName = advisories[0].name;
-            comment += ` ℹ️ ${advName}`;
+            const first = advisories[0];
+            const msgKey = Object.keys(advisoryMessages).find(k => first.name.includes(k));
+            const msg = msgKey ? advisoryMessages[msgKey] : `${first.name}が出ています。ご注意ください`;
+            const extra = advisories.length > 1
+                ? `（他${advisories.length - 1}件）`
+                : '';
+            comment += ` 🔔 ${msg}${extra}`;
         }
     }
 
