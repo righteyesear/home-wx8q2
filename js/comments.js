@@ -2213,7 +2213,7 @@ function updateGreeting(temp, humidity) {
 
     // メインコメントが既に降水について言及しているかチェック
     const mainCommentHasPrecip = isRaining || isRainingOpenMeteo || isSnowActual || isSleetActual ||
-        isHeavySnow || isSnow || isSleet || isHeavyRain || isModerateRain || isRain || isDrizzle;
+        isHeavySnow || isSnow || isHeavyRain || isModerateRain || isRain || isDrizzle;
 
     // Yahoo API実測データを優先（ただしメインで言及済みならスキップ）
     if (!mainCommentHasPrecip && actualPrecipState.isRaining && actualPrecipState.consecutiveMinutes >= 10) {
