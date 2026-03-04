@@ -1,4 +1,4 @@
-// =====================================================
+﻿// =====================================================
 // comments.js - 一言コメント生成
 // =====================================================
 // 修正時: 天気・気温・湿度に応じた一言コメント生成
@@ -2097,529 +2097,307 @@ function updateGreeting(temp, humidity) {
     }
 
     // ============================================================
-    // SUFFIX CONTROL: サフィックス数制限と優先度管理
-    // 優先サフィックス: 警報、降水警告、天気変化 → 制限なし
-    // 任意サフィックス: 風、体感温度、花粉、曜日、洗濯等 → 最大2つまで
+    // UNIFIED SUFFIX SYSTEM - 優先度キュー方式
     // ============================================================
-    let optionalSuffixCount = 0;
-    const MAX_OPTIONAL_SUFFIXES = 2;
+    // 全サフィックスを候補として収集し、優先度順にソートして最大2つまで表示
+    // priority: 数値が小さいほど優先（1=最優先, 10=最低）
+    // ============================================================
+    const suffixCandidates = [];
+    const MAX_SUFFIXES = 2;
 
-    // ============================================================
-    // 【最優先】ALERT SUFFIXES - 警報は最初に表示
-    // 優先順位: 特別警報 > 警報 > 注意報（1つだけ表示）
-    // ============================================================
+    // --- TIER 1: 緊急警報（priority 1-2）---
+
     if (currentAlerts.length > 0) {
         const specialWarnings = currentAlerts.filter(a => a.name?.includes('特別警報'));
         const severeWarnings = currentAlerts.filter(a => a.name?.includes('警報') && !a.name?.includes('特別'));
         const advisories = currentAlerts.filter(a => a.name?.includes('注意報'));
 
-        // 注意報の種別ごとの行動メッセージ
         const advisoryMessages = {
-            '大雨': '大雨に注意してください。側溝や川の増水に気をつけて',
-            '大雪': '大雪に注意。雪道の転倒や交通障害にお気をつけて',
-            '強風': '強風注意報が出ています。飛来物や転倒に注意',
-            '風雪': '風雪注意報が出ています。視界不良と凍結に注意',
-            '雷': '雷注意報が出ています。外出中は頑丈な建物の中へ',
-            '濃霧': '濃霧注意報が出ています。車の運転は特に慎重に',
-            '乾燥': '乾燥注意報が出ています。火の取り扱いと肌ケアに注意',
-            '低温': '低温注意報が出ています。農作物や水道管の凍結に注意',
-            '霜': '霜注意報が出ています。農作物の霜害に注意',
-            '洪水': '洪水注意報が出ています。低い土地や川沿いは避けて',
-            '高潮': '高潮注意報が出ています。海岸や低地にご注意を',
-            '波浪': '波浪注意報が出ています。海での活動は危険です',
+            '大雨': '大雨に注意。側溝や川の増水に気をつけて',
+            '大雪': '大雪に注意。転倒や交通障害にお気をつけて',
+            '強風': '強風注意報。飛来物や転倒に注意',
+            '風雪': '風雪注意報。視界不良と凍結に注意',
+            '雷': '雷注意報。頑丈な建物の中へ',
+            '濃霧': '濃霧注意報。車の運転は慎重に',
+            '乾燥': '乾燥注意報。火の元と肌ケアに注意',
+            '低温': '低温注意報。凍結に注意',
+            '霜': '霜注意報。農作物の霜害に注意',
+            '洪水': '洪水注意報。川沿いは避けて',
+            '高潮': '高潮注意報。海岸や低地にご注意',
+            '波浪': '波浪注意報。海は危険です',
         };
-
-        // 警報の種別ごとの行動メッセージ
         const warningMessages = {
-            '大雨': '大雨警報！土砂災害・浸水に厳重警戒を',
-            '洪水': '洪水警報！川の増水と氾濫に警戒。低い土地から避難を',
-            '暴風雪': '暴風雪警報！外出厳禁。吹雪で視界ゼロになる危険',
-            '暴風': '暴風警報！外出は極力控えて。飛来物や倒木に注意',
-            '大雪': '大雪警報！交通機関の乱れ必至。早めの帰宅・外出自粛を',
-            '波浪': '波浪警報！海岸付近は危険です。絶対に近づかないで',
-            '高潮': '高潮警報！沿岸・低地は今すぐ避難を',
+            '大雨': '大雨警報！土砂災害・浸水に厳重警戒',
+            '洪水': '洪水警報！川の氾濫に警戒',
+            '暴風雪': '暴風雪警報！外出厳禁',
+            '暴風': '暴風警報！飛来物や倒木に注意',
+            '大雪': '大雪警報！交通機関の乱れに注意',
+            '波浪': '波浪警報！海岸は危険',
+            '高潮': '高潮警報！沿岸は今すぐ避難を',
         };
 
-        // 特別警報（最優先）
         if (specialWarnings.length > 0) {
             const names = specialWarnings.slice(0, 2).map(a => a.name).join('・');
-            comment += pick([
-                ` 🚨 ${names}発令中！命を守る行動を今すぐ`,
-                ` 🆘 ${names}！直ちに安全な場所へ避難を`
-            ]);
-        }
-        // 警報（特別警報がなければ表示）
-        else if (severeWarnings.length > 0) {
+            suffixCandidates.push({
+                priority: 1, text: pick([
+                    ` 🚨 ${names}！命を守る行動を今すぐ`,
+                    ` 🆘 ${names}！直ちに避難を`
+                ])
+            });
+        } else if (severeWarnings.length > 0) {
             const first = severeWarnings[0];
-            // 警報名から種別キーワードを探してメッセージを決定
             const msgKey = Object.keys(warningMessages).find(k => first.name.includes(k));
-            const msg = msgKey ? warningMessages[msgKey] : `${first.name}が発令されています。十分にご注意を`;
-            const extra = severeWarnings.length > 1
-                ? `（他 ${severeWarnings.slice(1).map(a => a.name).join('・')} も）`
-                : '';
-            comment += ` ⚠️ ${msg}${extra}`;
-        }
-        // 注意報（警報がなければ表示）
-        else if (advisories.length > 0) {
+            const msg = msgKey ? warningMessages[msgKey] : `${first.name}発令中`;
+            suffixCandidates.push({ priority: 1, text: ` ⚠️ ${msg}` });
+        } else if (advisories.length > 0) {
             const first = advisories[0];
             const msgKey = Object.keys(advisoryMessages).find(k => first.name.includes(k));
-            const msg = msgKey ? advisoryMessages[msgKey] : `${first.name}が出ています。ご注意ください`;
-            const extra = advisories.length > 1
-                ? `（他${advisories.length - 1}件）`
-                : '';
-            comment += ` 🔔 ${msg}${extra}`;
+            const msg = msgKey ? advisoryMessages[msgKey] : `${first.name}が出ています`;
+            suffixCandidates.push({ priority: 3, text: ` 🔔 ${msg}` });
         }
     }
 
-    // ============================================================
-    // ADD WIND WARNING (if not already mentioned in weather)
-    // ============================================================
-    if (isVeryWindy && !isSnow && !isThunderstorm) {
-        comment += ' 🌀 強風です。飛ばされないよう注意';
-        optionalSuffixCount++;
-    } else if (isWindy && !isRaining && !isSnow && optionalSuffixCount < MAX_OPTIONAL_SUFFIXES) {
-        comment += ' 💨 風があります';
-        optionalSuffixCount++;
+    // --- TIER 2: 健康危機（priority 2）---
+
+    if (isDangerWBGT && !isThunderstorm && !isRaining) {
+        suffixCandidates.push({
+            priority: 2, text: pick([
+                ` 🆘 WBGT${wbgt.toFixed(0)} 運動禁止レベル`,
+                ` 🆘 WBGT${wbgt.toFixed(0)} 屋外活動は厳禁`
+            ])
+        });
+    } else if (isHighWBGT && !isRaining) {
+        suffixCandidates.push({
+            priority: 2, text: pick([
+                ` ⚠️ WBGT${wbgt.toFixed(0)} 運動は控えめに`,
+                ` ⚠️ WBGT${wbgt.toFixed(0)} こまめに休憩を`
+            ])
+        });
+    } else if (isModerateWBGT && !isRaining && isAfternoon) {
+        suffixCandidates.push({ priority: 5, text: ' ⚡ 暑さ指数注意。適度に休憩を' });
     }
 
-    // ============================================================
-    // ADD FEELS LIKE TEMPERATURE DIFFERENCE
-    // 大きな差（±5°C以上）は優先表示、小さい差（±3-5°C）は制限カウント
-    // ============================================================
-    const feelsDiff = fl - temp;
-    if (!comment.includes('体感') && Math.abs(feelsDiff) >= 3) {
-        if (feelsDiff >= 5) {
-            // 大きな差は優先（制限カウントしない）
-            comment += ` 🌡️ 体感は${fl.toFixed(0)}°C（+${feelsDiff.toFixed(0)}°C）`;
-        } else if (feelsDiff >= 3 && optionalSuffixCount < MAX_OPTIONAL_SUFFIXES) {
-            comment += ` 🌡️ 体感は${fl.toFixed(0)}°Cと暖かめ`;
-            optionalSuffixCount++;
-        } else if (feelsDiff <= -5) {
-            // 大きな差は優先（制限カウントしない）
-            comment += ` 🌡️ 体感は${fl.toFixed(0)}°C（${feelsDiff.toFixed(0)}°C）`;
-        } else if (feelsDiff <= -3 && optionalSuffixCount < MAX_OPTIONAL_SUFFIXES) {
-            comment += ` 🌡️ 体感は${fl.toFixed(0)}°Cと寒め`;
-            optionalSuffixCount++;
-        }
-    }
+    // --- TIER 3: 降水情報（priority 3）---
 
-    // ============================================================
-    // ADD PRECIPITATION WARNING (Yahoo API優先 + Open-Meteo雪判定)
-    // メインコメントで既に降水について言及している場合はスキップ
-    // ============================================================
-    const precipType = getPrecipitationType();
-    const precipEmoji = precipType === 'snow' ? '❄️' : precipType === 'sleet' ? '🌨️' : '☂️';
-    const precipName = precipType === 'snow' ? '雪' : precipType === 'sleet' ? 'みぞれ' : '雨';
-
-    // メインコメントが既に降水について言及しているかチェック
     const mainCommentHasPrecip = isRaining || isRainingOpenMeteo || isSnowActual || isSleetActual ||
         isHeavySnow || isSnow || isHeavyRain || isModerateRain || isRain || isDrizzle;
 
-    // Yahoo API実測データを優先（ただしメインで言及済みならスキップ）
     if (!mainCommentHasPrecip && actualPrecipState.isRaining && actualPrecipState.consecutiveMinutes >= 10) {
-        // 現在降っている場合 - actualPrecipStateから情報取得
         const intensity = getPrecipIntensityLabel(actualPrecipState.rainfall, actualPrecipState.precipType);
         const currentEmoji = actualPrecipState.precipType === 'snow' ? '❄️' :
             actualPrecipState.precipType === 'sleet' ? '🌨️' : '🌧️';
-        comment += ` ${currentEmoji} ${intensity}が降っています`;
-
-        // 今後雪に変わる予報があるか確認
-        const currentHour = new Date().getHours();
+        let precipText = ` ${currentEmoji} ${intensity}が降っています`;
+        // 雪への変化予報
         if (actualPrecipState.precipType === 'rain' || actualPrecipState.precipType === 'sleet') {
+            const currentHour = new Date().getHours();
             for (let i = 1; i <= 3; i++) {
                 const futureType = getPrecipitationType(currentHour + i);
                 if (futureType === 'snow') {
-                    comment += ` → 約${i}時間後に雪に変わる見込み`;
+                    precipText += ` → 約${i}時間後に雪に変わる見込み`;
                     break;
                 }
             }
         }
+        suffixCandidates.push({ priority: 3, text: precipText });
     } else if (!mainCommentHasPrecip && actualPrecipState.rainfall > 0) {
-        // 降り始め（10分未満）
         const currentEmoji = actualPrecipState.precipType === 'snow' ? '❄️' :
             actualPrecipState.precipType === 'sleet' ? '🌨️' : '🌧️';
         const currentName = actualPrecipState.precipType === 'snow' ? '雪' :
             actualPrecipState.precipType === 'sleet' ? 'みぞれ' : '雨';
-        comment += ` ${currentEmoji} ${currentName}が降り始めています`;
+        suffixCandidates.push({ priority: 3, text: ` ${currentEmoji} ${currentName}が降り始めています` });
     } else if (!mainCommentHasPrecip && willRain && pp >= 70) {
-        // Yahoo APIでは降っていないが、Open-Meteoで高確率で降水予報
-        comment += ` ${precipEmoji} ${precipName}の予報。${precipType === 'snow' ? '外出は控えめに' : precipType === 'sleet' ? '足元に注意' : '傘を持っていきましょう'}`;
+        const precipType = getPrecipitationType();
+        const precipEmoji = precipType === 'snow' ? '❄️' : precipType === 'sleet' ? '🌨️' : '☂️';
+        suffixCandidates.push({ priority: 4, text: ` ${precipEmoji} ${pp}%で${precipType === 'snow' ? '雪' : '雨'}の予報。傘を` });
     } else if (!mainCommentHasPrecip && willRain && pp >= 50) {
-        comment += ` 🌂 降水確率高め。${precipType === 'snow' ? '雪に変わるかも' : '念のため傘を'}`;
+        suffixCandidates.push({ priority: 5, text: ' 🌂 降水確率高め。念のため傘を' });
     }
 
-    // ============================================================
-    // ADD WEATHER FORECAST (worsening/improving)
-    // ============================================================
+    // --- TIER 4: 天気変化・気温変化（priority 4）---
+
     const willWorsen = weatherData?.willWorsen;
     const willImprove = weatherData?.willImprove;
     const maxFuturePrecip = weatherData?.maxFuturePrecipProb || 0;
     const tempIn3h = weatherData?.tempIn3Hours;
 
     if (willWorsen && maxFuturePrecip >= 60 && !actualPrecipState.isRaining) {
-        comment += ' ⚠️ 数時間後に天気が崩れそうです';
+        suffixCandidates.push({ priority: 4, text: ' ⚠️ 数時間後に天気が崩れそうです' });
     } else if (willWorsen && maxFuturePrecip >= 40 && !actualPrecipState.isRaining) {
-        comment += ' 🌥️ この後、雲が増えてきそう';
+        suffixCandidates.push({ priority: 5, text: ' 🌥️ この後、雲が増えてきそう' });
     }
 
-    if (willImprove && !actualPrecipState.isRaining) {
-        comment += ' 🌤️ これから晴れてきます';
-    } else if (willImprove && actualPrecipState.isRaining) {
+    if (willImprove && actualPrecipState.isRaining) {
         const stopMsg = actualPrecipState.precipType === 'snow' ? '雪が弱まりそう' :
             actualPrecipState.precipType === 'sleet' ? 'みぞれが上がりそう' : '雨が上がりそう';
-        comment += ` 🌈 もう少しで${stopMsg}`;
+        suffixCandidates.push({ priority: 4, text: ` 🌈 もう少しで${stopMsg}` });
+    } else if (willImprove && !actualPrecipState.isRaining) {
+        suffixCandidates.push({ priority: 6, text: ' 🌤️ これから晴れてきます' });
     }
 
-    // Temperature change forecast
     if (tempIn3h && Math.abs(tempIn3h - temp) >= 4) {
-        if (tempIn3h > temp) {
-            comment += ` 📈 3時間後は${tempIn3h.toFixed(0)}°Cに上昇`;
+        const arrow = tempIn3h > temp ? '📈' : '📉';
+        const dir = tempIn3h > temp ? '上昇' : '下降';
+        suffixCandidates.push({ priority: 4, text: ` ${arrow} 3時間後は${tempIn3h.toFixed(0)}°Cに${dir}` });
+    }
+
+    // --- TIER 5: 風・体感温度（priority 5）---
+
+    if (isVeryWindy && !isSnow && !isThunderstorm) {
+        suffixCandidates.push({ priority: 5, text: ' 🌀 強風。飛ばされないよう注意' });
+    } else if (isWindy && !isRaining && !isSnow) {
+        suffixCandidates.push({ priority: 7, text: ' 💨 風があります' });
+    }
+
+    const feelsDiff = fl - temp;
+    if (!comment.includes('体感') && Math.abs(feelsDiff) >= 5) {
+        const sign = feelsDiff >= 0 ? '+' : '';
+        suffixCandidates.push({ priority: 5, text: ` 🌡️ 体感は${fl.toFixed(0)}°C（${sign}${feelsDiff.toFixed(0)}°C）` });
+    } else if (!comment.includes('体感') && Math.abs(feelsDiff) >= 3) {
+        const desc = feelsDiff > 0 ? '暖かめ' : '寒め';
+        suffixCandidates.push({ priority: 7, text: ` 🌡️ 体感は${fl.toFixed(0)}°Cと${desc}` });
+    }
+
+    // --- TIER 6: 健康アドバイス（priority 6）---
+
+    if (isPollenSeason && !isRaining) {
+        if (isMorning) {
+            suffixCandidates.push({
+                priority: 6, text: pick([
+                    ' 🌼 花粉が飛びやすい朝。マスクを',
+                    ' 🤧 朝は花粉が多め。対策を万全に'
+                ])
+            });
         } else {
-            comment += ` 📉 3時間後は${tempIn3h.toFixed(0)}°Cに下降`;
+            suffixCandidates.push({
+                priority: 7, text: pick([
+                    ' 🌼 花粉シーズン。対策を忘れずに',
+                    ' 🤧 花粉対策を継続して'
+                ])
+            });
         }
     }
 
-    // 季節イベントコメントは下部の SEASONAL EVENT SUFFIXES セクションで一元管理
-
-    // ============================================================
-    // HEALTH ADVICE SUFFIXES (expanded x2)
-    // ============================================================
-    if (isPollenSeason && !isRaining && isMorning) {
-        comment += pick([
-            ' 🌼 花粉が飛びやすい朝。マスクを',
-            ' 🤧 朝は花粉が多め。対策を万全に',
-            ' 🌼 花粉注意の朝。目薬も忘れずに',
-            ' 🤧 花粉が舞いやすい時間帯。マスク必須',
-            ' 🌼 朝の花粉ピーク。窓を閉めて',
-            ' 🤧 花粉飛散中。帰宅後は服を払って'
-        ]);
-    } else if (isPollenSeason && !isRaining && isAfternoon) {
-        comment += pick([
-            ' 🌼 午後も花粉に注意',
-            ' 🤧 花粉は夕方まで続きます',
-            ' 🌼 洗濯物の外干しは要注意',
-            ' 🤧 花粉対策を継続して'
-        ]);
-    } else if (isPollenSeason && !isRaining) {
-        comment += pick([
-            ' 🌼 花粉シーズン。対策を忘れずに',
-            ' 🤧 花粉が飛んでいます。ご注意を',
-            ' 🌼 花粉情報をチェックして',
-            ' 🤧 花粉症の方はお大事に'
-        ]);
+    if (isDrySkinRisk && isWinter) {
+        suffixCandidates.push({
+            priority: 7, text: pick([
+                ' 💧 空気がカラカラ。保湿を忘れずに',
+                ' 🧴 乾燥注意。ハンドクリームを'
+            ])
+        });
     }
 
-    if (isDrySkinRisk && isWinter && isMorning) {
-        comment += pick([
-            ' 💧 空気がカラカラ。保湿を忘れずに',
-            ' 🧴 乾燥注意。ハンドクリームを',
-            ' 💨 乾燥した朝。リップクリームも',
-            ' 💧 乾燥で肌荒れ注意。保湿を'
-        ]);
-    } else if (isDrySkinRisk && isWinter) {
-        comment += pick([
-            ' 💧 空気が乾燥中。のど飴があると安心',
-            ' 🧴 乾燥注意。加湿器をつけましょう',
-            ' 💨 カラカラ空気。水分もこまめに',
-            ' 💧 乾燥でウイルスも活発に。対策を'
-        ]);
+    if (isDehydrationRisk && !isRaining && !isNight && !comment.includes('水分') && !comment.includes('💧')) {
+        suffixCandidates.push({
+            priority: 7, text: pick([
+                ' 💧 水分補給を',
+                ' 🥤 こまめに水分を'
+            ])
+        });
     }
 
-    if (isDangerWBGT && !isThunderstorm && !isRaining) {
-        comment += pick([
-            ` 🆘 WBGT${wbgt.toFixed(0)} 運動禁止レベル`,
-            ` 🆘 WBGT${wbgt.toFixed(0)} 屋外活動は厳禁`,
-            ` 🆘 WBGT${wbgt.toFixed(0)} 熱中症警戒アラート`,
-            ` 🆘 WBGT${wbgt.toFixed(0)} 外出は控えて`
-        ]);
-    } else if (isHighWBGT && !isRaining) {
-        comment += pick([
-            ` ⚠️ WBGT${wbgt.toFixed(0)} 運動は控えめに`,
-            ` ⚠️ WBGT${wbgt.toFixed(0)} こまめに休憩を`,
-            ` ⚠️ WBGT${wbgt.toFixed(0)} 激しい運動は避けて`,
-            ` ⚠️ WBGT${wbgt.toFixed(0)} 涼しい場所で休憩を`
-        ]);
-    } else if (isModerateWBGT && !isRaining && isAfternoon) {
-        comment += pick([
-            ' ⚡ 暑さ指数注意レベル。適度に休憩を',
-            ' ⚡ 運動時は水分補給を忘れずに',
-            ' ⚡ 日陰での休憩を心がけて'
-        ]);
+    // --- TIER 7: 低気圧・大気不安定（priority 7）---
+
+    if (isLowPressure && !isRaining && Math.random() < 0.4) {
+        suffixCandidates.push({
+            priority: 7, text: pick([
+                ' 🌀 気圧低め。頭痛持ちの方はご注意',
+                ' 📉 低気圧。体調に気をつけて'
+            ])
+        });
     }
 
-    // ============================================================
-    // LOW PRESSURE & ATMOSPHERIC INSTABILITY SUFFIXES
-    // ============================================================
-    if (isLowPressure && !isRaining && optionalSuffixCount < MAX_OPTIONAL_SUFFIXES && Math.random() < 0.4) {
-        comment += pick([
-            ' 🌀 気圧低め。頭痛持ちの方はご注意を',
-            ' 📉 低気圧。体調に気をつけて',
-            ' 🌀 気圧が下がっています。無理せずに'
-        ]);
-        optionalSuffixCount++;
+    if (isVeryUnstable && !isRaining && isAfternoon) {
+        suffixCandidates.push({
+            priority: 6, text: pick([
+                ' ⚡ 大気不安定。午後は天気急変に注意',
+                ' 🌩️ 急な雷雨の可能性あり'
+            ])
+        });
+    } else if (isUnstableAtmosphere && !isRaining && isAfternoon && Math.random() < 0.3) {
+        suffixCandidates.push({ priority: 8, text: ' ⚡ 大気がやや不安定。にわか雨に注意' });
     }
 
-    if (isVeryUnstable && !isRaining && isAfternoon && optionalSuffixCount < MAX_OPTIONAL_SUFFIXES) {
-        comment += pick([
-            ' ⚡ 大気が不安定。午後は天気の急変に注意',
-            ' 🌩️ 急な雷雨の可能性。洗濯物は早めに取り込んで',
-            ' ⚡ 午後から天気が崩れるかも。傘をお忘れなく'
-        ]);
-        optionalSuffixCount++;
-    } else if (isUnstableAtmosphere && !isRaining && isAfternoon && optionalSuffixCount < MAX_OPTIONAL_SUFFIXES && Math.random() < 0.3) {
-        comment += ' ⚡ 大気がやや不安定。にわか雨に注意';
-        optionalSuffixCount++;
-    }
+    // --- TIER 8: 季節イベント（priority 8）---
 
-    // ============================================================
-    // SEASONAL EVENT SUFFIXES (expanded x2)
-    // ============================================================
     if (isNewYear && isClear && !isNight) {
-        // 1/1-2: 強めの新年メッセージ
-        comment += pick([
-            ' 🎍 初詣日和ですね',
-            ' 🎍 良い年になりますように',
-            ' ⛩️ 初詣はいかが？',
-            ' 🌅 新年らしい清々しさ',
-            ' 🎍 お正月気分を満喫'
-        ]);
+        suffixCandidates.push({ priority: 8, text: pick([' 🎍 初詣日和ですね', ' 🎍 良い年になりますように']) });
     } else if (isNewYear && isNight) {
-        comment += pick([
-            ' 🎍 新年おめでとうございます',
-            ' ✨ 素敵なお正月を',
-            ' 🌙 穏やかな正月の夜ですね'
-        ]);
+        suffixCandidates.push({ priority: 8, text: pick([' 🎍 新年おめでとうございます', ' ✨ 素敵なお正月を']) });
     } else if (isMatsunouchi && isClear && !isNight) {
-        // 1/3-7: 穏やかな松の内メッセージ
-        comment += pick([
-            ' 🧧 初詣日和ですね',
-            ' ⛩️ まだ初詣に行けますよ',
-            ' 🎍 松の内のうちに初詣を',
-            ' 🌅 お正月気分を楽しんで'
-        ]);
+        suffixCandidates.push({ priority: 9, text: pick([' 🧧 初詣日和ですね', ' ⛩️ まだ初詣に行けますよ']) });
     } else if (isMatsunouchi && isNight) {
-        comment += pick([
-            ' 🌙 穏やかなお正月の夜',
-            ' ✨ ゆっくりお過ごしください',
-            ' 🎍 松の内をお楽しみください'
-        ]);
+        suffixCandidates.push({ priority: 9, text: pick([' 🌙 穏やかなお正月の夜', ' ✨ ゆっくりお過ごしください']) });
     } else if (isCherryBlossom && isClear && !isNight && !isRaining) {
-        comment += pick([
-            ' 🌸 お花見にぴったりの陽気',
-            ' 🌸 桜が見頃かも',
-            ' 🌷 春爛漫。お花見日和',
-            ' 🌸 桜の下でお弁当も良いですね',
-            ' 🌸 花見の計画はいかが？',
-            ' 🌷 春の陽気を楽しんで'
-        ]);
+        suffixCandidates.push({ priority: 8, text: pick([' 🌸 お花見にぴったりの陽気', ' 🌸 桜が見頃かも']) });
     } else if (isGoldenWeek && isClear && !isRaining) {
-        comment += pick([
-            ' 🎏 GW日和！',
-            ' 🎏 連休を楽しんで！',
-            ' 🎌 ゴールデンウィーク満喫日和',
-            ' 🚗 ドライブ日和ですね',
-            ' 🎏 お出かけを楽しんで',
-            ' 🌿 新緑が気持ちいい季節'
-        ]);
+        suffixCandidates.push({ priority: 8, text: pick([' 🎏 GW日和！', ' 🎏 連休を楽しんで！']) });
     } else if (isFireworkSeason && isClear) {
-        comment += pick([
-            ' 🎆 花火大会日和',
-            ' 🎇 夏の夜を楽しんで',
-            ' 🎆 花火が綺麗に見えそう',
-            ' 🏮 夏祭り日和',
-            ' 🎇 浴衣でお出かけも良いですね',
-            ' 🎆 夏の風物詩を楽しんで'
-        ]);
+        suffixCandidates.push({ priority: 9, text: pick([' 🎆 花火大会日和', ' 🎇 夏の夜を楽しんで']) });
     } else if (isAutumnLeaves && isClear && !isNight) {
-        comment += pick([
-            ' 🍁 紅葉狩り日和',
-            ' 🍂 秋の行楽日和',
-            ' 🍁 紅葉が見頃かも',
-            ' 🍂 秋の景色を楽しんで',
-            ' 🍁 カメラを持ってお出かけを',
-            ' 🍂 秋の味覚も楽しんで'
-        ]);
+        suffixCandidates.push({ priority: 8, text: pick([' 🍁 紅葉狩り日和', ' 🍂 秋の行楽日和']) });
     } else if (isChristmasDay) {
-        // 12/25 クリスマス当日
-        comment += pick([
-            ' 🎄 メリークリスマス！',
-            ' 🎅 素敵なクリスマスを！',
-            ' 🎁 プレゼントは届きましたか？',
-            ' ⭐ 楽しいクリスマスを！'
-        ]);
+        suffixCandidates.push({ priority: 8, text: pick([' 🎄 メリークリスマス！', ' 🎅 素敵なクリスマスを！']) });
     } else if (isChristmasEve) {
-        // 12/24 クリスマスイブ
-        comment += pick([
-            ' 🎄 クリスマスイブですね',
-            ' 🎅 素敵なイブを！',
-            ' 🎁 サンタさんが来るかも',
-            ' ⭐ 聖なる夜を楽しんで'
-        ]);
+        suffixCandidates.push({ priority: 8, text: pick([' 🎄 クリスマスイブですね', ' 🎅 素敵なイブを！']) });
     } else if (isChristmasEveEve && isClear) {
-        // 12/23 前日
-        comment += pick([
-            ' 🎄 明日はイブですね',
-            ' 🎅 クリスマス準備はお済みですか？'
-        ]);
+        suffixCandidates.push({ priority: 9, text: pick([' 🎄 明日はイブですね', ' 🎅 クリスマス準備はお済みですか？']) });
     } else if (isYearEnd) {
-        comment += pick([
-            ' 🎍 良いお年を',
-            ' ✨ 素敵な年末を',
-            ' 🧹 大掃除は進んでますか？',
-            ' 🎍 年末の慌ただしさも楽しんで',
-            ' ✨ 今年もお疲れ様でした',
-            ' 🎍 良い年越しを'
-        ]);
+        suffixCandidates.push({ priority: 8, text: pick([' 🎍 良いお年を', ' ✨ 素敵な年末を']) });
     }
 
-    // 節分 (2/3)
+    // 暦イベント
     if (month === 2 && dayOfMonth === 3) {
-        comment += pick([
-            ' 👹 今日は節分！福は内！',
-            ' 🥜 節分です。恵方巻は食べましたか？',
-            ' 👹 鬼は外！福は内！'
-        ]);
-    }
-    // 春の彼岸 (3/18-24頃)
-    else if (month === 3 && dayOfMonth >= 18 && dayOfMonth <= 24) {
-        comment += pick([
-            ' 🌸 春のお彼岸。春らしい陽気になりますように',
-            ' 🌼 お彼岸ですね。「暑さ寒さも彼岸まで」'
-        ]);
-    }
-    // 秋の彼岸 (9/20-26頃)
-    else if (month === 9 && dayOfMonth >= 20 && dayOfMonth <= 26) {
-        comment += pick([
-            ' 🍁 秋のお彼岸。過ごしやすくなりますように',
-            ' 🌾 お彼岸ですね。「暑さ寒さも彼岸まで」'
-        ]);
-    }
-    // 夏至 (6/21頃)
-    else if (month === 6 && dayOfMonth === 21) {
-        comment += pick([
-            ' ☀️ 今日は夏至。1年で最も日が長い日',
-            ' 🌞 夏至です。これから本格的な夏が始まります'
-        ]);
-    }
-    // 冬至 (12/22頃)
-    else if (month === 12 && dayOfMonth === 22) {
-        comment += pick([
-            ' 🌙 今日は冬至。1年で最も夜が長い日',
-            ' 🪷 冬至です。かぼちゃで温まりましょう'
-        ]);
+        suffixCandidates.push({ priority: 8, text: pick([' 👹 今日は節分！福は内！', ' 🥜 節分です。恵方巻は？']) });
+    } else if (month === 3 && dayOfMonth >= 18 && dayOfMonth <= 24) {
+        suffixCandidates.push({ priority: 9, text: ' 🌸 春のお彼岸。暑さ寒さも彼岸まで' });
+    } else if (month === 9 && dayOfMonth >= 20 && dayOfMonth <= 26) {
+        suffixCandidates.push({ priority: 9, text: ' 🍁 秋のお彼岸。暑さ寒さも彼岸まで' });
+    } else if (month === 6 && dayOfMonth === 21) {
+        suffixCandidates.push({ priority: 8, text: ' ☀️ 今日は夏至。1年で最も日が長い日' });
+    } else if (month === 12 && dayOfMonth === 22) {
+        suffixCandidates.push({ priority: 8, text: ' 🌙 今日は冬至。かぼちゃで温まりましょう' });
     }
 
-    // ============================================================
-    // DAY OF WEEK SUFFIXES (expanded x2)
-    // 任意情報なので確率制限（50%）とサフィックス数制限を適用
-    // ============================================================
-    if (isWeekend && isClear && !isRaining && isMorning && temp >= 15 && temp <= 28 &&
-        optionalSuffixCount < MAX_OPTIONAL_SUFFIXES && Math.random() < 0.5) {
-        const weekendTips = [
-            ' 🏃 お出かけ日和！',
-            ' 🧺 洗濯日和ですね',
-            ' 🚲 サイクリング日和',
-            ' 🌳 公園でピクニックも良い',
-            ' ☕ カフェでのんびりも',
-            ' 📷 写真日和ですね'
-        ];
-        comment += pick(weekendTips);
-        optionalSuffixCount++;
-    } else if (isWeekend && isClear && !isRaining && isAfternoon && temp >= 15 && temp <= 28 &&
-        optionalSuffixCount < MAX_OPTIONAL_SUFFIXES && Math.random() < 0.5) {
-        const weekendAfternoonTips = [
-            ' 🛍️ お買い物日和',
-            ' 🍰 カフェタイムにぴったり',
-            ' 🎬 映画館もいいですね',
-            ' 🚶 散歩日和です'
-        ];
-        comment += pick(weekendAfternoonTips);
-        optionalSuffixCount++;
-    } else if (isWeekend && isEvening && !isRaining && temp >= 10 &&
-        optionalSuffixCount < MAX_OPTIONAL_SUFFIXES && Math.random() < 0.5) {
-        const weekendEveningTips = [
-            ' 🍽️ 外食日和かも',
-            ' 🌃 夜景を見に行くのもいい',
-            ' 🎭 週末の夜を楽しんで'
-        ];
-        comment += pick(weekendEveningTips);
-    } else if (isMonday && isMorning && !isRaining &&
-        optionalSuffixCount < MAX_OPTIONAL_SUFFIXES && Math.random() < 0.6) {
-        comment += pick([
-            ' 💪 今週も頑張りましょう',
-            ' ☕ コーヒーで目を覚まして',
-            ' 🌟 良い1週間になりますように',
-            ' 💼 今週もファイト！',
-            ' 🌈 月曜を乗り越えれば楽になる',
-            ' 💪 今週の目標は何ですか？'
-        ]);
-        optionalSuffixCount++;
+    // --- TIER 9: 曜日・生活（priority 9、確率制限）---
+
+    if (isWeekend && isClear && !isRaining && (isMorning || isAfternoon) && temp >= 15 && temp <= 28 && Math.random() < 0.5) {
+        suffixCandidates.push({
+            priority: 9, text: pick([
+                ' 🏃 お出かけ日和！', ' 🧺 洗濯日和ですね', ' 🚲 サイクリング日和'
+            ])
+        });
+    } else if (isMonday && isMorning && !isRaining && Math.random() < 0.6) {
+        suffixCandidates.push({
+            priority: 9, text: pick([
+                ' 💪 今週も頑張りましょう', ' ☕ コーヒーで目を覚まして', ' 🌟 良い1週間になりますように'
+            ])
+        });
     } else if (isMonday && isMorning && isRaining) {
-        comment += pick([
-            ' ☔ 雨の月曜だけど頑張って',
-            ' 🌧️ 足元に気をつけて出勤を',
-            ' ☂️ 傘を忘れずに。良い1週間を'
-        ]);
+        suffixCandidates.push({
+            priority: 9, text: pick([
+                ' ☔ 雨の月曜だけど頑張って', ' ☂️ 傘を忘れずに。良い1週間を'
+            ])
+        });
     } else if (isFriday && isAfternoon) {
-        comment += pick([
-            ' 🎉 もうすぐ週末！',
-            ' ✨ あと少しで週末',
-            ' 🌟 金曜日の午後。もう一踏ん張り'
-        ]);
+        suffixCandidates.push({ priority: 9, text: pick([' 🎉 もうすぐ週末！', ' ✨ あと少しで週末']) });
     } else if (isFriday && isEvening) {
-        comment += pick([
-            ' 🍻 週末ですね',
-            ' 🎊 花金！週末を楽しんで',
-            ' 🍺 お疲れ様でした！',
-            ' 🎉 週末の始まり！',
-            ' 🌃 金曜の夜を満喫しましょう',
-            ' 🍷 ゆっくり休んでくださいね'
-        ]);
+        suffixCandidates.push({ priority: 9, text: pick([' 🍻 週末ですね', ' 🎊 花金！週末を楽しんで']) });
     }
 
-    // ============================================================
-    // HYDRATION REMINDER (expanded x2)
-    // ============================================================
-    if (isDehydrationRisk && !isRaining && !isNight) {
-        const hydrationTips = [
-            ' 💧 水分補給を',
-            ' 🥤 こまめに水分を',
-            ' 💦 脱水に注意',
-            ' 🧊 冷たい飲み物で水分補給を',
-            ' 💧 のどが渇く前に水分を',
-            ' 🥤 スポドリもおすすめ'
-        ];
-        if (!comment.includes('水分') && !comment.includes('💧') && !comment.includes('🥤')) {
-            comment += pick(hydrationTips);
-        }
+    // 洗濯・ペット（確率制限）
+    if (isClear && isDry && !isRaining && isMorning && temp >= 15 && temp <= 30 && !isWeekend && Math.random() < 0.3) {
+        suffixCandidates.push({ priority: 10, text: pick([' 🧺 洗濯物がよく乾きそう', ' 👕 布団干し日和']) });
+    }
+    if (temp >= 30 && isClear && isAfternoon && !isRaining && Math.random() < 0.25) {
+        suffixCandidates.push({ priority: 10, text: pick([' 🐕 ペットの散歩はアスファルトが冷めてから', ' 🐾 お散歩は涼しい時間帯に']) });
     }
 
-    // ============================================================
-    // LAUNDRY & OUTDOOR SUFFIXES (NEW)
-    // ============================================================
-    if (isClear && isDry && !isRaining && isMorning && !isNight && temp >= 15 && temp <= 30 && !isWeekend) {
-        if (Math.random() < 0.3) { // 30% chance to show
-            comment += pick([
-                ' 🧺 洗濯物がよく乾きそう',
-                ' 👕 布団干し日和',
-                ' 🌞 シーツを洗うのにぴったり'
-            ]);
-        }
+    // --- 候補をソートして最大2つまで採用 ---
+    suffixCandidates.sort((a, b) => a.priority - b.priority);
+    const selectedSuffixes = suffixCandidates.slice(0, MAX_SUFFIXES);
+    for (const suffix of selectedSuffixes) {
+        comment += suffix.text;
     }
-
-    // ============================================================
-    // PET SAFETY SUFFIXES (NEW)
-    // ============================================================
-    if (temp >= 30 && isClear && isAfternoon && !isRaining) {
-        if (Math.random() < 0.25) { // 25% chance
-            comment += pick([
-                ' 🐕 ペットの散歩はアスファルトが冷めてから',
-                ' 🐶 ワンちゃんの肉球火傷注意',
-                ' 🐾 お散歩は涼しい時間帯に'
-            ]);
-        }
-    }
-    // (警報処理は上部の優先サフィックスセクションに移動済み)
 
     // Save comment and condition key for next comparison
     lastComment = comment;
