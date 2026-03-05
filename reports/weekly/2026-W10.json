@@ -7,7 +7,7 @@
     "end_date": "2026-03-08",
     "label": "2026年 第10週（3/2 〜 3/8）"
   },
-  "generated_at": "2026-03-05T15:41:24.208581+09:00",
+  "generated_at": "2026-03-05T18:36:21.623947+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -15,14 +15,14 @@
       "highlights": [
         "最高気温 15.7℃",
         "最低気温 4.2℃",
-        "前週比 -2.8℃",
-        "前年比 +2.4℃"
+        "前週比 -2.6℃",
+        "前年比 +2.6℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 4,
-      "avg_temp": 9.3,
+      "avg_temp": 9.5,
       "avg_temp_stdev": 1.6,
       "max_temp": 15.7,
       "max_temp_date": "2026/03/05",
@@ -31,8 +31,8 @@
       "min_temp_date": "2026/03/03",
       "avg_low": 6.0,
       "avg_daily_range": 7.6,
-      "prev_week_diff": -2.8,
-      "prev_year_diff": 2.4
+      "prev_week_diff": -2.6,
+      "prev_year_diff": 2.6
     },
     "daily_data": [
       {
@@ -64,7 +64,7 @@
         "weekday": "木",
         "high": 15.7,
         "low": 6.7,
-        "avg": 9.9,
+        "avg": 10.4,
         "range": 9.0
       }
     ],
@@ -84,7 +84,7 @@
         "avg_low": 3.3,
         "avg_daily_range": 7.7
       },
-      "avg_temp_diff": 2.4,
+      "avg_temp_diff": 2.6,
       "max_temp_diff": -4.5,
       "min_temp_diff": 3.4,
       "avg_daily_range_diff": -0.1,
@@ -93,7 +93,7 @@
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 6.9,
-      "current_deviation": 2.4,
+      "current_deviation": 2.6,
       "years_count": 1,
       "ai_comment": ""
     },
@@ -273,7 +273,7 @@
             "low": -2.2
           },
           "3": {
-            "avg": 10.0,
+            "avg": 10.1,
             "high": 17.3,
             "low": 4.2
           }
@@ -308,7 +308,7 @@
         11.3,
         7.8,
         8.4,
-        9.9
+        10.4
       ]
     },
     "prev_year_comparison": {
@@ -322,7 +322,7 @@
         11.3,
         7.8,
         8.4,
-        9.9
+        10.4
       ],
       "last_year": [
         14.3,
@@ -375,7 +375,7 @@
         4.4,
         0.9,
         1.5,
-        3.0
+        3.5
       ],
       "baseline_avg": 6.9
     }
