@@ -7,32 +7,32 @@
     "end_date": "2026-03-31",
     "label": "2026年3月"
   },
-  "generated_at": "2026-03-08T00:16:51.850751+09:00",
+  "generated_at": "2026-03-08T03:23:52.237222+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
       "ai_comment": "",
       "highlights": [
-        "月平均 10.0℃",
+        "月平均 9.9℃",
         "最高 17.3℃",
-        "前月比 +2.4℃",
-        "前年比 -0.7℃"
+        "前月比 +2.3℃",
+        "前年比 -0.8℃"
       ]
     },
     "statistics": {
       "title": "月間統計",
       "days": 8,
-      "avg_temp": 10.0,
-      "avg_temp_stdev": 1.7,
+      "avg_temp": 9.9,
+      "avg_temp_stdev": 1.9,
       "max_temp": 17.3,
       "max_temp_date": "2026/03/01",
       "avg_high": 13.8,
       "min_temp": 4.2,
       "min_temp_date": "2026/03/03",
-      "avg_low": 6.7,
-      "avg_daily_range": 7.1,
-      "prev_month_diff": 2.4,
-      "prev_year_diff": -0.7
+      "avg_low": 6.4,
+      "avg_daily_range": 7.4,
+      "prev_month_diff": 2.3,
+      "prev_year_diff": -0.8
     },
     "daily_data": [
       {
@@ -95,9 +95,9 @@
         "date": "2026/03/08",
         "weekday": "日",
         "high": 8.6,
-        "low": 8.5,
-        "avg": 8.5,
-        "range": 0.1
+        "low": 6.6,
+        "avg": 7.6,
+        "range": 2.0
       }
     ],
     "weekly_breakdown": [
@@ -121,15 +121,15 @@
         "end_date": "2026-03-14",
         "label": "3/8〜3/14",
         "days": 1,
-        "avg_temp": 8.5,
+        "avg_temp": 7.6,
         "avg_temp_stdev": 0,
         "max_temp": 8.6,
         "max_temp_date": "2026/03/08",
         "avg_high": 8.6,
-        "min_temp": 8.5,
+        "min_temp": 6.6,
         "min_temp_date": "2026/03/08",
-        "avg_low": 8.5,
-        "avg_daily_range": 0.1
+        "avg_low": 6.6,
+        "avg_daily_range": 2.0
       }
     ],
     "comparison": {
@@ -148,10 +148,10 @@
         "avg_low": 6.4,
         "avg_daily_range": 8.8
       },
-      "avg_temp_diff": -0.7,
+      "avg_temp_diff": -0.8,
       "max_temp_diff": -7.8,
       "min_temp_diff": 3.4,
-      "avg_daily_range_diff": -1.7,
+      "avg_daily_range_diff": -1.4,
       "ai_comment": ""
     },
     "prev_month": {
@@ -168,16 +168,16 @@
         "avg_low": 3.3,
         "avg_daily_range": 8.8
       },
-      "avg_temp_diff": 2.4,
+      "avg_temp_diff": 2.3,
       "max_temp_diff": -4.6,
       "min_temp_diff": 6.4,
-      "avg_daily_range_diff": -1.7,
+      "avg_daily_range_diff": -1.4,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 10.8,
-      "current_deviation": -0.8,
+      "current_deviation": -0.9,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -357,7 +357,7 @@
             "low": -2.2
           },
           "3": {
-            "avg": 10.0,
+            "avg": 9.9,
             "high": 17.3,
             "low": 4.2
           }
@@ -395,7 +395,7 @@
         6.7,
         4.4,
         8.2,
-        8.5
+        6.6
       ],
       "avgs": [
         12.5,
@@ -405,7 +405,7 @@
         10.2,
         9.5,
         11.8,
-        8.5
+        7.6
       ]
     },
     "prev_year_comparison": {
@@ -427,7 +427,7 @@
         10.2,
         9.5,
         11.8,
-        8.5
+        7.6
       ],
       "last_year": [
         12.6,
@@ -513,7 +513,7 @@
         6.7,
         4.4,
         8.2,
-        8.5
+        6.6
       ],
       "last_year_low": [
         6.0,
@@ -568,7 +568,7 @@
         -0.6,
         -1.3,
         1.0,
-        -2.3
+        -3.2
       ],
       "baseline_avg": 10.8
     },
@@ -579,7 +579,7 @@
       ],
       "avgs": [
         10.2,
-        8.5
+        7.6
       ],
       "highs": [
         14.6,
@@ -587,7 +587,7 @@
       ],
       "lows": [
         6.4,
-        8.5
+        6.6
       ]
     }
   }
