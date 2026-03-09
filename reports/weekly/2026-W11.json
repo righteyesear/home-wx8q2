@@ -7,7 +7,7 @@
     "end_date": "2026-03-15",
     "label": "2026年 第11週（3/9 〜 3/15）"
   },
-  "generated_at": "2026-03-09T18:40:56.943450+09:00",
+  "generated_at": "2026-03-09T21:41:26.247447+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -15,14 +15,14 @@
       "highlights": [
         "最高気温 12.8℃",
         "最低気温 3.8℃",
-        "前週比 -1.8℃",
-        "前年比 -2.9℃"
+        "前週比 -1.6℃",
+        "前年比 -2.7℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 1,
-      "avg_temp": 7.8,
+      "avg_temp": 8.0,
       "avg_temp_stdev": 0,
       "max_temp": 12.8,
       "max_temp_date": "2026/03/09",
@@ -31,8 +31,8 @@
       "min_temp_date": "2026/03/09",
       "avg_low": 3.8,
       "avg_daily_range": 9.0,
-      "prev_week_diff": -1.8,
-      "prev_year_diff": -2.9
+      "prev_week_diff": -1.6,
+      "prev_year_diff": -2.7
     },
     "daily_data": [
       {
@@ -40,7 +40,7 @@
         "weekday": "月",
         "high": 12.8,
         "low": 3.8,
-        "avg": 7.8,
+        "avg": 8.0,
         "range": 9.0
       }
     ],
@@ -60,7 +60,7 @@
         "avg_low": 6.4,
         "avg_daily_range": 8.4
       },
-      "avg_temp_diff": -2.9,
+      "avg_temp_diff": -2.7,
       "max_temp_diff": -6.6,
       "min_temp_diff": 2.3,
       "avg_daily_range_diff": 0.6,
@@ -69,7 +69,7 @@
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 10.3,
-      "current_deviation": -2.5,
+      "current_deviation": -2.3,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -269,7 +269,7 @@
         3.8
       ],
       "avgs": [
-        7.8
+        8.0
       ]
     },
     "prev_year_comparison": {
@@ -277,7 +277,7 @@
         "月"
       ],
       "this_year": [
-        7.8
+        8.0
       ],
       "last_year": [
         6.7,
@@ -318,7 +318,7 @@
         "3/9(月)"
       ],
       "deviations": [
-        -2.5
+        -2.3
       ],
       "baseline_avg": 10.3
     }
