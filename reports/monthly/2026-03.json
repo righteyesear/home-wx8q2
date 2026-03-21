@@ -7,7 +7,7 @@
     "end_date": "2026-03-31",
     "label": "2026年3月"
   },
-  "generated_at": "2026-03-21T21:31:30.425831+09:00",
+  "generated_at": "2026-03-22T00:19:55.822281+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -21,16 +21,16 @@
     },
     "statistics": {
       "title": "月間統計",
-      "days": 21,
+      "days": 22,
       "avg_temp": 9.8,
-      "avg_temp_stdev": 2.4,
+      "avg_temp_stdev": 2.3,
       "max_temp": 19.5,
       "max_temp_date": "2026/03/19",
-      "avg_high": 13.9,
+      "avg_high": 13.7,
       "min_temp": 0.6,
       "min_temp_date": "2026/03/11",
-      "avg_low": 6.1,
-      "avg_daily_range": 7.9,
+      "avg_low": 6.2,
+      "avg_daily_range": 7.5,
       "prev_month_diff": 2.2,
       "prev_year_diff": -0.9
     },
@@ -202,6 +202,14 @@
         "low": 4.8,
         "avg": 10.6,
         "range": 11.5
+      },
+      {
+        "date": "2026/03/22",
+        "weekday": "日",
+        "high": 9.5,
+        "low": 9.3,
+        "avg": 9.4,
+        "range": 0.2
       }
     ],
     "weekly_breakdown": [
@@ -249,6 +257,21 @@
         "min_temp_date": "2026/03/21",
         "avg_low": 7.9,
         "avg_daily_range": 7.8
+      },
+      {
+        "start_date": "2026-03-22",
+        "end_date": "2026-03-28",
+        "label": "3/22〜3/28",
+        "days": 1,
+        "avg_temp": 9.4,
+        "avg_temp_stdev": 0,
+        "max_temp": 9.5,
+        "max_temp_date": "2026/03/22",
+        "avg_high": 9.5,
+        "min_temp": 9.3,
+        "min_temp_date": "2026/03/22",
+        "avg_low": 9.3,
+        "avg_daily_range": 0.2
       }
     ],
     "comparison": {
@@ -270,7 +293,7 @@
       "avg_temp_diff": -0.9,
       "max_temp_diff": -5.6,
       "min_temp_diff": -0.2,
-      "avg_daily_range_diff": -0.9,
+      "avg_daily_range_diff": -1.3,
       "ai_comment": ""
     },
     "prev_month": {
@@ -290,7 +313,7 @@
       "avg_temp_diff": 2.2,
       "max_temp_diff": -2.4,
       "min_temp_diff": 2.8,
-      "avg_daily_range_diff": -0.9,
+      "avg_daily_range_diff": -1.3,
       "ai_comment": ""
     },
     "baseline": {
@@ -513,7 +536,8 @@
         "18日",
         "19日",
         "20日",
-        "21日"
+        "21日",
+        "22日"
       ],
       "highs": [
         17.3,
@@ -536,7 +560,8 @@
         16.9,
         19.5,
         12.8,
-        16.3
+        16.3,
+        9.5
       ],
       "lows": [
         8.3,
@@ -559,7 +584,8 @@
         9.3,
         12.1,
         7.3,
-        4.8
+        4.8,
+        9.3
       ],
       "avgs": [
         12.5,
@@ -582,7 +608,8 @@
         13.2,
         15.1,
         9.7,
-        10.6
+        10.6,
+        9.4
       ]
     },
     "prev_year_comparison": {
@@ -607,7 +634,8 @@
         "18日",
         "19日",
         "20日",
-        "21日"
+        "21日",
+        "22日"
       ],
       "this_year": [
         12.5,
@@ -630,7 +658,8 @@
         13.2,
         15.1,
         9.7,
-        10.6
+        10.6,
+        9.4
       ],
       "last_year": [
         12.6,
@@ -686,7 +715,8 @@
         16.9,
         19.5,
         12.8,
-        16.3
+        16.3,
+        9.5
       ],
       "last_year_high": [
         18.9,
@@ -742,7 +772,8 @@
         9.3,
         12.1,
         7.3,
-        4.8
+        4.8,
+        9.3
       ],
       "last_year_low": [
         6.0,
@@ -800,7 +831,8 @@
         "3/18(水)",
         "3/19(木)",
         "3/20(金)",
-        "3/21(土)"
+        "3/21(土)",
+        "3/22(日)"
       ],
       "deviations": [
         1.7,
@@ -823,7 +855,8 @@
         2.4,
         4.3,
         -1.1,
-        -0.2
+        -0.2,
+        -1.4
       ],
       "baseline_avg": 10.8
     },
@@ -831,22 +864,26 @@
       "labels": [
         "3/1〜3/7",
         "3/8〜3/14",
-        "3/15〜3/21"
+        "3/15〜3/21",
+        "3/22〜3/28"
       ],
       "avgs": [
         10.2,
         7.5,
-        11.6
+        11.6,
+        9.4
       ],
       "highs": [
         14.6,
         11.5,
-        15.7
+        15.7,
+        9.5
       ],
       "lows": [
         6.4,
         3.8,
-        7.9
+        7.9,
+        9.3
       ]
     }
   }
