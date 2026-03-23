@@ -7,7 +7,7 @@
     "end_date": "2026-03-31",
     "label": "2026年3月"
   },
-  "generated_at": "2026-03-23T16:01:55.157523+09:00",
+  "generated_at": "2026-03-23T18:57:34.544853+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -23,7 +23,7 @@
       "title": "月間統計",
       "days": 23,
       "avg_temp": 10.0,
-      "avg_temp_stdev": 2.3,
+      "avg_temp_stdev": 2.4,
       "max_temp": 19.5,
       "max_temp_date": "2026/03/19",
       "avg_high": 14.2,
@@ -214,10 +214,10 @@
       {
         "date": "2026/03/23",
         "weekday": "月",
-        "high": 16.5,
+        "high": 16.8,
         "low": 10.0,
-        "avg": 12.3,
-        "range": 6.5
+        "avg": 12.8,
+        "range": 6.8
       }
     ],
     "weekly_breakdown": [
@@ -271,15 +271,15 @@
         "end_date": "2026-03-28",
         "label": "3/22〜3/28",
         "days": 2,
-        "avg_temp": 11.8,
-        "avg_temp_stdev": 0.7,
-        "max_temp": 16.7,
-        "max_temp_date": "2026/03/22",
-        "avg_high": 16.6,
+        "avg_temp": 12.1,
+        "avg_temp_stdev": 1.1,
+        "max_temp": 16.8,
+        "max_temp_date": "2026/03/23",
+        "avg_high": 16.8,
         "min_temp": 4.8,
         "min_temp_date": "2026/03/22",
         "avg_low": 7.4,
-        "avg_daily_range": 9.2
+        "avg_daily_range": 9.3
       }
     ],
     "comparison": {
@@ -571,7 +571,7 @@
         12.8,
         16.3,
         16.7,
-        16.5
+        16.8
       ],
       "lows": [
         8.3,
@@ -621,7 +621,7 @@
         9.7,
         10.6,
         11.3,
-        12.3
+        12.8
       ]
     },
     "prev_year_comparison": {
@@ -673,7 +673,7 @@
         9.7,
         10.6,
         11.3,
-        12.3
+        12.8
       ],
       "last_year": [
         12.6,
@@ -731,7 +731,7 @@
         12.8,
         16.3,
         16.7,
-        16.5
+        16.8
       ],
       "last_year_high": [
         18.9,
@@ -874,7 +874,7 @@
         -1.1,
         -0.2,
         0.5,
-        1.5
+        2.0
       ],
       "baseline_avg": 10.8
     },
@@ -889,13 +889,13 @@
         10.2,
         7.5,
         11.6,
-        11.8
+        12.1
       ],
       "highs": [
         14.6,
         11.5,
         15.7,
-        16.6
+        16.8
       ],
       "lows": [
         6.4,
