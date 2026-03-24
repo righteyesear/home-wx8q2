@@ -7,7 +7,7 @@
     "end_date": "2026-03-29",
     "label": "2026年 第13週（3/23 〜 3/29）"
   },
-  "generated_at": "2026-03-24T18:47:49.705524+09:00",
+  "generated_at": "2026-03-24T21:52:27.072400+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -23,7 +23,7 @@
       "title": "週間統計",
       "days": 2,
       "avg_temp": 12.8,
-      "avg_temp_stdev": 0.4,
+      "avg_temp_stdev": 0.3,
       "max_temp": 17.8,
       "max_temp_date": "2026/03/24",
       "avg_high": 17.3,
@@ -48,7 +48,7 @@
         "weekday": "火",
         "high": 17.8,
         "low": 9.4,
-        "avg": 13.1,
+        "avg": 13.0,
         "range": 8.4
       }
     ],
@@ -281,7 +281,7 @@
       ],
       "avgs": [
         12.6,
-        13.1
+        13.0
       ]
     },
     "prev_year_comparison": {
@@ -291,7 +291,7 @@
       ],
       "this_year": [
         12.6,
-        13.1
+        13.0
       ],
       "last_year": [
         16.4,
@@ -336,7 +336,7 @@
       ],
       "deviations": [
         -0.8,
-        -0.3
+        -0.4
       ],
       "baseline_avg": 13.4
     }
