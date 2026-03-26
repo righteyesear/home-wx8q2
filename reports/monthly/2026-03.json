@@ -7,7 +7,7 @@
     "end_date": "2026-03-31",
     "label": "2026年3月"
   },
-  "generated_at": "2026-03-27T01:09:11.857614+09:00",
+  "generated_at": "2026-03-27T03:56:15.637691+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -27,10 +27,10 @@
       "max_temp": 19.5,
       "max_temp_date": "2026/03/19",
       "avg_high": 14.2,
-      "min_temp": 0.0,
-      "min_temp_date": "2026/03/03",
-      "avg_low": 6.7,
-      "avg_daily_range": 7.5,
+      "min_temp": 0.6,
+      "min_temp_date": "2026/03/11",
+      "avg_low": 6.8,
+      "avg_daily_range": 7.4,
       "prev_month_diff": 2.7,
       "prev_year_diff": -0.4
     },
@@ -55,9 +55,9 @@
         "date": "2026/03/03",
         "weekday": "火",
         "high": 11.1,
-        "low": 0.0,
+        "low": 4.2,
         "avg": 7.8,
-        "range": 11.1
+        "range": 6.9
       },
       {
         "date": "2026/03/04",
@@ -247,9 +247,9 @@
         "date": "2026/03/27",
         "weekday": "金",
         "high": 11.4,
-        "low": 11.2,
-        "avg": 11.2,
-        "range": 0.2
+        "low": 10.5,
+        "avg": 11.0,
+        "range": 0.9
       }
     ],
     "weekly_breakdown": [
@@ -263,10 +263,10 @@
         "max_temp": 17.3,
         "max_temp_date": "2026/03/01",
         "avg_high": 14.6,
-        "min_temp": 0.0,
+        "min_temp": 4.2,
         "min_temp_date": "2026/03/03",
-        "avg_low": 5.8,
-        "avg_daily_range": 8.7
+        "avg_low": 6.4,
+        "avg_daily_range": 8.1
       },
       {
         "start_date": "2026-03-08",
@@ -310,8 +310,8 @@
         "avg_high": 15.1,
         "min_temp": 4.8,
         "min_temp_date": "2026/03/22",
-        "avg_low": 9.5,
-        "avg_daily_range": 5.6
+        "avg_low": 9.4,
+        "avg_daily_range": 5.7
       }
     ],
     "comparison": {
@@ -332,8 +332,8 @@
       },
       "avg_temp_diff": -0.4,
       "max_temp_diff": -5.6,
-      "min_temp_diff": -0.8,
-      "avg_daily_range_diff": -1.3,
+      "min_temp_diff": -0.2,
+      "avg_daily_range_diff": -1.4,
       "ai_comment": ""
     },
     "prev_month": {
@@ -352,8 +352,8 @@
       },
       "avg_temp_diff": 2.7,
       "max_temp_diff": -2.4,
-      "min_temp_diff": 2.2,
-      "avg_daily_range_diff": -1.3,
+      "min_temp_diff": 2.8,
+      "avg_daily_range_diff": -1.4,
       "ai_comment": ""
     },
     "baseline": {
@@ -547,7 +547,7 @@
           "3": {
             "avg": 10.3,
             "high": 19.5,
-            "low": 0.0
+            "low": 0.6
           }
         }
       }
@@ -616,7 +616,7 @@
       "lows": [
         8.3,
         8.9,
-        0.0,
+        4.2,
         4.2,
         6.7,
         4.4,
@@ -640,7 +640,7 @@
         9.4,
         10.9,
         10.7,
-        11.2
+        10.5
       ],
       "avgs": [
         12.5,
@@ -669,7 +669,7 @@
         12.9,
         12.2,
         11.9,
-        11.2
+        11.0
       ]
     },
     "prev_year_comparison": {
@@ -729,7 +729,7 @@
         12.9,
         12.2,
         11.9,
-        11.2
+        11.0
       ],
       "last_year": [
         12.6,
@@ -829,7 +829,7 @@
       "this_year_low": [
         8.3,
         8.9,
-        0.0,
+        4.2,
         4.2,
         6.7,
         4.4,
@@ -853,7 +853,7 @@
         9.4,
         10.9,
         10.7,
-        11.2
+        10.5
       ],
       "last_year_low": [
         6.0,
@@ -946,7 +946,7 @@
         2.1,
         1.4,
         1.1,
-        0.4
+        0.2
       ],
       "baseline_avg": 10.8
     },
@@ -970,10 +970,10 @@
         15.1
       ],
       "lows": [
-        5.8,
+        6.4,
         3.8,
         7.9,
-        9.5
+        9.4
       ]
     }
   }
