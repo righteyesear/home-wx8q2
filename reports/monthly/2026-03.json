@@ -7,7 +7,7 @@
     "end_date": "2026-03-31",
     "label": "2026年3月"
   },
-  "generated_at": "2026-03-26T06:32:46.772978+09:00",
+  "generated_at": "2026-03-26T10:29:33.177192+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -238,10 +238,10 @@
       {
         "date": "2026/03/26",
         "weekday": "木",
-        "high": 11.7,
+        "high": 12.1,
         "low": 10.7,
         "avg": 11.2,
-        "range": 1.0
+        "range": 1.4
       }
     ],
     "weekly_breakdown": [
@@ -299,11 +299,11 @@
         "avg_temp_stdev": 0.8,
         "max_temp": 17.8,
         "max_temp_date": "2026/03/24",
-        "avg_high": 15.4,
+        "avg_high": 15.5,
         "min_temp": 4.8,
         "min_temp_date": "2026/03/22",
         "avg_low": 9.2,
-        "avg_daily_range": 6.3
+        "avg_daily_range": 6.4
       }
     ],
     "comparison": {
@@ -601,7 +601,7 @@
         16.8,
         17.8,
         14.2,
-        11.7
+        12.1
       ],
       "lows": [
         8.3,
@@ -776,7 +776,7 @@
         16.8,
         17.8,
         14.2,
-        11.7
+        12.1
       ],
       "last_year_high": [
         18.9,
@@ -949,7 +949,7 @@
         14.6,
         11.5,
         15.7,
-        15.4
+        15.5
       ],
       "lows": [
         6.4,
