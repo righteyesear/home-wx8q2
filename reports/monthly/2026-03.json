@@ -7,7 +7,7 @@
     "end_date": "2026-03-31",
     "label": "2026年3月"
   },
-  "generated_at": "2026-03-27T06:26:25.631631+09:00",
+  "generated_at": "2026-03-27T10:28:21.985907+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -26,11 +26,11 @@
       "avg_temp_stdev": 2.3,
       "max_temp": 19.5,
       "max_temp_date": "2026/03/19",
-      "avg_high": 14.2,
+      "avg_high": 14.3,
       "min_temp": 0.6,
       "min_temp_date": "2026/03/11",
       "avg_low": 6.8,
-      "avg_daily_range": 7.4,
+      "avg_daily_range": 7.6,
       "prev_month_diff": 2.7,
       "prev_year_diff": -0.4
     },
@@ -246,10 +246,10 @@
       {
         "date": "2026/03/27",
         "weekday": "金",
-        "high": 11.4,
+        "high": 15.4,
         "low": 9.6,
-        "avg": 10.6,
-        "range": 1.8
+        "avg": 11.5,
+        "range": 5.8
       }
     ],
     "weekly_breakdown": [
@@ -303,15 +303,15 @@
         "end_date": "2026-03-28",
         "label": "3/22〜3/28",
         "days": 6,
-        "avg_temp": 11.9,
-        "avg_temp_stdev": 0.9,
+        "avg_temp": 12.1,
+        "avg_temp_stdev": 0.6,
         "max_temp": 17.8,
         "max_temp_date": "2026/03/24",
-        "avg_high": 15.1,
+        "avg_high": 15.7,
         "min_temp": 4.8,
         "min_temp_date": "2026/03/22",
         "avg_low": 9.2,
-        "avg_daily_range": 5.8
+        "avg_daily_range": 6.5
       }
     ],
     "comparison": {
@@ -333,7 +333,7 @@
       "avg_temp_diff": -0.4,
       "max_temp_diff": -5.6,
       "min_temp_diff": -0.2,
-      "avg_daily_range_diff": -1.4,
+      "avg_daily_range_diff": -1.2,
       "ai_comment": ""
     },
     "prev_month": {
@@ -353,7 +353,7 @@
       "avg_temp_diff": 2.7,
       "max_temp_diff": -2.4,
       "min_temp_diff": 2.8,
-      "avg_daily_range_diff": -1.4,
+      "avg_daily_range_diff": -1.2,
       "ai_comment": ""
     },
     "baseline": {
@@ -611,7 +611,7 @@
         17.8,
         14.2,
         13.5,
-        11.4
+        15.4
       ],
       "lows": [
         8.3,
@@ -669,7 +669,7 @@
         12.9,
         12.2,
         11.9,
-        10.6
+        11.5
       ]
     },
     "prev_year_comparison": {
@@ -729,7 +729,7 @@
         12.9,
         12.2,
         11.9,
-        10.6
+        11.5
       ],
       "last_year": [
         12.6,
@@ -791,7 +791,7 @@
         17.8,
         14.2,
         13.5,
-        11.4
+        15.4
       ],
       "last_year_high": [
         18.9,
@@ -946,7 +946,7 @@
         2.1,
         1.4,
         1.1,
-        -0.2
+        0.7
       ],
       "baseline_avg": 10.8
     },
@@ -961,13 +961,13 @@
         10.2,
         7.5,
         11.6,
-        11.9
+        12.1
       ],
       "highs": [
         14.6,
         11.5,
         15.7,
-        15.1
+        15.7
       ],
       "lows": [
         6.4,
