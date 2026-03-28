@@ -1,13 +1,13 @@
 {
-  "updated": "2026-03-28 21:56:40",
+  "updated": "2026-03-28 22:53:16",
   "location": {
     "lat": 35.7785,
     "lon": 139.878
   },
   "date": "2026-03-28",
-  "error": null,
-  "moonrise": "13:00",
-  "moonset": "翌2:48",
+  "error": "<urlopen error _ssl.c:999: The handshake operation timed out>",
+  "moonrise": "--:--",
+  "moonset": "--:--",
   "moon_age": 9.03,
   "sunrise": "5:33",
   "sunset": "17:59",
@@ -16,7 +16,5 @@
   "moonrise_azimuth": 64.2,
   "moonrise_direction": "東北東",
   "moon_phase_deg": 120.38,
-  "illumination": 75.3,
-  "moonset_azimuth": 287.3,
-  "moonset_direction": "西北西"
+  "illumination": 75.3
 }
