@@ -7,41 +7,41 @@
     "end_date": "2026-04-05",
     "label": "2026年 第14週（3/30 〜 4/5）"
   },
-  "generated_at": "2026-03-30T14:17:53.434192+09:00",
+  "generated_at": "2026-03-30T16:17:40.166931+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
       "ai_comment": "",
       "highlights": [
-        "最高気温 20.7℃",
+        "最高気温 20.8℃",
         "最低気温 12.2℃",
-        "前週比 +1.7℃",
-        "前年比 +5.9℃"
+        "前週比 +2.4℃",
+        "前年比 +6.6℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 1,
-      "avg_temp": 14.9,
+      "avg_temp": 15.6,
       "avg_temp_stdev": 0,
-      "max_temp": 20.7,
+      "max_temp": 20.8,
       "max_temp_date": "2026/03/30",
-      "avg_high": 20.7,
+      "avg_high": 20.8,
       "min_temp": 12.2,
       "min_temp_date": "2026/03/30",
       "avg_low": 12.2,
-      "avg_daily_range": 8.5,
-      "prev_week_diff": 1.7,
-      "prev_year_diff": 5.9
+      "avg_daily_range": 8.6,
+      "prev_week_diff": 2.4,
+      "prev_year_diff": 6.6
     },
     "daily_data": [
       {
         "date": "2026/03/30",
         "weekday": "月",
-        "high": 20.7,
+        "high": 20.8,
         "low": 12.2,
-        "avg": 14.9,
-        "range": 8.5
+        "avg": 15.6,
+        "range": 8.6
       }
     ],
     "comparison": {
@@ -60,16 +60,16 @@
         "avg_low": 5.6,
         "avg_daily_range": 6.8
       },
-      "avg_temp_diff": 5.9,
-      "max_temp_diff": 3.5,
+      "avg_temp_diff": 6.6,
+      "max_temp_diff": 3.6,
       "min_temp_diff": 8.0,
-      "avg_daily_range_diff": 1.7,
+      "avg_daily_range_diff": 1.8,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 12.1,
-      "current_deviation": 2.8,
+      "current_deviation": 3.5,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -263,13 +263,13 @@
         "3/30(月)"
       ],
       "highs": [
-        20.7
+        20.8
       ],
       "lows": [
         12.2
       ],
       "avgs": [
-        14.9
+        15.6
       ]
     },
     "prev_year_comparison": {
@@ -277,7 +277,7 @@
         "月"
       ],
       "this_year": [
-        14.9
+        15.6
       ],
       "last_year": [
         9.7,
@@ -289,7 +289,7 @@
         11.8
       ],
       "this_year_high": [
-        20.7
+        20.8
       ],
       "last_year_high": [
         14.7,
@@ -318,7 +318,7 @@
         "3/30(月)"
       ],
       "deviations": [
-        2.8
+        3.5
       ],
       "baseline_avg": 12.1
     }
