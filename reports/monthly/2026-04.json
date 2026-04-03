@@ -7,32 +7,32 @@
     "end_date": "2026-04-30",
     "label": "2026年4月"
   },
-  "generated_at": "2026-04-03T10:29:48.682873+09:00",
+  "generated_at": "2026-04-03T14:01:14.505218+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
       "ai_comment": "分析中にエラーが発生しました: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}",
       "highlights": [
-        "月平均 12.3℃",
-        "最高 18.2℃",
-        "前月比 +1.3℃",
-        "前年比 -3.6℃"
+        "月平均 13.0℃",
+        "最高 19.9℃",
+        "前月比 +2.0℃",
+        "前年比 -2.9℃"
       ]
     },
     "statistics": {
       "title": "月間統計",
       "days": 3,
-      "avg_temp": 12.3,
-      "avg_temp_stdev": 1.7,
-      "max_temp": 18.2,
+      "avg_temp": 13.0,
+      "avg_temp_stdev": 1.4,
+      "max_temp": 19.9,
       "max_temp_date": "2026/04/03",
-      "avg_high": 17.5,
+      "avg_high": 18.1,
       "min_temp": 8.7,
       "min_temp_date": "2026/04/03",
       "avg_low": 9.4,
-      "avg_daily_range": 8.1,
-      "prev_month_diff": 1.3,
-      "prev_year_diff": -3.6
+      "avg_daily_range": 8.6,
+      "prev_month_diff": 2.0,
+      "prev_year_diff": -2.9
     },
     "daily_data": [
       {
@@ -54,10 +54,10 @@
       {
         "date": "2026/04/03",
         "weekday": "金",
-        "high": 18.2,
+        "high": 19.9,
         "low": 8.7,
-        "avg": 11.1,
-        "range": 9.5
+        "avg": 13.2,
+        "range": 11.2
       }
     ],
     "weekly_breakdown": [
@@ -66,15 +66,15 @@
         "end_date": "2026-04-07",
         "label": "4/1〜4/7",
         "days": 3,
-        "avg_temp": 12.3,
-        "avg_temp_stdev": 1.7,
-        "max_temp": 18.2,
+        "avg_temp": 13.0,
+        "avg_temp_stdev": 1.4,
+        "max_temp": 19.9,
         "max_temp_date": "2026/04/03",
-        "avg_high": 17.5,
+        "avg_high": 18.1,
         "min_temp": 8.7,
         "min_temp_date": "2026/04/03",
         "avg_low": 9.4,
-        "avg_daily_range": 8.1
+        "avg_daily_range": 8.6
       }
     ],
     "comparison": {
@@ -93,10 +93,10 @@
         "avg_low": 11.8,
         "avg_daily_range": 8.5
       },
-      "avg_temp_diff": -3.6,
-      "max_temp_diff": -9.4,
+      "avg_temp_diff": -2.9,
+      "max_temp_diff": -7.7,
       "min_temp_diff": 4.5,
-      "avg_daily_range_diff": -0.4,
+      "avg_daily_range_diff": 0.1,
       "ai_comment": "平均気温こそ昨年とほぼ同じですが、その中身は正反対です。昨年は最高気温が27度を超える日がある一方で、最低気温が4度台まで下がるなど、激しい寒暖差に翻弄される春でした。対して今年は、一日の気温差がわずか2.9度と非常に小さく、朝から晩まで一定の温度が保たれる、凪のように穏やかで安定した気候が特徴です。\n\n4月1日の比較でも分かる通り、昨年の凍えるような寒さに比べ、今年は初めから安定した暖かさが続いています。急激な暑さや冷え込みがないため、厚手のコートを片付けるタイミングに迷うこともなく、自律神経への負担も少ないでしょう。服装選びのストレスが少なく、健やかに過ごせる春になりそうです 🌸"
     },
     "prev_month": {
@@ -113,16 +113,16 @@
         "avg_low": 7.4,
         "avg_daily_range": 7.7
       },
-      "avg_temp_diff": 1.3,
-      "max_temp_diff": -3.5,
+      "avg_temp_diff": 2.0,
+      "max_temp_diff": -1.8,
       "min_temp_diff": 8.1,
-      "avg_daily_range_diff": 0.4,
+      "avg_daily_range_diff": 0.9,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 16.7,
-      "current_deviation": -4.4,
+      "current_deviation": -3.7,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -307,8 +307,8 @@
             "low": 0.6
           },
           "4": {
-            "avg": 12.3,
-            "high": 18.2,
+            "avg": 13.0,
+            "high": 19.9,
             "low": 8.7
           }
         }
@@ -328,7 +328,7 @@
       "highs": [
         17.4,
         16.9,
-        18.2
+        19.9
       ],
       "lows": [
         10.7,
@@ -338,7 +338,7 @@
       "avgs": [
         14.2,
         11.5,
-        11.1
+        13.2
       ]
     },
     "prev_year_comparison": {
@@ -350,7 +350,7 @@
       "this_year": [
         14.2,
         11.5,
-        11.1
+        13.2
       ],
       "last_year": [
         5.2,
@@ -387,7 +387,7 @@
       "this_year_high": [
         17.4,
         16.9,
-        18.2
+        19.9
       ],
       "last_year_high": [
         6.1,
@@ -468,7 +468,7 @@
       "deviations": [
         -2.5,
         -5.2,
-        -5.6
+        -3.5
       ],
       "baseline_avg": 16.7
     },
@@ -477,10 +477,10 @@
         "4/1〜4/7"
       ],
       "avgs": [
-        12.3
+        13.0
       ],
       "highs": [
-        17.5
+        18.1
       ],
       "lows": [
         9.4
