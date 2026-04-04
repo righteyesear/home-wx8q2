@@ -7,22 +7,22 @@
     "end_date": "2026-04-30",
     "label": "2026年4月"
   },
-  "generated_at": "2026-04-04T18:31:41.427534+09:00",
+  "generated_at": "2026-04-04T21:39:01.809466+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
       "ai_comment": "分析中にエラーが発生しました: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}",
       "highlights": [
-        "月平均 13.7℃",
+        "月平均 13.8℃",
         "最高 19.9℃",
-        "前月比 +2.7℃",
-        "前年比 -2.2℃"
+        "前月比 +2.8℃",
+        "前年比 -2.1℃"
       ]
     },
     "statistics": {
       "title": "月間統計",
       "days": 4,
-      "avg_temp": 13.7,
+      "avg_temp": 13.8,
       "avg_temp_stdev": 1.5,
       "max_temp": 19.9,
       "max_temp_date": "2026/04/03",
@@ -31,8 +31,8 @@
       "min_temp_date": "2026/04/03",
       "avg_low": 10.3,
       "avg_daily_range": 7.5,
-      "prev_month_diff": 2.7,
-      "prev_year_diff": -2.2
+      "prev_month_diff": 2.8,
+      "prev_year_diff": -2.1
     },
     "daily_data": [
       {
@@ -64,7 +64,7 @@
         "weekday": "土",
         "high": 16.9,
         "low": 12.9,
-        "avg": 14.4,
+        "avg": 14.7,
         "range": 4.0
       }
     ],
@@ -74,7 +74,7 @@
         "end_date": "2026-04-07",
         "label": "4/1〜4/7",
         "days": 4,
-        "avg_temp": 13.7,
+        "avg_temp": 13.8,
         "avg_temp_stdev": 1.5,
         "max_temp": 19.9,
         "max_temp_date": "2026/04/03",
@@ -101,7 +101,7 @@
         "avg_low": 11.8,
         "avg_daily_range": 8.5
       },
-      "avg_temp_diff": -2.2,
+      "avg_temp_diff": -2.1,
       "max_temp_diff": -7.7,
       "min_temp_diff": 4.5,
       "avg_daily_range_diff": -1.0,
@@ -121,7 +121,7 @@
         "avg_low": 7.4,
         "avg_daily_range": 7.7
       },
-      "avg_temp_diff": 2.7,
+      "avg_temp_diff": 2.8,
       "max_temp_diff": -1.8,
       "min_temp_diff": 8.1,
       "avg_daily_range_diff": -0.2,
@@ -130,7 +130,7 @@
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 16.7,
-      "current_deviation": -3.0,
+      "current_deviation": -2.9,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -315,7 +315,7 @@
             "low": 0.6
           },
           "4": {
-            "avg": 13.7,
+            "avg": 13.8,
             "high": 19.9,
             "low": 8.7
           }
@@ -350,7 +350,7 @@
         14.2,
         11.5,
         14.6,
-        14.4
+        14.7
       ]
     },
     "prev_year_comparison": {
@@ -364,7 +364,7 @@
         14.2,
         11.5,
         14.6,
-        14.4
+        14.7
       ],
       "last_year": [
         5.2,
@@ -486,7 +486,7 @@
         -2.5,
         -5.2,
         -2.1,
-        -2.3
+        -2.0
       ],
       "baseline_avg": 16.7
     },
@@ -495,7 +495,7 @@
         "4/1〜4/7"
       ],
       "avgs": [
-        13.7
+        13.8
       ],
       "highs": [
         17.8
