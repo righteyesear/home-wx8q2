@@ -7,7 +7,7 @@
     "end_date": "2026-04-12",
     "label": "2026年 第15週（4/6 〜 4/12）"
   },
-  "generated_at": "2026-04-12T06:25:41.462654+09:00",
+  "generated_at": "2026-04-12T10:49:12.410577+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -26,11 +26,11 @@
       "avg_temp_stdev": 2.3,
       "max_temp": 27.1,
       "max_temp_date": "2026/04/11",
-      "avg_high": 20.7,
+      "avg_high": 21.2,
       "min_temp": 8.3,
       "min_temp_date": "2026/04/08",
       "avg_low": 12.5,
-      "avg_daily_range": 8.2,
+      "avg_daily_range": 8.7,
       "prev_week_diff": 1.5,
       "prev_year_diff": 1.1
     },
@@ -86,10 +86,10 @@
       {
         "date": "2026/04/12",
         "weekday": "日",
-        "high": 17.2,
+        "high": 21.3,
         "low": 14.6,
-        "avg": 15.8,
-        "range": 2.6
+        "avg": 16.4,
+        "range": 6.7
       }
     ],
     "comparison": {
@@ -111,7 +111,7 @@
       "avg_temp_diff": 1.1,
       "max_temp_diff": 4.9,
       "min_temp_diff": 0.0,
-      "avg_daily_range_diff": -0.5,
+      "avg_daily_range_diff": 0.0,
       "ai_comment": ""
     },
     "baseline": {
@@ -302,7 +302,7 @@
             "low": 0.6
           },
           "4": {
-            "avg": 15.8,
+            "avg": 15.9,
             "high": 27.1,
             "low": 8.3
           }
@@ -328,7 +328,7 @@
         20.3,
         19.4,
         27.1,
-        17.2
+        21.3
       ],
       "lows": [
         15.3,
@@ -346,7 +346,7 @@
         15.7,
         17.9,
         20.0,
-        15.8
+        16.4
       ]
     },
     "prev_year_comparison": {
@@ -366,7 +366,7 @@
         15.7,
         17.9,
         20.0,
-        15.8
+        16.4
       ],
       "last_year": [
         15.3,
@@ -384,7 +384,7 @@
         20.3,
         19.4,
         27.1,
-        17.2
+        21.3
       ],
       "last_year_high": [
         19.3,
@@ -431,7 +431,7 @@
         0.3,
         2.5,
         4.6,
-        0.4
+        1.0
       ],
       "baseline_avg": 15.4
     }
