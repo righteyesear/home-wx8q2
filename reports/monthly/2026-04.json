@@ -7,32 +7,32 @@
     "end_date": "2026-04-30",
     "label": "2026年4月"
   },
-  "generated_at": "2026-04-12T10:49:59.004175+09:00",
+  "generated_at": "2026-04-12T14:17:47.026074+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
       "ai_comment": "分析中にエラーが発生しました: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}",
       "highlights": [
-        "月平均 15.9℃",
+        "月平均 16.0℃",
         "最高 27.1℃",
-        "前月比 +4.9℃",
-        "前年比 +0.0℃"
+        "前月比 +5.0℃",
+        "前年比 +0.1℃"
       ]
     },
     "statistics": {
       "title": "月間統計",
       "days": 12,
-      "avg_temp": 15.9,
+      "avg_temp": 16.0,
       "avg_temp_stdev": 2.5,
       "max_temp": 27.1,
       "max_temp_date": "2026/04/11",
-      "avg_high": 20.2,
+      "avg_high": 20.4,
       "min_temp": 8.3,
       "min_temp_date": "2026/04/08",
       "avg_low": 11.9,
-      "avg_daily_range": 8.3,
-      "prev_month_diff": 4.9,
-      "prev_year_diff": 0.0
+      "avg_daily_range": 8.4,
+      "prev_month_diff": 5.0,
+      "prev_year_diff": 0.1
     },
     "daily_data": [
       {
@@ -126,10 +126,10 @@
       {
         "date": "2026/04/12",
         "weekday": "日",
-        "high": 21.3,
+        "high": 23.3,
         "low": 14.6,
-        "avg": 16.4,
-        "range": 6.7
+        "avg": 17.9,
+        "range": 8.7
       }
     ],
     "weekly_breakdown": [
@@ -153,15 +153,15 @@
         "end_date": "2026-04-14",
         "label": "4/8〜4/14",
         "days": 5,
-        "avg_temp": 16.6,
-        "avg_temp_stdev": 2.6,
+        "avg_temp": 16.9,
+        "avg_temp_stdev": 2.7,
         "max_temp": 27.1,
         "max_temp_date": "2026/04/11",
-        "avg_high": 21.2,
+        "avg_high": 21.6,
         "min_temp": 8.3,
         "min_temp_date": "2026/04/08",
         "avg_low": 12.6,
-        "avg_daily_range": 8.7
+        "avg_daily_range": 9.1
       }
     ],
     "comparison": {
@@ -180,10 +180,10 @@
         "avg_low": 11.8,
         "avg_daily_range": 8.5
       },
-      "avg_temp_diff": 0.0,
+      "avg_temp_diff": 0.1,
       "max_temp_diff": -0.5,
       "min_temp_diff": 4.1,
-      "avg_daily_range_diff": -0.2,
+      "avg_daily_range_diff": -0.1,
       "ai_comment": "平均気温こそ昨年とほぼ同じですが、その中身は正反対です。昨年は最高気温が27度を超える日がある一方で、最低気温が4度台まで下がるなど、激しい寒暖差に翻弄される春でした。対して今年は、一日の気温差がわずか2.9度と非常に小さく、朝から晩まで一定の温度が保たれる、凪のように穏やかで安定した気候が特徴です。\n\n4月1日の比較でも分かる通り、昨年の凍えるような寒さに比べ、今年は初めから安定した暖かさが続いています。急激な暑さや冷え込みがないため、厚手のコートを片付けるタイミングに迷うこともなく、自律神経への負担も少ないでしょう。服装選びのストレスが少なく、健やかに過ごせる春になりそうです 🌸"
     },
     "prev_month": {
@@ -200,16 +200,16 @@
         "avg_low": 7.4,
         "avg_daily_range": 7.7
       },
-      "avg_temp_diff": 4.9,
+      "avg_temp_diff": 5.0,
       "max_temp_diff": 5.4,
       "min_temp_diff": 7.7,
-      "avg_daily_range_diff": 0.6,
+      "avg_daily_range_diff": 0.7,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 16.7,
-      "current_deviation": -0.8,
+      "current_deviation": -0.7,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -394,7 +394,7 @@
             "low": 0.6
           },
           "4": {
-            "avg": 15.9,
+            "avg": 16.0,
             "high": 27.1,
             "low": 8.3
           }
@@ -433,7 +433,7 @@
         20.3,
         19.4,
         27.1,
-        21.3
+        23.3
       ],
       "lows": [
         10.7,
@@ -461,7 +461,7 @@
         15.7,
         17.9,
         20.0,
-        16.4
+        17.9
       ]
     },
     "prev_year_comparison": {
@@ -491,7 +491,7 @@
         15.7,
         17.9,
         20.0,
-        16.4
+        17.9
       ],
       "last_year": [
         5.2,
@@ -537,7 +537,7 @@
         20.3,
         19.4,
         27.1,
-        21.3
+        23.3
       ],
       "last_year_high": [
         6.1,
@@ -645,7 +645,7 @@
         -1.0,
         1.2,
         3.3,
-        -0.3
+        1.2
       ],
       "baseline_avg": 16.7
     },
@@ -656,11 +656,11 @@
       ],
       "avgs": [
         15.4,
-        16.6
+        16.9
       ],
       "highs": [
         19.5,
-        21.2
+        21.6
       ],
       "lows": [
         11.5,
