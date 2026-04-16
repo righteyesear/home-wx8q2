@@ -7,14 +7,14 @@
     "end_date": "2026-04-19",
     "label": "2026年 第16週（4/13 〜 4/19）"
   },
-  "generated_at": "2026-04-17T01:17:49.954493+09:00",
+  "generated_at": "2026-04-17T04:01:20.934653+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
       "ai_comment": "",
       "highlights": [
         "最高気温 24.7℃",
-        "最低気温 10.3℃",
+        "最低気温 9.8℃",
         "前週比 -0.6℃",
         "前年比 -0.7℃"
       ]
@@ -23,14 +23,14 @@
       "title": "週間統計",
       "days": 5,
       "avg_temp": 16.5,
-      "avg_temp_stdev": 3.7,
+      "avg_temp_stdev": 3.8,
       "max_temp": 24.7,
       "max_temp_date": "2026/04/13",
       "avg_high": 20.7,
-      "min_temp": 10.3,
+      "min_temp": 9.8,
       "min_temp_date": "2026/04/17",
-      "avg_low": 13.3,
-      "avg_daily_range": 7.5,
+      "avg_low": 13.2,
+      "avg_daily_range": 7.6,
       "prev_week_diff": -0.6,
       "prev_year_diff": -0.7
     },
@@ -71,9 +71,9 @@
         "date": "2026/04/17",
         "weekday": "金",
         "high": 10.8,
-        "low": 10.3,
-        "avg": 10.5,
-        "range": 0.5
+        "low": 9.8,
+        "avg": 10.1,
+        "range": 1.0
       }
     ],
     "comparison": {
@@ -94,8 +94,8 @@
       },
       "avg_temp_diff": -0.7,
       "max_temp_diff": -2.9,
-      "min_temp_diff": 0.9,
-      "avg_daily_range_diff": -1.8,
+      "min_temp_diff": 0.4,
+      "avg_daily_range_diff": -1.7,
       "ai_comment": ""
     },
     "baseline": {
@@ -111,7 +111,7 @@
         {
           "date": "2026/04/17",
           "type": "rapid_change",
-          "description": "平均気温が前日比-5.2℃の急低下"
+          "description": "平均気温が前日比-5.6℃の急低下"
         }
       ],
       "ai_comment": ""
@@ -321,14 +321,14 @@
         15.6,
         14.6,
         10.8,
-        10.3
+        9.8
       ],
       "avgs": [
         19.3,
         18.7,
         18.5,
         15.7,
-        10.5
+        10.1
       ]
     },
     "prev_year_comparison": {
@@ -344,7 +344,7 @@
         18.7,
         18.5,
         15.7,
-        10.5
+        10.1
       ],
       "last_year": [
         13.3,
@@ -376,7 +376,7 @@
         15.6,
         14.6,
         10.8,
-        10.3
+        9.8
       ],
       "last_year_low": [
         11.9,
@@ -401,7 +401,7 @@
         0.7,
         0.5,
         -2.3,
-        -7.5
+        -7.9
       ],
       "baseline_avg": 18.0
     }
