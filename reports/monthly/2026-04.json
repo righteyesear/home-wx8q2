@@ -7,7 +7,7 @@
     "end_date": "2026-04-30",
     "label": "2026年4月"
   },
-  "generated_at": "2026-04-17T06:37:50.949899+09:00",
+  "generated_at": "2026-04-17T10:49:54.209651+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -23,14 +23,14 @@
       "title": "月間統計",
       "days": 17,
       "avg_temp": 16.2,
-      "avg_temp_stdev": 2.9,
+      "avg_temp_stdev": 2.7,
       "max_temp": 27.1,
       "max_temp_date": "2026/04/11",
-      "avg_high": 20.5,
+      "avg_high": 20.8,
       "min_temp": 8.3,
       "min_temp_date": "2026/04/08",
       "avg_low": 12.2,
-      "avg_daily_range": 8.2,
+      "avg_daily_range": 8.6,
       "prev_month_diff": 5.2,
       "prev_year_diff": 0.3
     },
@@ -166,10 +166,10 @@
       {
         "date": "2026/04/17",
         "weekday": "金",
-        "high": 10.8,
+        "high": 16.5,
         "low": 9.0,
-        "avg": 9.8,
-        "range": 1.8
+        "avg": 11.2,
+        "range": 7.5
       }
     ],
     "weekly_breakdown": [
@@ -208,15 +208,15 @@
         "end_date": "2026-04-21",
         "label": "4/15〜4/21",
         "days": 3,
-        "avg_temp": 14.7,
-        "avg_temp_stdev": 4.4,
+        "avg_temp": 15.1,
+        "avg_temp_stdev": 3.7,
         "max_temp": 23.9,
         "max_temp_date": "2026/04/15",
-        "avg_high": 18.7,
+        "avg_high": 20.6,
         "min_temp": 9.0,
         "min_temp_date": "2026/04/17",
         "avg_low": 11.5,
-        "avg_daily_range": 7.2
+        "avg_daily_range": 9.1
       }
     ],
     "comparison": {
@@ -238,7 +238,7 @@
       "avg_temp_diff": 0.3,
       "max_temp_diff": -0.5,
       "min_temp_diff": 4.1,
-      "avg_daily_range_diff": -0.3,
+      "avg_daily_range_diff": 0.1,
       "ai_comment": "平均気温こそ昨年とほぼ同じですが、その中身は正反対です。昨年は最高気温が27度を超える日がある一方で、最低気温が4度台まで下がるなど、激しい寒暖差に翻弄される春でした。対して今年は、一日の気温差がわずか2.9度と非常に小さく、朝から晩まで一定の温度が保たれる、凪のように穏やかで安定した気候が特徴です。\n\n4月1日の比較でも分かる通り、昨年の凍えるような寒さに比べ、今年は初めから安定した暖かさが続いています。急激な暑さや冷え込みがないため、厚手のコートを片付けるタイミングに迷うこともなく、自律神経への負担も少ないでしょう。服装選びのストレスが少なく、健やかに過ごせる春になりそうです 🌸"
     },
     "prev_month": {
@@ -258,7 +258,7 @@
       "avg_temp_diff": 5.2,
       "max_temp_diff": 5.4,
       "min_temp_diff": 7.7,
-      "avg_daily_range_diff": 0.5,
+      "avg_daily_range_diff": 0.9,
       "ai_comment": ""
     },
     "baseline": {
@@ -270,13 +270,7 @@
     },
     "events": {
       "title": "特筆イベント",
-      "items": [
-        {
-          "date": "2026/04/17",
-          "type": "rapid_change",
-          "description": "平均気温が前日比-5.9℃の急低下"
-        }
-      ],
+      "items": [],
       "ai_comment": ""
     },
     "season": {
@@ -504,7 +498,7 @@
         22.9,
         23.9,
         21.4,
-        10.8
+        16.5
       ],
       "lows": [
         10.7,
@@ -542,7 +536,7 @@
         18.7,
         18.5,
         15.7,
-        9.8
+        11.2
       ]
     },
     "prev_year_comparison": {
@@ -582,7 +576,7 @@
         18.7,
         18.5,
         15.7,
-        9.8
+        11.2
       ],
       "last_year": [
         5.2,
@@ -633,7 +627,7 @@
         22.9,
         23.9,
         21.4,
-        10.8
+        16.5
       ],
       "last_year_high": [
         6.1,
@@ -756,7 +750,7 @@
         2.0,
         1.8,
         -1.0,
-        -6.9
+        -5.5
       ],
       "baseline_avg": 16.7
     },
@@ -769,12 +763,12 @@
       "avgs": [
         15.4,
         17.6,
-        14.7
+        15.1
       ],
       "highs": [
         19.5,
         22.3,
-        18.7
+        20.6
       ],
       "lows": [
         11.5,
