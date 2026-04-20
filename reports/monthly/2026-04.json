@@ -7,7 +7,7 @@
     "end_date": "2026-04-30",
     "label": "2026年4月"
   },
-  "generated_at": "2026-04-21T03:56:15.807876+09:00",
+  "generated_at": "2026-04-21T06:41:44.020097+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -26,7 +26,7 @@
       "avg_temp_stdev": 2.4,
       "max_temp": 27.1,
       "max_temp_date": "2026/04/11",
-      "avg_high": 21.3,
+      "avg_high": 21.4,
       "min_temp": 8.3,
       "min_temp_date": "2026/04/08",
       "avg_low": 12.7,
@@ -198,10 +198,10 @@
       {
         "date": "2026/04/21",
         "weekday": "火",
-        "high": 17.6,
+        "high": 19.2,
         "low": 17.1,
-        "avg": 17.3,
-        "range": 0.5
+        "avg": 17.4,
+        "range": 2.1
       }
     ],
     "weekly_breakdown": [
@@ -244,11 +244,11 @@
         "avg_temp_stdev": 2.0,
         "max_temp": 25.3,
         "max_temp_date": "2026/04/19",
-        "avg_high": 22.1,
+        "avg_high": 22.4,
         "min_temp": 9.0,
         "min_temp_date": "2026/04/17",
         "avg_low": 13.4,
-        "avg_daily_range": 8.7
+        "avg_daily_range": 9.0
       }
     ],
     "comparison": {
@@ -538,7 +538,7 @@
         23.0,
         25.3,
         24.9,
-        17.6
+        19.2
       ],
       "lows": [
         10.7,
@@ -584,7 +584,7 @@
         17.8,
         19.6,
         19.4,
-        17.3
+        17.4
       ]
     },
     "prev_year_comparison": {
@@ -632,7 +632,7 @@
         17.8,
         19.6,
         19.4,
-        17.3
+        17.4
       ],
       "last_year": [
         5.2,
@@ -687,7 +687,7 @@
         23.0,
         25.3,
         24.9,
-        17.6
+        19.2
       ],
       "last_year_high": [
         6.1,
@@ -822,7 +822,7 @@
         1.1,
         2.9,
         2.7,
-        0.6
+        0.7
       ],
       "baseline_avg": 16.7
     },
@@ -840,7 +840,7 @@
       "highs": [
         19.5,
         22.3,
-        22.1
+        22.4
       ],
       "lows": [
         11.5,
