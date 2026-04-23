@@ -7,32 +7,32 @@
     "end_date": "2026-04-30",
     "label": "2026年4月"
   },
-  "generated_at": "2026-04-23T22:07:56.529436+09:00",
+  "generated_at": "2026-04-24T01:27:46.388735+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
       "ai_comment": "分析中にエラーが発生しました: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}",
       "highlights": [
-        "月平均 16.9℃",
+        "月平均 16.8℃",
         "最高 27.1℃",
-        "前月比 +5.9℃",
-        "前年比 +1.0℃"
+        "前月比 +5.8℃",
+        "前年比 +0.9℃"
       ]
     },
     "statistics": {
       "title": "月間統計",
-      "days": 23,
-      "avg_temp": 16.9,
-      "avg_temp_stdev": 2.4,
+      "days": 24,
+      "avg_temp": 16.8,
+      "avg_temp_stdev": 2.5,
       "max_temp": 27.1,
       "max_temp_date": "2026/04/11",
-      "avg_high": 21.6,
+      "avg_high": 21.3,
       "min_temp": 8.3,
       "min_temp_date": "2026/04/08",
       "avg_low": 12.6,
-      "avg_daily_range": 9.0,
-      "prev_month_diff": 5.9,
-      "prev_year_diff": 1.0
+      "avg_daily_range": 8.6,
+      "prev_month_diff": 5.8,
+      "prev_year_diff": 0.9
     },
     "daily_data": [
       {
@@ -216,8 +216,16 @@
         "weekday": "木",
         "high": 19.3,
         "low": 12.9,
-        "avg": 16.3,
+        "avg": 16.1,
         "range": 6.4
+      },
+      {
+        "date": "2026/04/24",
+        "weekday": "金",
+        "high": 12.9,
+        "low": 12.7,
+        "avg": 12.8,
+        "range": 0.2
       }
     ],
     "weekly_breakdown": [
@@ -270,16 +278,16 @@
         "start_date": "2026-04-22",
         "end_date": "2026-04-28",
         "label": "4/22〜4/28",
-        "days": 2,
-        "avg_temp": 17.1,
-        "avg_temp_stdev": 1.2,
+        "days": 3,
+        "avg_temp": 15.6,
+        "avg_temp_stdev": 2.6,
         "max_temp": 23.6,
         "max_temp_date": "2026/04/22",
-        "avg_high": 21.5,
+        "avg_high": 18.6,
         "min_temp": 11.7,
         "min_temp_date": "2026/04/22",
-        "avg_low": 12.3,
-        "avg_daily_range": 9.2
+        "avg_low": 12.4,
+        "avg_daily_range": 6.2
       }
     ],
     "comparison": {
@@ -298,10 +306,10 @@
         "avg_low": 11.8,
         "avg_daily_range": 8.5
       },
-      "avg_temp_diff": 1.0,
+      "avg_temp_diff": 0.9,
       "max_temp_diff": -0.5,
       "min_temp_diff": 4.1,
-      "avg_daily_range_diff": 0.5,
+      "avg_daily_range_diff": 0.1,
       "ai_comment": "平均気温こそ昨年とほぼ同じですが、その中身は正反対です。昨年は最高気温が27度を超える日がある一方で、最低気温が4度台まで下がるなど、激しい寒暖差に翻弄される春でした。対して今年は、一日の気温差がわずか2.9度と非常に小さく、朝から晩まで一定の温度が保たれる、凪のように穏やかで安定した気候が特徴です。\n\n4月1日の比較でも分かる通り、昨年の凍えるような寒さに比べ、今年は初めから安定した暖かさが続いています。急激な暑さや冷え込みがないため、厚手のコートを片付けるタイミングに迷うこともなく、自律神経への負担も少ないでしょう。服装選びのストレスが少なく、健やかに過ごせる春になりそうです 🌸"
     },
     "prev_month": {
@@ -318,16 +326,16 @@
         "avg_low": 7.4,
         "avg_daily_range": 7.7
       },
-      "avg_temp_diff": 5.9,
+      "avg_temp_diff": 5.8,
       "max_temp_diff": 5.4,
       "min_temp_diff": 7.7,
-      "avg_daily_range_diff": 1.3,
+      "avg_daily_range_diff": 0.9,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 16.7,
-      "current_deviation": 0.2,
+      "current_deviation": 0.1,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -512,7 +520,7 @@
             "low": 0.6
           },
           "4": {
-            "avg": 16.9,
+            "avg": 16.8,
             "high": 27.1,
             "low": 8.3
           }
@@ -548,7 +556,8 @@
         "20日",
         "21日",
         "22日",
-        "23日"
+        "23日",
+        "24日"
       ],
       "highs": [
         17.4,
@@ -573,7 +582,8 @@
         24.9,
         24.9,
         23.6,
-        19.3
+        19.3,
+        12.9
       ],
       "lows": [
         10.7,
@@ -598,7 +608,8 @@
         15.2,
         15.2,
         11.7,
-        12.9
+        12.9,
+        12.7
       ],
       "avgs": [
         14.2,
@@ -623,7 +634,8 @@
         19.4,
         19.8,
         18.0,
-        16.3
+        16.1,
+        12.8
       ]
     },
     "prev_year_comparison": {
@@ -650,7 +662,8 @@
         "20日",
         "21日",
         "22日",
-        "23日"
+        "23日",
+        "24日"
       ],
       "this_year": [
         14.2,
@@ -675,7 +688,8 @@
         19.4,
         19.8,
         18.0,
-        16.3
+        16.1,
+        12.8
       ],
       "last_year": [
         5.2,
@@ -732,7 +746,8 @@
         24.9,
         24.9,
         23.6,
-        19.3
+        19.3,
+        12.9
       ],
       "last_year_high": [
         6.1,
@@ -789,7 +804,8 @@
         15.2,
         15.2,
         11.7,
-        12.9
+        12.9,
+        12.7
       ],
       "last_year_low": [
         4.2,
@@ -848,7 +864,8 @@
         "4/20(月)",
         "4/21(火)",
         "4/22(水)",
-        "4/23(木)"
+        "4/23(木)",
+        "4/24(金)"
       ],
       "deviations": [
         -2.5,
@@ -873,7 +890,8 @@
         2.7,
         3.1,
         1.3,
-        -0.4
+        -0.6,
+        -3.9
       ],
       "baseline_avg": 16.7
     },
@@ -888,19 +906,19 @@
         15.4,
         17.6,
         17.8,
-        17.1
+        15.6
       ],
       "highs": [
         19.5,
         22.3,
         23.2,
-        21.5
+        18.6
       ],
       "lows": [
         11.5,
         13.4,
         13.1,
-        12.3
+        12.4
       ]
     }
   }
