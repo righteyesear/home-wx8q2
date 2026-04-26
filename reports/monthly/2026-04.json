@@ -7,7 +7,7 @@
     "end_date": "2026-04-30",
     "label": "2026年4月"
   },
-  "generated_at": "2026-04-26T06:31:03.532396+09:00",
+  "generated_at": "2026-04-26T10:57:17.006015+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -23,14 +23,14 @@
       "title": "月間統計",
       "days": 26,
       "avg_temp": 16.6,
-      "avg_temp_stdev": 2.6,
+      "avg_temp_stdev": 2.4,
       "max_temp": 27.1,
       "max_temp_date": "2026/04/11",
-      "avg_high": 21.1,
+      "avg_high": 21.4,
       "min_temp": 8.3,
       "min_temp_date": "2026/04/08",
       "avg_low": 12.5,
-      "avg_daily_range": 8.6,
+      "avg_daily_range": 9.0,
       "prev_month_diff": 5.6,
       "prev_year_diff": 0.7
     },
@@ -238,10 +238,10 @@
       {
         "date": "2026/04/26",
         "weekday": "日",
-        "high": 12.3,
+        "high": 20.7,
         "low": 10.4,
-        "avg": 11.2,
-        "range": 1.9
+        "avg": 13.3,
+        "range": 10.3
       }
     ],
     "weekly_breakdown": [
@@ -295,15 +295,15 @@
         "end_date": "2026-04-28",
         "label": "4/22〜4/28",
         "days": 5,
-        "avg_temp": 15.1,
-        "avg_temp_stdev": 2.5,
+        "avg_temp": 15.5,
+        "avg_temp_stdev": 1.7,
         "max_temp": 23.6,
         "max_temp_date": "2026/04/22",
-        "avg_high": 18.8,
+        "avg_high": 20.5,
         "min_temp": 10.4,
         "min_temp_date": "2026/04/26",
         "avg_low": 11.7,
-        "avg_daily_range": 7.1
+        "avg_daily_range": 8.8
       }
     ],
     "comparison": {
@@ -325,7 +325,7 @@
       "avg_temp_diff": 0.7,
       "max_temp_diff": -0.5,
       "min_temp_diff": 4.1,
-      "avg_daily_range_diff": 0.1,
+      "avg_daily_range_diff": 0.5,
       "ai_comment": "平均気温こそ昨年とほぼ同じですが、その中身は正反対です。昨年は最高気温が27度を超える日がある一方で、最低気温が4度台まで下がるなど、激しい寒暖差に翻弄される春でした。対して今年は、一日の気温差がわずか2.9度と非常に小さく、朝から晩まで一定の温度が保たれる、凪のように穏やかで安定した気候が特徴です。\n\n4月1日の比較でも分かる通り、昨年の凍えるような寒さに比べ、今年は初めから安定した暖かさが続いています。急激な暑さや冷え込みがないため、厚手のコートを片付けるタイミングに迷うこともなく、自律神経への負担も少ないでしょう。服装選びのストレスが少なく、健やかに過ごせる春になりそうです 🌸"
     },
     "prev_month": {
@@ -345,7 +345,7 @@
       "avg_temp_diff": 5.6,
       "max_temp_diff": 5.4,
       "min_temp_diff": 7.7,
-      "avg_daily_range_diff": 0.9,
+      "avg_daily_range_diff": 1.3,
       "ai_comment": ""
     },
     "baseline": {
@@ -603,7 +603,7 @@
         19.3,
         19.9,
         18.8,
-        12.3
+        20.7
       ],
       "lows": [
         10.7,
@@ -659,7 +659,7 @@
         16.1,
         15.2,
         14.8,
-        11.2
+        13.3
       ]
     },
     "prev_year_comparison": {
@@ -717,7 +717,7 @@
         16.1,
         15.2,
         14.8,
-        11.2
+        13.3
       ],
       "last_year": [
         5.2,
@@ -777,7 +777,7 @@
         19.3,
         19.9,
         18.8,
-        12.3
+        20.7
       ],
       "last_year_high": [
         6.1,
@@ -927,7 +927,7 @@
         -0.6,
         -1.5,
         -1.9,
-        -5.5
+        -3.4
       ],
       "baseline_avg": 16.7
     },
@@ -942,13 +942,13 @@
         15.4,
         17.6,
         17.8,
-        15.1
+        15.5
       ],
       "highs": [
         19.5,
         22.3,
         23.2,
-        18.8
+        20.5
       ],
       "lows": [
         11.5,
