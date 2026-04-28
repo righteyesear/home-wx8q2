@@ -7,7 +7,7 @@
     "end_date": "2026-05-03",
     "label": "2026年 第18週（4/27 〜 5/3）"
   },
-  "generated_at": "2026-04-28T19:56:58.515095+09:00",
+  "generated_at": "2026-04-29T01:48:14.970211+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -15,24 +15,24 @@
       "highlights": [
         "最高気温 23.7℃",
         "最低気温 12.2℃",
-        "前週比 +0.2℃",
-        "前年比 -0.6℃"
+        "前週比 +1.2℃",
+        "前年比 +0.4℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
-      "days": 2,
-      "avg_temp": 17.4,
-      "avg_temp_stdev": 2.0,
+      "days": 3,
+      "avg_temp": 18.4,
+      "avg_temp_stdev": 2.1,
       "max_temp": 23.7,
       "max_temp_date": "2026/04/28",
-      "avg_high": 22.4,
+      "avg_high": 21.7,
       "min_temp": 12.2,
       "min_temp_date": "2026/04/28",
-      "avg_low": 12.8,
-      "avg_daily_range": 9.7,
-      "prev_week_diff": 0.2,
-      "prev_year_diff": -0.6
+      "avg_low": 15.1,
+      "avg_daily_range": 6.6,
+      "prev_week_diff": 1.2,
+      "prev_year_diff": 0.4
     },
     "daily_data": [
       {
@@ -48,8 +48,16 @@
         "weekday": "火",
         "high": 23.7,
         "low": 12.2,
-        "avg": 18.8,
+        "avg": 19.1,
         "range": 11.5
+      },
+      {
+        "date": "2026/04/29",
+        "weekday": "水",
+        "high": 20.2,
+        "low": 19.7,
+        "avg": 20.0,
+        "range": 0.5
       }
     ],
     "comparison": {
@@ -68,16 +76,16 @@
         "avg_low": 13.2,
         "avg_daily_range": 9.9
       },
-      "avg_temp_diff": -0.6,
+      "avg_temp_diff": 0.4,
       "max_temp_diff": -1.0,
       "min_temp_diff": 2.4,
-      "avg_daily_range_diff": -0.2,
+      "avg_daily_range_diff": -3.3,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 18.8,
-      "current_deviation": -1.4,
+      "current_deviation": -0.4,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -262,7 +270,7 @@
             "low": 0.6
           },
           "4": {
-            "avg": 16.8,
+            "avg": 17.0,
             "high": 27.1,
             "low": 8.3
           }
@@ -274,29 +282,35 @@
     "daily_temps": {
       "labels": [
         "4/27(月)",
-        "4/28(火)"
+        "4/28(火)",
+        "4/29(水)"
       ],
       "highs": [
         21.1,
-        23.7
+        23.7,
+        20.2
       ],
       "lows": [
         13.3,
-        12.2
+        12.2,
+        19.7
       ],
       "avgs": [
         16.0,
-        18.8
+        19.1,
+        20.0
       ]
     },
     "prev_year_comparison": {
       "labels": [
         "月",
-        "火"
+        "火",
+        "水"
       ],
       "this_year": [
         16.0,
-        18.8
+        19.1,
+        20.0
       ],
       "last_year": [
         17.0,
@@ -309,7 +323,8 @@
       ],
       "this_year_high": [
         21.1,
-        23.7
+        23.7,
+        20.2
       ],
       "last_year_high": [
         22.2,
@@ -322,7 +337,8 @@
       ],
       "this_year_low": [
         13.3,
-        12.2
+        12.2,
+        19.7
       ],
       "last_year_low": [
         9.8,
@@ -337,11 +353,13 @@
     "deviation": {
       "labels": [
         "4/27(月)",
-        "4/28(火)"
+        "4/28(火)",
+        "4/29(水)"
       ],
       "deviations": [
         -2.8,
-        0.0
+        0.3,
+        1.2
       ],
       "baseline_avg": 18.8
     }
