@@ -7,7 +7,7 @@
     "end_date": "2026-04-30",
     "label": "2026年4月"
   },
-  "generated_at": "2026-04-30T06:55:33.939618+09:00",
+  "generated_at": "2026-04-30T11:08:34.397857+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -26,11 +26,11 @@
       "avg_temp_stdev": 2.3,
       "max_temp": 27.1,
       "max_temp_date": "2026/04/11",
-      "avg_high": 21.3,
+      "avg_high": 21.4,
       "min_temp": 8.3,
       "min_temp_date": "2026/04/08",
       "avg_low": 12.6,
-      "avg_daily_range": 8.7,
+      "avg_daily_range": 8.8,
       "prev_month_diff": 5.8,
       "prev_year_diff": 0.9
     },
@@ -270,10 +270,10 @@
       {
         "date": "2026/04/30",
         "weekday": "木",
-        "high": 14.8,
+        "high": 15.9,
         "low": 13.5,
-        "avg": 14.0,
-        "range": 1.3
+        "avg": 14.3,
+        "range": 2.4
       }
     ],
     "weekly_breakdown": [
@@ -342,15 +342,15 @@
         "end_date": "2026-04-30",
         "label": "4/29〜4/30",
         "days": 2,
-        "avg_temp": 15.7,
-        "avg_temp_stdev": 2.3,
+        "avg_temp": 15.8,
+        "avg_temp_stdev": 2.1,
         "max_temp": 20.2,
         "max_temp_date": "2026/04/29",
-        "avg_high": 17.5,
+        "avg_high": 18.1,
         "min_temp": 13.5,
         "min_temp_date": "2026/04/30",
         "avg_low": 14.2,
-        "avg_daily_range": 3.4
+        "avg_daily_range": 3.9
       }
     ],
     "comparison": {
@@ -372,7 +372,7 @@
       "avg_temp_diff": 0.9,
       "max_temp_diff": -0.5,
       "min_temp_diff": 4.1,
-      "avg_daily_range_diff": 0.2,
+      "avg_daily_range_diff": 0.3,
       "ai_comment": "平均気温こそ昨年とほぼ同じですが、その中身は正反対です。昨年は最高気温が27度を超える日がある一方で、最低気温が4度台まで下がるなど、激しい寒暖差に翻弄される春でした。対して今年は、一日の気温差がわずか2.9度と非常に小さく、朝から晩まで一定の温度が保たれる、凪のように穏やかで安定した気候が特徴です。\n\n4月1日の比較でも分かる通り、昨年の凍えるような寒さに比べ、今年は初めから安定した暖かさが続いています。急激な暑さや冷え込みがないため、厚手のコートを片付けるタイミングに迷うこともなく、自律神経への負担も少ないでしょう。服装選びのストレスが少なく、健やかに過ごせる春になりそうです 🌸"
     },
     "prev_month": {
@@ -392,7 +392,7 @@
       "avg_temp_diff": 5.8,
       "max_temp_diff": 5.4,
       "min_temp_diff": 7.7,
-      "avg_daily_range_diff": 1.0,
+      "avg_daily_range_diff": 1.1,
       "ai_comment": ""
     },
     "baseline": {
@@ -658,7 +658,7 @@
         21.1,
         23.7,
         20.2,
-        14.8
+        15.9
       ],
       "lows": [
         10.7,
@@ -722,7 +722,7 @@
         16.0,
         19.1,
         17.3,
-        14.0
+        14.3
       ]
     },
     "prev_year_comparison": {
@@ -788,7 +788,7 @@
         16.0,
         19.1,
         17.3,
-        14.0
+        14.3
       ],
       "last_year": [
         5.2,
@@ -852,7 +852,7 @@
         21.1,
         23.7,
         20.2,
-        14.8
+        15.9
       ],
       "last_year_high": [
         6.1,
@@ -1014,7 +1014,7 @@
         -0.7,
         2.4,
         0.6,
-        -2.7
+        -2.4
       ],
       "baseline_avg": 16.7
     },
@@ -1031,14 +1031,14 @@
         17.6,
         17.8,
         16.6,
-        15.7
+        15.8
       ],
       "highs": [
         19.5,
         22.3,
         23.2,
         21.4,
-        17.5
+        18.1
       ],
       "lows": [
         11.5,
