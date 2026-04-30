@@ -7,41 +7,41 @@
     "end_date": "2026-05-31",
     "label": "2026年5月"
   },
-  "generated_at": "2026-05-01T01:14:30.858125+09:00",
+  "generated_at": "2026-05-01T04:08:56.768592+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
       "ai_comment": "",
       "highlights": [
-        "月平均 11.6℃",
+        "月平均 11.5℃",
         "最高 11.9℃",
-        "前月比 -5.2℃",
-        "前年比 -8.0℃"
+        "前月比 -5.3℃",
+        "前年比 -8.1℃"
       ]
     },
     "statistics": {
       "title": "月間統計",
       "days": 1,
-      "avg_temp": 11.6,
+      "avg_temp": 11.5,
       "avg_temp_stdev": 0,
       "max_temp": 11.9,
       "max_temp_date": "2026/05/01",
       "avg_high": 11.9,
-      "min_temp": 11.6,
+      "min_temp": 11.2,
       "min_temp_date": "2026/05/01",
-      "avg_low": 11.6,
-      "avg_daily_range": 0.3,
-      "prev_month_diff": -5.2,
-      "prev_year_diff": -8.0
+      "avg_low": 11.2,
+      "avg_daily_range": 0.7,
+      "prev_month_diff": -5.3,
+      "prev_year_diff": -8.1
     },
     "daily_data": [
       {
         "date": "2026/05/01",
         "weekday": "金",
         "high": 11.9,
-        "low": 11.6,
-        "avg": 11.6,
-        "range": 0.3
+        "low": 11.2,
+        "avg": 11.5,
+        "range": 0.7
       }
     ],
     "weekly_breakdown": [
@@ -50,15 +50,15 @@
         "end_date": "2026-05-07",
         "label": "5/1〜5/7",
         "days": 1,
-        "avg_temp": 11.6,
+        "avg_temp": 11.5,
         "avg_temp_stdev": 0,
         "max_temp": 11.9,
         "max_temp_date": "2026/05/01",
         "avg_high": 11.9,
-        "min_temp": 11.6,
+        "min_temp": 11.2,
         "min_temp_date": "2026/05/01",
-        "avg_low": 11.6,
-        "avg_daily_range": 0.3
+        "avg_low": 11.2,
+        "avg_daily_range": 0.7
       }
     ],
     "comparison": {
@@ -77,10 +77,10 @@
         "avg_low": 16.2,
         "avg_daily_range": 7.5
       },
-      "avg_temp_diff": -8.0,
+      "avg_temp_diff": -8.1,
       "max_temp_diff": -18.1,
-      "min_temp_diff": -1.1,
-      "avg_daily_range_diff": -7.2,
+      "min_temp_diff": -1.5,
+      "avg_daily_range_diff": -6.8,
       "ai_comment": ""
     },
     "prev_month": {
@@ -97,16 +97,16 @@
         "avg_low": 12.5,
         "avg_daily_range": 8.8
       },
-      "avg_temp_diff": -5.2,
+      "avg_temp_diff": -5.3,
       "max_temp_diff": -15.2,
-      "min_temp_diff": 3.3,
-      "avg_daily_range_diff": -8.5,
+      "min_temp_diff": 2.9,
+      "avg_daily_range_diff": -8.1,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 20.1,
-      "current_deviation": -8.5,
+      "current_deviation": -8.6,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -296,9 +296,9 @@
             "low": 8.3
           },
           "5": {
-            "avg": 11.6,
+            "avg": 11.5,
             "high": 11.9,
-            "low": 11.6
+            "low": 11.2
           }
         }
       }
@@ -313,10 +313,10 @@
         11.9
       ],
       "lows": [
-        11.6
+        11.2
       ],
       "avgs": [
-        11.6
+        11.5
       ]
     },
     "prev_year_comparison": {
@@ -324,7 +324,7 @@
         "1日"
       ],
       "this_year": [
-        11.6
+        11.5
       ],
       "last_year": [
         19.0,
@@ -396,7 +396,7 @@
         17.2
       ],
       "this_year_low": [
-        11.6
+        11.2
       ],
       "last_year_low": [
         13.3,
@@ -437,7 +437,7 @@
         "5/1(金)"
       ],
       "deviations": [
-        -8.5
+        -8.6
       ],
       "baseline_avg": 20.1
     },
@@ -446,13 +446,13 @@
         "5/1〜5/7"
       ],
       "avgs": [
-        11.6
+        11.5
       ],
       "highs": [
         11.9
       ],
       "lows": [
-        11.6
+        11.2
       ]
     }
   }
