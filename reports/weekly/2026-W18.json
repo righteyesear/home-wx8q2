@@ -7,7 +7,7 @@
     "end_date": "2026-05-03",
     "label": "2026年 第18週（4/27 〜 5/3）"
   },
-  "generated_at": "2026-05-01T21:59:38.089484+09:00",
+  "generated_at": "2026-05-02T00:48:54.407902+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -15,24 +15,24 @@
       "highlights": [
         "最高気温 23.7℃",
         "最低気温 11.2℃",
-        "前週比 -0.9℃",
-        "前年比 -1.7℃"
+        "前週比 -1.2℃",
+        "前年比 -2.0℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
-      "days": 5,
-      "avg_temp": 16.3,
+      "days": 6,
+      "avg_temp": 16.0,
       "avg_temp_stdev": 1.9,
       "max_temp": 23.7,
       "max_temp_date": "2026/04/28",
-      "avg_high": 20.4,
+      "avg_high": 19.5,
       "min_temp": 11.2,
       "min_temp_date": "2026/05/01",
-      "avg_low": 12.7,
-      "avg_daily_range": 7.8,
-      "prev_week_diff": -0.9,
-      "prev_year_diff": -1.7
+      "avg_low": 12.9,
+      "avg_daily_range": 6.6,
+      "prev_week_diff": -1.2,
+      "prev_year_diff": -2.0
     },
     "daily_data": [
       {
@@ -72,8 +72,16 @@
         "weekday": "金",
         "high": 20.3,
         "low": 11.2,
-        "avg": 14.6,
+        "avg": 14.7,
         "range": 9.1
+      },
+      {
+        "date": "2026/05/02",
+        "weekday": "土",
+        "high": 14.7,
+        "low": 14.1,
+        "avg": 14.4,
+        "range": 0.6
       }
     ],
     "comparison": {
@@ -92,16 +100,16 @@
         "avg_low": 13.2,
         "avg_daily_range": 9.9
       },
-      "avg_temp_diff": -1.7,
+      "avg_temp_diff": -2.0,
       "max_temp_diff": -1.0,
       "min_temp_diff": 1.4,
-      "avg_daily_range_diff": -2.1,
+      "avg_daily_range_diff": -3.3,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 18.8,
-      "current_deviation": -2.5,
+      "current_deviation": -2.8,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -306,28 +314,32 @@
         "4/28(火)",
         "4/29(水)",
         "4/30(木)",
-        "5/1(金)"
+        "5/1(金)",
+        "5/2(土)"
       ],
       "highs": [
         21.1,
         23.7,
         20.2,
         16.9,
-        20.3
+        20.3,
+        14.7
       ],
       "lows": [
         13.3,
         12.2,
         14.8,
         11.9,
-        11.2
+        11.2,
+        14.1
       ],
       "avgs": [
         16.0,
         19.1,
         17.3,
         14.7,
-        14.6
+        14.7,
+        14.4
       ]
     },
     "prev_year_comparison": {
@@ -336,14 +348,16 @@
         "火",
         "水",
         "木",
-        "金"
+        "金",
+        "土"
       ],
       "this_year": [
         16.0,
         19.1,
         17.3,
         14.7,
-        14.6
+        14.7,
+        14.4
       ],
       "last_year": [
         17.0,
@@ -359,7 +373,8 @@
         23.7,
         20.2,
         16.9,
-        20.3
+        20.3,
+        14.7
       ],
       "last_year_high": [
         22.2,
@@ -375,7 +390,8 @@
         12.2,
         14.8,
         11.9,
-        11.2
+        11.2,
+        14.1
       ],
       "last_year_low": [
         9.8,
@@ -393,14 +409,16 @@
         "4/28(火)",
         "4/29(水)",
         "4/30(木)",
-        "5/1(金)"
+        "5/1(金)",
+        "5/2(土)"
       ],
       "deviations": [
         -2.8,
         0.3,
         -1.5,
         -4.1,
-        -4.2
+        -4.1,
+        -4.4
       ],
       "baseline_avg": 18.8
     }
