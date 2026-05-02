@@ -7,7 +7,7 @@
     "end_date": "2026-05-31",
     "label": "2026年5月"
   },
-  "generated_at": "2026-05-03T03:47:29.482907+09:00",
+  "generated_at": "2026-05-03T06:34:55.334192+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -30,7 +30,7 @@
       "min_temp": 11.2,
       "min_temp_date": "2026/05/01",
       "avg_low": 13.7,
-      "avg_daily_range": 7.7,
+      "avg_daily_range": 7.8,
       "prev_month_diff": 0.4,
       "prev_year_diff": -2.4
     },
@@ -54,10 +54,10 @@
       {
         "date": "2026/05/03",
         "weekday": "日",
-        "high": 17.1,
-        "low": 16.1,
+        "high": 17.3,
+        "low": 16.0,
         "avg": 16.5,
-        "range": 1.0
+        "range": 1.3
       }
     ],
     "weekly_breakdown": [
@@ -74,7 +74,7 @@
         "min_temp": 11.2,
         "min_temp_date": "2026/05/01",
         "avg_low": 13.7,
-        "avg_daily_range": 7.7
+        "avg_daily_range": 7.8
       }
     ],
     "comparison": {
@@ -96,7 +96,7 @@
       "avg_temp_diff": -2.4,
       "max_temp_diff": -3.3,
       "min_temp_diff": -1.5,
-      "avg_daily_range_diff": 0.2,
+      "avg_daily_range_diff": 0.3,
       "ai_comment": "昨年は最高気温が30度に達するなど初夏を思わせる陽気でしたが、今年は平均気温が約8度も低く、季節が逆戻りしたような異例の涼しさです。特に最高気温の差が15度以上もあり、昨年のような突き抜けるような暑さは一切見られません。\n\n注目すべきは日較差の小ささです。昨年は昼夜の寒暖差が激しい「晴天型」の推移でしたが、今年は一日を通して気温の変化が乏しく、どんよりとした低温が続く「停滞型」のパターンとなっています。太陽の光が届きにくく、日中も空気がひんやりと感じられるのが今年の特徴です。\n\n昨年の今頃は半袖で過ごせましたが、今年は厚手の羽織りものが手放せません。体調管理はもちろん、衣替えのタイミングを遅らせるなど、例年とは違う「冷え」への対策を意識して過ごしましょう。🌡️"
     },
     "prev_month": {
@@ -116,7 +116,7 @@
       "avg_temp_diff": 0.4,
       "max_temp_diff": -0.4,
       "min_temp_diff": 2.9,
-      "avg_daily_range_diff": -1.1,
+      "avg_daily_range_diff": -1.0,
       "ai_comment": ""
     },
     "baseline": {
@@ -339,12 +339,12 @@
       "highs": [
         20.3,
         26.7,
-        17.1
+        17.3
       ],
       "lows": [
         11.2,
         13.8,
-        16.1
+        16.0
       ],
       "avgs": [
         14.7,
@@ -399,7 +399,7 @@
       "this_year_high": [
         20.3,
         26.7,
-        17.1
+        17.3
       ],
       "last_year_high": [
         24.6,
@@ -437,7 +437,7 @@
       "this_year_low": [
         11.2,
         13.8,
-        16.1
+        16.0
       ],
       "last_year_low": [
         13.3,
