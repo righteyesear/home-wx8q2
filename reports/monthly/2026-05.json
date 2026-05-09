@@ -7,7 +7,7 @@
     "end_date": "2026-05-31",
     "label": "2026年5月"
   },
-  "generated_at": "2026-05-09T14:42:38.795821+09:00",
+  "generated_at": "2026-05-09T16:46:10.996838+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -23,14 +23,14 @@
       "title": "月間統計",
       "days": 9,
       "avg_temp": 19.7,
-      "avg_temp_stdev": 2.3,
+      "avg_temp_stdev": 2.4,
       "max_temp": 26.8,
       "max_temp_date": "2026/05/04",
-      "avg_high": 24.4,
+      "avg_high": 24.5,
       "min_temp": 11.2,
       "min_temp_date": "2026/05/01",
       "avg_low": 15.7,
-      "avg_daily_range": 8.7,
+      "avg_daily_range": 8.8,
       "prev_month_diff": 2.9,
       "prev_year_diff": 0.1
     },
@@ -102,10 +102,10 @@
       {
         "date": "2026/05/09",
         "weekday": "土",
-        "high": 22.8,
+        "high": 23.3,
         "low": 17.3,
-        "avg": 20.0,
-        "range": 5.5
+        "avg": 20.4,
+        "range": 6.0
       }
     ],
     "weekly_breakdown": [
@@ -129,15 +129,15 @@
         "end_date": "2026-05-14",
         "label": "5/8〜5/14",
         "days": 2,
-        "avg_temp": 21.1,
-        "avg_temp_stdev": 1.6,
+        "avg_temp": 21.4,
+        "avg_temp_stdev": 1.3,
         "max_temp": 26.2,
         "max_temp_date": "2026/05/08",
-        "avg_high": 24.5,
+        "avg_high": 24.8,
         "min_temp": 17.3,
         "min_temp_date": "2026/05/09",
         "avg_low": 18.1,
-        "avg_daily_range": 6.4
+        "avg_daily_range": 6.7
       }
     ],
     "comparison": {
@@ -159,7 +159,7 @@
       "avg_temp_diff": 0.1,
       "max_temp_diff": -3.2,
       "min_temp_diff": -1.5,
-      "avg_daily_range_diff": 1.2,
+      "avg_daily_range_diff": 1.3,
       "ai_comment": "昨年は最高気温が30度に達するなど初夏を思わせる陽気でしたが、今年は平均気温が約8度も低く、季節が逆戻りしたような異例の涼しさです。特に最高気温の差が15度以上もあり、昨年のような突き抜けるような暑さは一切見られません。\n\n注目すべきは日較差の小ささです。昨年は昼夜の寒暖差が激しい「晴天型」の推移でしたが、今年は一日を通して気温の変化が乏しく、どんよりとした低温が続く「停滞型」のパターンとなっています。太陽の光が届きにくく、日中も空気がひんやりと感じられるのが今年の特徴です。\n\n昨年の今頃は半袖で過ごせましたが、今年は厚手の羽織りものが手放せません。体調管理はもちろん、衣替えのタイミングを遅らせるなど、例年とは違う「冷え」への対策を意識して過ごしましょう。🌡️"
     },
     "prev_month": {
@@ -179,7 +179,7 @@
       "avg_temp_diff": 2.9,
       "max_temp_diff": -0.3,
       "min_temp_diff": 2.9,
-      "avg_daily_range_diff": -0.1,
+      "avg_daily_range_diff": 0.0,
       "ai_comment": ""
     },
     "baseline": {
@@ -414,7 +414,7 @@
         22.1,
         26.3,
         26.2,
-        22.8
+        23.3
       ],
       "lows": [
         11.2,
@@ -436,7 +436,7 @@
         18.7,
         21.5,
         22.3,
-        20.0
+        20.4
       ]
     },
     "prev_year_comparison": {
@@ -460,7 +460,7 @@
         18.7,
         21.5,
         22.3,
-        20.0
+        20.4
       ],
       "last_year": [
         19.0,
@@ -504,7 +504,7 @@
         22.1,
         26.3,
         26.2,
-        22.8
+        23.3
       ],
       "last_year_high": [
         24.6,
@@ -605,7 +605,7 @@
         -1.4,
         1.4,
         2.2,
-        -0.1
+        0.3
       ],
       "baseline_avg": 20.1
     },
@@ -616,11 +616,11 @@
       ],
       "avgs": [
         19.3,
-        21.1
+        21.4
       ],
       "highs": [
         24.4,
-        24.5
+        24.8
       ],
       "lows": [
         15.0,
