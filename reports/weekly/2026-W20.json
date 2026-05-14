@@ -7,7 +7,7 @@
     "end_date": "2026-05-17",
     "label": "2026年 第20週（5/11 〜 5/17）"
   },
-  "generated_at": "2026-05-15T04:29:18.813650+09:00",
+  "generated_at": "2026-05-15T07:02:56.856875+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -23,14 +23,14 @@
       "title": "週間統計",
       "days": 5,
       "avg_temp": 19.4,
-      "avg_temp_stdev": 3.1,
+      "avg_temp_stdev": 3.0,
       "max_temp": 28.1,
       "max_temp_date": "2026/05/13",
-      "avg_high": 24.1,
+      "avg_high": 24.3,
       "min_temp": 13.7,
       "min_temp_date": "2026/05/15",
       "avg_low": 15.8,
-      "avg_daily_range": 8.3,
+      "avg_daily_range": 8.5,
       "prev_week_diff": -0.9,
       "prev_year_diff": -1.7
     },
@@ -70,10 +70,10 @@
       {
         "date": "2026/05/15",
         "weekday": "金",
-        "high": 14.5,
+        "high": 15.5,
         "low": 13.7,
-        "avg": 14.1,
-        "range": 0.8
+        "avg": 14.3,
+        "range": 1.8
       }
     ],
     "comparison": {
@@ -95,7 +95,7 @@
       "avg_temp_diff": -1.7,
       "max_temp_diff": 1.0,
       "min_temp_diff": -1.6,
-      "avg_daily_range_diff": 0.4,
+      "avg_daily_range_diff": 0.6,
       "ai_comment": ""
     },
     "baseline": {
@@ -107,13 +107,7 @@
     },
     "events": {
       "title": "特筆イベント",
-      "items": [
-        {
-          "date": "2026/05/15",
-          "type": "rapid_change",
-          "description": "平均気温が前日比-5.0℃の急低下"
-        }
-      ],
+      "items": [],
       "ai_comment": ""
     },
     "season": {
@@ -319,7 +313,7 @@
         26.4,
         28.1,
         25.7,
-        14.5
+        15.5
       ],
       "lows": [
         18.0,
@@ -333,7 +327,7 @@
         21.5,
         21.0,
         19.1,
-        14.1
+        14.3
       ]
     },
     "prev_year_comparison": {
@@ -349,7 +343,7 @@
         21.5,
         21.0,
         19.1,
-        14.1
+        14.3
       ],
       "last_year": [
         21.5,
@@ -365,7 +359,7 @@
         26.4,
         28.1,
         25.7,
-        14.5
+        15.5
       ],
       "last_year_high": [
         26.8,
@@ -406,7 +400,7 @@
         0.9,
         0.4,
         -1.5,
-        -6.5
+        -6.3
       ],
       "baseline_avg": 20.6
     }
