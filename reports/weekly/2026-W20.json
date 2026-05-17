@@ -7,7 +7,7 @@
     "end_date": "2026-05-17",
     "label": "2026年 第20週（5/11 〜 5/17）"
   },
-  "generated_at": "2026-05-17T15:14:46.478216+09:00",
+  "generated_at": "2026-05-17T19:18:43.803440+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -15,15 +15,15 @@
       "highlights": [
         "最高気温 29.2℃",
         "最低気温 13.7℃",
-        "前週比 +0.3℃",
-        "前年比 -0.5℃"
+        "前週比 +0.5℃",
+        "前年比 -0.3℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 7,
-      "avg_temp": 20.6,
-      "avg_temp_stdev": 1.4,
+      "avg_temp": 20.8,
+      "avg_temp_stdev": 1.7,
       "max_temp": 29.2,
       "max_temp_date": "2026/05/17",
       "avg_high": 26.6,
@@ -31,8 +31,8 @@
       "min_temp_date": "2026/05/15",
       "avg_low": 15.9,
       "avg_daily_range": 10.8,
-      "prev_week_diff": 0.3,
-      "prev_year_diff": -0.5
+      "prev_week_diff": 0.5,
+      "prev_year_diff": -0.3
     },
     "daily_data": [
       {
@@ -88,7 +88,7 @@
         "weekday": "日",
         "high": 29.2,
         "low": 16.7,
-        "avg": 22.2,
+        "avg": 23.3,
         "range": 12.5
       }
     ],
@@ -108,7 +108,7 @@
         "avg_low": 17.3,
         "avg_daily_range": 7.9
       },
-      "avg_temp_diff": -0.5,
+      "avg_temp_diff": -0.3,
       "max_temp_diff": 2.1,
       "min_temp_diff": -1.6,
       "avg_daily_range_diff": 2.9,
@@ -117,7 +117,7 @@
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 20.6,
-      "current_deviation": 0.0,
+      "current_deviation": 0.2,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -351,7 +351,7 @@
         19.1,
         18.2,
         21.0,
-        22.2
+        23.3
       ]
     },
     "prev_year_comparison": {
@@ -371,7 +371,7 @@
         19.1,
         18.2,
         21.0,
-        22.2
+        23.3
       ],
       "last_year": [
         21.5,
@@ -436,7 +436,7 @@
         -1.5,
         -2.4,
         0.4,
-        1.6
+        2.7
       ],
       "baseline_avg": 20.6
     }
