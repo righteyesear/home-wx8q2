@@ -7,41 +7,41 @@
     "end_date": "2026-05-24",
     "label": "2026年 第21週（5/18 〜 5/24）"
   },
-  "generated_at": "2026-05-18T11:32:46.000713+09:00",
+  "generated_at": "2026-05-18T15:47:33.098031+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
       "ai_comment": "",
       "highlights": [
-        "最高気温 28.6℃",
+        "最高気温 30.2℃",
         "最低気温 17.5℃",
-        "前週比 +0.1℃",
-        "前年比 -0.8℃"
+        "前週比 +2.4℃",
+        "前年比 +1.5℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 1,
-      "avg_temp": 20.9,
+      "avg_temp": 23.2,
       "avg_temp_stdev": 0,
-      "max_temp": 28.6,
+      "max_temp": 30.2,
       "max_temp_date": "2026/05/18",
-      "avg_high": 28.6,
+      "avg_high": 30.2,
       "min_temp": 17.5,
       "min_temp_date": "2026/05/18",
       "avg_low": 17.5,
-      "avg_daily_range": 11.1,
-      "prev_week_diff": 0.1,
-      "prev_year_diff": -0.8
+      "avg_daily_range": 12.7,
+      "prev_week_diff": 2.4,
+      "prev_year_diff": 1.5
     },
     "daily_data": [
       {
         "date": "2026/05/18",
         "weekday": "月",
-        "high": 28.6,
+        "high": 30.2,
         "low": 17.5,
-        "avg": 20.9,
-        "range": 11.1
+        "avg": 23.2,
+        "range": 12.7
       }
     ],
     "comparison": {
@@ -60,16 +60,16 @@
         "avg_low": 18.0,
         "avg_daily_range": 8.2
       },
-      "avg_temp_diff": -0.8,
-      "max_temp_diff": -1.4,
+      "avg_temp_diff": 1.5,
+      "max_temp_diff": 0.2,
       "min_temp_diff": 1.7,
-      "avg_daily_range_diff": 2.9,
+      "avg_daily_range_diff": 4.5,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 21.8,
-      "current_deviation": -0.9,
+      "current_deviation": 1.4,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -103,7 +103,7 @@
           "label": "初めて30℃超え",
           "2024": "2024/06/11",
           "2025": "2025/05/20",
-          "2026": null
+          "2026": "2026/05/18"
         },
         {
           "label": "初めて35℃超え",
@@ -259,8 +259,8 @@
             "low": 8.3
           },
           "5": {
-            "avg": 20.2,
-            "high": 29.2,
+            "avg": 20.3,
+            "high": 30.2,
             "low": 11.2
           }
         }
@@ -273,13 +273,13 @@
         "5/18(月)"
       ],
       "highs": [
-        28.6
+        30.2
       ],
       "lows": [
         17.5
       ],
       "avgs": [
-        20.9
+        23.2
       ]
     },
     "prev_year_comparison": {
@@ -287,7 +287,7 @@
         "月"
       ],
       "this_year": [
-        20.9
+        23.2
       ],
       "last_year": [
         24.1,
@@ -299,7 +299,7 @@
         18.1
       ],
       "this_year_high": [
-        28.6
+        30.2
       ],
       "last_year_high": [
         27.9,
@@ -328,7 +328,7 @@
         "5/18(月)"
       ],
       "deviations": [
-        -0.9
+        1.4
       ],
       "baseline_avg": 21.8
     }
