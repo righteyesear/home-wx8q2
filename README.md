@@ -148,7 +148,7 @@ python scripts/report_generator.py --backfill --no-ai
 | フロントエンド | HTML5, CSS3, JavaScript (Vanilla) |
 | グラフ | Chart.js |
 | フォント | Noto Sans JP (Google Fonts) |
-| AI分析 | Google Gemini API (`gemini-3-flash-preview`) |
+| AI分析 | Google Gemini API (`gemini-3.5-flash`) |
 | データソース | Google Sheets API (CSV公開) |
 | 気象警報 | 気象庁 XML API |
 | 降水判定 | Yahoo 天気 API + 独自スコアリング |

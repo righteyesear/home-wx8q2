@@ -391,11 +391,11 @@ export default {
             const hour = jstNow.getHours();
             const isNight = hour >= 22 || hour < 6;
 
-            // 1時間以内の予報雨を探す（forecastのみ）
-            const upcomingRain = precipData.find((d, i) => {
-                if (i > 6) return false; // 60分以内
-                return d.rainfall >= 20 && d.type === 'forecast';
-            });
+            // 1時間以内の予報雨を探す（forecastスロット全件から最大雨量を検出）
+            const forecastSlots = precipData.filter(d => d.type === 'forecast');
+            const maxRainSlot = forecastSlots.reduce((max, d) =>
+                (d.rainfall ?? 0) > (max?.rainfall ?? 0) ? d : max, null);
+            const upcomingRain = maxRainSlot && (maxRainSlot.rainfall ?? 0) >= 5 ? maxRainSlot : null;
 
             if (upcomingRain) {
                 const [hh, mm] = upcomingRain.time.split(':').map(Number);
@@ -406,32 +406,27 @@ export default {
                 const minsUntilRain = Math.round((rainTime - jstNow) / 60000);
                 const rainfall = upcomingRain.rainfall;
 
-                // 4段階雨量レベル別の文言とクールダウンキー
+                // 3段階雨量レベル別の文言とクールダウンキー
                 let level, title, body, rainKey;
-                if (rainfall >= 80) {
-                    level = 4;
-                    title = '🆆 猛烈な雨予報';
-                    body = `約${minsUntilRain}分後に${rainfall}mm/hの猛烈な雨\n甚大な被害のおそれがある大雨—命を守る行動を！`;
-                    rainKey = 'notify_rain_lv4';
-                } else if (rainfall >= 50) {
+                if (rainfall >= 50) {
                     level = 3;
                     title = '🚨 非常に激しい雨予報';
-                    body = `約${minsUntilRain}分後に${rainfall}mm/hの激しい雨\n屋外での行動は危険—すぐ避難して！`;
+                    body = `約${minsUntilRain}分後に${rainfall}mm/hの激しい雨\n屋外での行動は危険です`;
                     rainKey = 'notify_rain_lv3';
-                } else if (rainfall >= 30) {
+                } else if (rainfall >= 20) {
                     level = 2;
-                    title = '⛈️ 豪雨予報';
-                    body = `約${minsUntilRain}分後に${rainfall}mm/hの強い雨\n急な増水・土砂災害に注意してください`;
+                    title = '⛈️ 強い雨予報';
+                    body = `約${minsUntilRain}分後に${rainfall}mm/hの強い雨\n傘をお忘れなく`;
                     rainKey = 'notify_rain_lv2';
-                } else { // 20mm以上
+                } else { // 5mm/h以上
                     level = 1;
-                    title = '🌧️ 強雨予報';
-                    body = `約${minsUntilRain}分後に${rainfall}mm/hの強い雨\n屋外での行動に注意してください`;
+                    title = '🌧️ 雨雲接近';
+                    body = `約${minsUntilRain}分後に${rainfall}mm/hの雨\n傘をお忘れなく`;
                     rainKey = 'notify_rain_lv1';
                 }
 
-                // 夜間はレベル3以上のみ通知
-                if (isNight && level < 3) {
+                // 夜間はレベル2以上のみ通知
+                if (isNight && level < 2) {
                     return { minsUntilRain, rainfall, level, skipped: 'night_mode' };
                 }
 
@@ -1001,7 +996,16 @@ export default {
         }
 
         // ================================================================
-        // 5分ごとのチェック（気象警報・雨雲・雨止み）- 24時間稼働
+        // 毎分: 雨止みチェック（15分継続判定のため1分ごとに実行）
+        // ================================================================
+        try {
+            await this.checkRainStopped(env);
+        } catch (e) {
+            console.error('[Cron] Rain stopped check error:', e.message);
+        }
+
+        // ================================================================
+        // 5分ごとのチェック（気象警報・雨雲接近）- 24時間稼働
         // ================================================================
         if (minute % 5 === 0) {
             const urgentChecks = [
@@ -1011,10 +1015,6 @@ export default {
                 }),
                 this.checkYahooRain(env).catch(e => {
                     console.error('[Cron] Yahoo rain check error:', e.message);
-                    return null;
-                }),
-                this.checkRainStopped(env).catch(e => {
-                    console.error('[Cron] Rain stopped check error:', e.message);
                     return null;
                 })
             ];
@@ -1058,13 +1058,12 @@ export default {
 
             // 1. OpenMeteo で翌日の最低気温予報を取得（東京）
             const meteoResp = await fetch(
-                'https://api.open-meteo.com/v1/forecast?latitude=35.6895&longitude=139.6917&daily=temperature_2m_min,relative_humidity_2m_mean&timezone=Asia%2FTokyo&forecast_days=2'
+                'https://api.open-meteo.com/v1/forecast?latitude=35.6895&longitude=139.6917&daily=temperature_2m_min&timezone=Asia%2FTokyo&forecast_days=2'
             );
             if (!meteoResp.ok) return null;
 
             const meteoData = await meteoResp.json();
             const tomorrowMinTemp = meteoData.daily?.temperature_2m_min?.[1];
-            const tomorrowHumidity = meteoData.daily?.relative_humidity_2m_mean?.[1] ?? null;
             if (tomorrowMinTemp === undefined || tomorrowMinTemp === null) return null;
 
             // 2. 現在の実測気温を取得（Google Spreadsheets）
@@ -1096,17 +1095,6 @@ export default {
             } else if (tomorrowMinTemp <= 0 && currentTemp !== null && currentTemp <= 5) {
                 shouldNotify = true;
                 message = `明日の最低${tomorrowMinTemp.toFixed(1)}°C予報 / 現在${currentTemp.toFixed(1)}°C\n路面凍結・水道凍結に注意`;
-            }
-
-            // ⑥ 露点アラート（露点 ≈ 気温 - (100 - 湿度) / 5）
-            if (tomorrowHumidity !== null && tomorrowMinTemp !== null) {
-                const dewPoint = tomorrowMinTemp - (100 - tomorrowHumidity) / 5;
-                if (dewPoint <= 0 && !shouldNotify) {
-                    shouldNotify = true;
-                    message = `明日の露点: ${dewPoint.toFixed(1)}°C\n朝露が凍結する可能性があります🌫️`;
-                } else if (dewPoint <= 0 && shouldNotify) {
-                    message += `\n露点${dewPoint.toFixed(1)}°C：朝露凍結にも注意`;
-                }
             }
 
             if (!shouldNotify) return { tomorrowMinTemp, currentTemp, skipped: 'no_risk' };
@@ -1244,7 +1232,8 @@ export default {
         }
     },
 
-    // ② 雨が止んだ通知
+    // ② 雨が止んだ通知（15分継続確認方式）
+    // 条件: まとまった雨が降っていた → 実況0 + 全予報0 が15分間継続 → 通知
     async checkRainStopped(env) {
         try {
             const response = env.YAHOO_PROXY
@@ -1255,12 +1244,23 @@ export default {
             const data = await response.json();
             if (!data.data || data.data.length === 0) return null;
 
-            // 現在の実況値（最新のobservation）
             const jstNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
             const nowMinutes = jstNow.getHours() * 60 + jstNow.getMinutes();
-            let currentObs = null, bestDiff = Infinity;
+
+            // 実況データと予報データを分離
+            const observations = [];
+            const forecasts = [];
             for (const point of data.data) {
-                if (point.type === 'forecast' || !point.time) continue;
+                if (point.type === 'forecast') {
+                    forecasts.push(point);
+                } else if (point.time) {
+                    observations.push(point);
+                }
+            }
+
+            // 現在の実況値（最新のobservation）
+            let currentObs = null, bestDiff = Infinity;
+            for (const point of observations) {
                 const [hh, mm] = point.time.split(':').map(Number);
                 const pm = hh * 60 + mm;
                 let diff = Math.abs(pm - nowMinutes);
@@ -1269,33 +1269,78 @@ export default {
             }
             if (!currentObs) return null;
 
-            const isRaining = currentObs.rainfall > 0;
-            const wasRaining = !!(await env.KV.get('rain_was_raining'));
+            const isRaining = (currentObs.rainfall ?? 0) > 0;
+
+            // === 雨フラグON判定（過去60分のobservationデータから） ===
+            // (A) 総雨量 ≥ 1mm  OR  (B) いずれかのスロットで rainfall ≥ 3mm/h
+            let totalRainfall = 0;
+            let hasHeavySlot = false;
+            for (const obs of observations) {
+                const rainfall = obs.rainfall ?? 0;
+                totalRainfall += rainfall * (5 / 60); // 5分スロットをmmに換算
+                if (rainfall >= 3) hasHeavySlot = true;
+            }
+            const significantRain = totalRainfall >= 1 || hasHeavySlot;
 
             if (isRaining) {
-                // 雨が降っている間はフラグをセット（TTL 3時間）
-                await env.KV.put('rain_was_raining', 'true', { expirationTtl: 10800 });
-                return { isRaining, rainfall: currentObs.rainfall };
+                // 降水中: まとまった雨ならフラグON、候補タイマーは常にリセット
+                if (significantRain) {
+                    await env.KV.put('rain_was_raining', 'true', { expirationTtl: 10800 });
+                }
+                await env.KV.delete('rain_stop_candidate');
+                return { isRaining, rainfall: currentObs.rainfall, totalRainfall, significantRain };
             }
 
-            if (!isRaining && wasRaining) {
-                // 次1時間の予報も雨なしか確認
-                const nextRain = data.data.find((d, i) => i <= 6 && d.type === 'forecast' && d.rainfall > 0);
-                if (!nextRain) {
-                    // 雨止みクールダウン（2時間）
-                    const stopKey = 'notify_rain_stopped';
-                    if (!await env.KV.get(stopKey)) {
-                        await this.sendToAll(env, {
-                            title: '🌤️ 雨が上がりました',
-                            body: `雨が止んで、この先1時間は降水の予報がありません`,
-                            data: { url: './#precipitationCard' }
-                        });
-                        await env.KV.put(stopKey, 'true', { expirationTtl: 7200 });
-                        await env.KV.delete('rain_was_raining');
-                    }
-                }
+            // 現在降っていない → 雨止み判定に入る
+            const wasRaining = !!(await env.KV.get('rain_was_raining'));
+            if (!wasRaining) return { isRaining, status: 'no_prior_rain' };
+
+            // 条件: 予報の全スロットが 0mm/h
+            const allForecastsClear = forecasts.length > 0 &&
+                forecasts.every(f => (f.rainfall ?? 0) === 0);
+
+            if (!allForecastsClear) {
+                // 予報に雨あり → 候補タイマーをリセット
+                await env.KV.delete('rain_stop_candidate');
+                return { isRaining, allForecastsClear, status: 'forecast_has_rain' };
             }
-            return { isRaining, wasRaining };
+
+            // 実況0 + 全予報0 → 候補開始時刻を確認（15分継続判定）
+            const candidateStr = await env.KV.get('rain_stop_candidate');
+            const now = Date.now();
+
+            if (!candidateStr) {
+                // 候補開始を記録
+                await env.KV.put('rain_stop_candidate', String(now), { expirationTtl: 3600 });
+                console.log('[RainStopped] Candidate started');
+                return { status: 'candidate_started' };
+            }
+
+            const candidateStart = parseInt(candidateStr, 10);
+            const elapsedMinutes = (now - candidateStart) / 60000;
+
+            if (elapsedMinutes < 15) {
+                return { status: 'candidate_ongoing', elapsedMinutes: Math.round(elapsedMinutes) };
+            }
+
+            // 15分継続達成 → 通知送信（クールダウン確認）
+            const stopKey = 'notify_rain_stopped';
+            if (await env.KV.get(stopKey)) {
+                return { status: 'already_notified' };
+            }
+
+            await this.sendToAll(env, {
+                title: '🌤️ 雨が上がりました',
+                body: '雨が止んで、この先1時間は降水の予報がありません',
+                data: { url: './#precipitationCard' }
+            });
+
+            await env.KV.put(stopKey, 'true', { expirationTtl: 7200 }); // 2時間クールダウン
+            await env.KV.delete('rain_was_raining');
+            await env.KV.delete('rain_stop_candidate');
+            console.log('[RainStopped] Notification sent');
+
+            return { status: 'notified', elapsedMinutes: Math.round(elapsedMinutes) };
         } catch (e) {
             console.error('[RainStopped Error]', e.message);
             return null;
@@ -1431,11 +1476,11 @@ export default {
 
             // クールダウンKVの状態を確認
             const cooldownKeys = [
-                'notify_rain_lv1', 'notify_rain_lv2', 'notify_rain_lv3', 'notify_rain_lv4',
+                'notify_rain_lv1', 'notify_rain_lv2', 'notify_rain_lv3',
                 'notify_rain_stopped', 'notify_rapid_temp',
                 'notify_temp_freezing', 'notify_temp_cold', 'notify_temp_hot', 'notify_temp_heatwave',
                 'notify_tempchange_warmer_than_high', 'notify_tempchange_colder_than_low',
-                'rain_was_raining', 'rapid_temp_prev'
+                'rain_was_raining', 'rain_stop_candidate', 'rapid_temp_prev'
             ];
 
             const cooldowns = {};
