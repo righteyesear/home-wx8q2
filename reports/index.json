@@ -1,6 +1,61 @@
 {
   "weekly": [
     {
+      "period": "2026-W21",
+      "label": "05/18 〜 05/24",
+      "file": "weekly/2026-W21.json"
+    },
+    {
+      "period": "2026-W20",
+      "label": "05/11 〜 05/17",
+      "file": "weekly/2026-W20.json"
+    },
+    {
+      "period": "2026-W19",
+      "label": "05/04 〜 05/10",
+      "file": "weekly/2026-W19.json"
+    },
+    {
+      "period": "2026-W18",
+      "label": "04/27 〜 05/03",
+      "file": "weekly/2026-W18.json"
+    },
+    {
+      "period": "2026-W17",
+      "label": "04/20 〜 04/26",
+      "file": "weekly/2026-W17.json"
+    },
+    {
+      "period": "2026-W16",
+      "label": "04/13 〜 04/19",
+      "file": "weekly/2026-W16.json"
+    },
+    {
+      "period": "2026-W15",
+      "label": "04/06 〜 04/12",
+      "file": "weekly/2026-W15.json"
+    },
+    {
+      "period": "2026-W14",
+      "label": "03/30 〜 04/05",
+      "file": "weekly/2026-W14.json"
+    },
+    {
+      "period": "2026-W13",
+      "label": "03/23 〜 03/29",
+      "file": "weekly/2026-W13.json"
+    },
+    {
+      "period": "2026-W12",
+      "label": "03/16 〜 03/22",
+      "file": "weekly/2026-W12.json"
+    },
+    {
+      "period": "2026-W11",
+      "label": "03/09 〜 03/15",
+      "file": "weekly/2026-W11.json"
+    },
+    {
       "period": "2026-W10",
       "label": "03/02 〜 03/08",
       "file": "weekly/2026-W10.json"
@@ -523,6 +578,16 @@
   ],
   "monthly": [
     {
+      "period": "2026-05",
+      "label": "2026年5月",
+      "file": "monthly/2026-05.json"
+    },
+    {
+      "period": "2026-04",
+      "label": "2026年4月",
+      "file": "monthly/2026-04.json"
+    },
+    {
       "period": "2026-03",
       "label": "2026年3月",
       "file": "monthly/2026-03.json"
@@ -648,5 +713,5 @@
       "file": "monthly/2024-03.json"
     }
   ],
-  "updated_at": "2026-03-04T15:38:44.540417+09:00"
+  "updated_at": "2026-05-21T15:45:44.414092+09:00"
 }
