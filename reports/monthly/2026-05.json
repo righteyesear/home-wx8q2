@@ -7,7 +7,7 @@
     "end_date": "2026-05-31",
     "label": "2026年5月"
   },
-  "generated_at": "2026-05-22T07:15:27.607753+09:00",
+  "generated_at": "2026-05-22T11:36:34.931096+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -29,7 +29,7 @@
       "avg_high": 25.4,
       "min_temp": 11.2,
       "min_temp_date": "2026/05/01",
-      "avg_low": 16.1,
+      "avg_low": 16.0,
       "avg_daily_range": 9.4,
       "prev_month_diff": 3.6,
       "prev_year_diff": 0.8
@@ -206,10 +206,10 @@
       {
         "date": "2026/05/22",
         "weekday": "金",
-        "high": 15.2,
-        "low": 14.2,
+        "high": 15.4,
+        "low": 13.9,
         "avg": 14.7,
-        "range": 1.0
+        "range": 1.5
       }
     ],
     "weekly_breakdown": [
@@ -265,13 +265,13 @@
         "days": 1,
         "avg_temp": 14.7,
         "avg_temp_stdev": 0,
-        "max_temp": 15.2,
+        "max_temp": 15.4,
         "max_temp_date": "2026/05/22",
-        "avg_high": 15.2,
-        "min_temp": 14.2,
+        "avg_high": 15.4,
+        "min_temp": 13.9,
         "min_temp_date": "2026/05/22",
-        "avg_low": 14.2,
-        "avg_daily_range": 1.0
+        "avg_low": 13.9,
+        "avg_daily_range": 1.5
       }
     ],
     "comparison": {
@@ -579,7 +579,7 @@
         28.9,
         30.1,
         23.2,
-        15.2
+        15.4
       ],
       "lows": [
         11.2,
@@ -603,7 +603,7 @@
         20.3,
         20.8,
         15.2,
-        14.2
+        13.9
       ],
       "avgs": [
         14.7,
@@ -734,7 +734,7 @@
         28.9,
         30.1,
         23.2,
-        15.2
+        15.4
       ],
       "last_year_high": [
         24.6,
@@ -791,7 +791,7 @@
         20.3,
         20.8,
         15.2,
-        14.2
+        13.9
       ],
       "last_year_low": [
         13.3,
@@ -895,13 +895,13 @@
         24.4,
         25.8,
         27.6,
-        15.2
+        15.4
       ],
       "lows": [
         15.0,
         16.4,
         17.1,
-        14.2
+        13.9
       ]
     }
   }
