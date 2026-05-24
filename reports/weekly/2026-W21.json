@@ -7,7 +7,7 @@
     "end_date": "2026-05-24",
     "label": "2026年 第21週（5/18 〜 5/24）"
   },
-  "generated_at": "2026-05-24T19:27:12.518685+09:00",
+  "generated_at": "2026-05-24T22:03:41.035651+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -15,14 +15,14 @@
       "highlights": [
         "最高気温 30.2℃",
         "最低気温 12.1℃",
-        "前週比 -1.0℃",
-        "前年比 -1.9℃"
+        "前週比 -0.9℃",
+        "前年比 -1.8℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 7,
-      "avg_temp": 19.8,
+      "avg_temp": 19.9,
       "avg_temp_stdev": 4.4,
       "max_temp": 30.2,
       "max_temp_date": "2026/05/18",
@@ -31,8 +31,8 @@
       "min_temp_date": "2026/05/23",
       "avg_low": 16.0,
       "avg_daily_range": 8.2,
-      "prev_week_diff": -1.0,
-      "prev_year_diff": -1.9
+      "prev_week_diff": -0.9,
+      "prev_year_diff": -1.8
     },
     "daily_data": [
       {
@@ -88,7 +88,7 @@
         "weekday": "日",
         "high": 22.5,
         "low": 13.9,
-        "avg": 18.3,
+        "avg": 18.5,
         "range": 8.6
       }
     ],
@@ -108,7 +108,7 @@
         "avg_low": 18.0,
         "avg_daily_range": 8.2
       },
-      "avg_temp_diff": -1.9,
+      "avg_temp_diff": -1.8,
       "max_temp_diff": 0.2,
       "min_temp_diff": -3.7,
       "avg_daily_range_diff": 0.0,
@@ -117,7 +117,7 @@
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 21.8,
-      "current_deviation": -2.0,
+      "current_deviation": -1.9,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -313,7 +313,7 @@
             "low": 8.3
           },
           "5": {
-            "avg": 20.0,
+            "avg": 20.1,
             "high": 30.2,
             "low": 11.2
           }
@@ -357,7 +357,7 @@
         18.8,
         14.2,
         14.9,
-        18.3
+        18.5
       ]
     },
     "prev_year_comparison": {
@@ -377,7 +377,7 @@
         18.8,
         14.2,
         14.9,
-        18.3
+        18.5
       ],
       "last_year": [
         24.1,
@@ -442,7 +442,7 @@
         -3.0,
         -7.6,
         -6.9,
-        -3.5
+        -3.3
       ],
       "baseline_avg": 21.8
     }
