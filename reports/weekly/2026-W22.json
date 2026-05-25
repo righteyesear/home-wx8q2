@@ -7,7 +7,7 @@
     "end_date": "2026-05-31",
     "label": "2026年 第22週（5/25 〜 5/31）"
   },
-  "generated_at": "2026-05-26T02:01:23.527174+09:00",
+  "generated_at": "2026-05-26T04:17:15.363003+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -15,24 +15,24 @@
       "highlights": [
         "最高気温 27.5℃",
         "最低気温 16.2℃",
-        "前週比 +1.0℃",
-        "前年比 +2.8℃"
+        "前週比 +0.8℃",
+        "前年比 +2.6℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 2,
-      "avg_temp": 20.9,
-      "avg_temp_stdev": 1.6,
+      "avg_temp": 20.7,
+      "avg_temp_stdev": 1.8,
       "max_temp": 27.5,
       "max_temp_date": "2026/05/25",
       "avg_high": 23.8,
       "min_temp": 16.2,
       "min_temp_date": "2026/05/25",
-      "avg_low": 17.8,
-      "avg_daily_range": 6.1,
-      "prev_week_diff": 1.0,
-      "prev_year_diff": 2.8
+      "avg_low": 17.5,
+      "avg_daily_range": 6.2,
+      "prev_week_diff": 0.8,
+      "prev_year_diff": 2.6
     },
     "daily_data": [
       {
@@ -47,9 +47,9 @@
         "date": "2026/05/26",
         "weekday": "火",
         "high": 20.1,
-        "low": 19.3,
-        "avg": 19.7,
-        "range": 0.8
+        "low": 18.9,
+        "avg": 19.4,
+        "range": 1.2
       }
     ],
     "comparison": {
@@ -68,16 +68,16 @@
         "avg_low": 15.8,
         "avg_daily_range": 5.4
       },
-      "avg_temp_diff": 2.8,
+      "avg_temp_diff": 2.6,
       "max_temp_diff": 2.3,
       "min_temp_diff": 2.0,
-      "avg_daily_range_diff": 0.7,
+      "avg_daily_range_diff": 0.8,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 20.3,
-      "current_deviation": 0.6,
+      "current_deviation": 0.4,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -287,11 +287,11 @@
       ],
       "lows": [
         16.2,
-        19.3
+        18.9
       ],
       "avgs": [
         22.0,
-        19.7
+        19.4
       ]
     },
     "prev_year_comparison": {
@@ -301,7 +301,7 @@
       ],
       "this_year": [
         22.0,
-        19.7
+        19.4
       ],
       "last_year": [
         17.5,
@@ -327,7 +327,7 @@
       ],
       "this_year_low": [
         16.2,
-        19.3
+        18.9
       ],
       "last_year_low": [
         15.0,
@@ -346,7 +346,7 @@
       ],
       "deviations": [
         1.7,
-        -0.6
+        -0.9
       ],
       "baseline_avg": 20.3
     }
