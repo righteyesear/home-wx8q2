@@ -7,7 +7,7 @@
     "end_date": "2026-05-31",
     "label": "2026年 第22週（5/25 〜 5/31）"
   },
-  "generated_at": "2026-05-27T04:58:19.436644+09:00",
+  "generated_at": "2026-05-27T07:16:13.735980+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -26,11 +26,11 @@
       "avg_temp_stdev": 1.3,
       "max_temp": 27.5,
       "max_temp_date": "2026/05/25",
-      "avg_high": 25.3,
+      "avg_high": 25.5,
       "min_temp": 16.2,
       "min_temp_date": "2026/05/25",
       "avg_low": 18.2,
-      "avg_daily_range": 7.1,
+      "avg_daily_range": 7.2,
       "prev_week_diff": 1.9,
       "prev_year_diff": 3.7
     },
@@ -54,10 +54,10 @@
       {
         "date": "2026/05/27",
         "weekday": "水",
-        "high": 20.9,
+        "high": 21.4,
         "low": 19.9,
         "avg": 20.5,
-        "range": 1.0
+        "range": 1.5
       }
     ],
     "comparison": {
@@ -79,7 +79,7 @@
       "avg_temp_diff": 3.7,
       "max_temp_diff": 2.3,
       "min_temp_diff": 2.0,
-      "avg_daily_range_diff": 1.7,
+      "avg_daily_range_diff": 1.8,
       "ai_comment": ""
     },
     "baseline": {
@@ -293,7 +293,7 @@
       "highs": [
         27.5,
         27.5,
-        20.9
+        21.4
       ],
       "lows": [
         16.2,
@@ -329,7 +329,7 @@
       "this_year_high": [
         27.5,
         27.5,
-        20.9
+        21.4
       ],
       "last_year_high": [
         20.4,

@@ -7,7 +7,7 @@
     "end_date": "2026-05-31",
     "label": "2026年5月"
   },
-  "generated_at": "2026-05-27T04:59:26.896212+09:00",
+  "generated_at": "2026-05-27T07:17:15.058508+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -246,10 +246,10 @@
       {
         "date": "2026/05/27",
         "weekday": "水",
-        "high": 20.9,
+        "high": 21.4,
         "low": 19.9,
         "avg": 20.5,
-        "range": 1.0
+        "range": 1.5
       }
     ],
     "weekly_breakdown": [
@@ -307,11 +307,11 @@
         "avg_temp_stdev": 3.7,
         "max_temp": 27.5,
         "max_temp_date": "2026/05/25",
-        "avg_high": 22.2,
+        "avg_high": 22.3,
         "min_temp": 12.1,
         "min_temp_date": "2026/05/23",
         "avg_low": 15.5,
-        "avg_daily_range": 6.7
+        "avg_daily_range": 6.8
       }
     ],
     "comparison": {
@@ -629,7 +629,7 @@
         22.5,
         27.5,
         27.5,
-        20.9
+        21.4
       ],
       "lows": [
         11.2,
@@ -809,7 +809,7 @@
         22.5,
         27.5,
         27.5,
-        20.9
+        21.4
       ],
       "last_year_high": [
         24.6,
@@ -985,7 +985,7 @@
         24.4,
         25.8,
         27.6,
-        22.2
+        22.3
       ],
       "lows": [
         15.0,
