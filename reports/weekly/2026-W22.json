@@ -7,7 +7,7 @@
     "end_date": "2026-05-31",
     "label": "2026年 第22週（5/25 〜 5/31）"
   },
-  "generated_at": "2026-05-27T21:14:38.943306+09:00",
+  "generated_at": "2026-05-28T02:52:42.406540+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -15,24 +15,24 @@
       "highlights": [
         "最高気温 28.4℃",
         "最低気温 16.2℃",
-        "前週比 +3.1℃",
-        "前年比 +4.9℃"
+        "前週比 +2.9℃",
+        "前年比 +4.7℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
-      "days": 3,
-      "avg_temp": 23.0,
-      "avg_temp_stdev": 1.0,
+      "days": 4,
+      "avg_temp": 22.8,
+      "avg_temp_stdev": 0.9,
       "max_temp": 28.4,
       "max_temp_date": "2026/05/27",
-      "avg_high": 27.8,
+      "avg_high": 26.6,
       "min_temp": 16.2,
       "min_temp_date": "2026/05/25",
-      "avg_low": 18.2,
-      "avg_daily_range": 9.6,
-      "prev_week_diff": 3.1,
-      "prev_year_diff": 4.9
+      "avg_low": 19.1,
+      "avg_daily_range": 7.4,
+      "prev_week_diff": 2.9,
+      "prev_year_diff": 4.7
     },
     "daily_data": [
       {
@@ -56,8 +56,16 @@
         "weekday": "水",
         "high": 28.4,
         "low": 19.9,
-        "avg": 24.0,
+        "avg": 23.9,
         "range": 8.5
+      },
+      {
+        "date": "2026/05/28",
+        "weekday": "木",
+        "high": 22.8,
+        "low": 21.8,
+        "avg": 22.2,
+        "range": 1.0
       }
     ],
     "comparison": {
@@ -76,16 +84,16 @@
         "avg_low": 15.8,
         "avg_daily_range": 5.4
       },
-      "avg_temp_diff": 4.9,
+      "avg_temp_diff": 4.7,
       "max_temp_diff": 3.2,
       "min_temp_diff": 2.0,
-      "avg_daily_range_diff": 4.2,
+      "avg_daily_range_diff": 2.0,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 20.3,
-      "current_deviation": 2.7,
+      "current_deviation": 2.5,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -288,34 +296,40 @@
       "labels": [
         "5/25(月)",
         "5/26(火)",
-        "5/27(水)"
+        "5/27(水)",
+        "5/28(木)"
       ],
       "highs": [
         27.5,
         27.5,
-        28.4
+        28.4,
+        22.8
       ],
       "lows": [
         16.2,
         18.6,
-        19.9
+        19.9,
+        21.8
       ],
       "avgs": [
         22.0,
         23.0,
-        24.0
+        23.9,
+        22.2
       ]
     },
     "prev_year_comparison": {
       "labels": [
         "月",
         "火",
-        "水"
+        "水",
+        "木"
       ],
       "this_year": [
         22.0,
         23.0,
-        24.0
+        23.9,
+        22.2
       ],
       "last_year": [
         17.5,
@@ -329,7 +343,8 @@
       "this_year_high": [
         27.5,
         27.5,
-        28.4
+        28.4,
+        22.8
       ],
       "last_year_high": [
         20.4,
@@ -343,7 +358,8 @@
       "this_year_low": [
         16.2,
         18.6,
-        19.9
+        19.9,
+        21.8
       ],
       "last_year_low": [
         15.0,
@@ -359,12 +375,14 @@
       "labels": [
         "5/25(月)",
         "5/26(火)",
-        "5/27(水)"
+        "5/27(水)",
+        "5/28(木)"
       ],
       "deviations": [
         1.7,
         2.7,
-        3.7
+        3.6,
+        1.9
       ],
       "baseline_avg": 20.3
     }
