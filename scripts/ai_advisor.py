@@ -1640,8 +1640,8 @@ def main():
 
 
 def demo_with_fake_alerts():
-    """デモ: 大雨警報・洪水警報がある状況をシミュレート"""
-    print(f"[{datetime.now(JST).isoformat()}] === デモモード: 大雨警報・洪水警報 ===")
+    """デモ: 大雨警報・河川氾濫警報がある状況をシミュレート"""
+    print(f"[{datetime.now(JST).isoformat()}] === デモモード: 大雨警報・河川氾濫警報 ===")
     
     # 1. データ収集（実データ）
     print("  → スプレッドシートからデータ取得中...")
@@ -1651,16 +1651,16 @@ def demo_with_fake_alerts():
     weather_data = fetch_weather_forecast()
     
     # 2. フェイク警報データを作成
-    print("  → [デモ] 大雨警報・洪水警報を追加...")
+    print("  → [デモ] 大雨警報・河川氾濫警報を追加...")
     fake_alerts = {
         'alerts': [
-            {'name': '大雨警報', 'code': '03', 'status': '発表'},
-            {'name': '洪水警報', 'code': '04', 'status': '発表'}
+            {'name': 'レベル3 大雨警報', 'code': '03', 'status': '発表'},
+            {'name': 'レベル3 河川氾濫警報', 'code': '44', 'status': '発表'}
         ],
         'special_warnings': [],
         'warnings': [
-            {'name': '大雨警報', 'code': '03', 'status': '発表'},
-            {'name': '洪水警報', 'code': '04', 'status': '発表'}
+            {'name': 'レベル3 大雨警報', 'code': '03', 'status': '発表'},
+            {'name': 'レベル3 河川氾濫警報', 'code': '44', 'status': '発表'}
         ],
         'advisories': [],
         'error': None
@@ -1681,7 +1681,7 @@ def demo_with_fake_alerts():
             'weather_temp': weather_data.get('current', {}).get('temperature'),
             'weather': weather_code_to_text(weather_data.get('current', {}).get('weather_code', 0)),
             'alerts_count': 2,
-            'fake_alerts': ['大雨警報', '洪水警報']
+            'fake_alerts': ['レベル3 大雨警報', 'レベル3 河川氾濫警報']
         }
     }
     

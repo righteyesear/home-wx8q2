@@ -322,7 +322,6 @@ export default {
                 '44': 'レベル3 河川氾濫警報' // 新設
             };
 
-            const specialWarnings = []; // レベル5
             const dangerWarnings = [];  // レベル4
             const regularWarnings = []; // レベル3
 
@@ -1187,10 +1186,9 @@ export default {
                                 if (area.code === '130014' || area.name?.includes('東部')) {
                                     for (const warning of (area.warnings || [])) {
                                         if ((warning.status === '発表' || warning.status === '継続') &&
-                                            ['03', '04', '05', '06', '07', '08'].includes(warning.code?.toString().padStart(2, '0'))) {
+                                             ['03', '05', '06', '07', '08', '09', '33', '38', '39', '40', '41', '42', '43', '44'].includes(warning.code?.toString().padStart(2, '0'))) {
                                             const warningNames = {
-                                                '03': '大雨', '04': '洪水', '05': '暴風',
-                                                '06': '大雪', '07': '波浪', '08': '高潮'
+                                                 '03': '大雨', '05': '暴風', '06': '大雪', '07': '波浪', '08': '高潮危険', '09': '土砂災害警報', '33': '大雨特別', '38': '高潮特別', '39': '氾濫特別', '40': '土砂災害特別', '41': '大雨危険', '42': '土砂災害危険', '43': '河川氾濫危険', '44': '河川氾濫'
                                             };
                                             activeWarnings.push(warningNames[warning.code?.toString().padStart(2, '0')] || '');
                                         }
