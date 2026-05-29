@@ -1,3 +1,7 @@
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
         :root {
             --bg-primary: #020617;
             /* Deepest Indigo/Black */
@@ -65,6 +69,7 @@
 
         html {
             height: 100%;
+            overflow-x: hidden;
             /* Noise texture overlay for entire app */
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
             background-attachment: fixed;
@@ -1199,6 +1204,7 @@
             max-width: 1440px;
             margin: 0 auto;
             padding: 32px;
+            box-sizing: border-box;
         }
 
         /* Header */
@@ -1779,10 +1785,15 @@
             margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px 12px; /* 縦横のギャップを指定 */
+            flex-wrap: wrap; /* コンテンツが溢れる場合は自動で折り返す */
             animation: alertPulse 2s ease-in-out infinite;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
         }
 
         .alert-banner.alert-warning {
@@ -1800,14 +1811,115 @@
             border-color: rgba(168, 85, 247, 0.4);
         }
 
+        /* 警戒レベル別（レベル2〜5）の新しい配色定義 */
+        .alert-banner.alert-level2 {
+            /* レベル2: アンバーイエロー（注意） */
+            background: linear-gradient(135deg, rgba(217, 119, 6, 0.2) 0%, rgba(217, 119, 6, 0.1) 100%);
+            border-color: rgba(217, 119, 6, 0.45);
+        }
+
+        .alert-banner.alert-level3 {
+            /* レベル3: クリムゾンレッド（警戒・高齢者等避難） */
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.2) 0%, rgba(220, 38, 38, 0.1) 100%);
+            border-color: rgba(220, 38, 38, 0.45);
+        }
+
+        .alert-banner.alert-level4 {
+            /* レベル4: エレクトリックパープル（全員避難・危険警報） */
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.25) 0%, rgba(147, 51, 234, 0.12) 100%);
+            border-color: rgba(147, 51, 234, 0.5);
+            box-shadow: 0 0 15px rgba(147, 51, 234, 0.2);
+        }
+
+        .alert-banner.alert-level5 {
+            /* レベル5: ディープブラック × 警告レッドネオン脈動（緊急安全確保・特別警報） */
+            background: linear-gradient(135deg, rgba(9, 9, 11, 0.95) 0%, rgba(24, 24, 27, 0.9) 100%);
+            border-color: #ef4444;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.35);
+            animation: alertPulse-level5 1.5s ease-in-out infinite;
+            color: #ffffff !important;
+        }
+
+        .alert-banner.alert-level5 #alertText {
+            color: #ffffff !important;
+        }
+
+        .alert-banner.alert-level5 .alert-link-hint {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+
+        @keyframes alertPulse-level5 {
+            0%, 100% {
+                box-shadow: 0 0 12px rgba(239, 68, 68, 0.25);
+                border-color: rgba(239, 68, 68, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 25px rgba(239, 68, 68, 0.6);
+                border-color: rgba(239, 68, 68, 1);
+            }
+        }
+
         .alert-icon {
             font-size: 1.3rem;
+            flex-shrink: 0;
         }
 
         #alertText {
             color: var(--text-primary);
             font-weight: 500;
-            flex: 1;
+            flex: 1 1 200px; /* flex-grow, shrink, basis を指定し、折り返し時の最低幅を200pxに制限 */
+            word-break: break-all;
+            min-width: 0;
+        }
+
+        .alert-meta {
+            display: inline;
+            margin-right: 8px;
+        }
+
+        .alert-location {
+            display: inline;
+        }
+
+        .alert-location::after {
+            content: ":";
+        }
+
+        .alert-time {
+            display: inline;
+            font-size: 0.85em;
+            opacity: 0.8;
+            margin-left: 6px;
+        }
+
+        .alert-time::before {
+            content: "(";
+        }
+
+        .alert-time::after {
+            content: ")";
+        }
+
+        .alert-groups {
+            display: inline;
+        }
+
+        .alert-group-item {
+            display: inline;
+        }
+
+        .alert-level-label {
+            display: inline;
+            font-weight: 600;
+            margin-right: 4px;
+        }
+
+        .alert-level-content {
+            display: inline;
+        }
+
+        .alert-group-separator {
+            display: inline;
         }
 
         .alert-link-hint {
@@ -1815,7 +1927,15 @@
             color: var(--text-secondary);
             opacity: 0.7;
             transition: opacity 0.3s ease;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: auto; /* 折り返し時に自動的に右下に寄せる */
+            align-self: flex-end;
         }
+
+
 
         .alert-banner:hover {
             transform: translateY(-2px);
@@ -2469,11 +2589,42 @@
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                overflow-x: hidden;
             }
 
             header {
                 flex-direction: column;
                 align-items: flex-start;
+                gap: 12px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .status-info {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                flex-wrap: wrap;
+            }
+
+            .weather-hero-info {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 12px 6px;
+                padding: 12px 10px;
+            }
+
+            .weather-hero-info-item {
+                padding: 0 8px;
+                min-width: 55px;
+                flex: 1 1 25%;
+            }
+
+            .weather-hero-info-divider {
+                display: none;
             }
 
             .main-stats {
@@ -2500,6 +2651,90 @@
             .footer-stats {
                 gap: 24px;
                 padding: 20px;
+            }
+
+            .alert-banner {
+                padding: 10px 14px 30px; /* 下にlink-hint用のスペース確保 */
+                position: relative;
+                flex-wrap: nowrap; /* アイコンとテキストは横並びのまま */
+            }
+
+            .alert-banner #alertText {
+                flex: 1 1 auto;
+                min-width: 0; /* flexbox内で確実に縮む */
+                font-size: 0.85rem;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                width: 100%;
+            }
+
+            .alert-banner .alert-meta {
+                display: flex;
+                justify-content: space-between; /* 左右に分散 */
+                align-items: center;
+                width: 100%;
+                margin-bottom: 2px;
+            }
+
+            .alert-banner .alert-location::after {
+                content: ""; /* モバイルではコロンを非表示 */
+            }
+
+            .alert-banner .alert-time {
+                font-size: 0.75rem; /* 小さく */
+                opacity: 0.7; /* 薄く */
+                margin-left: 0;
+            }
+
+            .alert-banner .alert-time::before,
+            .alert-banner .alert-time::after {
+                content: ""; /* モバイルでは括弧を非表示 */
+            }
+
+            .alert-banner .alert-groups {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                width: 100%;
+            }
+
+            .alert-banner .alert-group-item {
+                display: flex;
+                align-items: flex-start;
+                width: 100%;
+            }
+
+            .alert-banner .alert-level-label {
+                display: inline-block;
+                width: 58px; /* 「レベルX」が綺麗に入る幅 */
+                flex-shrink: 0;
+                font-weight: 600;
+                text-align: left;
+            }
+
+            .alert-banner .alert-level-content {
+                display: block;
+                flex-grow: 1;
+                word-break: break-all;
+                overflow-wrap: break-word;
+            }
+
+            .alert-banner .alert-group-separator {
+                display: none;
+            }
+
+            .alert-banner .alert-link-hint {
+                position: absolute;
+                right: 14px;
+                bottom: 6px;
+                margin-left: 0;
+                align-self: auto;
+                font-size: 0.75rem;
+            }
+
+            .alert-banner .alert-icon {
+                font-size: 1.1rem;
             }
         }
 

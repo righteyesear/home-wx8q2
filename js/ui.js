@@ -57,19 +57,47 @@ function updateDataAnalysis() {
 
 // JMA Warning Code to Name Mapping (気象庁防災情報XML公式コード - 完全版)
 const JMA_WARNING_NAMES = {
-    // 特別警報 (32-38)
-    '32': '暴風雪特別警報', '33': '大雨特別警報', '35': '暴風特別警報',
-    '36': '大雪特別警報', '37': '波浪特別警報', '38': '高潮特別警報',
-    // 警報 (02-08)
-    '02': '暴風雪警報', '03': '大雨警報', '04': '洪水警報',
-    '05': '暴風警報', '06': '大雪警報', '07': '波浪警報', '08': '高潮警報',
-    // 注意報 (10-26)
-    '10': '大雨注意報', '12': '大雪注意報', '13': '風雪注意報',
-    '14': '雷注意報', '15': '強風注意報', '16': '波浪注意報',
-    '17': '融雪注意報', '18': '洪水注意報', '19': '高潮注意報',
-    '20': '濃霧注意報', '21': '乾燥注意報', '22': 'なだれ注意報',
-    '23': '低温注意報', '24': '霜注意報', '25': '着氷注意報',
+    // 特別警報・レベル5相当 (32-39, 40)
+    '32': '暴風雪特別警報', 
+    '33': 'レベル5 大雨特別警報', 
+    '35': '暴風特別警報',
+    '36': '大雪特別警報', 
+    '37': '波浪特別警報', 
+    '38': 'レベル5 高潮特別警報',
+    '39': 'レベル5 氾濫特別警報', // 新設（河川氾濫特別警報）
+    '40': 'レベル5 土砂災害特別警報', // 新設
+
+    // 警報・レベル3/4相当 (02-08, 41-44)
+    '02': '暴風雪警報', 
+    '03': 'レベル3 大雨警報', 
+    '05': '暴風警報', 
+    '06': '大雪警報', 
+    '07': '波浪警報', 
+    '08': 'レベル4 高潮危険警報', // 旧高潮警報
+    '09': 'レベル3 土砂災害警報', // 新設
+    '41': 'レベル4 大雨危険警報', // 新設（大雨危険警報）
+    '42': 'レベル4 土砂災害危険警報', // 新設（土砂災害危険警報）
+    '43': 'レベル4 河川氾濫危険警報', // 新設（河川氾濫危険警報）
+    '44': 'レベル3 河川氾濫警報', // 新設（河川氾濫警報）
+
+    // 注意報・レベル2相当 (10-26, 45)
+    '10': 'レベル2 大雨注意報', 
+    '12': '大雪注意報', 
+    '13': '風雪注意報',
+    '14': '雷注意報', 
+    '15': '強風注意報', 
+    '16': '波浪注意報',
+    '17': '融雪注意報', 
+    '19': 'レベル2 高潮注意報',
+    '20': '濃霧注意報', 
+    '21': '乾燥注意報', 
+    '22': 'なだれ注意報',
+    '23': '低温注意報', 
+    '24': '霜注意報', 
+    '25': '着氷注意報',
     '26': '着雪注意報',
+    '45': 'レベル2 河川氾濫注意報', // 新設（河川氾濫注意報）
+
     // 津波警報・注意報
     '50': '津波警報解除', '51': '津波警報', '52': '大津波警報', '53': '大津波警報',
     '60': '津波注意報解除', '62': '津波注意報',
@@ -127,31 +155,81 @@ function updateAlertBanner(alerts, reportTime = null) {
         return;
     }
 
-    // Categorize alerts by priority
-    const specialWarnings = alerts.filter(a => a.name?.includes('特別警報'));
-    const warnings = alerts.filter(a => a.name?.includes('警報') && !a.name?.includes('特別'));
-    const advisories = alerts.filter(a => a.name?.includes('注意報'));
+    // 新たな防災気象情報の警戒レベル判定に基づいて分類するヘルパー
+    const isLevel5 = a => a.name?.includes('レベル5') || a.name?.includes('特別警報') || a.name?.includes('氾濫特別警報');
+    const isLevel4 = a => a.name?.includes('レベル4') || a.name?.includes('危険警報');
+    const isLevel3 = a => a.name?.includes('レベル3') || (a.name?.includes('警報') && !a.name?.includes('特別') && !a.name?.includes('危険'));
+    const isLevel2 = a => a.name?.includes('レベル2') || a.name?.includes('注意報');
 
-    // Build display text showing ALL alerts in priority order
+    // 複数あり、かつレベル3以上がある場合は、レベル2以下（注意報）を除外
+    let targetAlerts = [...alerts];
+    const hasLevel3OrAbove = alerts.some(a => isLevel5(a) || isLevel4(a) || isLevel3(a));
+
+    if (alerts.length > 1 && hasLevel3OrAbove) {
+        targetAlerts = alerts.filter(a => isLevel5(a) || isLevel4(a) || isLevel3(a));
+        if (targetAlerts.length === 0) {
+            targetAlerts = [...alerts];
+        }
+    }
+
+    // 分類
+    const level5Alerts = targetAlerts.filter(isLevel5);
+    const level4Alerts = targetAlerts.filter(isLevel4);
+    const level3Alerts = targetAlerts.filter(isLevel3);
+    const level2Alerts = targetAlerts.filter(isLevel2);
+    const otherAlerts = targetAlerts.filter(a => 
+        !isLevel5(a) && !isLevel4(a) && !isLevel3(a) && !isLevel2(a)
+    );
+
+    // プレフィックスを除去したコンテンツ文字列を結合するヘルパー
+    const getGroupContent = (group, prefix) => {
+        if (group.length === 0) return null;
+        const cleanedNames = group.map(a => {
+            let name = a.name || '';
+            // 先頭の「レベルX」とそれに続く空白を除去
+            name = name.replace(new RegExp(`^${prefix}\\s*`), '');
+            return name;
+        });
+        return cleanedNames.join('・');
+    };
+
+    // テキスト構築（構造化オブジェクト）
     const alertParts = [];
-    if (specialWarnings.length > 0) {
-        alertParts.push(specialWarnings.map(a => a.name).join('・'));
+    if (level5Alerts.length > 0) {
+        const content = getGroupContent(level5Alerts, 'レベル5');
+        if (content) alertParts.push({ prefix: 'レベル5', content });
     }
-    if (warnings.length > 0) {
-        alertParts.push(warnings.map(a => a.name).join('・'));
+    if (level4Alerts.length > 0) {
+        const content = getGroupContent(level4Alerts, 'レベル4');
+        if (content) alertParts.push({ prefix: 'レベル4', content });
     }
-    if (advisories.length > 0) {
-        alertParts.push(advisories.map(a => a.name).join('・'));
+    if (level3Alerts.length > 0) {
+        const content = getGroupContent(level3Alerts, 'レベル3');
+        if (content) alertParts.push({ prefix: 'レベル3', content });
+    }
+    if (level2Alerts.length > 0) {
+        const content = getGroupContent(level2Alerts, 'レベル2');
+        if (content) alertParts.push({ prefix: 'レベル2', content });
+    }
+    if (otherAlerts.length > 0) {
+        const content = otherAlerts.map(a => a.name).join('・');
+        alertParts.push({ prefix: '', content });
     }
 
-    // Determine banner style by highest priority
+    // Determine banner style and icon by highest active level
     let className, icon;
-    if (specialWarnings.length > 0) {
-        className = 'alert-special';
-        icon = '🚨';
-    } else if (warnings.length > 0) {
-        className = 'alert-severe';
-        icon = '⚠️';
+    if (level5Alerts.length > 0) {
+        className = 'alert-level5';
+        icon = '🔴'; // レベル5: 赤丸（極大警告）
+    } else if (level4Alerts.length > 0) {
+        className = 'alert-level4';
+        icon = '🟪'; // レベル4: 紫（避難指示）
+    } else if (level3Alerts.length > 0) {
+        className = 'alert-level3';
+        icon = '🚨'; // レベル3: 赤警報（高齢者等避難）
+    } else if (level2Alerts.length > 0) {
+        className = 'alert-level2';
+        icon = '🟨'; // レベル2: 黄（注意）
     } else {
         className = 'alert-warning';
         icon = '🔔';
@@ -161,10 +239,34 @@ function updateAlertBanner(alerts, reportTime = null) {
     let timeStr = '';
     if (reportTime) {
         const dt = new Date(reportTime);
-        timeStr = ` (${dt.getHours()}:${dt.getMinutes().toString().padStart(2, '0')}発表)`;
+        timeStr = `${dt.getHours()}:${dt.getMinutes().toString().padStart(2, '0')}発表`;
     }
 
-    alertText.textContent = `葛飾区: ${alertParts.join(' / ')}${timeStr}`;
+    // HTML組み立て
+    let htmlContent = '';
+    htmlContent += `<span class="alert-meta">`;
+    htmlContent += `<span class="alert-location">葛飾区</span>`;
+    if (timeStr) {
+        htmlContent += `<span class="alert-time">${timeStr}</span>`;
+    }
+    htmlContent += `</span>`;
+    
+    htmlContent += `<span class="alert-groups">`;
+    alertParts.forEach((part, index) => {
+        const separator = index > 0 ? `<span class="alert-group-separator"> / </span>` : '';
+        htmlContent += separator;
+        htmlContent += `<span class="alert-group-item">`;
+        if (part.prefix) {
+            htmlContent += `<span class="alert-level-label">${part.prefix}</span>`;
+            htmlContent += `<span class="alert-level-content">${part.content}</span>`;
+        } else {
+            htmlContent += `<span class="alert-level-content">${part.content}</span>`;
+        }
+        htmlContent += `</span>`;
+    });
+    htmlContent += `</span>`;
+
+    alertText.innerHTML = htmlContent;
     alertIcon.textContent = icon;
     banner.className = `alert-banner ${className}`;
     banner.style.display = 'flex';

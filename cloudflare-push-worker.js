@@ -113,12 +113,12 @@ export default {
                     body: '通知システムが正常に動作しています！'
                 },
                 warning: {
-                    title: '【テスト】🚨 気象警報',
-                    body: `大雨警報 暴風警報（${timeStr}発表）\n※これはテスト通知です`
+                    title: '【テスト】🟪 危険警報',
+                    body: `レベル4 土砂災害危険警報 レベル3 大雨警報（${timeStr}発表）\n危険な場所から全員避難！\n※これはテスト通知です`
                 },
                 special: {
                     title: '【テスト】🔴 特別警報',
-                    body: `大雨特別警報（${timeStr}発表）\n命を守る行動を！\n※これはテスト通知です`
+                    body: `レベル5 氾濫特別警報 レベル5 大雨特別警報（${timeStr}発表）\n命を守る最善の行動を！\n※これはテスト通知です`
                 },
                 rain: {
                     title: '【テスト】🌧️ 雨雲接近',
@@ -296,15 +296,35 @@ export default {
             const warnings = [];
             const specialWarnings = [];
 
-            // 特別警報・警報コード対応表（注意報は除外）
+            // 特別警報・レベル5相当コード対応表（注意報は除外）
             const SPECIAL_WARNINGS = {
-                '32': '暴風雪特別警報', '33': '大雨特別警報', '35': '暴風特別警報',
-                '36': '大雪特別警報', '37': '波浪特別警報', '38': '高潮特別警報'
+                '32': '暴風雪特別警報', 
+                '33': 'レベル5 大雨特別警報', 
+                '35': '暴風特別警報',
+                '36': '大雪特別警報', 
+                '37': '波浪特別警報', 
+                '38': 'レベル5 高潮特別警報',
+                '39': 'レベル5 氾濫特別警報', // 新設
+                '40': 'レベル5 土砂災害特別警報' // 新設
             };
+            // 警報・危険警報（レベル3/4相当）コード対応表（注意報は除外）
             const WARNINGS = {
-                '02': '暴風雪警報', '03': '大雨警報', '04': '洪水警報',
-                '05': '暴風警報', '06': '大雪警報', '07': '波浪警報', '08': '高潮警報'
+                '02': '暴風雪警報', 
+                '03': 'レベル3 大雨警報', 
+                '05': '暴風警報', 
+                '06': '大雪警報', 
+                '07': '波浪警報', 
+                '08': 'レベル4 高潮危険警報',
+                '09': 'レベル3 土砂災害警報',
+                '41': 'レベル4 大雨危険警報', // 新設
+                '42': 'レベル4 土砂災害危険警報', // 新設
+                '43': 'レベル4 河川氾濫危険警報', // 新設
+                '44': 'レベル3 河川氾濫警報' // 新設
             };
+
+            const specialWarnings = []; // レベル5
+            const dangerWarnings = [];  // レベル4
+            const regularWarnings = []; // レベル3
 
             if (data.areaTypes) {
                 for (const areaType of data.areaTypes) {
@@ -313,10 +333,17 @@ export default {
                             for (const warning of (area.warnings || [])) {
                                 if (warning.status === '発表' || warning.status === '継続') {
                                     const code = warning.code?.toString().padStart(2, '0') || '';
-                                    if (SPECIAL_WARNINGS[code]) {
-                                        specialWarnings.push(SPECIAL_WARNINGS[code]);
-                                    } else if (WARNINGS[code]) {
-                                        warnings.push(WARNINGS[code]);
+                                    
+                                    // 辞書マッピングまたはAPIが返す名称を使用
+                                    const name = warning.name || SPECIAL_WARNINGS[code] || WARNINGS[code];
+                                    if (!name) continue;
+
+                                    if (SPECIAL_WARNINGS[code] || name.includes('レベル5') || name.includes('特別警報') || name.includes('氾濫特別警報')) {
+                                        specialWarnings.push(name);
+                                    } else if (name.includes('レベル4') || name.includes('危険警報')) {
+                                        dangerWarnings.push(name);
+                                    } else if (WARNINGS[code] || name.includes('レベル3') || name.includes('警報')) {
+                                        regularWarnings.push(name);
                                     }
                                 }
                             }
@@ -329,7 +356,7 @@ export default {
                 hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tokyo'
             }) : '';
 
-            // 特別警報通知（最優先）- 個別の警報タイプごとにチェック
+            // 1. 特別警報通知（最優先・レベル5相当）
             if (specialWarnings.length > 0) {
                 const newSpecialWarnings = [];
                 for (const w of specialWarnings) {
@@ -342,16 +369,35 @@ export default {
                 if (newSpecialWarnings.length > 0) {
                     await this.sendToAll(env, {
                         title: '🔴 特別警報',
-                        body: `${newSpecialWarnings.join(' ')}（${timeStr}発表）\n命を守る行動を！`,
+                        body: `${newSpecialWarnings.join(' ')}（${timeStr}発表）\n命を守る最善の行動をとってください！`,
                         data: { url: './#alertBanner' }
                     });
                 }
             }
 
-            // 警報通知 - 個別の警報タイプごとにチェック
-            if (warnings.length > 0) {
+            // 2. 危険警報通知（全員避難・レベル4相当）
+            if (dangerWarnings.length > 0) {
+                const newDangerWarnings = [];
+                for (const w of dangerWarnings) {
+                    const key = 'notify_danger_' + w.replace(/\s/g, '');
+                    if (!await env.KV.get(key)) {
+                        newDangerWarnings.push(w);
+                        await env.KV.put(key, 'true', { expirationTtl: 21600 }); // 6時間
+                    }
+                }
+                if (newDangerWarnings.length > 0) {
+                    await this.sendToAll(env, {
+                        title: '🟪 危険警報',
+                        body: `${newDangerWarnings.join(' ')}（${timeStr}発表）\n危険な場所から全員避難してください！`,
+                        data: { url: './#alertBanner' }
+                    });
+                }
+            }
+
+            // 3. 警報通知（高齢者等避難・レベル3相当）
+            if (regularWarnings.length > 0) {
                 const newWarnings = [];
-                for (const w of warnings) {
+                for (const w of regularWarnings) {
                     const key = 'notify_warning_' + w.replace(/\s/g, '');
                     if (!await env.KV.get(key)) {
                         newWarnings.push(w);
@@ -361,13 +407,17 @@ export default {
                 if (newWarnings.length > 0) {
                     await this.sendToAll(env, {
                         title: '🚨 気象警報',
-                        body: `${newWarnings.join(' ')}（${timeStr}発表）`,
+                        body: `${newWarnings.join(' ')}（${timeStr}発表）\n高齢者等の方は避難を開始してください`,
                         data: { url: './#alertBanner' }
                     });
                 }
             }
 
-            return { warnings, specialWarnings };
+            return { 
+                warnings: [...regularWarnings, ...dangerWarnings], // 後方互換性のため両方含める
+                dangerWarnings, 
+                specialWarnings 
+            };
         } catch (e) {
             console.error('[JMA Error]', e.message);
             return { warnings: [], specialWarnings: [] };

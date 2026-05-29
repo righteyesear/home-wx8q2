@@ -10,3 +10,15 @@ __pycache__/
 
 # Backups
 backups/
+
+# Local backup & debug files
+*.bak
+index_temp_*.html
+index_old.html
+index_backup_*.html
+index.html.backup_*
+temp_extract.html
+precipitation_sample.json
+*.lnk
+*.code-workspace
+.vscode/
