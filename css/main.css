@@ -2589,10 +2589,6 @@
         @media (max-width: 768px) {
             .container {
                 padding: 20px;
-                width: 100%;
-                max-width: 100%;
-                box-sizing: border-box;
-                overflow-x: hidden;
             }
 
             header {
