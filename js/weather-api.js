@@ -96,6 +96,73 @@ async function fetchAll() {
     // Phase 1A+1Bを待機（軽量シート + 天気API）
     await Promise.all(phase1Promises);
 
+    // =====================================================
+    // センサー異常データ（気温0.0℃かつ湿度0.0%）のクレンジング＆補完
+    // =====================================================
+    let isCurrentTempBug = (summaryData.currentTemp === 0.0 && summaryData.currentHumidity === 0.0);
+
+    if (isCurrentTempBug) {
+        console.warn('⚠ センサー現在値に異常値(0.0℃/0.0%)を検出しました。補正処理を実行します。');
+        
+        // 1. 直近データの最新正常レコードから補完を試みる
+        let recovered = false;
+        if (recentData && recentData.length > 0) {
+            // recentDataは既にparseRecentCSVでクレンジング済み
+            const latestRecord = recentData[recentData.length - 1];
+            if (latestRecord && !(latestRecord.temperature === 0.0 && latestRecord.humidity === 0.0)) {
+                summaryData.currentTemp = latestRecord.temperature;
+                summaryData.currentHumidity = latestRecord.humidity;
+                recovered = true;
+                console.log(`✓ 直近データの最新正常値で補正しました: ${summaryData.currentTemp}℃ / ${summaryData.currentHumidity}%`);
+            }
+        }
+        
+        // 2. 直近データが利用できない場合は localStorage キャッシュから補完
+        if (!recovered) {
+            const cachedTemp = localStorage.getItem('lastValidTemp');
+            const cachedHumid = localStorage.getItem('lastValidHumidity');
+            if (cachedTemp !== null && cachedHumid !== null) {
+                summaryData.currentTemp = parseFloat(cachedTemp);
+                summaryData.currentHumidity = parseFloat(cachedHumid);
+                console.log(`✓ localStorage キャッシュ値で補正しました: ${summaryData.currentTemp}℃ / ${summaryData.currentHumidity}%`);
+            }
+        }
+    } else {
+        // 正常値の場合は次回補正用に localStorage キャッシュを更新
+        if (summaryData.currentTemp !== undefined && summaryData.currentHumidity !== undefined) {
+            localStorage.setItem('lastValidTemp', summaryData.currentTemp);
+            localStorage.setItem('lastValidHumidity', summaryData.currentHumidity);
+        }
+    }
+
+    // 今日の最高・最低気温のバグデータ汚染チェック (0.0℃バグによって最低気温が0.0℃等に歪んでいる場合の補正)
+    if (recentData && recentData.length > 0) {
+        const todayStr = new Date().toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' });
+        const todayRecords = recentData.filter(d => {
+            const dStr = d.date.toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' });
+            return dStr === todayStr;
+        });
+
+        if (todayRecords.length > 0) {
+            const temps = todayRecords.map(r => r.temperature);
+            const calculatedHigh = Math.max(...temps);
+            const calculatedLow = Math.min(...temps);
+
+            // 最高または最低気温が 0.0℃ のバグ値で汚染され、かつ本日の実測データ（正常値）に 0.0℃ 以外のデータが存在する場合に上書き補正
+            if (summaryData.todayHigh === 0.0 && calculatedHigh !== 0.0) {
+                summaryData.todayHigh = calculatedHigh;
+                console.log(`✓ 今日の最高気温を実測値で補正しました: ${summaryData.todayHigh}℃`);
+            }
+            if (summaryData.todayLow === 0.0 && calculatedLow !== 0.0) {
+                summaryData.todayLow = calculatedLow;
+                console.log(`✓ 今日の最低気温を実測値で補正しました: ${summaryData.todayLow}℃`);
+            }
+        }
+    }
+
+    // 補正後の値で UI を再更新
+    updateUI();
+
     // 更新時刻を表示
     document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
     document.querySelectorAll('.chart-skeleton').forEach(el => el.classList.add('hidden'));

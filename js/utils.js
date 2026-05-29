@@ -232,12 +232,23 @@ function parseDailyCSV(csv) {
 }
 
 function parseRecentCSV(csv) {
-    return csv.trim().split(/\r?\n/).slice(1).map(line => {
+    const records = csv.trim().split(/\r?\n/).slice(1).map(line => {
         let [dateStr, temp, humidity] = line.split(',').map(v => v.replace(/"/g, ''));
         dateStr = dateStr.replace(/ (\d):/, ' 0$1:');
         const d = new Date(dateStr.replace(' ', 'T'));
         return !isNaN(d) && !isNaN(parseFloat(temp)) ? { date: d, temperature: parseFloat(temp), humidity: parseFloat(humidity) } : null;
     }).filter(Boolean).sort((a, b) => a.date - b.date);
+
+    // 気温0.0かつ湿度0.0をセンサーバグ（異常値）とし、直前の正常なデータで補完
+    for (let i = 0; i < records.length; i++) {
+        if (records[i].temperature === 0.0 && records[i].humidity === 0.0) {
+            if (i > 0) {
+                records[i].temperature = records[i - 1].temperature;
+                records[i].humidity = records[i - 1].humidity;
+            }
+        }
+    }
+    return records;
 }
 
 // Simple markdown to HTML converter

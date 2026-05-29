@@ -288,6 +288,19 @@ function initChartReordering() {
         }, { passive: true });
 
         handle.addEventListener('touchmove', (e) => {
+            if (!isTouchDragging) {
+                // 指が動いたことを検知し、一定距離（8px）以上動いた場合は長押しタイマーをキャンセルする
+                const touch = e.touches[0];
+                const moveY = Math.abs(touch.clientY - touchStartY);
+                const moveX = Math.abs(touch.clientX - touchStartX);
+                if (moveY > 8 || moveX > 8) {
+                    if (longPressTimer) {
+                        clearTimeout(longPressTimer);
+                        longPressTimer = null;
+                    }
+                }
+            }
+
             if (!isTouchDragging || !draggedElement) return;
 
             e.preventDefault();
