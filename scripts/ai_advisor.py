@@ -779,9 +779,28 @@ def analyze_with_gemini(spreadsheet_data: Dict, weather_data: Dict, alerts_data:
     api_humidity = current_weather.get('humidity', 50) or 50
     actual_feels_like = calculate_feels_like(api_temp, api_humidity, api_wind_speed)
     
-    # センサーの体感温度も計算
+    # センサーの体感温度も計算（現在値がバグ（気温0.0℃かつ湿度0%）の場合は最新の正常値で補正）
     sensor_temp = spreadsheet_data.get('current', {}).get('temperature', api_temp) or api_temp
     sensor_humidity = spreadsheet_data.get('current', {}).get('humidity', api_humidity) or api_humidity
+    if sensor_temp == 0.0 and sensor_humidity == 0.0:
+        raw_records = spreadsheet_data.get('raw_records', [])
+        latest_normal = None
+        for r in reversed(raw_records):
+            try:
+                t = float(r.get('temperature', 0.0))
+                h = float(r.get('humidity', 0.0))
+                if not (t == 0.0 and h == 0.0):
+                    latest_normal = (t, h)
+                    break
+            except:
+                continue
+        if latest_normal:
+            sensor_temp, sensor_humidity = latest_normal
+            print(f"  → センサー現在値バグ検出。最新正常値で補正: {sensor_temp}℃ / {sensor_humidity}%")
+        else:
+            sensor_temp, sensor_humidity = api_temp, api_humidity
+            print(f"  → センサー現在値バグ検出。フォールバックでAPI値を使用: {sensor_temp}℃ / {sensor_humidity}%")
+            
     sensor_feels_like = calculate_feels_like(sensor_temp, sensor_humidity, api_wind_speed)
     
     # 月齢・暦情報を取得（moon_data.json から優先的に読み込み）

@@ -54,8 +54,19 @@ def analyze_data_comprehensive(all_records: List[Dict]) -> Dict[str, Any]:
     for r in all_records:
         r['parsed_dt'] = parse_datetime(r.get('datetime', ''))
     
-    # 有効なレコードのみフィルタ
-    valid_records = [r for r in all_records if r['parsed_dt'] is not None]
+    # 有効なレコードかつセンサー異常（気温0.0かつ湿度0.0）でないものをフィルタ
+    valid_records = []
+    for r in all_records:
+        if r['parsed_dt'] is not None:
+            try:
+                temp = float(r.get('temperature', 0.0))
+                humid = float(r.get('humidity', 0.0))
+                if temp == 0.0 and humid == 0.0:
+                    continue  # 異常データを除外
+                valid_records.append(r)
+            except (ValueError, TypeError):
+                continue
+    
     valid_records.sort(key=lambda x: x['parsed_dt'])
     
     if not valid_records:

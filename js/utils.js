@@ -224,11 +224,39 @@ function parseSummaryCSV(csv) {
 }
 
 function parseDailyCSV(csv) {
-    return csv.trim().split(/\r?\n/).slice(1).map(line => {
+    const records = csv.trim().split(/\r?\n/).slice(1).map(line => {
         const [dateStr, max, min] = line.split(',').map(v => v.replace(/"/g, ''));
         const d = new Date(dateStr);
         return !isNaN(d) && !isNaN(parseFloat(max)) ? { date: d, max: parseFloat(max), min: parseFloat(min) } : null;
     }).filter(Boolean).sort((a, b) => a.date - b.date);
+
+    // 最高0.0かつ最低0.0をセンサーバグ（異常値）とし、前後の正常なデータで補完
+    for (let i = 0; i < records.length; i++) {
+        if (records[i].max === 0.0 && records[i].min === 0.0) {
+            let foundNormal = false;
+            // 1. 直前の正常な日から補完
+            for (let j = i - 1; j >= 0; j--) {
+                if (!(records[j].max === 0.0 && records[j].min === 0.0)) {
+                    records[i].max = records[j].max;
+                    records[i].min = records[j].min;
+                    foundNormal = true;
+                    break;
+                }
+            }
+            // 2. なければ直後の正常な日から補完
+            if (!foundNormal) {
+                for (let j = i + 1; j < records.length; j++) {
+                    if (!(records[j].max === 0.0 && records[j].min === 0.0)) {
+                        records[i].max = records[j].max;
+                        records[i].min = records[j].min;
+                        foundNormal = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    return records;
 }
 
 function parseRecentCSV(csv) {
@@ -239,12 +267,29 @@ function parseRecentCSV(csv) {
         return !isNaN(d) && !isNaN(parseFloat(temp)) ? { date: d, temperature: parseFloat(temp), humidity: parseFloat(humidity) } : null;
     }).filter(Boolean).sort((a, b) => a.date - b.date);
 
-    // 気温0.0かつ湿度0.0をセンサーバグ（異常値）とし、直前の正常なデータで補完
+    // 気温0.0かつ湿度0.0をセンサーバグ（異常値）とし、前後の正常なデータで補完
     for (let i = 0; i < records.length; i++) {
         if (records[i].temperature === 0.0 && records[i].humidity === 0.0) {
-            if (i > 0) {
-                records[i].temperature = records[i - 1].temperature;
-                records[i].humidity = records[i - 1].humidity;
+            let foundNormal = false;
+            // 1. 直前の正常値を探す
+            for (let j = i - 1; j >= 0; j--) {
+                if (!(records[j].temperature === 0.0 && records[j].humidity === 0.0)) {
+                    records[i].temperature = records[j].temperature;
+                    records[i].humidity = records[j].humidity;
+                    foundNormal = true;
+                    break;
+                }
+            }
+            // 2. なければ直後の正常値を探す
+            if (!foundNormal) {
+                for (let j = i + 1; j < records.length; j++) {
+                    if (!(records[j].temperature === 0.0 && records[j].humidity === 0.0)) {
+                        records[i].temperature = records[j].temperature;
+                        records[i].humidity = records[j].humidity;
+                        foundNormal = true;
+                        break;
+                    }
+                }
             }
         }
     }
