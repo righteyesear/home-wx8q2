@@ -7,7 +7,7 @@
     "end_date": "2026-05-31",
     "label": "2026年5月"
   },
-  "generated_at": "2026-05-30T07:26:33.541705+09:00",
+  "generated_at": "2026-05-30T11:15:13.197605+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -26,11 +26,11 @@
       "avg_temp_stdev": 3.0,
       "max_temp": 31.8,
       "max_temp_date": "2026/05/29",
-      "avg_high": 25.6,
+      "avg_high": 25.8,
       "min_temp": 11.2,
       "min_temp_date": "2026/05/01",
       "avg_low": 16.5,
-      "avg_daily_range": 9.1,
+      "avg_daily_range": 9.3,
       "prev_month_diff": 4.0,
       "prev_year_diff": 1.2
     },
@@ -270,10 +270,10 @@
       {
         "date": "2026/05/30",
         "weekday": "土",
-        "high": 23.3,
+        "high": 29.5,
         "low": 19.5,
-        "avg": 21.1,
-        "range": 3.8
+        "avg": 22.7,
+        "range": 10.0
       }
     ],
     "weekly_breakdown": [
@@ -342,15 +342,15 @@
         "end_date": "2026-05-31",
         "label": "5/29〜5/31",
         "days": 2,
-        "avg_temp": 23.9,
-        "avg_temp_stdev": 4.0,
+        "avg_temp": 24.7,
+        "avg_temp_stdev": 2.8,
         "max_temp": 31.8,
         "max_temp_date": "2026/05/29",
-        "avg_high": 27.6,
+        "avg_high": 30.6,
         "min_temp": 19.5,
         "min_temp_date": "2026/05/30",
         "avg_low": 21.1,
-        "avg_daily_range": 6.4
+        "avg_daily_range": 9.5
       }
     ],
     "comparison": {
@@ -372,7 +372,7 @@
       "avg_temp_diff": 1.2,
       "max_temp_diff": 1.8,
       "min_temp_diff": -1.5,
-      "avg_daily_range_diff": 1.6,
+      "avg_daily_range_diff": 1.8,
       "ai_comment": "昨年は最高気温が30度に達するなど初夏を思わせる陽気でしたが、今年は平均気温が約8度も低く、季節が逆戻りしたような異例の涼しさです。特に最高気温の差が15度以上もあり、昨年のような突き抜けるような暑さは一切見られません。\n\n注目すべきは日較差の小ささです。昨年は昼夜の寒暖差が激しい「晴天型」の推移でしたが、今年は一日を通して気温の変化が乏しく、どんよりとした低温が続く「停滞型」のパターンとなっています。太陽の光が届きにくく、日中も空気がひんやりと感じられるのが今年の特徴です。\n\n昨年の今頃は半袖で過ごせましたが、今年は厚手の羽織りものが手放せません。体調管理はもちろん、衣替えのタイミングを遅らせるなど、例年とは違う「冷え」への対策を意識して過ごしましょう。🌡️"
     },
     "prev_month": {
@@ -392,7 +392,7 @@
       "avg_temp_diff": 4.0,
       "max_temp_diff": 4.7,
       "min_temp_diff": 2.9,
-      "avg_daily_range_diff": 0.3,
+      "avg_daily_range_diff": 0.5,
       "ai_comment": ""
     },
     "baseline": {
@@ -414,11 +414,6 @@
           "date": "2026/05/21",
           "type": "rapid_change",
           "description": "平均気温が前日比-6.1℃の急低下"
-        },
-        {
-          "date": "2026/05/30",
-          "type": "rapid_change",
-          "description": "平均気温が前日比-5.6℃の急低下"
         }
       ],
       "ai_comment": ""
@@ -679,7 +674,7 @@
         28.4,
         29.2,
         31.8,
-        23.3
+        29.5
       ],
       "lows": [
         11.2,
@@ -743,7 +738,7 @@
         23.9,
         25.1,
         26.7,
-        21.1
+        22.7
       ]
     },
     "prev_year_comparison": {
@@ -809,7 +804,7 @@
         23.9,
         25.1,
         26.7,
-        21.1
+        22.7
       ],
       "last_year": [
         19.0,
@@ -874,7 +869,7 @@
         28.4,
         29.2,
         31.8,
-        23.3
+        29.5
       ],
       "last_year_high": [
         24.6,
@@ -1038,7 +1033,7 @@
         3.8,
         5.0,
         6.6,
-        1.0
+        2.6
       ],
       "baseline_avg": 20.1
     },
@@ -1055,14 +1050,14 @@
         20.7,
         22.0,
         20.2,
-        23.9
+        24.7
       ],
       "highs": [
         24.4,
         25.8,
         27.6,
         24.3,
-        27.6
+        30.6
       ],
       "lows": [
         15.0,
