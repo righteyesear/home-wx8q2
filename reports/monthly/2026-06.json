@@ -7,41 +7,41 @@
     "end_date": "2026-06-30",
     "label": "2026年6月"
   },
-  "generated_at": "2026-06-01T11:49:55.424252+09:00",
+  "generated_at": "2026-06-01T14:00:44.305220+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
-      "ai_comment": "",
+      "ai_comment": "分析中にエラーが発生しました: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}",
       "highlights": [
-        "月平均 24.2℃",
-        "最高 32.7℃",
-        "前月比 +3.2℃",
-        "前年比 -1.4℃"
+        "月平均 25.7℃",
+        "最高 34.1℃",
+        "前月比 +4.7℃",
+        "前年比 +0.1℃"
       ]
     },
     "statistics": {
       "title": "月間統計",
       "days": 1,
-      "avg_temp": 24.2,
+      "avg_temp": 25.7,
       "avg_temp_stdev": 0,
-      "max_temp": 32.7,
+      "max_temp": 34.1,
       "max_temp_date": "2026/06/01",
-      "avg_high": 32.7,
+      "avg_high": 34.1,
       "min_temp": 20.6,
       "min_temp_date": "2026/06/01",
       "avg_low": 20.6,
-      "avg_daily_range": 12.1,
-      "prev_month_diff": 3.2,
-      "prev_year_diff": -1.4
+      "avg_daily_range": 13.5,
+      "prev_month_diff": 4.7,
+      "prev_year_diff": 0.1
     },
     "daily_data": [
       {
         "date": "2026/06/01",
         "weekday": "月",
-        "high": 32.7,
+        "high": 34.1,
         "low": 20.6,
-        "avg": 24.2,
-        "range": 12.1
+        "avg": 25.7,
+        "range": 13.5
       }
     ],
     "weekly_breakdown": [
@@ -50,15 +50,15 @@
         "end_date": "2026-06-07",
         "label": "6/1〜6/7",
         "days": 1,
-        "avg_temp": 24.2,
+        "avg_temp": 25.7,
         "avg_temp_stdev": 0,
-        "max_temp": 32.7,
+        "max_temp": 34.1,
         "max_temp_date": "2026/06/01",
-        "avg_high": 32.7,
+        "avg_high": 34.1,
         "min_temp": 20.6,
         "min_temp_date": "2026/06/01",
         "avg_low": 20.6,
-        "avg_daily_range": 12.1
+        "avg_daily_range": 13.5
       }
     ],
     "comparison": {
@@ -77,11 +77,11 @@
         "avg_low": 22.3,
         "avg_daily_range": 7.7
       },
-      "avg_temp_diff": -1.4,
-      "max_temp_diff": -3.6,
+      "avg_temp_diff": 0.1,
+      "max_temp_diff": -2.2,
       "min_temp_diff": 4.6,
-      "avg_daily_range_diff": 4.4,
-      "ai_comment": ""
+      "avg_daily_range_diff": 5.8,
+      "ai_comment": "分析中にエラーが発生しました: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
     },
     "prev_month": {
       "title": "前月比較",
@@ -97,16 +97,16 @@
         "avg_low": 16.7,
         "avg_daily_range": 9.3
       },
-      "avg_temp_diff": 3.2,
-      "max_temp_diff": 0.9,
+      "avg_temp_diff": 4.7,
+      "max_temp_diff": 2.3,
       "min_temp_diff": 9.4,
-      "avg_daily_range_diff": 2.8,
+      "avg_daily_range_diff": 4.2,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 24.8,
-      "current_deviation": -0.6,
+      "current_deviation": 0.9,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -301,12 +301,16 @@
             "low": 11.2
           },
           "6": {
-            "avg": 24.2,
-            "high": 32.7,
+            "avg": 25.7,
+            "high": 34.1,
             "low": 20.6
           }
         }
       }
+    },
+    "trend_analysis": {
+      "title": "気温推移の分析",
+      "ai_comment": "分析中にエラーが発生しました: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
     }
   },
   "chart_data": {
@@ -315,13 +319,13 @@
         "1日"
       ],
       "highs": [
-        32.7
+        34.1
       ],
       "lows": [
         20.6
       ],
       "avgs": [
-        24.2
+        25.7
       ]
     },
     "prev_year_comparison": {
@@ -329,7 +333,7 @@
         "1日"
       ],
       "this_year": [
-        24.2
+        25.7
       ],
       "last_year": [
         19.6,
@@ -364,7 +368,7 @@
         29.4
       ],
       "this_year_high": [
-        32.7
+        34.1
       ],
       "last_year_high": [
         24.6,
@@ -439,7 +443,7 @@
         "6/1(月)"
       ],
       "deviations": [
-        -0.6
+        0.9
       ],
       "baseline_avg": 24.8
     },
@@ -448,10 +452,10 @@
         "6/1〜6/7"
       ],
       "avgs": [
-        24.2
+        25.7
       ],
       "highs": [
-        32.7
+        34.1
       ],
       "lows": [
         20.6
