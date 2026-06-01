@@ -7,7 +7,7 @@
     "end_date": "2026-06-07",
     "label": "2026年 第23週（6/1 〜 6/7）"
   },
-  "generated_at": "2026-06-01T17:27:19.503943+09:00",
+  "generated_at": "2026-06-01T23:52:58.216719+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -15,14 +15,14 @@
       "highlights": [
         "最高気温 34.1℃",
         "最低気温 20.6℃",
-        "前週比 +2.3℃",
-        "前年比 +4.5℃"
+        "前週比 +1.7℃",
+        "前年比 +3.9℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 1,
-      "avg_temp": 26.8,
+      "avg_temp": 26.2,
       "avg_temp_stdev": 0,
       "max_temp": 34.1,
       "max_temp_date": "2026/06/01",
@@ -31,8 +31,8 @@
       "min_temp_date": "2026/06/01",
       "avg_low": 20.6,
       "avg_daily_range": 13.5,
-      "prev_week_diff": 2.3,
-      "prev_year_diff": 4.5
+      "prev_week_diff": 1.7,
+      "prev_year_diff": 3.9
     },
     "daily_data": [
       {
@@ -40,7 +40,7 @@
         "weekday": "月",
         "high": 34.1,
         "low": 20.6,
-        "avg": 26.8,
+        "avg": 26.2,
         "range": 13.5
       }
     ],
@@ -60,7 +60,7 @@
         "avg_low": 18.3,
         "avg_daily_range": 8.6
       },
-      "avg_temp_diff": 4.5,
+      "avg_temp_diff": 3.9,
       "max_temp_diff": 4.2,
       "min_temp_diff": 4.6,
       "avg_daily_range_diff": 4.9,
@@ -69,7 +69,7 @@
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 21.7,
-      "current_deviation": 5.1,
+      "current_deviation": 4.5,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -264,7 +264,7 @@
             "low": 11.2
           },
           "6": {
-            "avg": 26.8,
+            "avg": 26.2,
             "high": 34.1,
             "low": 20.6
           }
@@ -284,7 +284,7 @@
         20.6
       ],
       "avgs": [
-        26.8
+        26.2
       ]
     },
     "prev_year_comparison": {
@@ -292,7 +292,7 @@
         "月"
       ],
       "this_year": [
-        26.8
+        26.2
       ],
       "last_year": [
         19.6,
@@ -333,7 +333,7 @@
         "6/1(月)"
       ],
       "deviations": [
-        5.1
+        4.5
       ],
       "baseline_avg": 21.7
     }
