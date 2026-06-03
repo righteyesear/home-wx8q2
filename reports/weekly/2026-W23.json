@@ -7,7 +7,7 @@
     "end_date": "2026-06-07",
     "label": "2026年 第23週（6/1 〜 6/7）"
   },
-  "generated_at": "2026-06-03T11:54:31.412915+09:00",
+  "generated_at": "2026-06-03T17:09:36.738722+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -26,11 +26,11 @@
       "avg_temp_stdev": 3.8,
       "max_temp": 34.1,
       "max_temp_date": "2026/06/01",
-      "avg_high": 26.9,
+      "avg_high": 27.0,
       "min_temp": 17.4,
       "min_temp_date": "2026/06/03",
       "avg_low": 19.3,
-      "avg_daily_range": 7.6,
+      "avg_daily_range": 7.7,
       "prev_week_diff": -1.7,
       "prev_year_diff": 0.5
     },
@@ -54,10 +54,10 @@
       {
         "date": "2026/06/03",
         "weekday": "水",
-        "high": 20.0,
+        "high": 20.2,
         "low": 17.4,
         "avg": 18.7,
-        "range": 2.6
+        "range": 2.8
       }
     ],
     "comparison": {
@@ -79,7 +79,7 @@
       "avg_temp_diff": 0.5,
       "max_temp_diff": 4.2,
       "min_temp_diff": 1.4,
-      "avg_daily_range_diff": -1.0,
+      "avg_daily_range_diff": -0.9,
       "ai_comment": ""
     },
     "baseline": {
@@ -304,7 +304,7 @@
       "highs": [
         34.1,
         26.7,
-        20.0
+        20.2
       ],
       "lows": [
         20.6,
@@ -340,7 +340,7 @@
       "this_year_high": [
         34.1,
         26.7,
-        20.0
+        20.2
       ],
       "last_year_high": [
         24.6,
