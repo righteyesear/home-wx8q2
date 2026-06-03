@@ -7,7 +7,7 @@
     "end_date": "2026-06-30",
     "label": "2026年6月"
   },
-  "generated_at": "2026-06-04T03:43:57.791370+09:00",
+  "generated_at": "2026-06-04T08:01:38.240248+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -26,11 +26,11 @@
       "avg_temp_stdev": 3.4,
       "max_temp": 34.1,
       "max_temp_date": "2026/06/01",
-      "avg_high": 25.2,
+      "avg_high": 25.4,
       "min_temp": 17.4,
       "min_temp_date": "2026/06/03",
       "avg_low": 19.4,
-      "avg_daily_range": 5.9,
+      "avg_daily_range": 6.0,
       "prev_month_diff": 1.1,
       "prev_year_diff": -3.5
     },
@@ -62,10 +62,10 @@
       {
         "date": "2026/06/04",
         "weekday": "木",
-        "high": 20.0,
-        "low": 19.5,
+        "high": 20.6,
+        "low": 19.4,
         "avg": 19.8,
-        "range": 0.5
+        "range": 1.2
       }
     ],
     "weekly_breakdown": [
@@ -78,11 +78,11 @@
         "avg_temp_stdev": 3.4,
         "max_temp": 34.1,
         "max_temp_date": "2026/06/01",
-        "avg_high": 25.2,
+        "avg_high": 25.4,
         "min_temp": 17.4,
         "min_temp_date": "2026/06/03",
         "avg_low": 19.4,
-        "avg_daily_range": 5.9
+        "avg_daily_range": 6.0
       }
     ],
     "comparison": {
@@ -104,7 +104,7 @@
       "avg_temp_diff": -3.5,
       "max_temp_diff": -2.2,
       "min_temp_diff": 1.4,
-      "avg_daily_range_diff": -1.8,
+      "avg_daily_range_diff": -1.7,
       "ai_comment": "分析中にエラーが発生しました: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
     },
     "prev_month": {
@@ -124,7 +124,7 @@
       "avg_temp_diff": 1.1,
       "max_temp_diff": 2.3,
       "min_temp_diff": 6.2,
-      "avg_daily_range_diff": -3.4,
+      "avg_daily_range_diff": -3.3,
       "ai_comment": ""
     },
     "baseline": {
@@ -348,13 +348,13 @@
         34.1,
         26.7,
         20.2,
-        20.0
+        20.6
       ],
       "lows": [
         20.6,
         20.0,
         17.4,
-        19.5
+        19.4
       ],
       "avgs": [
         26.1,
@@ -412,7 +412,7 @@
         34.1,
         26.7,
         20.2,
-        20.0
+        20.6
       ],
       "last_year_high": [
         24.6,
@@ -450,7 +450,7 @@
         20.6,
         20.0,
         17.4,
-        19.5
+        19.4
       ],
       "last_year_low": [
         16.0,
@@ -508,7 +508,7 @@
         22.1
       ],
       "highs": [
-        25.2
+        25.4
       ],
       "lows": [
         19.4
