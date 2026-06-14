@@ -7,11 +7,11 @@
     "end_date": "2026-06-14",
     "label": "2026年 第24週（6/8 〜 6/14）"
   },
-  "generated_at": "2026-06-15T07:03:05.398447+09:00",
+  "generated_at": "2026-06-15T07:19:21.842286+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "",
+      "ai_comment": "分析中にエラーが発生しました: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}",
       "highlights": [
         "最高気温 28.9℃",
         "最低気温 17.9℃",
@@ -112,7 +112,7 @@
       "max_temp_diff": -0.6,
       "min_temp_diff": -2.1,
       "avg_daily_range_diff": 2.0,
-      "ai_comment": ""
+      "ai_comment": "分析中にエラーが発生しました: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
     },
     "baseline": {
       "title": "2年平均との比較",
@@ -318,6 +318,10 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "title": "気温推移の分析",
+      "ai_comment": "分析中にエラーが発生しました: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
     }
   },
   "chart_data": {
