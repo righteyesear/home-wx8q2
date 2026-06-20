@@ -7,7 +7,7 @@
     "end_date": "2026-06-30",
     "label": "2026年6月"
   },
-  "generated_at": "2026-06-21T04:13:44.572025+09:00",
+  "generated_at": "2026-06-21T07:02:49.036290+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -26,7 +26,7 @@
       "avg_temp_stdev": 2.2,
       "max_temp": 34.1,
       "max_temp_date": "2026/06/01",
-      "avg_high": 25.7,
+      "avg_high": 25.8,
       "min_temp": 15.6,
       "min_temp_date": "2026/06/06",
       "avg_low": 18.7,
@@ -198,10 +198,10 @@
       {
         "date": "2026/06/21",
         "weekday": "日",
-        "high": 21.4,
+        "high": 23.2,
         "low": 21.0,
-        "avg": 21.2,
-        "range": 0.4
+        "avg": 21.6,
+        "range": 2.2
       }
     ],
     "weekly_breakdown": [
@@ -240,15 +240,15 @@
         "end_date": "2026-06-21",
         "label": "6/15〜6/21",
         "days": 7,
-        "avg_temp": 22.7,
-        "avg_temp_stdev": 1.9,
+        "avg_temp": 22.8,
+        "avg_temp_stdev": 1.8,
         "max_temp": 31.6,
         "max_temp_date": "2026/06/19",
-        "avg_high": 26.4,
+        "avg_high": 26.7,
         "min_temp": 16.7,
         "min_temp_date": "2026/06/16",
         "avg_low": 19.6,
-        "avg_daily_range": 6.8
+        "avg_daily_range": 7.1
       }
     ],
     "comparison": {
@@ -548,7 +548,7 @@
         26.3,
         31.6,
         24.1,
-        21.4
+        23.2
       ],
       "lows": [
         20.6,
@@ -594,7 +594,7 @@
         22.3,
         25.6,
         22.2,
-        21.2
+        21.6
       ]
     },
     "prev_year_comparison": {
@@ -642,7 +642,7 @@
         22.3,
         25.6,
         22.2,
-        21.2
+        21.6
       ],
       "last_year": [
         19.6,
@@ -697,7 +697,7 @@
         26.3,
         31.6,
         24.1,
-        21.4
+        23.2
       ],
       "last_year_high": [
         24.6,
@@ -832,7 +832,7 @@
         -2.5,
         0.8,
         -2.6,
-        -3.6
+        -3.2
       ],
       "baseline_avg": 24.8
     },
@@ -845,12 +845,12 @@
       "avgs": [
         20.9,
         22.0,
-        22.7
+        22.8
       ],
       "highs": [
         24.6,
         26.2,
-        26.4
+        26.7
       ],
       "lows": [
         17.8,
