@@ -7,7 +7,7 @@
     "end_date": "2026-06-28",
     "label": "2026年 第26週（6/22 〜 6/28）"
   },
-  "generated_at": "2026-06-26T04:47:10.623271+09:00",
+  "generated_at": "2026-06-26T07:16:39.845091+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -30,7 +30,7 @@
       "min_temp": 18.6,
       "min_temp_date": "2026/06/24",
       "avg_low": 19.6,
-      "avg_daily_range": 5.1,
+      "avg_daily_range": 5.2,
       "prev_week_diff": -1.4,
       "prev_year_diff": -6.3
     },
@@ -70,10 +70,10 @@
       {
         "date": "2026/06/26",
         "weekday": "金",
-        "high": 20.9,
+        "high": 21.2,
         "low": 20.7,
         "avg": 20.8,
-        "range": 0.2
+        "range": 0.5
       }
     ],
     "comparison": {
@@ -95,7 +95,7 @@
       "avg_temp_diff": -6.3,
       "max_temp_diff": -5.8,
       "min_temp_diff": -6.0,
-      "avg_daily_range_diff": -2.1,
+      "avg_daily_range_diff": -2.0,
       "ai_comment": ""
     },
     "baseline": {
@@ -318,7 +318,7 @@
         24.6,
         27.0,
         22.3,
-        20.9
+        21.2
       ],
       "lows": [
         20.0,
@@ -364,7 +364,7 @@
         24.6,
         27.0,
         22.3,
-        20.9
+        21.2
       ],
       "last_year_high": [
         33.5,

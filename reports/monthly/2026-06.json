@@ -7,7 +7,7 @@
     "end_date": "2026-06-30",
     "label": "2026年6月"
   },
-  "generated_at": "2026-06-26T04:48:26.032674+09:00",
+  "generated_at": "2026-06-26T07:17:36.784417+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -238,10 +238,10 @@
       {
         "date": "2026/06/26",
         "weekday": "金",
-        "high": 20.9,
+        "high": 21.2,
         "low": 20.7,
         "avg": 20.8,
-        "range": 0.2
+        "range": 0.5
       }
     ],
     "weekly_breakdown": [
@@ -303,7 +303,7 @@
         "min_temp": 18.6,
         "min_temp_date": "2026/06/24",
         "avg_low": 19.6,
-        "avg_daily_range": 5.1
+        "avg_daily_range": 5.2
       }
     ],
     "comparison": {
@@ -613,7 +613,7 @@
         24.6,
         27.0,
         22.3,
-        20.9
+        21.2
       ],
       "lows": [
         20.6,
@@ -787,7 +787,7 @@
         24.6,
         27.0,
         22.3,
-        20.9
+        21.2
       ],
       "last_year_high": [
         24.6,
