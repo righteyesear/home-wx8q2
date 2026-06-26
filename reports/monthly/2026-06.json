@@ -7,7 +7,7 @@
     "end_date": "2026-06-30",
     "label": "2026年6月"
   },
-  "generated_at": "2026-06-26T23:07:59.078898+09:00",
+  "generated_at": "2026-06-27T01:58:38.935151+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -21,16 +21,16 @@
     },
     "statistics": {
       "title": "月間統計",
-      "days": 26,
+      "days": 27,
       "avg_temp": 22.0,
       "avg_temp_stdev": 2.0,
       "max_temp": 34.1,
       "max_temp_date": "2026/06/01",
-      "avg_high": 25.9,
+      "avg_high": 25.8,
       "min_temp": 15.6,
       "min_temp_date": "2026/06/06",
-      "avg_low": 18.9,
-      "avg_daily_range": 7.1,
+      "avg_low": 19.0,
+      "avg_daily_range": 6.8,
       "prev_month_diff": 1.0,
       "prev_year_diff": -3.6
     },
@@ -240,8 +240,16 @@
         "weekday": "金",
         "high": 24.9,
         "low": 20.7,
-        "avg": 22.1,
+        "avg": 22.0,
         "range": 4.2
+      },
+      {
+        "date": "2026/06/27",
+        "weekday": "土",
+        "high": 21.8,
+        "low": 21.6,
+        "avg": 21.7,
+        "range": 0.2
       }
     ],
     "weekly_breakdown": [
@@ -294,16 +302,16 @@
         "start_date": "2026-06-22",
         "end_date": "2026-06-28",
         "label": "6/22〜6/28",
-        "days": 5,
-        "avg_temp": 22.0,
-        "avg_temp_stdev": 1.0,
+        "days": 6,
+        "avg_temp": 21.9,
+        "avg_temp_stdev": 0.9,
         "max_temp": 28.6,
         "max_temp_date": "2026/06/22",
-        "avg_high": 25.5,
+        "avg_high": 24.9,
         "min_temp": 18.6,
         "min_temp_date": "2026/06/24",
-        "avg_low": 19.6,
-        "avg_daily_range": 5.9
+        "avg_low": 19.9,
+        "avg_daily_range": 5.0
       }
     ],
     "comparison": {
@@ -325,7 +333,7 @@
       "avg_temp_diff": -3.6,
       "max_temp_diff": -2.2,
       "min_temp_diff": -0.4,
-      "avg_daily_range_diff": -0.6,
+      "avg_daily_range_diff": -0.9,
       "ai_comment": "分析中にエラーが発生しました: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
     },
     "prev_month": {
@@ -345,7 +353,7 @@
       "avg_temp_diff": 1.0,
       "max_temp_diff": 2.3,
       "min_temp_diff": 4.4,
-      "avg_daily_range_diff": -2.2,
+      "avg_daily_range_diff": -2.5,
       "ai_comment": ""
     },
     "baseline": {
@@ -585,7 +593,8 @@
         "23日",
         "24日",
         "25日",
-        "26日"
+        "26日",
+        "27日"
       ],
       "highs": [
         34.1,
@@ -613,7 +622,8 @@
         24.6,
         27.0,
         22.3,
-        24.9
+        24.9,
+        21.8
       ],
       "lows": [
         20.6,
@@ -641,7 +651,8 @@
         18.8,
         18.6,
         19.7,
-        20.7
+        20.7,
+        21.6
       ],
       "avgs": [
         26.1,
@@ -669,7 +680,8 @@
         21.0,
         22.5,
         21.0,
-        22.1
+        22.0,
+        21.7
       ]
     },
     "prev_year_comparison": {
@@ -699,7 +711,8 @@
         "23日",
         "24日",
         "25日",
-        "26日"
+        "26日",
+        "27日"
       ],
       "this_year": [
         26.1,
@@ -727,7 +740,8 @@
         21.0,
         22.5,
         21.0,
-        22.1
+        22.0,
+        21.7
       ],
       "last_year": [
         19.6,
@@ -787,7 +801,8 @@
         24.6,
         27.0,
         22.3,
-        24.9
+        24.9,
+        21.8
       ],
       "last_year_high": [
         24.6,
@@ -847,7 +862,8 @@
         18.8,
         18.6,
         19.7,
-        20.7
+        20.7,
+        21.6
       ],
       "last_year_low": [
         16.0,
@@ -909,7 +925,8 @@
         "6/23(火)",
         "6/24(水)",
         "6/25(木)",
-        "6/26(金)"
+        "6/26(金)",
+        "6/27(土)"
       ],
       "deviations": [
         1.3,
@@ -937,7 +954,8 @@
         -3.8,
         -2.3,
         -3.8,
-        -2.7
+        -2.8,
+        -3.1
       ],
       "baseline_avg": 24.8
     },
@@ -952,19 +970,19 @@
         20.9,
         22.0,
         23.1,
-        22.0
+        21.9
       ],
       "highs": [
         24.6,
         26.2,
         27.3,
-        25.5
+        24.9
       ],
       "lows": [
         17.8,
         18.7,
         19.6,
-        19.6
+        19.9
       ]
     }
   }
