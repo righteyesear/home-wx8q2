@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-06-26T17:49:43.477283+09:00",
-  "advice": "⚠️ 分析エラー: Server disconnected without sending a response.",
+  "generated_at": "2026-06-26T19:14:36.537014+09:00",
+  "advice": "⚠️ 分析エラー: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently exp",
   "data_summary": {
-    "outdoor_temp": 22.5,
-    "weather_temp": 23.1,
-    "weather": "強い霧雨",
+    "outdoor_temp": 22.9,
+    "weather_temp": 22.5,
+    "weather": "弱い雨",
     "alerts_count": 0
   }
 }
