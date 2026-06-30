@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-06-30T13:55:28.857280+09:00",
+  "generated_at": "2026-06-30T15:12:06.872551+09:00",
   "advice": "⚠️ 分析エラー: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently exp",
   "data_summary": {
-    "outdoor_temp": 29.1,
-    "weather_temp": 27.2,
+    "outdoor_temp": 28.9,
+    "weather_temp": 28.1,
     "weather": "晴れ",
     "alerts_count": 0
   }
