@@ -1,56 +1,40 @@
 {
-  "type": "weekly",
+  "type": "monthly",
   "period": {
     "year": 2026,
-    "week": 27,
-    "start_date": "2026-06-29",
-    "end_date": "2026-07-05",
-    "label": "2026年 第27週（6/29 〜 7/5）"
+    "month": 7,
+    "start_date": "2026-07-01",
+    "end_date": "2026-07-31",
+    "label": "2026年7月"
   },
-  "generated_at": "2026-07-01T02:05:28.831569+09:00",
+  "generated_at": "2026-07-01T02:07:23.687693+09:00",
   "sections": {
     "summary": {
-      "title": "週間サマリー",
+      "title": "月間サマリー",
       "ai_comment": "",
       "highlights": [
-        "最高気温 29.6℃",
-        "最低気温 20.0℃",
-        "前週比 +1.9℃",
-        "前年比 -5.6℃"
+        "月平均 23.4℃",
+        "最高 23.6℃",
+        "前月比 +1.2℃",
+        "前年比 -6.1℃"
       ]
     },
     "statistics": {
-      "title": "週間統計",
-      "days": 3,
-      "avg_temp": 24.0,
-      "avg_temp_stdev": 1.3,
-      "max_temp": 29.6,
-      "max_temp_date": "2026/06/30",
-      "avg_high": 27.0,
-      "min_temp": 20.0,
-      "min_temp_date": "2026/06/29",
-      "avg_low": 21.7,
-      "avg_daily_range": 5.3,
-      "prev_week_diff": 1.9,
-      "prev_year_diff": -5.6
+      "title": "月間統計",
+      "days": 1,
+      "avg_temp": 23.4,
+      "avg_temp_stdev": 0,
+      "max_temp": 23.6,
+      "max_temp_date": "2026/07/01",
+      "avg_high": 23.6,
+      "min_temp": 23.3,
+      "min_temp_date": "2026/07/01",
+      "avg_low": 23.3,
+      "avg_daily_range": 0.3,
+      "prev_month_diff": 1.2,
+      "prev_year_diff": -6.1
     },
     "daily_data": [
-      {
-        "date": "2026/06/29",
-        "weekday": "月",
-        "high": 27.8,
-        "low": 20.0,
-        "avg": 23.1,
-        "range": 7.8
-      },
-      {
-        "date": "2026/06/30",
-        "weekday": "火",
-        "high": 29.6,
-        "low": 21.7,
-        "avg": 25.4,
-        "range": 7.9
-      },
       {
         "date": "2026/07/01",
         "weekday": "水",
@@ -60,32 +44,69 @@
         "range": 0.3
       }
     ],
+    "weekly_breakdown": [
+      {
+        "start_date": "2026-07-01",
+        "end_date": "2026-07-07",
+        "label": "7/1〜7/7",
+        "days": 1,
+        "avg_temp": 23.4,
+        "avg_temp_stdev": 0,
+        "max_temp": 23.6,
+        "max_temp_date": "2026/07/01",
+        "avg_high": 23.6,
+        "min_temp": 23.3,
+        "min_temp_date": "2026/07/01",
+        "avg_low": 23.3,
+        "avg_daily_range": 0.3
+      }
+    ],
     "comparison": {
-      "title": "前年比較",
-      "prev_year_week": {
+      "title": "前年同月比較",
+      "prev_year_month": {
         "year": 2025,
-        "week": 27,
-        "days": 7,
-        "avg_temp": 29.6,
-        "avg_temp_stdev": 0.5,
-        "max_temp": 34.9,
-        "max_temp_date": "2025/07/05",
-        "avg_high": 34.4,
-        "min_temp": 24.4,
-        "min_temp_date": "2025/06/29",
-        "avg_low": 26.0,
-        "avg_daily_range": 8.4
+        "month": 7,
+        "days": 31,
+        "avg_temp": 29.5,
+        "avg_temp_stdev": 2.1,
+        "max_temp": 36.7,
+        "max_temp_date": "2025/07/24",
+        "avg_high": 34.0,
+        "min_temp": 21.1,
+        "min_temp_date": "2025/07/12",
+        "avg_low": 26.1,
+        "avg_daily_range": 7.9
       },
-      "avg_temp_diff": -5.6,
-      "max_temp_diff": -5.3,
-      "min_temp_diff": -4.4,
-      "avg_daily_range_diff": -3.1,
+      "avg_temp_diff": -6.1,
+      "max_temp_diff": -13.1,
+      "min_temp_diff": 2.2,
+      "avg_daily_range_diff": -7.6,
+      "ai_comment": ""
+    },
+    "prev_month": {
+      "title": "前月比較",
+      "prev_month_stats": {
+        "days": 30,
+        "avg_temp": 22.2,
+        "avg_temp_stdev": 2.0,
+        "max_temp": 34.1,
+        "max_temp_date": "2026/06/01",
+        "avg_high": 26.0,
+        "min_temp": 15.6,
+        "min_temp_date": "2026/06/06",
+        "avg_low": 19.1,
+        "avg_daily_range": 6.9
+      },
+      "avg_temp_diff": 1.2,
+      "max_temp_diff": -10.5,
+      "min_temp_diff": 7.7,
+      "avg_daily_range_diff": -6.6,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
-      "baseline_avg": 28.8,
-      "current_deviation": -4.8,
+      "baseline_avg": 29.5,
+      "current_deviation": -6.1,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -296,87 +317,153 @@
   "chart_data": {
     "daily_temps": {
       "labels": [
-        "6/29(月)",
-        "6/30(火)",
-        "7/1(水)"
+        "1日"
       ],
       "highs": [
-        27.8,
-        29.6,
         23.6
       ],
       "lows": [
-        20.0,
-        21.7,
         23.3
       ],
       "avgs": [
-        23.1,
-        25.4,
         23.4
       ]
     },
     "prev_year_comparison": {
       "labels": [
-        "月",
-        "火",
-        "水"
+        "1日"
       ],
       "this_year": [
-        23.1,
-        25.4,
         23.4
       ],
       "last_year": [
-        28.8,
-        29.4,
         29.4,
         29.2,
         30.1,
         29.8,
-        30.2
+        30.2,
+        30.7,
+        31.4,
+        31.7,
+        31.5,
+        29.0,
+        23.5,
+        23.9,
+        27.2,
+        27.1,
+        27.5,
+        27.4,
+        28.5,
+        29.0,
+        29.7,
+        30.3,
+        30.9,
+        30.6,
+        30.7,
+        31.1,
+        31.2,
+        31.3,
+        30.7,
+        31.4,
+        31.2,
+        29.3,
+        27.9
       ],
       "this_year_high": [
-        27.8,
-        29.6,
         23.6
       ],
       "last_year_high": [
-        34.2,
-        34.5,
         34.5,
         33.5,
         34.6,
         34.7,
-        34.9
+        34.9,
+        35.8,
+        36.2,
+        36.4,
+        36.0,
+        36.5,
+        25.3,
+        27.3,
+        33.2,
+        30.7,
+        30.2,
+        29.6,
+        32.3,
+        33.4,
+        35.3,
+        34.6,
+        35.9,
+        35.4,
+        35.5,
+        36.7,
+        36.0,
+        36.0,
+        35.2,
+        36.7,
+        36.5,
+        33.7,
+        32.1
       ],
       "this_year_low": [
-        20.0,
-        21.7,
         23.3
       ],
       "last_year_low": [
-        24.4,
-        25.4,
         26.1,
         26.3,
         26.6,
         26.5,
-        27.0
+        27.0,
+        26.9,
+        27.9,
+        27.8,
+        28.2,
+        22.8,
+        21.9,
+        21.1,
+        22.5,
+        24.6,
+        25.6,
+        26.2,
+        25.8,
+        25.7,
+        25.8,
+        26.6,
+        27.0,
+        27.3,
+        27.3,
+        27.3,
+        27.8,
+        27.9,
+        27.9,
+        27.3,
+        27.3,
+        26.0,
+        24.8
       ]
     },
     "deviation": {
       "labels": [
-        "6/29(月)",
-        "6/30(火)",
         "7/1(水)"
       ],
       "deviations": [
-        -5.7,
-        -3.4,
-        -5.4
+        -6.1
       ],
-      "baseline_avg": 28.8
+      "baseline_avg": 29.5
+    },
+    "weekly_trend_in_month": {
+      "labels": [
+        "7/1〜7/7"
+      ],
+      "avgs": [
+        23.4
+      ],
+      "highs": [
+        23.6
+      ],
+      "lows": [
+        23.3
+      ]
     }
   }
 }
