@@ -7,14 +7,14 @@
     "end_date": "2026-07-31",
     "label": "2026年7月"
   },
-  "generated_at": "2026-07-01T04:45:30.608736+09:00",
+  "generated_at": "2026-07-01T07:12:55.594064+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
       "ai_comment": "",
       "highlights": [
         "月平均 23.2℃",
-        "最高 23.6℃",
+        "最高 24.3℃",
         "前月比 +1.0℃",
         "前年比 -6.3℃"
       ]
@@ -24,13 +24,13 @@
       "days": 1,
       "avg_temp": 23.2,
       "avg_temp_stdev": 0,
-      "max_temp": 23.6,
+      "max_temp": 24.3,
       "max_temp_date": "2026/07/01",
-      "avg_high": 23.6,
+      "avg_high": 24.3,
       "min_temp": 22.7,
       "min_temp_date": "2026/07/01",
       "avg_low": 22.7,
-      "avg_daily_range": 0.9,
+      "avg_daily_range": 1.6,
       "prev_month_diff": 1.0,
       "prev_year_diff": -6.3
     },
@@ -38,10 +38,10 @@
       {
         "date": "2026/07/01",
         "weekday": "水",
-        "high": 23.6,
+        "high": 24.3,
         "low": 22.7,
         "avg": 23.2,
-        "range": 0.9
+        "range": 1.6
       }
     ],
     "weekly_breakdown": [
@@ -52,13 +52,13 @@
         "days": 1,
         "avg_temp": 23.2,
         "avg_temp_stdev": 0,
-        "max_temp": 23.6,
+        "max_temp": 24.3,
         "max_temp_date": "2026/07/01",
-        "avg_high": 23.6,
+        "avg_high": 24.3,
         "min_temp": 22.7,
         "min_temp_date": "2026/07/01",
         "avg_low": 22.7,
-        "avg_daily_range": 0.9
+        "avg_daily_range": 1.6
       }
     ],
     "comparison": {
@@ -78,9 +78,9 @@
         "avg_daily_range": 7.9
       },
       "avg_temp_diff": -6.3,
-      "max_temp_diff": -13.1,
+      "max_temp_diff": -12.4,
       "min_temp_diff": 1.6,
-      "avg_daily_range_diff": -7.0,
+      "avg_daily_range_diff": -6.3,
       "ai_comment": ""
     },
     "prev_month": {
@@ -98,9 +98,9 @@
         "avg_daily_range": 6.9
       },
       "avg_temp_diff": 1.0,
-      "max_temp_diff": -10.5,
+      "max_temp_diff": -9.8,
       "min_temp_diff": 7.1,
-      "avg_daily_range_diff": -6.0,
+      "avg_daily_range_diff": -5.3,
       "ai_comment": ""
     },
     "baseline": {
@@ -307,7 +307,7 @@
           },
           "7": {
             "avg": 23.2,
-            "high": 23.6,
+            "high": 24.3,
             "low": 22.7
           }
         }
@@ -320,7 +320,7 @@
         "1日"
       ],
       "highs": [
-        23.6
+        24.3
       ],
       "lows": [
         22.7
@@ -370,7 +370,7 @@
         27.9
       ],
       "this_year_high": [
-        23.6
+        24.3
       ],
       "last_year_high": [
         34.5,
@@ -459,7 +459,7 @@
         23.2
       ],
       "highs": [
-        23.6
+        24.3
       ],
       "lows": [
         22.7
