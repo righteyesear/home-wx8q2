@@ -7,7 +7,7 @@
     "end_date": "2026-07-31",
     "label": "2026年7月"
   },
-  "generated_at": "2026-07-03T04:13:28.005492+09:00",
+  "generated_at": "2026-07-03T07:03:15.993801+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -23,14 +23,14 @@
       "title": "月間統計",
       "days": 3,
       "avg_temp": 22.9,
-      "avg_temp_stdev": 2.2,
+      "avg_temp_stdev": 2.3,
       "max_temp": 29.1,
       "max_temp_date": "2026/07/01",
       "avg_high": 24.8,
       "min_temp": 20.5,
       "min_temp_date": "2026/07/02",
-      "avg_low": 21.4,
-      "avg_daily_range": 3.4,
+      "avg_low": 21.3,
+      "avg_daily_range": 3.6,
       "prev_month_diff": 0.7,
       "prev_year_diff": -6.6
     },
@@ -55,9 +55,9 @@
         "date": "2026/07/03",
         "weekday": "金",
         "high": 21.6,
-        "low": 21.0,
-        "avg": 21.4,
-        "range": 0.6
+        "low": 20.6,
+        "avg": 21.2,
+        "range": 1.0
       }
     ],
     "weekly_breakdown": [
@@ -67,14 +67,14 @@
         "label": "7/1〜7/7",
         "days": 3,
         "avg_temp": 22.9,
-        "avg_temp_stdev": 2.2,
+        "avg_temp_stdev": 2.3,
         "max_temp": 29.1,
         "max_temp_date": "2026/07/01",
         "avg_high": 24.8,
         "min_temp": 20.5,
         "min_temp_date": "2026/07/02",
-        "avg_low": 21.4,
-        "avg_daily_range": 3.4
+        "avg_low": 21.3,
+        "avg_daily_range": 3.6
       }
     ],
     "comparison": {
@@ -96,7 +96,7 @@
       "avg_temp_diff": -6.6,
       "max_temp_diff": -7.6,
       "min_temp_diff": -0.6,
-      "avg_daily_range_diff": -4.5,
+      "avg_daily_range_diff": -4.3,
       "ai_comment": "昨年の7月は最高気温が36.7度に達し、日中の厳しい酷暑と大きな寒暖差が特徴のギラギラとした真夏でした。一方で今年の7月は、最高気温が30度を下回り、一日を通じた気温の変化も非常に緩やかです。昨年のような極端な猛暑日はなく、全体的にしのぎやすい穏やかな夏のスタートとなっています。\n\nこの気候パターンの変化は私たちの暮らしにも大きく影響します。昨年は熱中症への厳重な警戒とエアコンのフル稼働が不可欠でしたが、今年は身体への熱ストレスが大幅に軽減され、お財布にも優しい1ヶ月になりそうです。ただ、日較差が小さくジメジメと感じる日もあるため、除湿を上手に使って快適に過ごしましょう。🍀"
     },
     "prev_month": {
@@ -116,7 +116,7 @@
       "avg_temp_diff": 0.7,
       "max_temp_diff": -5.0,
       "min_temp_diff": 4.9,
-      "avg_daily_range_diff": -3.5,
+      "avg_daily_range_diff": -3.3,
       "ai_comment": ""
     },
     "baseline": {
@@ -348,12 +348,12 @@
       "lows": [
         22.7,
         20.5,
-        21.0
+        20.6
       ],
       "avgs": [
         25.5,
         21.9,
-        21.4
+        21.2
       ]
     },
     "prev_year_comparison": {
@@ -365,7 +365,7 @@
       "this_year": [
         25.5,
         21.9,
-        21.4
+        21.2
       ],
       "last_year": [
         29.4,
@@ -441,7 +441,7 @@
       "this_year_low": [
         22.7,
         20.5,
-        21.0
+        20.6
       ],
       "last_year_low": [
         26.1,
@@ -486,7 +486,7 @@
       "deviations": [
         -4.0,
         -7.6,
-        -8.1
+        -8.3
       ],
       "baseline_avg": 29.5
     },
@@ -501,7 +501,7 @@
         24.8
       ],
       "lows": [
-        21.4
+        21.3
       ]
     }
   }
