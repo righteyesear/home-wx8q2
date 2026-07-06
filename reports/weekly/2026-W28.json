@@ -7,7 +7,7 @@
     "end_date": "2026-07-12",
     "label": "2026年 第28週（7/6 〜 7/12）"
   },
-  "generated_at": "2026-07-07T04:46:51.152582+09:00",
+  "generated_at": "2026-07-07T07:07:52.632278+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -26,11 +26,11 @@
       "avg_temp_stdev": 1.7,
       "max_temp": 27.9,
       "max_temp_date": "2026/07/06",
-      "avg_high": 25.3,
+      "avg_high": 25.4,
       "min_temp": 21.7,
       "min_temp_date": "2026/07/07",
       "avg_low": 21.9,
-      "avg_daily_range": 3.4,
+      "avg_daily_range": 3.5,
       "prev_week_diff": -0.7,
       "prev_year_diff": -5.5
     },
@@ -46,10 +46,10 @@
       {
         "date": "2026/07/07",
         "weekday": "火",
-        "high": 22.7,
+        "high": 22.9,
         "low": 21.7,
         "avg": 22.1,
-        "range": 1.0
+        "range": 1.2
       }
     ],
     "comparison": {
@@ -71,7 +71,7 @@
       "avg_temp_diff": -5.5,
       "max_temp_diff": -8.6,
       "min_temp_diff": 0.6,
-      "avg_daily_range_diff": -4.7,
+      "avg_daily_range_diff": -4.6,
       "ai_comment": ""
     },
     "baseline": {
@@ -293,7 +293,7 @@
       ],
       "highs": [
         27.9,
-        22.7
+        22.9
       ],
       "lows": [
         22.2,
@@ -324,7 +324,7 @@
       ],
       "this_year_high": [
         27.9,
-        22.7
+        22.9
       ],
       "last_year_high": [
         35.8,
