@@ -7,7 +7,7 @@
     "end_date": "2026-07-19",
     "label": "2026年 第29週（7/13 〜 7/19）"
   },
-  "generated_at": "2026-07-15T04:05:19.408181+09:00",
+  "generated_at": "2026-07-15T06:49:54.001312+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -26,11 +26,11 @@
       "avg_temp_stdev": 1.6,
       "max_temp": 35.7,
       "max_temp_date": "2026/07/14",
-      "avg_high": 31.2,
+      "avg_high": 31.5,
       "min_temp": 25.5,
       "min_temp_date": "2026/07/14",
-      "avg_low": 26.1,
-      "avg_daily_range": 5.1,
+      "avg_low": 26.0,
+      "avg_daily_range": 5.5,
       "prev_week_diff": 1.8,
       "prev_year_diff": 0.3
     },
@@ -54,10 +54,10 @@
       {
         "date": "2026/07/15",
         "weekday": "水",
-        "high": 27.8,
-        "low": 27.1,
-        "avg": 27.5,
-        "range": 0.7
+        "high": 28.8,
+        "low": 26.8,
+        "avg": 27.4,
+        "range": 2.0
       }
     ],
     "comparison": {
@@ -79,7 +79,7 @@
       "avg_temp_diff": 0.3,
       "max_temp_diff": 0.4,
       "min_temp_diff": 3.0,
-      "avg_daily_range_diff": -1.8,
+      "avg_daily_range_diff": -1.4,
       "ai_comment": ""
     },
     "baseline": {
@@ -309,17 +309,17 @@
       "highs": [
         30.0,
         35.7,
-        27.8
+        28.8
       ],
       "lows": [
         25.7,
         25.5,
-        27.1
+        26.8
       ],
       "avgs": [
         27.5,
         30.3,
-        27.5
+        27.4
       ]
     },
     "prev_year_comparison": {
@@ -331,7 +331,7 @@
       "this_year": [
         27.5,
         30.3,
-        27.5
+        27.4
       ],
       "last_year": [
         27.2,
@@ -345,7 +345,7 @@
       "this_year_high": [
         30.0,
         35.7,
-        27.8
+        28.8
       ],
       "last_year_high": [
         33.2,
@@ -359,7 +359,7 @@
       "this_year_low": [
         25.7,
         25.5,
-        27.1
+        26.8
       ],
       "last_year_low": [
         22.5,
@@ -380,7 +380,7 @@
       "deviations": [
         0.0,
         2.8,
-        0.0
+        -0.1
       ],
       "baseline_avg": 27.5
     }
