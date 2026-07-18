@@ -7,7 +7,7 @@
     "end_date": "2026-07-31",
     "label": "2026年7月"
   },
-  "generated_at": "2026-07-19T03:51:08.714917+09:00",
+  "generated_at": "2026-07-19T06:43:05.812429+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -26,7 +26,7 @@
       "avg_temp_stdev": 2.6,
       "max_temp": 35.8,
       "max_temp_date": "2026/07/15",
-      "avg_high": 30.4,
+      "avg_high": 30.5,
       "min_temp": 20.4,
       "min_temp_date": "2026/07/04",
       "avg_low": 23.9,
@@ -182,10 +182,10 @@
       {
         "date": "2026/07/19",
         "weekday": "日",
-        "high": 26.8,
+        "high": 27.7,
         "low": 26.3,
         "avg": 26.5,
-        "range": 0.5
+        "range": 1.4
       }
     ],
     "weekly_breakdown": [
@@ -228,11 +228,11 @@
         "avg_temp_stdev": 1.9,
         "max_temp": 35.8,
         "max_temp_date": "2026/07/15",
-        "avg_high": 32.5,
+        "avg_high": 32.7,
         "min_temp": 25.6,
         "min_temp_date": "2026/07/18",
         "avg_low": 26.4,
-        "avg_daily_range": 6.1
+        "avg_daily_range": 6.3
       }
     ],
     "comparison": {
@@ -539,7 +539,7 @@
         35.2,
         32.2,
         32.4,
-        26.8
+        27.7
       ],
       "lows": [
         22.7,
@@ -679,7 +679,7 @@
         35.2,
         32.2,
         32.4,
-        26.8
+        27.7
       ],
       "last_year_high": [
         34.5,
@@ -828,7 +828,7 @@
       "highs": [
         27.1,
         32.3,
-        32.5
+        32.7
       ],
       "lows": [
         21.5,
