@@ -7,41 +7,41 @@
     "end_date": "2026-07-26",
     "label": "2026年 第30週（7/20 〜 7/26）"
   },
-  "generated_at": "2026-07-20T11:09:48.847277+09:00",
+  "generated_at": "2026-07-20T15:09:23.861299+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
       "ai_comment": "",
       "highlights": [
-        "最高気温 35.7℃",
+        "最高気温 37.1℃",
         "最低気温 26.7℃",
-        "前週比 +0.0℃",
-        "前年比 -1.5℃"
+        "前週比 +1.9℃",
+        "前年比 +0.4℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 1,
-      "avg_temp": 29.4,
+      "avg_temp": 31.3,
       "avg_temp_stdev": 0,
-      "max_temp": 35.7,
+      "max_temp": 37.1,
       "max_temp_date": "2026/07/20",
-      "avg_high": 35.7,
+      "avg_high": 37.1,
       "min_temp": 26.7,
       "min_temp_date": "2026/07/20",
       "avg_low": 26.7,
-      "avg_daily_range": 9.0,
-      "prev_week_diff": 0.0,
-      "prev_year_diff": -1.5
+      "avg_daily_range": 10.4,
+      "prev_week_diff": 1.9,
+      "prev_year_diff": 0.4
     },
     "daily_data": [
       {
         "date": "2026/07/20",
         "weekday": "月",
-        "high": 35.7,
+        "high": 37.1,
         "low": 26.7,
-        "avg": 29.4,
-        "range": 9.0
+        "avg": 31.3,
+        "range": 10.4
       }
     ],
     "comparison": {
@@ -60,16 +60,16 @@
         "avg_low": 27.3,
         "avg_daily_range": 8.4
       },
-      "avg_temp_diff": -1.5,
-      "max_temp_diff": -1.0,
+      "avg_temp_diff": 0.4,
+      "max_temp_diff": 0.4,
       "min_temp_diff": 0.1,
-      "avg_daily_range_diff": 0.6,
+      "avg_daily_range_diff": 2.0,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 30.9,
-      "current_deviation": -1.5,
+      "current_deviation": 0.4,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -79,7 +79,7 @@
         {
           "date": "2026/07/20",
           "type": "extreme_heat",
-          "description": "猛暑日: 最高気温35.7℃"
+          "description": "猛暑日: 最高気温37.1℃"
         }
       ],
       "ai_comment": ""
@@ -275,8 +275,8 @@
             "low": 15.6
           },
           "7": {
-            "avg": 27.0,
-            "high": 35.8,
+            "avg": 27.1,
+            "high": 37.1,
             "low": 20.4
           }
         }
@@ -289,13 +289,13 @@
         "7/20(月)"
       ],
       "highs": [
-        35.7
+        37.1
       ],
       "lows": [
         26.7
       ],
       "avgs": [
-        29.4
+        31.3
       ]
     },
     "prev_year_comparison": {
@@ -303,7 +303,7 @@
         "月"
       ],
       "this_year": [
-        29.4
+        31.3
       ],
       "last_year": [
         30.3,
@@ -315,7 +315,7 @@
         31.3
       ],
       "this_year_high": [
-        35.7
+        37.1
       ],
       "last_year_high": [
         34.6,
@@ -344,7 +344,7 @@
         "7/20(月)"
       ],
       "deviations": [
-        -1.5
+        0.4
       ],
       "baseline_avg": 30.9
     }
