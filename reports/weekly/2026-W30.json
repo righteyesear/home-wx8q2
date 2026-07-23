@@ -7,7 +7,7 @@
     "end_date": "2026-07-26",
     "label": "2026年 第30週（7/20 〜 7/26）"
   },
-  "generated_at": "2026-07-23T06:59:27.775309+09:00",
+  "generated_at": "2026-07-23T10:58:18.055502+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -15,24 +15,24 @@
       "highlights": [
         "最高気温 37.6℃",
         "最低気温 26.7℃",
-        "前週比 +2.1℃",
-        "前年比 +0.6℃"
+        "前週比 +2.4℃",
+        "前年比 +0.9℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 4,
-      "avg_temp": 31.5,
-      "avg_temp_stdev": 1.4,
+      "avg_temp": 31.8,
+      "avg_temp_stdev": 0.7,
       "max_temp": 37.6,
       "max_temp_date": "2026/07/21",
-      "avg_high": 35.8,
+      "avg_high": 37.1,
       "min_temp": 26.7,
       "min_temp_date": "2026/07/20",
       "avg_low": 27.9,
-      "avg_daily_range": 7.8,
-      "prev_week_diff": 2.1,
-      "prev_year_diff": 0.6
+      "avg_daily_range": 9.2,
+      "prev_week_diff": 2.4,
+      "prev_year_diff": 0.9
     },
     "daily_data": [
       {
@@ -62,10 +62,10 @@
       {
         "date": "2026/07/23",
         "weekday": "木",
-        "high": 30.9,
+        "high": 36.2,
         "low": 28.7,
-        "avg": 29.5,
-        "range": 2.2
+        "avg": 30.9,
+        "range": 7.5
       }
     ],
     "comparison": {
@@ -84,16 +84,16 @@
         "avg_low": 27.3,
         "avg_daily_range": 8.4
       },
-      "avg_temp_diff": 0.6,
+      "avg_temp_diff": 0.9,
       "max_temp_diff": 0.9,
       "min_temp_diff": 0.1,
-      "avg_daily_range_diff": -0.6,
+      "avg_daily_range_diff": 0.8,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 30.9,
-      "current_deviation": 0.6,
+      "current_deviation": 0.9,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -101,9 +101,9 @@
       "title": "特筆イベント",
       "items": [
         {
-          "date": "2026/07/20〜2026/07/22",
+          "date": "2026/07/20〜2026/07/23",
           "type": "extreme_heat",
-          "description": "猛暑日3日連続（最高気温37.2℃〜最高気温37.3℃）"
+          "description": "猛暑日4日連続（最高気温37.2℃〜最高気温36.2℃）"
         }
       ],
       "ai_comment": ""
@@ -299,7 +299,7 @@
             "low": 15.6
           },
           "7": {
-            "avg": 27.7,
+            "avg": 27.8,
             "high": 37.6,
             "low": 20.4
           }
@@ -319,7 +319,7 @@
         37.2,
         37.6,
         37.3,
-        30.9
+        36.2
       ],
       "lows": [
         26.7,
@@ -331,7 +331,7 @@
         31.8,
         32.0,
         32.6,
-        29.5
+        30.9
       ]
     },
     "prev_year_comparison": {
@@ -345,7 +345,7 @@
         31.8,
         32.0,
         32.6,
-        29.5
+        30.9
       ],
       "last_year": [
         30.3,
@@ -360,7 +360,7 @@
         37.2,
         37.6,
         37.3,
-        30.9
+        36.2
       ],
       "last_year_high": [
         34.6,
@@ -398,7 +398,7 @@
         0.9,
         1.1,
         1.7,
-        -1.4
+        0.0
       ],
       "baseline_avg": 30.9
     }
