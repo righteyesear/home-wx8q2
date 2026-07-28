@@ -7,7 +7,7 @@
     "end_date": "2026-08-02",
     "label": "2026年 第31週（7/27 〜 8/2）"
   },
-  "generated_at": "2026-07-28T17:18:20.986864+09:00",
+  "generated_at": "2026-07-28T20:10:55.129668+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -23,7 +23,7 @@
       "title": "週間統計",
       "days": 2,
       "avg_temp": 26.4,
-      "avg_temp_stdev": 0.0,
+      "avg_temp_stdev": 0.1,
       "max_temp": 31.5,
       "max_temp_date": "2026/07/28",
       "avg_high": 31.4,
@@ -48,7 +48,7 @@
         "weekday": "火",
         "high": 31.5,
         "low": 23.1,
-        "avg": 26.4,
+        "avg": 26.5,
         "range": 8.4
       }
     ],
@@ -301,7 +301,7 @@
       ],
       "avgs": [
         26.4,
-        26.4
+        26.5
       ]
     },
     "prev_year_comparison": {
@@ -311,7 +311,7 @@
       ],
       "this_year": [
         26.4,
-        26.4
+        26.5
       ],
       "last_year": [
         30.7,
@@ -356,7 +356,7 @@
       ],
       "deviations": [
         -4.1,
-        -4.1
+        -4.0
       ],
       "baseline_avg": 30.5
     }
