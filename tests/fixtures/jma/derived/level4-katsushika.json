@@ -1,0 +1,23 @@
+[
+  {
+    "controlDatetime": "2026-06-03T01:31:05Z",
+    "reportDatetime": "2026-06-03T10:31:00+09:00",
+    "infoType": "発表",
+    "publishingOffice": "気象庁",
+    "headlineText": "東京地方では、低い土地の浸水や河川の増水に厳重に警戒してください。",
+    "warning": {
+      "class20Items": [
+        {
+          "areaCode": "1312200",
+          "kinds": [
+            {
+              "code": "43",
+              "status": "発表"
+            }
+          ]
+        }
+      ]
+    },
+    "dataTypeCode": "VPWW55"
+  }
+]

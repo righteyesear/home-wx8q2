@@ -1,0 +1,87 @@
+{
+  "createdAt": "2026-07-31T05:30:00+09:00",
+  "targetAreaCode": "1312200",
+  "newEndpoint": "https://www.jma.go.jp/bosai/warning/data/r8/130000.json",
+  "rawFixtures": [
+    {
+      "file": "fixtures/raw/legacy-stale-130000.json",
+      "provenance": "Unmodified response downloaded from the legacy JMA endpoint on 2026-07-31 JST",
+      "expected": "Legacy data frozen at 2026-05-28; must be rejected as stale"
+    },
+    {
+      "file": "fixtures/raw/current-r8-130000.json",
+      "provenance": "Unmodified response downloaded from the current JMA r8 endpoint on 2026-07-31 JST",
+      "expected": "New array schema; Katsushika has no active warning in the captured response"
+    },
+    {
+      "file": "fixtures/raw/archive-r8-130000-2026060218-level2.json",
+      "provenance": "Unmodified JMA official review archive response",
+      "expected": "Katsushika code 10, status 発表"
+    },
+    {
+      "file": "fixtures/raw/archive-r8-130000-2026060303-level3-level4-continuing.json",
+      "provenance": "Unmodified JMA official review archive response",
+      "expected": "Katsushika code 03, status 継続; code 43 level-4 examples also exist in the same Tokyo response"
+    },
+    {
+      "file": "fixtures/raw/archive-r8-130000-2026060306-downgrade.json",
+      "provenance": "Unmodified JMA official review archive response",
+      "expected": "Katsushika code 10, status 警報から注意報; this is still an active advisory"
+    },
+    {
+      "file": "fixtures/raw/archive-r8-130000-2026060309-release.json",
+      "provenance": "Unmodified JMA official review archive response",
+      "expected": "Katsushika code 10, status 解除"
+    }
+  ],
+  "derivedFixtures": [
+    {
+      "file": "fixtures/derived/no-warning-katsushika.json",
+      "expectedLevel": 0,
+      "expectedActive": false
+    },
+    {
+      "file": "fixtures/derived/advisory-katsushika.json",
+      "expectedName": "レベル2 大雨注意報",
+      "expectedLevel": 2,
+      "expectedActive": true
+    },
+    {
+      "file": "fixtures/derived/level3-katsushika.json",
+      "expectedName": "レベル3 大雨警報",
+      "expectedLevel": 3,
+      "expectedActive": true
+    },
+    {
+      "file": "fixtures/derived/level4-katsushika.json",
+      "expectedName": "レベル4 大雨危険警報",
+      "expectedLevel": 4,
+      "expectedActive": true
+    },
+    {
+      "file": "fixtures/derived/level5-katsushika.json",
+      "expectedName": "レベル5 大雨特別警報",
+      "expectedLevel": 5,
+      "expectedActive": true,
+      "provenanceNote": "Schema-shaped derivative of JMA official VPWW55 level-5 sample XML; not an observed Katsushika event"
+    },
+    {
+      "file": "fixtures/derived/continuing-katsushika.json",
+      "expectedLevel": 3,
+      "expectedActive": true,
+      "expectedNotification": false
+    },
+    {
+      "file": "fixtures/derived/downgraded-katsushika.json",
+      "expectedLevel": 2,
+      "expectedActive": true,
+      "expectedTransition": "downgrade"
+    },
+    {
+      "file": "fixtures/derived/released-katsushika.json",
+      "expectedLevel": 0,
+      "expectedActive": false,
+      "expectedTransition": "release"
+    }
+  ]
+}

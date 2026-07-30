@@ -1,0 +1,185 @@
+import importlib.util
+import json
+import sys
+import tempfile
+import types
+from pathlib import Path
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+MODULE_PATH = PROJECT_ROOT / "scripts" / "ai_advisor.py"
+
+requests_stub = types.ModuleType("requests")
+dotenv_stub = types.ModuleType("dotenv")
+dotenv_stub.load_dotenv = lambda *_args, **_kwargs: None
+google_stub = types.ModuleType("google")
+genai_stub = types.ModuleType("google.genai")
+google_stub.genai = genai_stub
+data_analysis_stub = types.ModuleType("data_analysis")
+data_analysis_stub.analyze_data_comprehensive = lambda *_args, **_kwargs: {}
+sys.modules.update(
+    {
+        "requests": requests_stub,
+        "dotenv": dotenv_stub,
+        "google": google_stub,
+        "google.genai": genai_stub,
+        "data_analysis": data_analysis_stub,
+    }
+)
+
+sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+spec = importlib.util.spec_from_file_location("advisor_under_test", MODULE_PATH)
+module = importlib.util.module_from_spec(spec)
+assert spec.loader is not None
+spec.loader.exec_module(module)
+
+
+class FakeResponse:
+    text = (
+        "風は穏やかで、体感温度も過ごしやすい範囲です。"
+        "今後6時間も大きな崩れは見込みにくいため、"
+        "薄手の羽織で調整できます。"
+    )
+
+
+class FakeModels:
+    def __init__(self, fail_primary=False):
+        self.calls = []
+        self.fail_primary = fail_primary
+
+    def generate_content(self, *, model, contents):
+        self.calls.append((model, contents))
+        if self.fail_primary and model == "gemini-3.6-flash":
+            raise RuntimeError("primary unavailable")
+        return FakeResponse()
+
+
+def run_with(fake_models):
+    module.genai.Client = lambda **_kwargs: types.SimpleNamespace(models=fake_models)
+    module.GEMINI_API_KEY = "test-key"
+    module.GEMINI_MODEL = "gemini-3.6-flash"
+    module.load_moon_data = lambda: {"age": 1, "phase": "新月"}
+
+    spreadsheet = {
+        "current": {
+            "temperature": 24.0,
+            "humidity": 55,
+            "today_high": 25.0,
+            "today_low": 20.0,
+        },
+        "analysis": {
+            "trends": {"change_rate_1h": 0.2},
+            "patterns": {"vs_yesterday": -1.0},
+        },
+    }
+    weather = {
+        "current": {
+            "weather_code": 1,
+            "temperature": 24.5,
+            "humidity": 54,
+            "wind_speed": 2.0,
+            "wind_direction": 90,
+        },
+        "hourly_forecast": [],
+        "daily": {},
+        "yahoo_precip": {},
+    }
+    alerts = {"alerts": [], "transitions": []}
+    return module.analyze_with_gemini(spreadsheet, weather, alerts)
+
+
+primary = FakeModels()
+result = run_with(primary)
+assert primary.calls[0][0] == "gemini-3.6-flash"
+assert "気象データ:" in primary.calls[0][1]
+assert "直前と同じ書き出し" in primary.calls[0][1]
+assert "次回更新" not in primary.calls[0][1]
+assert "次回更新" not in result
+assert len(result) < 620
+
+failed = FakeModels(fail_primary=True)
+failed_result = run_with(failed)
+assert [call[0] for call in failed.calls] == ["gemini-3.6-flash"]
+assert failed_result.startswith("⚠️ 分析エラー (gemini-3.6-flash):")
+
+no_data_models = FakeModels()
+module.genai.Client = lambda **_kwargs: types.SimpleNamespace(models=no_data_models)
+no_data_result = module.analyze_with_gemini(
+    {"current": {}},
+    {"current": {}, "yahoo_precip": {}},
+    {"alerts": [], "transitions": []},
+)
+assert no_data_models.calls == []
+assert "AI分析を実行しませんでした" in no_data_result
+
+assert module._select_editorial_focus(
+    module.datetime.now(module.JST),
+    25,
+    25,
+    {"yahoo_precip": {"is_raining": True}},
+    {"alerts": []},
+    {},
+).startswith("雨の現在地")
+
+assert module._select_editorial_focus(
+    module.datetime.now(module.JST),
+    25,
+    25,
+    {},
+    {"alerts": [{"level": 4}]},
+    {},
+).startswith("防災情報")
+
+
+class FakeWeatherResponse:
+    def raise_for_status(self):
+        return None
+
+    def json(self):
+        size = 48
+        return {
+            "current": {
+                "weather_code": 1,
+                "temperature_2m": 24.5,
+                "relative_humidity_2m": 54,
+                "wind_speed_10m": 2.0,
+            },
+            "hourly": {
+                "time": [f"2026-07-31T{i % 24:02d}:00" for i in range(size)],
+                "weather_code": [1] * size,
+                "temperature_2m": [24.5] * size,
+                "precipitation_probability": [10] * size,
+                "wind_speed_10m": [2.0] * size,
+            },
+            "daily": {
+                "time": ["2026-07-31"],
+                "sunrise": ["2026-07-31T04:47"],
+                "sunset": ["2026-07-31T18:48"],
+                "temperature_2m_max": [33.2],
+                "temperature_2m_min": [25.1],
+                "precipitation_probability_max": [40],
+                "precipitation_sum": [2.5],
+                "wind_speed_10m_max": [6.4],
+                "wind_gusts_10m_max": [12.1],
+                "wind_direction_10m_dominant": [180],
+            },
+        }
+
+
+module.requests.get = lambda *_args, **_kwargs: FakeWeatherResponse()
+forecast = module.fetch_weather_forecast()
+assert forecast["daily"]["temperature_max"] == 33.2
+assert forecast["daily"]["temperature_min"] == 25.1
+assert forecast["daily"]["precipitation_sum"] == 2.5
+assert forecast["daily"]["wind_gusts_max"] == 12.1
+assert forecast["daily"]["wind_direction_dominant"] == "南"
+
+with tempfile.TemporaryDirectory() as temp_dir:
+    output_path = Path(temp_dir) / "output.json"
+    module._write_json_atomic(output_path, {"message": "正常"})
+    assert json.loads(output_path.read_text(encoding="utf-8")) == {
+        "message": "正常"
+    }
+    assert not output_path.with_suffix(".json.tmp").exists()
+
+print("AI advisor prompt tests passed")

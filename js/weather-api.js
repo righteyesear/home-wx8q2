@@ -252,11 +252,15 @@ async function loadAIComment() {
                     expandBtn.textContent = '閉じる';
                     expandBtn.style.display = 'inline-block';
                 } else {
-                    // Find good break point (word boundary)
+                    // 日本語でも読みやすい句読点を優先して区切る
                     let breakPoint = TRUNCATE_LENGTH;
-                    while (breakPoint > 100 && plainText[breakPoint] !== ' ') {
+                    while (
+                        breakPoint > 100
+                        && !'。！？\n'.includes(plainText[breakPoint - 1])
+                    ) {
                         breakPoint--;
                     }
+                    if (breakPoint <= 100) breakPoint = TRUNCATE_LENGTH;
                     const truncatedPlain = plainText.substring(0, breakPoint);
                     const truncatedHtml = simpleMarkdownToHtml(truncatedPlain) + '...';
                     textEl.innerHTML = truncatedHtml;
@@ -269,12 +273,19 @@ async function loadAIComment() {
                 expandBtn.style.display = 'none';
             }
 
-            // Format time
+            // 生成時刻・モデル・データ取得状態
+            const statusParts = [];
             if (data.generated_at) {
                 const genTime = new Date(data.generated_at);
                 const timeStr = genTime.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
-                document.getElementById('aiAdvisorTime').textContent = `${timeStr} 生成`;
+                statusParts.push(`${timeStr}生成`);
             }
+            if (data.model) {
+                statusParts.push(data.model.replace('gemini-', 'Gemini '));
+            }
+            const sourceErrors = Object.values(data.source_status || {}).filter(Boolean);
+            if (sourceErrors.length > 0) statusParts.push('⚠ 一部データ取得失敗');
+            document.getElementById('aiAdvisorTime').textContent = statusParts.join(' · ');
 
             // Show section
             document.getElementById('aiAdvisorSection').classList.add('show');

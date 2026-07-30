@@ -1,0 +1,23 @@
+[
+  {
+    "controlDatetime": "2026-06-02T15:08:05Z",
+    "reportDatetime": "2026-06-03T00:08:00+09:00",
+    "infoType": "発表",
+    "publishingOffice": "気象庁",
+    "headlineText": "東京地方、伊豆諸島北部、伊豆諸島南部では、低い土地の浸水や河川の増水に注意してください。",
+    "warning": {
+      "class20Items": [
+        {
+          "areaCode": "1312200",
+          "kinds": [
+            {
+              "code": "10",
+              "status": "発表"
+            }
+          ]
+        }
+      ]
+    },
+    "dataTypeCode": "VPWW55"
+  }
+]
