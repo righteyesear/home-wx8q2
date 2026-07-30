@@ -1,5 +1,5 @@
 # AI気象アドバイザー 定期更新ワークフロー
-# 昼間（7-22時）: 毎時、夜間: 1時, 4時 = 計18回/日
+# 昼間（7-22時）: 毎時、夜間: 4時 = 計17回/日
 
 name: AI Weather Advisor Update
 
@@ -7,7 +7,6 @@ on:
   schedule:
     # UTC時間で設定（JST = UTC + 9）
     # 夜間
-    - cron: '0 16 * * *'   # JST 1:00
     - cron: '0 19 * * *'   # JST 4:00
     # 昼間（7:00-22:00 JST = 22:00-13:00 UTC）
     - cron: '0 22 * * *'   # JST 7:00
@@ -76,6 +75,7 @@ jobs:
         env:
           # GitHub Secretsから安全にAPIキーを読み込み
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-3.6-flash
           SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
         run: |
           python scripts/ai_advisor.py
@@ -124,7 +124,7 @@ jobs:
             echo "No changes to commit"
           else
             git add ai_comment.json
-            git commit -m "🤖 Update AI weather advice [$(date +'%Y-%m-%d %H:%M JST')]"
+            git commit -m "🤖 Update AI weather advice [$(TZ=Asia/Tokyo date +'%Y-%m-%d %H:%M JST')]"
             git pull --rebase origin main || true
             git push
             echo "✅ Changes pushed successfully"

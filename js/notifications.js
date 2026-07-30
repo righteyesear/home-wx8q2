@@ -44,11 +44,22 @@ const VAPID_PUBLIC_KEY = 'BPcLliQGMqx_XC_LpymDjhVNerzB1TJb9oqAfpeS9VyTxW7Ab3Heo5
 
 // Your Cloudflare Worker subscription endpoint
 const PUSH_SUBSCRIBE_URL = 'https://push-notifications.miurayukimail.workers.dev/api/subscribe';
+let notificationSyncFailed = false;
+
+async function syncPushSubscription(subscription) {
+    const response = await fetch(PUSH_SUBSCRIBE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(subscription)
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || result.success !== true) {
+        throw new Error(result.error || `購読サーバーエラー (${response.status})`);
+    }
+    return result;
+}
 
 async function toggleNotifications() {
-    const btn = document.getElementById('notificationToggle');
-    const icon = document.getElementById('notificationIcon');
-
     // Check if notifications are supported
     if (!('Notification' in window) || !('serviceWorker' in navigator)) {
         alert('このブラウザはプッシュ通知に対応していません');
@@ -73,14 +84,23 @@ async function toggleNotifications() {
         const subscription = await registration.pushManager.getSubscription();
 
         if (subscription) {
+            if (notificationSyncFailed) {
+                await syncPushSubscription(subscription);
+                updateNotificationUI(true);
+                console.log('[Notification] Subscription re-synced');
+                return;
+            }
             // Already subscribed - unsubscribe
             await subscription.unsubscribe();
             // Notify server to remove subscription
-            await fetch(PUSH_SUBSCRIBE_URL, {
+            const response = await fetch(PUSH_SUBSCRIBE_URL, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ endpoint: subscription.endpoint })
             });
+            if (!response.ok) {
+                console.warn('[Notification] Server unsubscribe failed:', response.status);
+            }
             updateNotificationUI(false);
             console.log('[Notification] Unsubscribed');
         } else {
@@ -93,44 +113,66 @@ async function toggleNotifications() {
                     applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
                 });
 
-                // Send subscription to server
-                await fetch(PUSH_SUBSCRIBE_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newSubscription)
-                });
+                try {
+                    // Server registration is part of successful subscription.
+                    await syncPushSubscription(newSubscription);
+                } catch (syncError) {
+                    await newSubscription.unsubscribe().catch(() => {});
+                    throw syncError;
+                }
 
                 updateNotificationUI(true);
-                console.log('[Notification] Subscribed:', newSubscription);
+                console.log('[Notification] Subscribed and synced');
             } else {
                 updateNotificationUI(false, result === 'denied');
             }
         }
     } catch (err) {
         console.error('[Notification] Error:', err);
+        updateNotificationUI(false, false, true);
         alert('通知の設定中にエラー: ' + err.message);
     }
 }
 
-function updateNotificationUI(enabled, denied = false) {
+function updateNotificationUI(enabled, denied = false, syncError = false) {
     const btn = document.getElementById('notificationToggle');
     const icon = document.getElementById('notificationIcon');
+    const text = document.getElementById('notificationText');
+    if (!btn || !icon) return;
 
     if (denied) {
+        notificationSyncFailed = false;
         btn.classList.add('denied');
         btn.classList.remove('enabled');
         icon.textContent = '🔕';
+        if (text) text.textContent = '通知ブロック中';
         btn.title = '通知がブロックされています';
+        notificationsEnabled = false;
+    } else if (syncError) {
+        notificationSyncFailed = true;
+        btn.classList.add('denied');
+        btn.classList.remove('enabled');
+        icon.textContent = '⚠️';
+        if (text) text.textContent = '通知再登録が必要';
+        btn.title = '通知サーバーとの同期に失敗しました。押して再登録してください';
+        notificationsEnabled = false;
     } else if (enabled) {
+        notificationSyncFailed = false;
         btn.classList.add('enabled');
         btn.classList.remove('denied');
         icon.textContent = '🔔';
+        if (text) text.textContent = '通知ON';
         btn.title = '通知をオフにする';
+        notificationsEnabled = true;
     } else {
+        notificationSyncFailed = false;
         btn.classList.remove('enabled', 'denied');
         icon.textContent = '🔕';
+        if (text) text.textContent = '通知OFF';
         btn.title = '通知をオンにする';
+        notificationsEnabled = false;
     }
+    localStorage.setItem('notifications', String(notificationsEnabled));
 }
 
 // Check notification state on page load
@@ -148,9 +190,16 @@ async function initNotificationState() {
     try {
         const registration = await navigator.serviceWorker.ready;
         const subscription = await registration.pushManager.getSubscription();
-        updateNotificationUI(!!subscription);
+        if (subscription) {
+            // Worker再配置やKV消失後も、ページ表示時にサーバー側購読を復元する。
+            await syncPushSubscription(subscription);
+            updateNotificationUI(true);
+        } else {
+            updateNotificationUI(false);
+        }
     } catch (err) {
-        console.log('[Notification] Init error:', err);
+        console.error('[Notification] Init/sync error:', err);
+        updateNotificationUI(false, false, true);
     }
 }
 

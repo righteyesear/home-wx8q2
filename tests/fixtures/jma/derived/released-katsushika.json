@@ -1,0 +1,23 @@
+[
+  {
+    "controlDatetime": "2026-06-03T07:10:05Z",
+    "reportDatetime": "2026-06-03T16:10:00+09:00",
+    "infoType": "発表",
+    "publishingOffice": "気象庁",
+    "headlineText": "注意報を解除します。",
+    "warning": {
+      "class20Items": [
+        {
+          "areaCode": "1312200",
+          "kinds": [
+            {
+              "code": "10",
+              "status": "解除"
+            }
+          ]
+        }
+      ]
+    },
+    "dataTypeCode": "VPWW55"
+  }
+]

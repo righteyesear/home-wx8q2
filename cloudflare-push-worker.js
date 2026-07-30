@@ -7,11 +7,35 @@ export default {
         const corsHeaders = {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         };
 
         if (request.method === 'OPTIONS') {
             return new Response(null, { headers: corsHeaders });
+        }
+
+        const adminPaths = new Set([
+            '/api/test', '/api/test/warning', '/api/test/special',
+            '/api/test/rain', '/api/test/heavyrain', '/api/test/fullmoon',
+            '/api/test/temperature', '/api/test/heatwave',
+            '/api/test/tempchange', '/api/test/real-rain', '/api/check'
+        ]);
+        if (adminPaths.has(path)) {
+            if (!env.ADMIN_TOKEN) {
+                return new Response(JSON.stringify({
+                    error: 'ADMIN_TOKEN is not configured'
+                }), {
+                    status: 503,
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
+            const authorization = request.headers.get('Authorization') || '';
+            if (authorization !== `Bearer ${env.ADMIN_TOKEN}`) {
+                return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+                    status: 401,
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
         }
 
         switch (path) {
@@ -75,6 +99,20 @@ export default {
     async subscribe(request, env, corsHeaders) {
         try {
             const subscription = await request.json();
+            if (
+                !subscription
+                || typeof subscription.endpoint !== 'string'
+                || !subscription.endpoint.startsWith('https://')
+                || typeof subscription.keys?.p256dh !== 'string'
+                || typeof subscription.keys?.auth !== 'string'
+            ) {
+                return new Response(JSON.stringify({
+                    error: 'Invalid push subscription'
+                }), {
+                    status: 400,
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
             const key = this.hashEndpoint(subscription.endpoint);
             await env.KV.put(key, JSON.stringify({ subscription, createdAt: new Date().toISOString() }));
             return new Response(JSON.stringify({ success: true, id: key }), {
@@ -285,141 +323,274 @@ export default {
         return results;
     },
 
-    // JMA警報チェック（警報・特別警報のみ、注意報は除外）
-    async checkJMAWarnings(env) {
-        try {
-            const response = await fetch('https://www.jma.go.jp/bosai/warning/data/warning/130000.json');
-            if (!response.ok) return { warnings: [], specialWarnings: [] };
+    // 2026-05-29以降のJMA警報JSONを地域別に正規化する。
+    normalizeJMAWarnings(data, areaCode = '1312200') {
+        if (!Array.isArray(data)) {
+            throw new Error('Unexpected JMA warning response schema');
+        }
 
-            const data = await response.json();
-            const reportTime = data.reportDatetime || '';
-            const warnings = [];
-            const specialWarnings = [];
+        const definitions = {
+            VPWW55: {
+                '33': { name: 'レベル5 大雨特別警報', level: 5 },
+                '43': { name: 'レベル4 大雨危険警報', level: 4 },
+                '03': { name: 'レベル3 大雨警報', level: 3 },
+                '10': { name: 'レベル2 大雨注意報', level: 2 }
+            },
+            VPWW56: {
+                '39': { name: 'レベル5 土砂災害特別警報', level: 5 },
+                '49': { name: 'レベル4 土砂災害危険警報', level: 4 },
+                '09': { name: 'レベル3 土砂災害警報', level: 3 },
+                '29': { name: 'レベル2 土砂災害注意報', level: 2 }
+            },
+            VPWW57: {
+                '38': { name: 'レベル5 高潮特別警報', level: 5 },
+                '48': { name: 'レベル4 高潮危険警報', level: 4 },
+                '08': { name: 'レベル3 高潮警報', level: 3 },
+                '19': { name: 'レベル2 高潮注意報', level: 2 }
+            },
+            VPWW58: {
+                '32': { name: '暴風雪特別警報', level: 5 },
+                '35': { name: '暴風特別警報', level: 5 },
+                '02': { name: '暴風雪警報', level: 3 },
+                '05': { name: '暴風警報', level: 3 },
+                '13': { name: '風雪注意報', level: 2 },
+                '15': { name: '強風注意報', level: 2 }
+            },
+            VPWW59: {
+                '37': { name: '波浪特別警報', level: 5 },
+                '07': { name: '波浪警報', level: 3 },
+                '16': { name: '波浪注意報', level: 2 }
+            },
+            VPWW60: {
+                '36': { name: '大雪特別警報', level: 5 },
+                '06': { name: '大雪警報', level: 3 },
+                '12': { name: '大雪注意報', level: 2 }
+            },
+            VPWW61: {
+                '14': { name: '雷注意報', level: 2 },
+                '17': { name: '融雪注意報', level: 2 },
+                '20': { name: '濃霧注意報', level: 2 },
+                '21': { name: '乾燥注意報', level: 2 },
+                '22': { name: 'なだれ注意報', level: 2 },
+                '23': { name: '低温注意報', level: 2 },
+                '24': { name: '霜注意報', level: 2 },
+                '25': { name: '着氷注意報', level: 2 },
+                '26': { name: '着雪注意報', level: 2 },
+                '27': { name: 'その他の注意報', level: 2 }
+            }
+        };
+        const activeStatuses = new Set([
+            '発表',
+            '継続',
+            '特別警報から危険警報',
+            '特別警報から警報',
+            '特別警報から注意報',
+            '危険警報から警報',
+            '危険警報から注意報',
+            '警報から注意報'
+        ]);
 
-            // 特別警報・レベル5相当コード対応表（注意報は除外）
-            const SPECIAL_WARNINGS = {
-                '32': '暴風雪特別警報', 
-                '33': 'レベル5 大雨特別警報', 
-                '35': '暴風特別警報',
-                '36': '大雪特別警報', 
-                '37': '波浪特別警報', 
-                '38': 'レベル5 高潮特別警報',
-                '39': 'レベル5 氾濫特別警報', // 新設
-                '40': 'レベル5 土砂災害特別警報' // 新設
-            };
-            // 警報・危険警報（レベル3/4相当）コード対応表（注意報は除外）
-            const WARNINGS = {
-                '02': '暴風雪警報', 
-                '03': 'レベル3 大雨警報', 
-                '05': '暴風警報', 
-                '06': '大雪警報', 
-                '07': '波浪警報', 
-                '08': 'レベル4 高潮危険警報',
-                '09': 'レベル3 土砂災害警報',
-                '41': 'レベル4 大雨危険警報', // 新設
-                '42': 'レベル4 土砂災害危険警報', // 新設
-                '43': 'レベル4 河川氾濫危険警報', // 新設
-                '44': 'レベル3 河川氾濫警報' // 新設
-            };
+        const active = [];
+        const transitions = [];
+        const seen = new Set();
+        let latestControlDatetime = '';
 
-            const dangerWarnings = [];  // レベル4
-            const regularWarnings = []; // レベル3
+        for (const report of data) {
+            const dataTypeCode = report.dataTypeCode || '';
+            const codeDefinitions = definitions[dataTypeCode] || {};
+            if (report.controlDatetime > latestControlDatetime) {
+                latestControlDatetime = report.controlDatetime;
+            }
 
-            if (data.areaTypes) {
-                for (const areaType of data.areaTypes) {
-                    for (const area of (areaType.areas || [])) {
-                        if (area.code === '130014' || area.name?.includes('東部')) {
-                            for (const warning of (area.warnings || [])) {
-                                if (warning.status === '発表' || warning.status === '継続') {
-                                    const code = warning.code?.toString().padStart(2, '0') || '';
-                                    
-                                    // 辞書マッピングまたはAPIが返す名称を使用
-                                    const name = warning.name || SPECIAL_WARNINGS[code] || WARNINGS[code];
-                                    if (!name) continue;
+            for (const area of (report.warning?.class20Items || [])) {
+                if (area.areaCode !== areaCode) continue;
 
-                                    if (SPECIAL_WARNINGS[code] || name.includes('レベル5') || name.includes('特別警報') || name.includes('氾濫特別警報')) {
-                                        specialWarnings.push(name);
-                                    } else if (name.includes('レベル4') || name.includes('危険警報')) {
-                                        dangerWarnings.push(name);
-                                    } else if (WARNINGS[code] || name.includes('レベル3') || name.includes('警報')) {
-                                        regularWarnings.push(name);
-                                    }
-                                }
-                            }
+                for (const kind of (area.kinds || [])) {
+                    const status = kind.status || '';
+                    const code = kind.code?.toString().padStart(2, '0') || '';
+
+                    if (!activeStatuses.has(status)) {
+                        if (status && status !== '発表警報・注意報はなし') {
+                            transitions.push({
+                                dataTypeCode,
+                                code: code || null,
+                                status,
+                                reportDatetime: report.reportDatetime || null
+                            });
                         }
+                        continue;
                     }
+                    if (!code) continue;
+
+                    const id = `${dataTypeCode}:${code}`;
+                    if (seen.has(id)) continue;
+                    seen.add(id);
+
+                    const definition = codeDefinitions[code] || {
+                        name: `気象警報等（${dataTypeCode}/${code}）`,
+                        level: 0
+                    };
+                    active.push({
+                        id,
+                        dataTypeCode,
+                        code,
+                        name: definition.name,
+                        level: definition.level,
+                        status,
+                        reportDatetime: report.reportDatetime || null,
+                        controlDatetime: report.controlDatetime || null
+                    });
+                }
+            }
+        }
+
+        active.sort((a, b) => b.level - a.level || a.id.localeCompare(b.id));
+        return { areaCode, latestControlDatetime, active, transitions };
+    },
+
+    // JMA警報チェック。注意報も状態管理に含めるが、通常の注意報はプッシュしない。
+    async checkJMAWarnings(env) {
+        const stateKey = 'jma_warning_state_1312200';
+
+        try {
+            const response = await fetch(
+                'https://www.jma.go.jp/bosai/warning/data/r8/130000.json',
+                { cache: 'no-store' }
+            );
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            const normalized = this.normalizeJMAWarnings(await response.json(), '1312200');
+            let previousState = { lastControlDatetime: '', active: [] };
+            const storedState = await env.KV.get(stateKey);
+            if (storedState) {
+                try {
+                    previousState = JSON.parse(storedState);
+                } catch (e) {
+                    console.warn('[JMA] Invalid previous state, rebuilding:', e.message);
                 }
             }
 
-            const timeStr = reportTime ? new Date(reportTime).toLocaleTimeString('ja-JP', {
-                hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tokyo'
-            }) : '';
+            // 古いレスポンスで新しい状態を上書きしない。
+            if (
+                previousState.lastControlDatetime &&
+                normalized.latestControlDatetime &&
+                normalized.latestControlDatetime < previousState.lastControlDatetime
+            ) {
+                return {
+                    warnings: [],
+                    dangerWarnings: [],
+                    specialWarnings: [],
+                    advisories: [],
+                    active: previousState.active || [],
+                    skipped: 'out_of_order'
+                };
+            }
 
-            // 1. 特別警報通知（最優先・レベル5相当）
-            if (specialWarnings.length > 0) {
-                const newSpecialWarnings = [];
-                for (const w of specialWarnings) {
-                    const key = 'notify_special_' + w.replace(/\s/g, '');
-                    if (!await env.KV.get(key)) {
-                        newSpecialWarnings.push(w);
-                        await env.KV.put(key, 'true', { expirationTtl: 21600 }); // 6時間
-                    }
-                }
-                if (newSpecialWarnings.length > 0) {
+            const previousActive = Array.isArray(previousState.active) ? previousState.active : [];
+            const previousIds = new Set(previousActive.map(alert => alert.id));
+            const currentIds = new Set(normalized.active.map(alert => alert.id));
+            const newUrgent = normalized.active.filter(
+                alert => alert.level >= 3 && !previousIds.has(alert.id)
+            );
+            const resolvedUrgent = previousActive.filter(
+                alert => alert.level >= 3 && !currentIds.has(alert.id)
+            );
+
+            const notifyGroup = async (alerts, title, guidance) => {
+                if (alerts.length === 0) return;
+                const reportTime = alerts
+                    .map(alert => alert.reportDatetime)
+                    .filter(Boolean)
+                    .sort()
+                    .at(-1);
+                const timeStr = reportTime ? new Date(reportTime).toLocaleTimeString('ja-JP', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    timeZone: 'Asia/Tokyo'
+                }) : '';
+                await this.sendToAll(env, {
+                    title,
+                    body: `${alerts.map(alert => alert.name).join(' ')}${timeStr ? `（${timeStr}発表）` : ''}\n${guidance}`,
+                    data: { url: './#alertBanner' }
+                });
+            };
+
+            await notifyGroup(
+                newUrgent.filter(alert => alert.level >= 5),
+                '🔴 特別警報',
+                '命を守る最善の行動をとってください！'
+            );
+            await notifyGroup(
+                newUrgent.filter(alert => alert.level === 4),
+                '🟪 危険警報',
+                '危険な場所から全員避難してください！'
+            );
+            await notifyGroup(
+                newUrgent.filter(alert => alert.level === 3),
+                '🚨 気象警報',
+                '自治体の避難情報と危険度分布を確認してください'
+            );
+
+            // 警報が注意報へ下がった場合、または解除された場合は1回だけ通知する。
+            if (resolvedUrgent.length > 0 && newUrgent.length === 0) {
+                const replacements = normalized.active.filter(alert =>
+                    alert.level <= 2 &&
+                    resolvedUrgent.some(previous => previous.dataTypeCode === alert.dataTypeCode)
+                );
+                if (replacements.length > 0) {
                     await this.sendToAll(env, {
-                        title: '🔴 特別警報',
-                        body: `${newSpecialWarnings.join(' ')}（${timeStr}発表）\n命を守る最善の行動をとってください！`,
+                        title: '⚠️ 気象警報の切替',
+                        body: `${resolvedUrgent.map(alert => alert.name).join('・')}は解除され、${replacements.map(alert => alert.name).join('・')}に切り替わりました。`,
+                        data: { url: './#alertBanner' }
+                    });
+                } else {
+                    await this.sendToAll(env, {
+                        title: '✅ 気象警報解除',
+                        body: `${resolvedUrgent.map(alert => alert.name).join('・')}は解除されました。`,
                         data: { url: './#alertBanner' }
                     });
                 }
             }
 
-            // 2. 危険警報通知（全員避難・レベル4相当）
-            if (dangerWarnings.length > 0) {
-                const newDangerWarnings = [];
-                for (const w of dangerWarnings) {
-                    const key = 'notify_danger_' + w.replace(/\s/g, '');
-                    if (!await env.KV.get(key)) {
-                        newDangerWarnings.push(w);
-                        await env.KV.put(key, 'true', { expirationTtl: 21600 }); // 6時間
-                    }
-                }
-                if (newDangerWarnings.length > 0) {
-                    await this.sendToAll(env, {
-                        title: '🟪 危険警報',
-                        body: `${newDangerWarnings.join(' ')}（${timeStr}発表）\n危険な場所から全員避難してください！`,
-                        data: { url: './#alertBanner' }
-                    });
-                }
-            }
+            await env.KV.put(stateKey, JSON.stringify({
+                areaCode: normalized.areaCode,
+                lastControlDatetime: normalized.latestControlDatetime,
+                active: normalized.active
+            }));
 
-            // 3. 警報通知（高齢者等避難・レベル3相当）
-            if (regularWarnings.length > 0) {
-                const newWarnings = [];
-                for (const w of regularWarnings) {
-                    const key = 'notify_warning_' + w.replace(/\s/g, '');
-                    if (!await env.KV.get(key)) {
-                        newWarnings.push(w);
-                        await env.KV.put(key, 'true', { expirationTtl: 21600 }); // 6時間
-                    }
-                }
-                if (newWarnings.length > 0) {
-                    await this.sendToAll(env, {
-                        title: '🚨 気象警報',
-                        body: `${newWarnings.join(' ')}（${timeStr}発表）\n高齢者等の方は避難を開始してください`,
-                        data: { url: './#alertBanner' }
-                    });
-                }
-            }
+            const specialWarnings = normalized.active
+                .filter(alert => alert.level >= 5)
+                .map(alert => alert.name);
+            const dangerWarnings = normalized.active
+                .filter(alert => alert.level === 4)
+                .map(alert => alert.name);
+            const regularWarnings = normalized.active
+                .filter(alert => alert.level === 3)
+                .map(alert => alert.name);
+            const advisories = normalized.active
+                .filter(alert => alert.level === 2)
+                .map(alert => alert.name);
 
-            return { 
-                warnings: [...regularWarnings, ...dangerWarnings], // 後方互換性のため両方含める
-                dangerWarnings, 
-                specialWarnings 
+            return {
+                warnings: [...regularWarnings, ...dangerWarnings],
+                dangerWarnings,
+                specialWarnings,
+                advisories,
+                active: normalized.active,
+                transitions: normalized.transitions
             };
         } catch (e) {
+            // 取得失敗を解除として保存しない。
             console.error('[JMA Error]', e.message);
-            return { warnings: [], specialWarnings: [] };
+            return {
+                warnings: [],
+                dangerWarnings: [],
+                specialWarnings: [],
+                advisories: [],
+                error: e.message
+            };
         }
     },
 
@@ -504,7 +675,7 @@ export default {
         // 朝8時のみチェック
         if (hour !== 8) return false;
 
-        const moonAge = this.calculateMoonAge(now);
+        const moonAge = this.calculateMoonAge(jstNow);
         const isFullMoon = moonAge >= 13.5 && moonAge < 15.5;
 
         if (isFullMoon) {
@@ -534,11 +705,21 @@ export default {
     },
 
     calculateMoonAge(date) {
-        const y = date.getFullYear(), m = date.getMonth() + 1, d = date.getDate();
-        const c = Math.floor(y / 100);
-        let adj = m < 3 ? 1 : 0;
-        let jd = Math.floor(365.25 * (y - adj + 4716)) + Math.floor(30.6001 * ((m < 3 ? m + 12 : m) + 1)) + d - 1524.5;
-        jd = jd - Math.floor(c / 4) + c + 2;
+        let y = date.getFullYear();
+        let m = date.getMonth() + 1;
+        const d = date.getDate()
+            + (date.getHours() + date.getMinutes() / 60) / 24;
+        if (m <= 2) {
+            y -= 1;
+            m += 12;
+        }
+        const century = Math.floor(y / 100);
+        const gregorianCorrection = 2 - century + Math.floor(century / 4);
+        const jd = Math.floor(365.25 * (y + 4716))
+            + Math.floor(30.6001 * (m + 1))
+            + d
+            + gregorianCorrection
+            - 1524.5;
         return ((jd - 2451550.1) % 29.53058867 + 29.53058867) % 29.53058867;
     },
 
@@ -572,7 +753,10 @@ export default {
             }
 
             // 月ごとの閾値設定
-            const month = new Date().getMonth() + 1;
+            const jstNow = new Date(new Date().toLocaleString('en-US', {
+                timeZone: 'Asia/Tokyo'
+            }));
+            const month = jstNow.getMonth() + 1;
             const thresholds = this.getMonthlyThresholds(month);
 
             let alertType = null;
@@ -750,9 +934,15 @@ export default {
         let sent = 0, failed = 0, cleaned = 0;
 
         for (const key of list.keys) {
-            const data = await env.KV.get(key.name);
-            if (data) {
+            try {
+                const data = await env.KV.get(key.name);
+                if (!data) continue;
                 const { subscription } = JSON.parse(data);
+                if (!subscription?.endpoint || !subscription?.keys) {
+                    await env.KV.delete(key.name);
+                    cleaned++;
+                    continue;
+                }
                 const result = await this.sendWebPush(env, subscription, payload);
                 if (result.success) {
                     sent++;
@@ -764,7 +954,30 @@ export default {
                 } else {
                     failed++;
                 }
+            } catch (error) {
+                failed++;
+                console.error('[Push] Invalid subscription entry:', key.name, error.message);
             }
+        }
+        const delivery = {
+            attemptedAt: new Date().toISOString(),
+            title: String(payload?.title || '').slice(0, 100),
+            subscribers: list.keys.length,
+            sent,
+            failed,
+            cleaned
+        };
+        try {
+            await env.KV.put(
+                'push_last_delivery',
+                JSON.stringify(delivery),
+                { expirationTtl: 2592000 }
+            );
+        } catch (error) {
+            console.error('[Push] Failed to save delivery metrics:', error.message);
+        }
+        if (list.keys.length > 0 && sent === 0 && failed > 0) {
+            throw new Error(`All push deliveries failed (${failed})`);
         }
         return { sent, failed, cleaned };
     },
@@ -805,13 +1018,13 @@ export default {
                 return { success: true, gone: false };
             }
             // 410 Gone = サブスクリプションが完全に無効化された
-            if (response.status === 410) {
-                return { success: false, gone: true };
+            if (response.status === 404 || response.status === 410) {
+                return { success: false, gone: true, status: response.status };
             }
-            return { success: false, gone: false };
+            return { success: false, gone: false, status: response.status };
         } catch (error) {
             console.error('[Push Error]', error.message, error.stack);
-            return { success: false, gone: false };
+            return { success: false, gone: false, status: null };
         }
     },
 
@@ -984,6 +1197,15 @@ export default {
     // Cron Trigger: 定期実行（1分ごと）
     async scheduled(event, env, ctx) {
         const now = new Date();
+        try {
+            await env.KV.put(
+                'cron_last_run',
+                now.toISOString(),
+                { expirationTtl: 86400 }
+            );
+        } catch (error) {
+            console.error('[Cron] Failed to save heartbeat:', error.message);
+        }
         const jstNow = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
         const hour = jstNow.getHours();
         const minute = jstNow.getMinutes();
@@ -1176,27 +1398,15 @@ export default {
 
             // 1. 気象警報の有無
             try {
-                const response = await fetch('https://www.jma.go.jp/bosai/warning/data/warning/130000.json');
+                const response = await fetch(
+                    'https://www.jma.go.jp/bosai/warning/data/r8/130000.json',
+                    { cache: 'no-store' }
+                );
                 if (response.ok) {
-                    const data = await response.json();
-                    const activeWarnings = [];
-                    if (data.areaTypes) {
-                        for (const areaType of data.areaTypes) {
-                            for (const area of (areaType.areas || [])) {
-                                if (area.code === '130014' || area.name?.includes('東部')) {
-                                    for (const warning of (area.warnings || [])) {
-                                        if ((warning.status === '発表' || warning.status === '継続') &&
-                                             ['03', '05', '06', '07', '08', '09', '33', '38', '39', '40', '41', '42', '43', '44'].includes(warning.code?.toString().padStart(2, '0'))) {
-                                            const warningNames = {
-                                                 '03': '大雨', '05': '暴風', '06': '大雪', '07': '波浪', '08': '高潮危険', '09': '土砂災害警報', '33': '大雨特別', '38': '高潮特別', '39': '氾濫特別', '40': '土砂災害特別', '41': '大雨危険', '42': '土砂災害危険', '43': '河川氾濫危険', '44': '河川氾濫'
-                                            };
-                                            activeWarnings.push(warningNames[warning.code?.toString().padStart(2, '0')] || '');
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    const normalized = this.normalizeJMAWarnings(await response.json(), '1312200');
+                    const activeWarnings = normalized.active
+                        .filter(alert => alert.level >= 3)
+                        .map(alert => alert.name);
                     if (activeWarnings.length > 0) {
                         summaryParts.push(`⚠️ ${activeWarnings.join('・')}警報発令中`);
                     }
@@ -1521,6 +1731,14 @@ export default {
     async getDetailedStatus(env, corsHeaders) {
         try {
             const subscribers = await this.getSubscriberCount(env);
+            const cronLastRun = await env.KV.get('cron_last_run');
+            const lastDeliveryRaw = await env.KV.get('push_last_delivery');
+            let lastDelivery = null;
+            try {
+                lastDelivery = lastDeliveryRaw ? JSON.parse(lastDeliveryRaw) : null;
+            } catch {
+                lastDelivery = { error: 'invalid stored delivery metrics' };
+            }
 
             // クールダウンKVの状態を確認
             const cooldownKeys = [
@@ -1543,6 +1761,20 @@ export default {
             return new Response(JSON.stringify({
                 checkedAt: jstStr,
                 subscribers,
+                cron: {
+                    lastRun: cronLastRun,
+                    ageMinutes: cronLastRun
+                        ? Math.round((Date.now() - Date.parse(cronLastRun)) / 60000)
+                        : null
+                },
+                lastDelivery,
+                configuration: {
+                    kv: !!env.KV,
+                    yahooProxy: !!env.YAHOO_PROXY,
+                    vapidPublicKey: !!env.VAPID_PUBLIC_KEY,
+                    vapidPrivateKey: !!env.VAPID_PRIVATE_KEY,
+                    adminToken: !!env.ADMIN_TOKEN
+                },
                 activeCooldowns: Object.fromEntries(
                     Object.entries(cooldowns).filter(([, v]) => v)
                 ),
@@ -1555,15 +1787,6 @@ export default {
                 status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
             });
         }
-    },
-
-    calculateMoonAge(date) {
-        const y = date.getFullYear(), m = date.getMonth() + 1, d = date.getDate();
-        const c = Math.floor(y / 100);
-        let adj = m < 3 ? 1 : 0;
-        let jd = Math.floor(365.25 * (y - adj + 4716)) + Math.floor(30.6001 * ((m < 3 ? m + 12 : m) + 1)) + d - 1524.5;
-        jd = jd - Math.floor(c / 4) + c + 2;
-        return ((jd - 2451550.1) % 29.53058867 + 29.53058867) % 29.53058867;
     }
 };
 

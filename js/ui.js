@@ -55,92 +55,143 @@ function updateDataAnalysis() {
     }
 }
 
-// JMA Warning Code to Name Mapping (気象庁防災情報XML公式コード - 完全版)
-const JMA_WARNING_NAMES = {
-    // 特別警報・レベル5相当 (32-39, 40)
-    '32': '暴風雪特別警報', 
-    '33': 'レベル5 大雨特別警報', 
-    '35': '暴風特別警報',
-    '36': '大雪特別警報', 
-    '37': '波浪特別警報', 
-    '38': 'レベル5 高潮特別警報',
-    '39': 'レベル5 氾濫特別警報', // 新設（河川氾濫特別警報）
-    '40': 'レベル5 土砂災害特別警報', // 新設
-
-    // 警報・レベル3/4相当 (02-08, 41-44)
-    '02': '暴風雪警報', 
-    '03': 'レベル3 大雨警報', 
-    '05': '暴風警報', 
-    '06': '大雪警報', 
-    '07': '波浪警報', 
-    '08': 'レベル4 高潮危険警報', // 旧高潮警報
-    '09': 'レベル3 土砂災害警報', // 新設
-    '41': 'レベル4 大雨危険警報', // 新設（大雨危険警報）
-    '42': 'レベル4 土砂災害危険警報', // 新設（土砂災害危険警報）
-    '43': 'レベル4 河川氾濫危険警報', // 新設（河川氾濫危険警報）
-    '44': 'レベル3 河川氾濫警報', // 新設（河川氾濫警報）
-
-    // 注意報・レベル2相当 (10-26, 45)
-    '10': 'レベル2 大雨注意報', 
-    '12': '大雪注意報', 
-    '13': '風雪注意報',
-    '14': '雷注意報', 
-    '15': '強風注意報', 
-    '16': '波浪注意報',
-    '17': '融雪注意報', 
-    '19': 'レベル2 高潮注意報',
-    '20': '濃霧注意報', 
-    '21': '乾燥注意報', 
-    '22': 'なだれ注意報',
-    '23': '低温注意報', 
-    '24': '霜注意報', 
-    '25': '着氷注意報',
-    '26': '着雪注意報',
-    '45': 'レベル2 河川氾濫注意報', // 新設（河川氾濫注意報）
-
-    // 津波警報・注意報
-    '50': '津波警報解除', '51': '津波警報', '52': '大津波警報', '53': '大津波警報',
-    '60': '津波注意報解除', '62': '津波注意報',
-    '71': '津波予報', '72': '津波予報', '73': '津波予報',
-    // 解除
-    '00': '解除'
+// 2026-05-29以降の気象警報・注意報コード。
+// コードだけでなく dataTypeCode と組み合わせて解釈する。
+const JMA_WARNING_DEFINITIONS = {
+    VPWW55: {
+        '33': { name: 'レベル5 大雨特別警報', level: 5 },
+        '43': { name: 'レベル4 大雨危険警報', level: 4 },
+        '03': { name: 'レベル3 大雨警報', level: 3 },
+        '10': { name: 'レベル2 大雨注意報', level: 2 }
+    },
+    VPWW56: {
+        '39': { name: 'レベル5 土砂災害特別警報', level: 5 },
+        '49': { name: 'レベル4 土砂災害危険警報', level: 4 },
+        '09': { name: 'レベル3 土砂災害警報', level: 3 },
+        '29': { name: 'レベル2 土砂災害注意報', level: 2 }
+    },
+    VPWW57: {
+        '38': { name: 'レベル5 高潮特別警報', level: 5 },
+        '48': { name: 'レベル4 高潮危険警報', level: 4 },
+        '08': { name: 'レベル3 高潮警報', level: 3 },
+        '19': { name: 'レベル2 高潮注意報', level: 2 }
+    },
+    VPWW58: {
+        '32': { name: '暴風雪特別警報', level: 5 },
+        '35': { name: '暴風特別警報', level: 5 },
+        '02': { name: '暴風雪警報', level: 3 },
+        '05': { name: '暴風警報', level: 3 },
+        '13': { name: '風雪注意報', level: 2 },
+        '15': { name: '強風注意報', level: 2 }
+    },
+    VPWW59: {
+        '37': { name: '波浪特別警報', level: 5 },
+        '07': { name: '波浪警報', level: 3 },
+        '16': { name: '波浪注意報', level: 2 }
+    },
+    VPWW60: {
+        '36': { name: '大雪特別警報', level: 5 },
+        '06': { name: '大雪警報', level: 3 },
+        '12': { name: '大雪注意報', level: 2 }
+    },
+    VPWW61: {
+        '14': { name: '雷注意報', level: 2 },
+        '17': { name: '融雪注意報', level: 2 },
+        '20': { name: '濃霧注意報', level: 2 },
+        '21': { name: '乾燥注意報', level: 2 },
+        '22': { name: 'なだれ注意報', level: 2 },
+        '23': { name: '低温注意報', level: 2 },
+        '24': { name: '霜注意報', level: 2 },
+        '25': { name: '着氷注意報', level: 2 },
+        '26': { name: '着雪注意報', level: 2 },
+        '27': { name: 'その他の注意報', level: 2 }
+    }
 };
 
-// Fetch JMA weather alerts for Tokyo (Katsushika = 23区東部)
-async function fetchAlerts() {
-    try {
-        const response = await fetch('https://www.jma.go.jp/bosai/warning/data/warning/130000.json');
-        const data = await response.json();
+const JMA_ACTIVE_STATUSES = new Set([
+    '発表',
+    '継続',
+    '特別警報から危険警報',
+    '特別警報から警報',
+    '特別警報から注意報',
+    '危険警報から警報',
+    '危険警報から注意報',
+    '警報から注意報'
+]);
 
-        const reportTime = data.reportDatetime || null;
+function normalizeJmaAlerts(data, areaCode = '1312200') {
+    if (!Array.isArray(data)) {
+        throw new Error('Unexpected JMA warning response schema');
+    }
 
-        // Find Katsushika area (code 1312200) or 23区東部 (code 130014)
-        const areaWarnings = [];
-        if (data.areaTypes) {
-            for (const areaType of data.areaTypes) {
-                for (const area of (areaType.areas || [])) {
-                    if (area.code === '130014' || area.code === '1312200' || area.name?.includes('東部')) {
-                        for (const warning of (area.warnings || [])) {
-                            if (warning.status === '発表' || warning.status === '継続') {
-                                const warningCode = warning.code?.toString().padStart(2, '0') || '';
-                                const warningName = warning.name || JMA_WARNING_NAMES[warningCode] || `警報${warningCode}`;
-                                areaWarnings.push({
-                                    name: warningName,
-                                    level: warning.kind?.code || 0
-                                });
-                            }
-                        }
-                    }
-                }
+    const alerts = [];
+    const seen = new Set();
+
+    for (const report of data) {
+        const dataTypeCode = report.dataTypeCode || '';
+        const definitions = JMA_WARNING_DEFINITIONS[dataTypeCode] || {};
+        const class20Items = report.warning?.class20Items || [];
+
+        for (const area of class20Items) {
+            if (area.areaCode !== areaCode) continue;
+
+            for (const kind of (area.kinds || [])) {
+                if (!JMA_ACTIVE_STATUSES.has(kind.status)) continue;
+
+                const code = kind.code?.toString().padStart(2, '0') || '';
+                if (!code) continue;
+
+                const definition = definitions[code] || {
+                    name: `気象警報等（${dataTypeCode}/${code}）`,
+                    level: 0
+                };
+                const id = `${dataTypeCode}:${code}`;
+                if (seen.has(id)) continue;
+                seen.add(id);
+
+                alerts.push({
+                    id,
+                    dataTypeCode,
+                    code,
+                    name: definition.name,
+                    level: definition.level,
+                    status: kind.status,
+                    reportDatetime: report.reportDatetime || null,
+                    controlDatetime: report.controlDatetime || null
+                });
             }
         }
+    }
+
+    return alerts.sort((a, b) => b.level - a.level || a.id.localeCompare(b.id));
+}
+
+// Fetch JMA weather alerts for Katsushika.
+async function fetchAlerts() {
+    try {
+        const response = await fetch('https://www.jma.go.jp/bosai/warning/data/r8/130000.json', {
+            cache: 'no-store'
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        const data = await response.json();
+        const areaWarnings = normalizeJmaAlerts(data, '1312200');
+        const reportTime = areaWarnings
+            .map(alert => alert.reportDatetime)
+            .filter(Boolean)
+            .sort()
+            .at(-1) || null;
 
         // Save to global for comment integration
         currentAlerts = areaWarnings;
         updateAlertBanner(areaWarnings, reportTime);
     } catch (e) {
-        console.log('JMA Alert API unavailable (CORS):', e.message);
-        document.getElementById('alertBanner').style.display = 'none';
+        console.error('JMA Alert API unavailable:', e.message);
+        // 取得失敗を「警報なし」と誤認しない。既存表示があれば維持する。
+        if (!currentAlerts || currentAlerts.length === 0) {
+            document.getElementById('alertBanner').style.display = 'none';
+        }
     }
 }
 

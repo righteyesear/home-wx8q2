@@ -1,0 +1,23 @@
+[
+  {
+    "controlDatetime": "2026-05-11T08:30:05Z",
+    "reportDatetime": "2026-05-11T17:30:00+09:00",
+    "infoType": "発表",
+    "publishingOffice": "気象庁",
+    "headlineText": "レベル５大雨特別警報を発表します。",
+    "warning": {
+      "class20Items": [
+        {
+          "areaCode": "1312200",
+          "kinds": [
+            {
+              "code": "33",
+              "status": "発表"
+            }
+          ]
+        }
+      ]
+    },
+    "dataTypeCode": "VPWW55"
+  }
+]
