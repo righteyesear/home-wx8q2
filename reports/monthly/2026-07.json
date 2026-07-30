@@ -7,7 +7,7 @@
     "end_date": "2026-07-31",
     "label": "2026年7月"
   },
-  "generated_at": "2026-07-30T10:43:58.585963+09:00",
+  "generated_at": "2026-07-30T14:34:51.116038+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -26,11 +26,11 @@
       "avg_temp_stdev": 2.9,
       "max_temp": 37.6,
       "max_temp_date": "2026/07/21",
-      "avg_high": 32.4,
+      "avg_high": 32.5,
       "min_temp": 20.4,
       "min_temp_date": "2026/07/04",
       "avg_low": 24.7,
-      "avg_daily_range": 7.8,
+      "avg_daily_range": 7.9,
       "prev_month_diff": 5.8,
       "prev_year_diff": -1.5
     },
@@ -270,10 +270,10 @@
       {
         "date": "2026/07/30",
         "weekday": "木",
-        "high": 34.4,
+        "high": 37.4,
         "low": 27.1,
-        "avg": 29.3,
-        "range": 7.3
+        "avg": 31.1,
+        "range": 10.3
       }
     ],
     "weekly_breakdown": [
@@ -342,15 +342,15 @@
         "end_date": "2026-07-31",
         "label": "7/29〜7/31",
         "days": 2,
-        "avg_temp": 29.9,
-        "avg_temp_stdev": 0.8,
-        "max_temp": 35.8,
-        "max_temp_date": "2026/07/29",
-        "avg_high": 35.1,
+        "avg_temp": 30.8,
+        "avg_temp_stdev": 0.4,
+        "max_temp": 37.4,
+        "max_temp_date": "2026/07/30",
+        "avg_high": 36.6,
         "min_temp": 24.5,
         "min_temp_date": "2026/07/29",
         "avg_low": 25.8,
-        "avg_daily_range": 9.3
+        "avg_daily_range": 10.8
       }
     ],
     "comparison": {
@@ -372,7 +372,7 @@
       "avg_temp_diff": -1.5,
       "max_temp_diff": 0.9,
       "min_temp_diff": -0.7,
-      "avg_daily_range_diff": -0.1,
+      "avg_daily_range_diff": 0.0,
       "ai_comment": "昨年の7月は最高気温が36.7度に達し、日中の厳しい酷暑と大きな寒暖差が特徴のギラギラとした真夏でした。一方で今年の7月は、最高気温が30度を下回り、一日を通じた気温の変化も非常に緩やかです。昨年のような極端な猛暑日はなく、全体的にしのぎやすい穏やかな夏のスタートとなっています。\n\nこの気候パターンの変化は私たちの暮らしにも大きく影響します。昨年は熱中症への厳重な警戒とエアコンのフル稼働が不可欠でしたが、今年は身体への熱ストレスが大幅に軽減され、お財布にも優しい1ヶ月になりそうです。ただ、日較差が小さくジメジメと感じる日もあるため、除湿を上手に使って快適に過ごしましょう。🍀"
     },
     "prev_month": {
@@ -392,7 +392,7 @@
       "avg_temp_diff": 5.8,
       "max_temp_diff": 3.5,
       "min_temp_diff": 4.8,
-      "avg_daily_range_diff": 0.9,
+      "avg_daily_range_diff": 1.0,
       "ai_comment": ""
     },
     "baseline": {
@@ -424,6 +424,11 @@
           "date": "2026/07/29",
           "type": "extreme_heat",
           "description": "猛暑日: 最高気温35.8℃"
+        },
+        {
+          "date": "2026/07/30",
+          "type": "extreme_heat",
+          "description": "猛暑日: 最高気温37.4℃"
         }
       ],
       "ai_comment": ""
@@ -694,7 +699,7 @@
         31.2,
         31.5,
         35.8,
-        34.4
+        37.4
       ],
       "lows": [
         22.7,
@@ -758,7 +763,7 @@
         26.4,
         26.5,
         30.5,
-        29.3
+        31.1
       ]
     },
     "prev_year_comparison": {
@@ -824,7 +829,7 @@
         26.4,
         26.5,
         30.5,
-        29.3
+        31.1
       ],
       "last_year": [
         29.4,
@@ -889,7 +894,7 @@
         31.2,
         31.5,
         35.8,
-        34.4
+        37.4
       ],
       "last_year_high": [
         34.5,
@@ -1053,7 +1058,7 @@
         -3.1,
         -3.0,
         1.0,
-        -0.2
+        1.6
       ],
       "baseline_avg": 29.5
     },
@@ -1070,14 +1075,14 @@
         28.0,
         30.3,
         29.2,
-        29.9
+        30.8
       ],
       "highs": [
         27.1,
         32.3,
         35.1,
         34.5,
-        35.1
+        36.6
       ],
       "lows": [
         21.5,
