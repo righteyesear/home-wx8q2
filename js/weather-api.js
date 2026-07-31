@@ -218,6 +218,24 @@ async function fetchAll() {
     }, 100); // Phase 2をすぐ開始（100msディレイ）
 }
 
+function truncateJapaneseText(text, maxLength = 150, minLength = 100) {
+    const chars = Array.from(String(text || ''));
+    if (chars.length <= maxLength) return { text: chars.join(''), truncated: false };
+
+    let breakPoint = maxLength;
+    while (
+        breakPoint > minLength
+        && !'。！？\n'.includes(chars[breakPoint - 1])
+    ) {
+        breakPoint--;
+    }
+    if (breakPoint <= minLength) breakPoint = maxLength;
+    return {
+        text: chars.slice(0, breakPoint).join('').trimEnd(),
+        truncated: true
+    };
+}
+
 // Load AI advisor comment from ai_comment.json
 async function loadAIComment() {
     try {
@@ -236,6 +254,7 @@ async function loadAIComment() {
 
             // Store full text for later
             textEl.dataset.fullText = html;
+            textEl.dataset.rawText = data.advice;
 
             // Check if user has already expanded - preserve that state
             const wasExpanded = textEl.dataset.truncated === 'false' && textEl.dataset.fullText;
@@ -252,17 +271,10 @@ async function loadAIComment() {
                     expandBtn.textContent = '閉じる';
                     expandBtn.style.display = 'inline-block';
                 } else {
-                    // 日本語でも読みやすい句読点を優先して区切る
-                    let breakPoint = TRUNCATE_LENGTH;
-                    while (
-                        breakPoint > 100
-                        && !'。！？\n'.includes(plainText[breakPoint - 1])
-                    ) {
-                        breakPoint--;
-                    }
-                    if (breakPoint <= 100) breakPoint = TRUNCATE_LENGTH;
-                    const truncatedPlain = plainText.substring(0, breakPoint);
-                    const truncatedHtml = simpleMarkdownToHtml(truncatedPlain) + '...';
+                    const truncatedPlain = truncateJapaneseText(
+                        plainText, TRUNCATE_LENGTH
+                    ).text;
+                    const truncatedHtml = simpleMarkdownToHtml(truncatedPlain) + '…';
                     textEl.innerHTML = truncatedHtml;
                     textEl.dataset.truncated = 'true';
                     expandBtn.style.display = 'inline-block';
@@ -307,14 +319,12 @@ function toggleAiAdvisor() {
         expandBtn.textContent = '閉じる';
     } else {
         // Re-truncate
-        const plainText = textEl.textContent;
+        const plainText = textEl.dataset.rawText || textEl.textContent;
         const TRUNCATE_LENGTH = 150;
-        let breakPoint = TRUNCATE_LENGTH;
-        while (breakPoint > 100 && plainText[breakPoint] !== ' ') {
-            breakPoint--;
-        }
-        const truncatedPlain = plainText.substring(0, breakPoint);
-        const truncatedHtml = simpleMarkdownToHtml(truncatedPlain) + '...';
+        const truncatedPlain = truncateJapaneseText(
+            plainText, TRUNCATE_LENGTH
+        ).text;
+        const truncatedHtml = simpleMarkdownToHtml(truncatedPlain) + '…';
         textEl.innerHTML = truncatedHtml;
         textEl.dataset.truncated = 'true';
         expandBtn.textContent = '続きを表示';

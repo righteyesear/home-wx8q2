@@ -479,75 +479,60 @@ function updateBackgroundWeatherEffects(code, hour) {
     }
 }
 
-// Calculate feels-like temperature (improved physical model + low wind correction)
+// Calculate a reference apparent temperature.
+// Heat Index assumes shade/light wind. Wind is Open-Meteo's 10 m estimate,
+// not a measurement at the outdoor sensor.
 function calculateFeelsLike(temp, humidity, windSpeed) {
-    // Adjust wind speed from 10m to 2m height
-    const v = Math.max(0, (windSpeed || 0) * 0.6);
-
-    // Minimum wind threshold
-    const MIN_WIND_THRESHOLD = 1.3;
+    const airTemp = Number(temp);
+    if (!Number.isFinite(airTemp)) return NaN;
+    const rh = Math.max(0, Math.min(100, Number(humidity) || 0));
+    const wind10m = Math.max(0, Number(windSpeed) || 0);
 
     // Calculate vapor pressure using Tetens formula (hPa)
-    const e = 6.11 * Math.pow(10, (7.5 * temp) / (temp + 237.3)) * (humidity / 100);
+    const e = 6.11 * Math.pow(10, (7.5 * airTemp) / (airTemp + 237.3)) * (rh / 100);
 
-    // Wind Chill (Linke formula for cold conditions)
-    const windChill = (temp, v) => {
-        if (v <= 0) return temp;
-        return 13.12 + 0.6215 * temp - 11.37 * Math.pow(v * 3.6, 0.16) + 0.3965 * temp * Math.pow(v * 3.6, 0.16);
+    // Environment Canada wind chill: valid at <= 10°C and wind >= 5 km/h.
+    const windChill = (value, wind) => {
+        const windKmh = wind * 3.6;
+        if (value > 10 || windKmh < 5) return value;
+        return 13.12 + 0.6215 * value - 11.37 * Math.pow(windKmh, 0.16)
+            + 0.3965 * value * Math.pow(windKmh, 0.16);
     };
 
-    // Steadman's Apparent Temperature
-    const steadman = (temp, e, v) => {
-        return temp + 0.33 * e - 0.70 * v - 4.0;
+    const steadman = (value, vaporPressure, wind) =>
+        value + 0.33 * vaporPressure - 0.70 * wind - 4.0;
+
+    // NWS Rothfusz Heat Index regression with its official adjustments.
+    const heatIndex = (value, relativeHumidity) => {
+        const tempF = value * 9 / 5 + 32;
+        const simple = 0.5 * (
+            tempF + 61 + (tempF - 68) * 1.2 + relativeHumidity * 0.094
+        );
+        if ((simple + tempF) / 2 < 80) return value;
+
+        let hi = -42.379 + 2.04901523 * tempF
+            + 10.14333127 * relativeHumidity
+            - 0.22475541 * tempF * relativeHumidity
+            - 0.00683783 * tempF * tempF
+            - 0.05481717 * relativeHumidity * relativeHumidity
+            + 0.00122874 * tempF * tempF * relativeHumidity
+            + 0.00085282 * tempF * relativeHumidity * relativeHumidity
+            - 0.00000199 * tempF * tempF * relativeHumidity * relativeHumidity;
+
+        if (relativeHumidity < 13 && tempF >= 80 && tempF <= 112) {
+            hi -= ((13 - relativeHumidity) / 4)
+                * Math.sqrt(Math.max(0, (17 - Math.abs(tempF - 95)) / 17));
+        } else if (relativeHumidity > 85 && tempF >= 80 && tempF <= 87) {
+            hi += ((relativeHumidity - 85) / 10) * ((87 - tempF) / 5);
+        }
+        return (hi - 32) * 5 / 9;
     };
 
-    // Heat Index
-    const heatIndex = (temp, humidity) => {
-        const c1 = -8.78469475556;
-        const c2 = 1.61139411;
-        const c3 = 2.33854883889;
-        const c4 = -0.14611605;
-        const c5 = -0.012308094;
-        const c6 = -0.0164248277778;
-        const c7 = 0.002211732;
-        const c8 = 0.00072546;
-        const c9 = -0.000003582;
-        return c1 + c2 * temp + c3 * humidity + c4 * temp * humidity
-            + c5 * temp * temp + c6 * humidity * humidity
-            + c7 * temp * temp * humidity + c8 * temp * humidity * humidity
-            + c9 * temp * temp * humidity * humidity;
-    };
+    if (airTemp <= 10) return windChill(airTemp, wind10m);
+    if (airTemp >= 27 && rh >= 40) return heatIndex(airTemp, rh);
 
-    // Linear interpolation helper
-    const lerp = (a, b, t) => a + (b - a) * Math.max(0, Math.min(1, t));
-
-    // Calculate raw result based on temperature range
-    let rawResult;
-    if (temp <= 8) {
-        rawResult = windChill(temp, v);
-    } else if (temp <= 12) {
-        const wc = windChill(temp, v);
-        const st = steadman(temp, e, v);
-        const t = (temp - 8) / 4;
-        rawResult = lerp(wc, st, t);
-    } else if (temp <= 25) {
-        rawResult = steadman(temp, e, v);
-    } else if (temp <= 29) {
-        const st = steadman(temp, e, v);
-        const hi = heatIndex(temp, humidity);
-        const t = (temp - 25) / 4;
-        rawResult = lerp(st, hi, t);
-    } else {
-        rawResult = heatIndex(temp, humidity);
-    }
-
-    // Low wind correction
-    if (v < MIN_WIND_THRESHOLD) {
-        const windFactor = v / MIN_WIND_THRESHOLD;
-        return lerp(temp, rawResult, windFactor);
-    }
-
-    return rawResult;
+    const apparent = steadman(airTemp, e, wind10m);
+    return airTemp >= 32 ? Math.max(airTemp, apparent) : apparent;
 }
 
 // Get UV level description

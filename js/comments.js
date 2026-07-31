@@ -10,6 +10,16 @@
 //
 // 依存: config.js, precipitation.js (actualPrecipState), ui.js
 
+function formatWeatherComment(comment) {
+    return String(comment || '')
+        .replace(
+            /<span class="temp-highlight">[0-9.-]+°C<\/span>(?:\s*・\s*(湿度\d+%))?\s*—\s*/,
+            (_, humidityText) => humidityText ? `${humidityText} — ` : ''
+        )
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+}
+
 // 天気カード（heroセクション）の値を更新する関数
 function updateHeroSection(temp, humidity, emoji, wc, fl, ws, pp) {
     const heroTempEl = document.getElementById('heroTemp');
@@ -191,19 +201,21 @@ function updateGreeting(temp, humidity) {
     // Weather state detection (detailed)
     // WMO Weather interpretation codes: https://open-meteo.com/en/docs
     const isThunderstorm = wc >= 95;           // 95-99: 雷雨
-    const isHeavySnow = wc === 75 || wc === 77; // 75: 大雪, 77: 雪あられ
-    const isSnow = wc >= 71 && wc <= 73;       // 71: 弱い雪, 73: 中程度の雪
+    const isHeavySnow = wc === 75 || wc === 86; // 75: 大雪, 86: 激しいにわか雪
+    const isSnow = wc === 71 || wc === 73 || wc === 77; // 弱/中程度の雪、霧雪
     const isSnowShower = wc === 85 || wc === 86; // 85-86: にわか雪
-    const isShower = wc >= 80 && wc <= 82;     // 80: 弱いにわか雨, 81: 中, 82: 激しい
+    const isShower = wc === 81 || wc === 82;   // 81: 中, 82: 激しいにわか雨
     const isHeavyRain = wc === 82;             // 82: 激しいにわか雨
-    const isModerateRain = wc >= 63 && wc <= 67; // 63: 中程度の雨, 65: 強い雨, 66-67: 凍雨
-    const isRain = wc === 61;                  // 61: 弱い雨
-    const isDrizzle = wc >= 51 && wc <= 57;    // 51-57: 霧雨（凍霧雨含む）
+    const isModerateRain = wc === 63 || wc === 65; // 中程度～強い雨
+    const isRain = wc === 61 || wc === 80;     // 弱い雨、弱いにわか雨
+    const isFreezingPrecip = [56, 57, 66, 67].includes(wc);
+    const isDrizzle = wc >= 51 && wc <= 55;    // 凍結性を除く霧雨
     const isFog = wc === 45 || wc === 48;      // 45: 霧, 48: 着氷性の霧
     const isOvercast = wc === 3;               // 3: 曇り（WMOコード3のみ）
     const isPartlyCloudy = wc === 2;           // 2: 晴れ時々曇り
     const isClear = wc >= 0 && wc <= 1;        // 0: 快晴, 1: 晴れ
-    const isRainingOpenMeteo = isThunderstorm || isHeavyRain || isShower || isModerateRain || isRain || isDrizzle;
+    const isRainingOpenMeteo = isThunderstorm || isHeavyRain || isShower
+        || isModerateRain || isRain || isDrizzle || isFreezingPrecip;
     // Yahoo APIの実測データを優先、なければOpen-Meteoを使用
     const isRaining = actualPrecipState?.isRaining ?? isRainingOpenMeteo;
 
@@ -212,6 +224,7 @@ function updateGreeting(temp, humidity) {
     const isActuallyPrecipitating = actualPrecipState?.isRaining === true;
     const isSnowYahoo = isActuallyPrecipitating && actualPrecipState?.precipType === 'snow';
     const isSleetYahoo = isActuallyPrecipitating && actualPrecipState?.precipType === 'sleet';
+    const isRainYahoo = isActuallyPrecipitating && !isSnowYahoo && !isSleetYahoo;
     const isSnowActual = isSnowYahoo || isHeavySnow || isSnow || isSnowShower;
     const isSleetActual = isSleetYahoo; // みぞれ判定はYahoo API実測のみに依存
 
@@ -315,7 +328,8 @@ function updateGreeting(temp, humidity) {
     const isYearEnd = month === 12 && dayOfMonth >= 28;  // 28日以降
 
     // Health conditions
-    const isPollenSeason = (month >= 2 && month <= 5) && !isRaining;  // 曇りの日も花粉は飛散する
+    const isPollenSeason = month >= 2 && month <= 5 && temp >= 5
+        && !isRaining && !isSnowActual && !isSleetActual && !isThunderstorm;
     const isDrySkinRisk = isExtremelyDry || isVeryDry;
     const isHeatstrokeRisk = temp >= 28 && (humidity >= 60 || wbgt >= 25);
     const isColdRisk = (isWinter || temp < 10) && (isDrySkinRisk || isVeryWindy);
@@ -364,7 +378,11 @@ function updateGreeting(temp, humidity) {
     const alertKey = currentAlerts.map(a => a.name).sort().join(',');
     // 降水状態も条件キーに含める（降水開始/終了でコメント更新）
     const precipState = actualPrecipState?.isRaining ? `precip-${actualPrecipState.precipType}` : 'no-precip';
-    const conditionKey = `${getTempBand(temp)}|${wc}|${getTimePeriod(hour)}|${alertKey}|${precipState}`;
+    const humidityBand = Math.round(humidity / 5) * 5;
+    const windBand = Math.round(ws / 2) * 2;
+    const precipProbBand = Math.round(pp / 10) * 10;
+    const uvBand = Math.floor(uv / 3);
+    const conditionKey = `${getTempBand(temp)}|${humidityBand}|${wc}|${windBand}|${precipProbBand}|${uvBand}|${month}-${dayOfMonth}|${getTimePeriod(hour)}|${alertKey}|${precipState}`;
 
     // Check if conditions changed
     const conditionsChanged = conditionKey !== lastConditionKey;
@@ -386,7 +404,7 @@ function updateGreeting(temp, humidity) {
             `<span class="temp-highlight">${temp.toFixed(1)}°C</span>`
         );
         const weatherCommentEl = document.getElementById('weatherComment');
-        if (weatherCommentEl) weatherCommentEl.innerHTML = updatedComment;
+        if (weatherCommentEl) weatherCommentEl.innerHTML = formatWeatherComment(updatedComment);
         return;
     }
 
@@ -450,6 +468,18 @@ function updateGreeting(temp, humidity) {
             ]);
         }
         if (isStormWind) comment += ' 🌀 暴風注意！';
+    }
+    // Yahoo雨雲レーダーの実測降水は、Open-Meteoの現在天気より優先する。
+    else if (isRainYahoo) {
+        const rainfall = Number(actualPrecipState?.rainfall) || 0;
+        if (rainfall >= 20) {
+            comment = `🌧️ ${t} — 実測で激しい雨が降っています。安全な屋内で雨雲の動きを確認して`;
+        } else if (rainfall >= 5) {
+            comment = `🌧️ ${t} — 実測で本降りの雨です。外出時は足元と視界に注意`;
+        } else {
+            comment = `☔ ${t} — 実測で雨が降っています。傘をお持ちください`;
+        }
+        if (isVeryWindy) comment += ' 💨 風も強い！';
     }
     // ============================================================
     // PRIORITY 2: Heavy Snow - Expanded
@@ -563,13 +593,23 @@ function updateGreeting(temp, humidity) {
         if (isVeryWindy) comment += ' 🌀 吹雪に注意';
     }
     // ============================================================
+    // PRIORITY 3.5: Freezing rain / freezing drizzle
+    // ============================================================
+    else if (isFreezingPrecip && !isSnowActual && !isSleetActual) {
+        comment = pick([
+            `🧊 ${t} — 凍結性の雨です。路面や手すりの着氷に注意`,
+            `🧊 ${t} — 雨が地面で凍るおそれ。徒歩も運転も慎重に`,
+            `🌧️ ${t} — 凍結性降水。見た目が濡れているだけでも路面凍結に警戒`
+        ]);
+    }
+    // ============================================================
     // PRIORITY 4: Heavy Rain / Showers (雪/みぞれ判定なら優先でスキップ)
     // ============================================================
     else if ((isHeavyRain || isShower || isModerateRain) && !isSnowActual && !isSleetActual) {
         if (temp >= 32 && isExtremelyHumid) {
             comment = `🌧️ ${t}・湿度${h}% — 猛暑の中の豪雨。蒸し暑さが極限レベル。雨宿りして涼を`;
         } else if (temp >= 28 && isSummer && isAfternoon && hour >= 15) {
-            comment = `🌧️ ${t} — 夏の夕立が激しいです。1時間もすれば止むかも`;
+            comment = `🌧️ ${t} — 夏の強いにわか雨。雨雲の動きを確認して`;
         } else if (temp >= 28 && isExtremelyHumid) {
             comment = `🌧️ ${t}・湿度${h}% — 熱帯のようなスコール。ジメジメします`;
         } else if (temp >= 25 && isRainySeason) {
@@ -760,7 +800,7 @@ function updateGreeting(temp, humidity) {
         // ============================================================
         // PRIORITY 8a: High precipitation probability warning
         // ============================================================
-        if (pp >= 70 && !isRaining && !isSnow && !isHeavySnow) {
+        if (pp >= 70 && temp < 34 && !isRaining && !isSnow && !isHeavySnow) {
             if (temp <= 2) {
                 comment = pick([
                     `❄️ ${t} — 降水確率${pp}%。雪が降る可能性が高いです。早めの帰宅を`,
@@ -2164,15 +2204,15 @@ function updateGreeting(temp, humidity) {
     if (isDangerWBGT && !isThunderstorm && !isRaining) {
         suffixCandidates.push({
             priority: 2, text: pick([
-                ` 🆘 WBGT${wbgt.toFixed(0)} 運動禁止レベル`,
-                ` 🆘 WBGT${wbgt.toFixed(0)} 屋外活動は厳禁`
+                ` 🆘 簡易推定WBGT${wbgt.toFixed(0)}。運動は中止を`,
+                ` 🆘 簡易推定WBGT${wbgt.toFixed(0)}。屋外活動を避けて`
             ])
         });
     } else if (isHighWBGT && !isRaining) {
         suffixCandidates.push({
             priority: 2, text: pick([
-                ` ⚠️ WBGT${wbgt.toFixed(0)} 運動は控えめに`,
-                ` ⚠️ WBGT${wbgt.toFixed(0)} こまめに休憩を`
+                ` ⚠️ 簡易推定WBGT${wbgt.toFixed(0)}。運動は控えめに`,
+                ` ⚠️ 簡易推定WBGT${wbgt.toFixed(0)}。こまめに休憩を`
             ])
         });
     } else if (isModerateWBGT && !isRaining && isAfternoon) {
@@ -2181,8 +2221,7 @@ function updateGreeting(temp, humidity) {
 
     // --- TIER 3: 降水情報（priority 3）---
 
-    const mainCommentHasPrecip = isRaining || isRainingOpenMeteo || isSnowActual || isSleetActual ||
-        isHeavySnow || isSnow || isHeavyRain || isModerateRain || isRain || isDrizzle;
+    const mainCommentHasPrecip = /雨|雪|みぞれ|降水|傘|凍結性/.test(comment);
 
     if (!mainCommentHasPrecip && actualPrecipState.isRaining && actualPrecipState.consecutiveMinutes >= 10) {
         const intensity = getPrecipIntensityLabel(actualPrecipState.rainfall, actualPrecipState.precipType);
@@ -2409,14 +2448,9 @@ function updateGreeting(temp, humidity) {
     updateHeroSection(temp, humidity, emoji, wc, fl, ws, pp);
 
     // Update comment section (remove temperature display)
-    let cleanComment = comment
-        .replace(/<span class="temp-highlight">[0-9.-]+°C<\/span>/g, '')
-        .replace(/[・—]\s*/g, '')
-        .trim();
-    // Remove leading dash or bullet that may remain
-    cleanComment = cleanComment.replace(/^[—・\-]\s*/, '');
-    document.getElementById('weatherComment').innerHTML = cleanComment;
-    document.getElementById('greetingSection').classList.add('show');
+    const weatherCommentEl = document.getElementById('weatherComment');
+    if (weatherCommentEl) weatherCommentEl.innerHTML = formatWeatherComment(comment);
+    document.getElementById('greetingSection')?.classList.add('show');
 }
 
 // Get weather condition name from WMO code + cloud cover (Enhanced)

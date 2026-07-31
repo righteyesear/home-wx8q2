@@ -298,7 +298,13 @@ function parseRecentCSV(csv) {
 
 // Simple markdown to HTML converter
 function simpleMarkdownToHtml(text) {
-    return text
+    const escaped = String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    return escaped
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.+?)\*/g, '<em>$1</em>')
         .replace(/\n/g, '<br>');
