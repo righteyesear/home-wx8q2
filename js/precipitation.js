@@ -129,6 +129,7 @@ function getPrecipitationType(hourIndex = null) {
 // Actual precipitation state (from Yahoo API observation)
 // ============================================================
 let actualPrecipState = {
+    observationAvailable: false,
     isRaining: false,
     rainfall: 0,
     precipType: 'rain',
@@ -153,6 +154,7 @@ let lastWeatherOverride = {
  */
 function updateActualPrecipState(precipData) {
     if (!precipData || precipData.length === 0) {
+        actualPrecipState.observationAvailable = false;
         actualPrecipState.isRaining = false;
         actualPrecipState.rainfall = 0;
         actualPrecipState.consecutiveMinutes = 0;
@@ -164,10 +166,12 @@ function updateActualPrecipState(precipData) {
     // Get observation data only (not forecast)
     const observations = precipData.filter(d => d.type === 'observation');
     if (observations.length === 0) {
+        actualPrecipState.observationAvailable = false;
         actualPrecipState.isRaining = false;
         actualPrecipState.rainfall = 0;
         actualPrecipState.consecutiveMinutes = 0;
     } else {
+        actualPrecipState.observationAvailable = true;
         // Get latest observation
         const latest = observations[observations.length - 1];
         actualPrecipState.rainfall = latest.rainfall;
@@ -222,7 +226,12 @@ function updateActualPrecipState(precipData) {
 function getWeatherOverride() {
     const now = Date.now();
     const wc = weatherData?.weatherCode ?? 0;
-    const isOpenMeteoRainCode = (wc >= 51 && wc <= 67) || (wc >= 80 && wc <= 82) || wc >= 95;
+    // 雷雨コードは雨量0でも落雷リスクが残るため、曇りへ上書きしない。
+    const isOpenMeteoRainCode = (wc >= 51 && wc <= 67)
+        || (wc >= 80 && wc <= 82);
+
+    // Yahoo実測を取得できていない場合はOpen-Meteoをそのまま使用する。
+    if (!actualPrecipState.observationAvailable) return null;
 
     // Priority 1: Yahoo observation shows precipitation → 即座に上書き（10分制限撤廃）
     if (actualPrecipState.rainfall > 0) {
@@ -300,7 +309,7 @@ function updateWeatherDisplay() {
  */
 function getCurrentWeatherOverride() {
     // 現在降水がある場合は即座に上書き情報を返す
-    if (actualPrecipState.rainfall > 0) {
+    if (actualPrecipState.observationAvailable && actualPrecipState.rainfall > 0) {
         const pType = actualPrecipState.precipType;
         const rainfall = actualPrecipState.rainfall;
         const intensity = getPrecipIntensityLabel(rainfall, pType);
@@ -316,6 +325,17 @@ function getCurrentWeatherOverride() {
             icon: icon,
             condition: intensity,
             precipType: pType,
+            isActive: true
+        };
+    }
+    const wc = weatherData?.weatherCode ?? 0;
+    const openMeteoPrecip = (wc >= 51 && wc <= 67)
+        || (wc >= 80 && wc <= 82);
+    if (actualPrecipState.observationAvailable && openMeteoPrecip) {
+        return {
+            icon: '☁️',
+            condition: '曇り',
+            precipType: null,
             isActive: true
         };
     }
@@ -367,10 +387,16 @@ async function loadPrecipitation() {
     try {
         // Cloudflare Worker経由でYahoo Weather APIを取得
         const resp = await fetch('https://yahoo-weather-proxy.miurayukimail.workers.dev');
-        if (!resp.ok) return;
+        if (!resp.ok) {
+            actualPrecipState.observationAvailable = false;
+            return;
+        }
 
         const data = await resp.json();
-        if (!data.data || data.data.length === 0) return;
+        if (!data.data || data.data.length === 0) {
+            actualPrecipState.observationAvailable = false;
+            return;
+        }
 
         const precipData = data.data;
 
@@ -636,6 +662,7 @@ async function loadPrecipitation() {
             rainAlert.style.display = 'none';
         }
     } catch (e) {
+        actualPrecipState.observationAvailable = false;
         console.log('Precipitation data not available:', e.message);
     }
 }

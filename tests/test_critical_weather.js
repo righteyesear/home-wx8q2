@@ -94,6 +94,7 @@ function renderComment({
     code = 0,
     precipProb = 0,
     isRaining = false,
+    observationAvailable = isRaining,
     precipType = 'rain',
     rainfall = 0
 } = {}) {
@@ -120,6 +121,7 @@ function renderComment({
         tempIn3Hours: temp
     };
     context.actualPrecipState = {
+        observationAvailable,
         isRaining,
         precipType,
         rainfall,
@@ -128,7 +130,8 @@ function renderComment({
         forecastPrecipType: 'rain'
     };
     context.updateGreeting(temp, humidity);
-    return elements.get('weatherComment').innerHTML;
+    const result = elements.get('weatherComment');
+    return result.textContent || result.innerHTML;
 }
 
 const humidHeatCalm = context.calculateFeelsLike(38, 65, 0);
