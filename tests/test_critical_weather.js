@@ -136,10 +136,20 @@ function renderComment({
 
 const humidHeatCalm = context.calculateFeelsLike(38, 65, 0);
 const humidHeatWindy = context.calculateFeelsLike(38, 65, 5);
-assert(Math.abs(humidHeatCalm - humidHeatWindy) < 0.01);
-assert(humidHeatCalm > 50);
-assert(context.calculateFeelsLike(40, 10, 25) >= 40);
+assert(humidHeatCalm > 47 && humidHeatCalm < 50);
+assert(humidHeatWindy > 44 && humidHeatWindy < humidHeatCalm);
+const hotDryStormWind = context.calculateFeelsLike(40, 10, 25);
+assert(hotDryStormWind >= 32 && hotDryStormWind <= 40);
 assert(Number.isFinite(context.calculateFeelsLike(20, 150, -5)));
+for (const temp of [27, 32, 38, 45, 60]) {
+    for (const rh of [0, 10, 65, 100, 150]) {
+        for (const wind of [0, 5, 25, 60]) {
+            const result = context.calculateFeelsLike(temp, rh, wind);
+            assert(result >= temp - 8);
+            assert(result <= temp + 15);
+        }
+    }
+}
 
 const yahooRain = renderComment({
     code: 0,

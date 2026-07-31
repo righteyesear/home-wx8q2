@@ -479,17 +479,21 @@ function updateBackgroundWeatherEffects(code, hour) {
     }
 }
 
-// Calculate a reference apparent temperature.
-// Heat Index assumes shade/light wind. Wind is Open-Meteo's 10 m estimate,
-// not a measurement at the outdoor sensor.
+// Calculate a reference apparent temperature for an adult outdoors in shade.
+// Humidity and estimated local wind use the Steadman/BOM model. Cold weather
+// uses Environment Canada's wind chill. This is not a heat-risk index.
 function calculateFeelsLike(temp, humidity, windSpeed) {
     const airTemp = Number(temp);
     if (!Number.isFinite(airTemp)) return NaN;
     const rh = Math.max(0, Math.min(100, Number(humidity) || 0));
     const wind10m = Math.max(0, Number(windSpeed) || 0);
+    // Open-Meteo is a 10 m gridded estimate. Approximate the more sheltered
+    // sensor height and cap the estimate where local exposure dominates.
+    const estimatedLocalWind = Math.min(wind10m * 0.6, 12);
 
-    // Calculate vapor pressure using Tetens formula (hPa)
-    const e = 6.11 * Math.pow(10, (7.5 * airTemp) / (airTemp + 237.3)) * (rh / 100);
+    // Water vapour pressure (hPa), as used by the Steadman AT approximation.
+    const vaporPressure = (rh / 100) * 6.105
+        * Math.exp((17.27 * airTemp) / (237.7 + airTemp));
 
     // Environment Canada wind chill: valid at <= 10°C and wind >= 5 km/h.
     const windChill = (value, wind) => {
@@ -499,40 +503,23 @@ function calculateFeelsLike(temp, humidity, windSpeed) {
             + 0.3965 * value * Math.pow(windKmh, 0.16);
     };
 
-    const steadman = (value, vaporPressure, wind) =>
-        value + 0.33 * vaporPressure - 0.70 * wind - 4.0;
-
-    // NWS Rothfusz Heat Index regression with its official adjustments.
-    const heatIndex = (value, relativeHumidity) => {
-        const tempF = value * 9 / 5 + 32;
-        const simple = 0.5 * (
-            tempF + 61 + (tempF - 68) * 1.2 + relativeHumidity * 0.094
-        );
-        if ((simple + tempF) / 2 < 80) return value;
-
-        let hi = -42.379 + 2.04901523 * tempF
-            + 10.14333127 * relativeHumidity
-            - 0.22475541 * tempF * relativeHumidity
-            - 0.00683783 * tempF * tempF
-            - 0.05481717 * relativeHumidity * relativeHumidity
-            + 0.00122874 * tempF * tempF * relativeHumidity
-            + 0.00085282 * tempF * relativeHumidity * relativeHumidity
-            - 0.00000199 * tempF * tempF * relativeHumidity * relativeHumidity;
-
-        if (relativeHumidity < 13 && tempF >= 80 && tempF <= 112) {
-            hi -= ((13 - relativeHumidity) / 4)
-                * Math.sqrt(Math.max(0, (17 - Math.abs(tempF - 95)) / 17));
-        } else if (relativeHumidity > 85 && tempF >= 80 && tempF <= 87) {
-            hi += ((relativeHumidity - 85) / 10) * ((87 - tempF) / 5);
-        }
-        return (hi - 32) * 5 / 9;
-    };
-
     if (airTemp <= 10) return windChill(airTemp, wind10m);
-    if (airTemp >= 27 && rh >= 40) return heatIndex(airTemp, rh);
 
-    const apparent = steadman(airTemp, e, wind10m);
-    return airTemp >= 32 ? Math.max(airTemp, apparent) : apparent;
+    const apparent = airTemp + 0.33 * vaporPressure
+        - 0.70 * estimatedLocalWind - 4.0;
+
+    // Smooth the hand-off from wind chill to Steadman around 10–14°C.
+    if (airTemp < 14) {
+        const coldEdge = windChill(10, wind10m) + (airTemp - 10);
+        const ratio = (airTemp - 10) / 4;
+        return coldEdge + (apparent - coldEdge) * ratio;
+    }
+
+    // The sensor humidity and gridded wind are not co-located. Guardrails keep
+    // extrapolation and wind mismatches from producing implausible extremes.
+    const lowerBound = airTemp >= 27 ? airTemp - 8 : airTemp - 10;
+    const upperBound = airTemp >= 27 ? airTemp + 15 : airTemp + 10;
+    return Math.max(lowerBound, Math.min(upperBound, apparent));
 }
 
 // Get UV level description

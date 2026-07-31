@@ -93,6 +93,8 @@ result = run_with(primary)
 assert primary.calls[0][0] == "gemini-3.6-flash"
 assert "気象データ:" in primary.calls[0][1]
 assert "直前と同じ書き出し" in primary.calls[0][1]
+assert "Steadman参考値" in primary.calls[0][1]
+assert "estimated_sensor_height_wind_ms" in primary.calls[0][1]
 assert "次回更新" not in primary.calls[0][1]
 assert "次回更新" not in result
 assert len(result) < 620
