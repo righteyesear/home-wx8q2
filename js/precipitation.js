@@ -393,6 +393,9 @@ async function loadPrecipitation() {
         }
 
         const data = await resp.json();
+        if (typeof updateYahooForecastBrief === 'function') {
+            updateYahooForecastBrief(data);
+        }
         if (!data.data || data.data.length === 0) {
             actualPrecipState.observationAvailable = false;
             return;

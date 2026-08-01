@@ -161,6 +161,9 @@ async function fetchAll() {
     }
 
     // 補正後の値で UI を再更新
+    if (typeof applyJmaForecastToWeatherData === 'function') {
+        applyJmaForecastToWeatherData();
+    }
     updateUI();
 
     // 更新時刻を表示
@@ -309,9 +312,8 @@ async function loadAIComment() {
                 const timeStr = genTime.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
                 statusParts.push(`${timeStr}生成`);
             }
-            if (data.model) {
-                statusParts.push(data.model.replace('gemini-', 'Gemini '));
-            }
+            const advisorSection = document.getElementById('aiAdvisorSection');
+            if (advisorSection && data.model) advisorSection.dataset.model = data.model;
             const sourceErrors = Object.values(data.source_status || {}).filter(Boolean);
             if (sourceErrors.length > 0) statusParts.push('⚠ 一部データ取得失敗');
             document.getElementById('aiAdvisorTime').textContent = statusParts.join(' · ');

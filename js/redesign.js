@@ -53,12 +53,33 @@
 
     function improveAccessibleLabels() {
         const themeToggle = document.getElementById('themeToggle');
+        const fontSizeToggle = document.getElementById('fontSizeToggle');
         const notificationToggle = document.getElementById('notificationToggle');
         const modeToggle = document.getElementById('modeToggle');
 
         if (themeToggle) themeToggle.setAttribute('aria-label', 'ライト・ダークテーマを切り替える');
+        if (fontSizeToggle) fontSizeToggle.setAttribute('aria-label', '文字サイズを切り替える');
         if (notificationToggle) notificationToggle.setAttribute('aria-label', 'プッシュ通知を切り替える');
         if (modeToggle) modeToggle.setAttribute('aria-label', '表示する情報量を切り替える');
+    }
+
+    function initFontSizeToggle() {
+        const button = document.getElementById('fontSizeToggle');
+        const text = document.getElementById('fontSizeText');
+        if (!button) return;
+
+        function apply(size) {
+            const large = size === 'large';
+            document.documentElement.classList.toggle('font-large', large);
+            button.setAttribute('aria-pressed', String(large));
+            if (text) text.textContent = large ? '文字 大' : '文字';
+            localStorage.setItem('fontSize', large ? 'large' : 'standard');
+        }
+
+        apply(localStorage.getItem('fontSize') || 'standard');
+        button.addEventListener('click', function () {
+            apply(document.documentElement.classList.contains('font-large') ? 'standard' : 'large');
+        });
     }
 
     function alignReadingOrderWithVisualOrder() {
@@ -72,6 +93,7 @@
             '#weatherHero',
             '.main-stats',
             '#greetingSection',
+            '#forecastBrief',
             '#precipitationCard',
             '#aiAdvisorSection',
             '.history-intro',
@@ -89,6 +111,7 @@
     function initRedesign() {
         alignReadingOrderWithVisualOrder();
         initChartViews();
+        initFontSizeToggle();
         improveAccessibleLabels();
     }
 

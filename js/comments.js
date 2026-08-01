@@ -546,10 +546,8 @@ function getSupplementCandidates(context, primary) {
     const candidates = [];
     const add = (topic, priority, text) => candidates.push({ topic, priority, text });
 
-    if (context.alerts.highestLevel === 2 && primary.topic !== 'alert') {
-        const names = context.alerts.names.join('・') || '注意報';
-        add('alert', 1, `🔔 ${names}が発表中です。今後の情報に注意してください。`);
-    }
+    // 注意報は直上の公式警報バナーで常時表示する。
+    // 一言コメントでは重複させず、暑さ・降雨など今必要な行動に集中する。
 
     if (primary.topic === 'alert') {
         if (context.wmo.thunder) {
@@ -596,16 +594,6 @@ function getSupplementCandidates(context, primary) {
         } else if (context.willWorsen && context.maxFuturePrecipProb >= 60) {
             add('precipitation-forecast', 5, '🌥️ 数時間以内に天気が崩れる可能性があります。');
         }
-    }
-
-    if (context.tempIn3Hours !== null
-        && Math.abs(context.tempIn3Hours - context.temp) >= 4) {
-        const direction = context.tempIn3Hours > context.temp ? '上がる' : '下がる';
-        add(
-            'temperature-change',
-            5,
-            `🌡️ 3時間後は${context.tempIn3Hours.toFixed(0)}°Cまで${direction}予報です。`
-        );
     }
 
     const feelsDiff = context.feelsLike - context.temp;

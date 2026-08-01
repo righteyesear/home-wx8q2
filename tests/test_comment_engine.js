@@ -137,7 +137,7 @@ const advisoryDuringHeat = scenario({
     alerts: [{ name: 'レベル2 雷注意報', level: 2 }]
 }).text;
 assert.match(advisoryDuringHeat, /^🆘 命の危険/);
-assert.match(advisoryDuringHeat, /雷注意報/);
+assert.doesNotMatch(advisoryDuringHeat, /雷注意報/);
 
 const thunder = scenario({ code: 95, yahooAvailable: true }).text;
 assert.match(thunder, /^⛈️/);

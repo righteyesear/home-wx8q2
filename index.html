@@ -55,7 +55,7 @@
          - モバイル対応 → @media クエリセクション
          ==================================================================== -->
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/redesign.css?v=20260801c">
+    <link rel="stylesheet" href="css/redesign.css?v=20260801e">
     <!-- ちらつき防止: JSより先にテーマを適用 + 初回のtransitionを無効化 -->
     <script>
         (function () {
@@ -134,6 +134,10 @@
                     </span>
                     <span id="themeText">ダーク</span>
                 </button>
+                <button id="fontSizeToggle" class="font-size-toggle" type="button">
+                    <span class="font-size-icon" aria-hidden="true">Aa</span>
+                    <span id="fontSizeText">文字</span>
+                </button>
             </div>
         </header>
 
@@ -168,7 +172,7 @@
             </div>
             <div class="weather-hero-info">
                 <div class="weather-hero-info-item">
-                    <span class="info-label">体感</span>
+                    <span class="info-label" title="センサー温湿度と補助風速から算出した参考値">体感*</span>
                     <span class="info-value" id="heroFeelsLike">--</span>
                     <span class="info-unit">℃</span>
                 </div>
@@ -180,19 +184,19 @@
                 </div>
                 <div class="weather-hero-info-divider"></div>
                 <div class="weather-hero-info-item">
-                    <span class="info-label">風速</span>
+                    <span class="info-label" title="Open-Meteoの格子予報による参考値">風速*</span>
                     <span class="info-value" id="heroWind">--</span>
                     <span class="info-unit">m/s</span>
                 </div>
                 <div class="weather-hero-info-divider"></div>
                 <div class="weather-hero-info-item">
-                    <span class="info-label">降水</span>
+                    <span class="info-label" title="気象庁・東京地方の6時間区分予報">降水確率</span>
                     <span class="info-value" id="heroPrecip">--</span>
                     <span class="info-unit">%</span>
                 </div>
                 <div class="weather-hero-info-divider"></div>
                 <div class="weather-hero-info-item">
-                    <span class="info-label">気圧</span>
+                    <span class="info-label" title="Open-Meteoの格子予報による参考値">気圧*</span>
                     <span class="info-value" id="heroPressure">--</span>
                     <span class="info-unit">hPa</span>
                 </div>
@@ -351,6 +355,40 @@
                 <button type="button" class="chart-view-btn" data-chart-view="moon" aria-pressed="false">月情報</button>
             </div>
         </div>
+
+        <section id="forecastBrief" class="forecast-brief" aria-labelledby="forecastBriefTitle" hidden>
+            <div class="forecast-brief-header">
+                <div>
+                    <span class="section-kicker">FORECAST</span>
+                    <h2 id="forecastBriefTitle">雨と天気の見通し</h2>
+                </div>
+                <div class="forecast-freshness" id="forecastFreshness" aria-live="polite"></div>
+            </div>
+            <div class="forecast-brief-grid">
+                <div class="forecast-panel yahoo-nowcast-panel">
+                    <div class="forecast-panel-header">
+                        <span>1時間先までの雨</span>
+                        <span class="source-badge source-yahoo">Yahoo</span>
+                    </div>
+                    <div class="nowcast-cells" id="yahooNowcastCells">
+                        <span class="forecast-placeholder">取得中…</span>
+                    </div>
+                </div>
+                <div class="forecast-panel jma-forecast-panel">
+                    <div class="forecast-panel-header">
+                        <span>東京地方の予報</span>
+                        <span class="source-badge source-jma">気象庁</span>
+                    </div>
+                    <div class="jma-weather-summary" id="jmaWeatherSummary">取得中…</div>
+                    <div class="jma-pop-periods" id="jmaPopPeriods"></div>
+                </div>
+            </div>
+            <div class="forecast-source-note">
+                <span><strong>実測</strong> 外気温・湿度／Yahoo雨量</span>
+                <span><strong>公式予報</strong> 気象庁</span>
+                <span><strong>参考値*</strong> 風・UV・気圧はOpen-Meteo</span>
+            </div>
+        </section>
 
         <!-- Charts Grid -->
         <div class="charts-grid" id="chartsGrid">
@@ -663,7 +701,7 @@
             </button>
         </div>
 
-        <div class="version-info">v3.7.0 <span style="opacity: 0.5; font-size: 0.75em;">| 最終更新: 2026/08/01</span>
+        <div class="version-info">v3.8.0 <span style="opacity: 0.5; font-size: 0.75em;">| 最終更新: 2026/08/01</span>
         </div>
     </div>
 
@@ -687,7 +725,7 @@
          ==================================================================== -->
 
     <!-- 1. 設定・グローバル変数 -->
-    <script src="js/config.js"></script>
+    <script src="js/config.js?v=20260801"></script>
 
     <!-- 2. 通知システム -->
     <script src="js/notifications.js"></script>
@@ -695,8 +733,11 @@
     <!-- 3. ユーティリティ関数 -->
     <script src="js/utils.js"></script>
 
+    <!-- 3.5 気象庁予報・Yahoo短時間予報の表示 -->
+    <script src="js/forecast.js?v=20260801b"></script>
+
     <!-- 4. 降水判定システム -->
-    <script src="js/precipitation.js"></script>
+    <script src="js/precipitation.js?v=20260801"></script>
 
     <!-- 5. 月計算・表示 -->
     <script src="js/moon.js"></script>
@@ -705,10 +746,10 @@
     <script src="js/ui.js"></script>
 
     <!-- 7. API呼び出し -->
-    <script src="js/weather-api.js?v=20260801"></script>
+    <script src="js/weather-api.js?v=20260801c"></script>
 
     <!-- 8. 一言コメント生成 -->
-    <script src="js/comments.js"></script>
+    <script src="js/comments.js?v=20260801b"></script>
 
     <!-- 9. グラフ描画 -->
     <script src="js/charts.js"></script>
@@ -717,7 +758,7 @@
     <script src="js/init.js"></script>
 
     <!-- 表示層のみの再設計。データ取得・計算処理には依存しない -->
-    <script src="js/redesign.js?v=20260801"></script>
+    <script src="js/redesign.js?v=20260801c"></script>
 </body>
 
 </html>

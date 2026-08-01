@@ -37,10 +37,14 @@ const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?latitude=35.7727&lon
     'wind_speed_10m_max,wind_gusts_10m_max,wind_direction_10m_dominant,shortwave_radiation_sum' +
     '&forecast_days=2&timezone=Asia%2FTokyo&wind_speed_unit=ms';
 
+// 気象庁・東京都の府県天気予報（東京地方: 130010）
+const JMA_FORECAST_URL = 'https://www.jma.go.jp/bosai/forecast/data/forecast/130000.json';
+
 const UPDATE_INTERVAL = 60 * 1000;
 
 // グローバル状態変数
-let summaryData = {}, dailyData = [], recentData = [], weeklyData = [], weatherData = null, charts = {}, nextUpdateTime = null;
+let summaryData = {}, dailyData = [], recentData = [], weeklyData = [], weatherData = null,
+    jmaForecastData = null, yahooPrecipData = null, charts = {}, nextUpdateTime = null;
 
 // Comment stability system - only change comment when conditions change
 let lastConditionKey = '';  // Previous condition key (temp band, weather, alerts)
@@ -59,7 +63,8 @@ const CACHE_CONFIG = {
     weather: { key: 'cache_weather', ttl: 5 * 60 * 1000 },      // 5 minutes
     spreadsheet: { key: 'cache_spreadsheet', ttl: 10 * 60 * 1000 }, // 10 minutes
     precipitation: { key: 'cache_precip', ttl: 5 * 60 * 1000 }, // 5 minutes
-    alerts: { key: 'cache_alerts', ttl: 30 * 60 * 1000 }        // 30 minutes
+    alerts: { key: 'cache_alerts', ttl: 30 * 60 * 1000 },       // 30 minutes
+    forecast: { key: 'cache_forecast', ttl: 10 * 60 * 1000 }    // 10 minutes
 };
 
 function getFromCache(type) {

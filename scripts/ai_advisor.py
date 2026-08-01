@@ -34,6 +34,8 @@ LATITUDE = 35.7727
 LONGITUDE = 139.8680
 AREA_CODE = '1312200'  # 葛飾区
 JMA_WARNING_URL = "https://www.jma.go.jp/bosai/warning/data/r8/130000.json"
+JMA_FORECAST_URL = "https://www.jma.go.jp/bosai/forecast/data/forecast/130000.json"
+JMA_FORECAST_AREA_CODE = '130010'  # 東京地方
 
 # 2026-05-29以降の気象警報・注意報コード。
 # dataTypeCode と code の組み合わせを正規キーとして扱う。
@@ -556,6 +558,70 @@ def fetch_weather_forecast() -> Dict[str, Any]:
     return result
 
 
+def fetch_jma_forecast() -> Dict[str, Any]:
+    """気象庁の府県予報から東京地方の天気と6時間降水確率を取得する。"""
+    result = {
+        'report_datetime': None,
+        'weather': None,
+        'weather_code': None,
+        'precipitation_probability_periods': [],
+        'error': None,
+    }
+    try:
+        response = requests.get(
+            JMA_FORECAST_URL,
+            timeout=10,
+            headers={'Cache-Control': 'no-cache'},
+        )
+        response.raise_for_status()
+        payload = response.json()
+        if not isinstance(payload, list) or not payload:
+            raise ValueError('Unexpected JMA forecast response schema')
+
+        report = payload[0]
+        result['report_datetime'] = report.get('reportDatetime')
+        for series in report.get('timeSeries') or []:
+            area = next(
+                (
+                    item for item in (series.get('areas') or [])
+                    if str((item.get('area') or {}).get('code'))
+                    == JMA_FORECAST_AREA_CODE
+                ),
+                None,
+            )
+            if not area:
+                continue
+
+            time_defines = series.get('timeDefines') or []
+            if area.get('weathers') and not result['weather']:
+                result['weather'] = ' '.join(
+                    str(area['weathers'][0]).replace('　', ' ').split()
+                )
+                weather_codes = area.get('weatherCodes') or []
+                result['weather_code'] = weather_codes[0] if weather_codes else None
+
+            for index, probability in enumerate(area.get('pops') or []):
+                try:
+                    probability_value = int(probability)
+                except (TypeError, ValueError):
+                    continue
+                if index < len(time_defines):
+                    result['precipitation_probability_periods'].append({
+                        'start': time_defines[index],
+                        'hours': 6,
+                        'percent': probability_value,
+                    })
+
+        result['precipitation_probability_periods'] = (
+            result['precipitation_probability_periods'][:4]
+        )
+        if not result['weather'] and not result['precipitation_probability_periods']:
+            raise ValueError('Tokyo forecast area was not found')
+    except Exception as exc:
+        result['error'] = str(exc)
+    return result
+
+
 def normalize_jma_alerts(data: Any, area_code: str = AREA_CODE) -> Dict[str, Any]:
     """2026-05-29以降のJMA警報JSONを地域別に正規化する。"""
     result = {
@@ -972,6 +1038,7 @@ def analyze_with_gemini(
             'uv_index': current_weather.get('uv_index'),
         },
         'next_6_hours': weather_data.get('hourly_forecast') or [],
+        'official_jma_forecast': weather_data.get('jma_forecast') or {},
         'today': weather_data.get('daily') or {},
         'rain_nowcast': {
             'current_mm_h': rain.get('current_rainfall'),
@@ -999,6 +1066,9 @@ def analyze_with_gemini(
         'source_status': {
             'spreadsheet_error': spreadsheet_data.get('error'),
             'weather_error': weather_data.get('error'),
+            'jma_forecast_error': (
+                (weather_data.get('jma_forecast') or {}).get('error')
+            ),
             'jma_error': alerts_data.get('error'),
             'rain_nowcast_error': rain.get('error'),
         },
@@ -1023,6 +1093,8 @@ def analyze_with_gemini(
 - センサー実測値、予報値、独自計算の体感温度を区別する。
 - センサーは家の外の日陰・風通しの良い場所。公式観測所の値とは書かない。
 - 体感温度は局所の実測風ではなく、Open-Meteoの10m風速から2m相当を推定したSteadman参考値。実気温のように断定しない。
+- 雨の実況と約1時間先はYahooのrain_nowcast、先の天気と降水確率はofficial_jma_forecastを優先する。
+- Open-Meteoの天気・降水予報は、Yahooや気象庁が取得できない場合の補足に限る。風・気圧・UVなどは参考値として扱う。
 - 今日の実測最高・最低を、一日全体の予報最高・最低として扱わない。
 - 警報がない場合は「警報はありません」と書かない。
 - source_statusにエラーがある情報源について、取得できた・異常なしとは断定しない。
@@ -1098,6 +1170,12 @@ def main():
     weather_data = fetch_weather_forecast()
     if weather_data.get('error'):
         print(f"  [WARN] 天気APIエラー: {weather_data['error']}")
+
+    print("  → 気象庁の東京地方予報を取得中...")
+    jma_forecast = fetch_jma_forecast()
+    weather_data['jma_forecast'] = jma_forecast
+    if jma_forecast.get('error'):
+        print(f"  [WARN] 気象庁予報エラー: {jma_forecast['error']}")
     
     print("  → 警報情報を取得中...")
     alerts_data = fetch_jma_alerts()
@@ -1126,6 +1204,7 @@ def main():
         'source_status': {
             'spreadsheet_error': spreadsheet_data.get('error'),
             'weather_error': weather_data.get('error'),
+            'jma_forecast_error': jma_forecast.get('error'),
             'jma_error': alerts_data.get('error'),
             'rain_nowcast_error': precip_data.get('error'),
         },
