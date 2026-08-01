@@ -288,7 +288,7 @@ html.light-mode .weather-hero {
     border: 1px solid var(--ui-border);
     border-radius: var(--ui-radius-lg);
     background:
-        linear-gradient(135deg, hsla(var(--temp-hue, 26), 75%, 53%, 0.14), transparent 52%),
+        radial-gradient(105% 85% at 4% 0%, hsla(var(--temp-hue, 26), 72%, 54%, 0.11), transparent 68%),
         var(--ui-surface);
     box-shadow: var(--ui-shadow);
 }
@@ -305,16 +305,9 @@ html.light-mode .weather-hero {
 }
 
 .weather-hero::after {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    width: 320px;
-    height: 320px;
-    right: -90px;
-    top: -110px;
-    border-radius: 50%;
-    background: hsla(var(--temp-hue, 26), 82%, 58%, 0.12);
-    filter: blur(2px);
+    /* main.cssのスポットライト疑似要素を明示的に無効化する。
+       高DPIのスマホで円形の輪郭が巨大に見えるため、温度色は背景へ統合。 */
+    display: none !important;
 }
 
 .sun-times {
