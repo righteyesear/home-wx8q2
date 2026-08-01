@@ -247,6 +247,23 @@ async function loadAIComment() {
         const data = await resp.json();
 
         if (data.advice) {
+            // 古い観測値で生成された助言を現在値と並べると危険なため表示しない。
+            // 取得構造は変えず、既存JSONの generated_at / data_summary を安全確認に使う。
+            const generatedAt = data.generated_at ? new Date(data.generated_at).getTime() : NaN;
+            const ageMs = Date.now() - generatedAt;
+            const aiTemp = Number(data.data_summary?.outdoor_temp);
+            const currentTemp = Number(summaryData.currentTemp);
+            const isStale = Number.isFinite(ageMs) && ageMs > 6 * 60 * 60 * 1000;
+            const hasTempMismatch = Number.isFinite(aiTemp)
+                && Number.isFinite(currentTemp)
+                && Math.abs(aiTemp - currentTemp) >= 3;
+
+            if (isStale || hasTempMismatch) {
+                document.getElementById('aiAdvisorSection')?.classList.remove('show');
+                console.log('AI comment hidden because its source data is stale');
+                return;
+            }
+
             // Convert simple markdown to HTML
             const html = simpleMarkdownToHtml(data.advice);
             const textEl = document.getElementById('aiAdvisorText');

@@ -55,6 +55,7 @@
          - モバイル対応 → @media クエリセクション
          ==================================================================== -->
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/redesign.css?v=20260801b">
     <!-- ちらつき防止: JSより先にテーマを適用 + 初回のtransitionを無効化 -->
     <script>
         (function () {
@@ -93,7 +94,10 @@
                         <path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z" />
                     </svg>
                 </span>
-                <h1>外気温モニター</h1>
+                <div class="brand-copy">
+                    <span class="brand-kicker">KATSUSHIKA · OUTDOOR SENSOR</span>
+                    <h1>外気温モニター</h1>
+                </div>
             </div>
             <div class="status-info">
                 <div class="status-item">
@@ -230,7 +234,7 @@
         <!-- 気象警報バナー -->
         <a id="alertBanner" class="alert-banner"
             href="https://www.jma.go.jp/bosai/warning/#area_type=class20s&area_code=1312200" target="_blank"
-            rel="noopener" style="display: none; text-decoration: none;">
+            rel="noopener" aria-live="assertive" style="display: none; text-decoration: none;">
             <span class="alert-icon"><svg class="icon" viewBox="0 0 24 24">
                     <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
                     <path d="M12 9v4" />
@@ -331,6 +335,20 @@
                 <div class="stat-label">今日の最低</div>
                 <div class="stat-value low"><span id="todayLow"><span class="skeleton"
                             style="width:80px;height:40px"></span></span><span class="stat-unit">°C</span></div>
+            </div>
+        </div>
+
+        <div class="section-intro history-intro" id="historySection">
+            <div>
+                <span class="section-kicker">HISTORY</span>
+                <h2>気温の推移</h2>
+                <p>必要な期間を選んで、変化だけをすばやく確認できます。</p>
+            </div>
+            <div class="chart-view-switcher" role="group" aria-label="表示するグラフの期間">
+                <button type="button" class="chart-view-btn active" data-chart-view="recent" aria-pressed="true">直近</button>
+                <button type="button" class="chart-view-btn" data-chart-view="week" aria-pressed="false">週間</button>
+                <button type="button" class="chart-view-btn" data-chart-view="long" aria-pressed="false">長期</button>
+                <button type="button" class="chart-view-btn" data-chart-view="moon" aria-pressed="false">月情報</button>
             </div>
         </div>
 
@@ -645,7 +663,7 @@
             </button>
         </div>
 
-        <div class="version-info">v3.6.0 <span style="opacity: 0.5; font-size: 0.75em;">| 最終更新: 2026/07/31</span>
+        <div class="version-info">v3.7.0 <span style="opacity: 0.5; font-size: 0.75em;">| 最終更新: 2026/08/01</span>
         </div>
     </div>
 
@@ -687,7 +705,7 @@
     <script src="js/ui.js"></script>
 
     <!-- 7. API呼び出し -->
-    <script src="js/weather-api.js"></script>
+    <script src="js/weather-api.js?v=20260801"></script>
 
     <!-- 8. 一言コメント生成 -->
     <script src="js/comments.js"></script>
@@ -697,6 +715,9 @@
 
     <!-- 10. 初期化・イベント処理 -->
     <script src="js/init.js"></script>
+
+    <!-- 表示層のみの再設計。データ取得・計算処理には依存しない -->
+    <script src="js/redesign.js?v=20260801"></script>
 </body>
 
 </html>
