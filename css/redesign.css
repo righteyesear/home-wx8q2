@@ -132,17 +132,17 @@ body.simple-mode .container {
     order: 4;
 }
 
-.container > #forecastBrief {
+.container > #aiAdvisorSection {
     grid-column: 1 / -1;
     order: 5;
 }
 
-.container > #precipitationCard {
+.container > #forecastBrief {
     grid-column: 1 / -1;
     order: 6;
 }
 
-.container > #aiAdvisorSection {
+.container > #precipitationCard {
     grid-column: 1 / -1;
     order: 7;
 }
@@ -644,6 +644,15 @@ html.light-mode .ai-advisor-section {
     display: none;
 }
 
+.ai-advisor-section.is-waiting {
+    border-style: dashed;
+    box-shadow: none;
+}
+
+.ai-advisor-section.is-waiting .ai-advisor-text {
+    color: var(--ui-text-subtle);
+}
+
 .ai-advisor-header {
     margin-bottom: 13px;
 }
@@ -916,7 +925,7 @@ html.light-mode .footer-mode-btn {
 }
 
 .forecast-brief {
-    padding: 25px 27px 20px;
+    padding: 22px 24px 17px;
     border: 1px solid var(--ui-border);
     border-radius: var(--ui-radius-lg);
     background: var(--ui-surface);
@@ -977,13 +986,13 @@ html.light-mode .footer-mode-btn {
 .forecast-brief-grid {
     display: grid;
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    gap: 13px;
-    margin-top: 17px;
+    gap: 11px;
+    margin-top: 14px;
 }
 
 .forecast-panel {
     min-width: 0;
-    padding: 17px;
+    padding: 15px;
     border: 1px solid var(--ui-border);
     border-radius: 18px;
     background: var(--ui-surface-soft);
@@ -1063,7 +1072,7 @@ html.light-mode .footer-mode-btn {
 .forecast-source-note {
     justify-content: flex-start;
     flex-wrap: wrap;
-    margin-top: 14px;
+    margin-top: 11px;
     color: var(--ui-text-muted);
     font-size: 0.65rem;
 }
@@ -1106,19 +1115,19 @@ body.simple-mode .chart-card[data-chart-id="chart24h"] {
         order: 4;
     }
 
-    .container > #forecastBrief {
+    .container > #aiAdvisorSection {
         order: 5;
     }
 
-    .container > #precipitationCard {
+    .container > #forecastBrief {
         order: 6;
     }
 
-    .container > .main-stats {
+    .container > #precipitationCard {
         order: 7;
     }
 
-    .container > #aiAdvisorSection {
+    .container > .main-stats {
         order: 8;
     }
 
@@ -1219,7 +1228,7 @@ body.simple-mode .chart-card[data-chart-id="chart24h"] {
     }
 
     .forecast-brief {
-        padding: 21px 18px 17px;
+        padding: 18px 15px 14px;
         border-radius: 23px;
     }
 
@@ -1238,7 +1247,7 @@ body.simple-mode .chart-card[data-chart-id="chart24h"] {
     }
 
     .forecast-panel {
-        padding: 15px 13px;
+        padding: 13px 11px;
     }
 
     .forecast-source-note {

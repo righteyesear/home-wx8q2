@@ -239,12 +239,34 @@ function truncateJapaneseText(text, maxLength = 150, minLength = 100) {
     };
 }
 
+function optionalFiniteNumber(value) {
+    if (value === null || value === undefined || value === '') return null;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+}
+
+function showAIAdvisorStatus(message, statusText = '更新待ち') {
+    const section = document.getElementById('aiAdvisorSection');
+    const textEl = document.getElementById('aiAdvisorText');
+    const timeEl = document.getElementById('aiAdvisorTime');
+    const expandBtn = document.getElementById('aiAdvisorExpand');
+    if (!section || !textEl || !timeEl) return;
+
+    textEl.textContent = message;
+    textEl.dataset.fullText = '';
+    textEl.dataset.rawText = '';
+    textEl.dataset.truncated = 'false';
+    timeEl.textContent = statusText;
+    if (expandBtn) expandBtn.style.display = 'none';
+    section.classList.add('show', 'is-waiting');
+}
+
 // Load AI advisor comment from ai_comment.json
 async function loadAIComment() {
     try {
         const resp = await fetch('./ai_comment.json?' + Date.now());
         if (!resp.ok) {
-            // File doesn't exist yet, keep section hidden
+            showAIAdvisorStatus('AIコメントを取得できませんでした。次の生成を待っています。');
             return;
         }
         const data = await resp.json();
@@ -254,16 +276,16 @@ async function loadAIComment() {
             // 取得構造は変えず、既存JSONの generated_at / data_summary を安全確認に使う。
             const generatedAt = data.generated_at ? new Date(data.generated_at).getTime() : NaN;
             const ageMs = Date.now() - generatedAt;
-            const aiTemp = Number(data.data_summary?.outdoor_temp);
-            const currentTemp = Number(summaryData.currentTemp);
+            const aiTemp = optionalFiniteNumber(data.data_summary?.outdoor_temp);
+            const currentTemp = optionalFiniteNumber(summaryData.currentTemp);
             const isStale = Number.isFinite(ageMs) && ageMs > 6 * 60 * 60 * 1000;
-            const hasTempMismatch = Number.isFinite(aiTemp)
-                && Number.isFinite(currentTemp)
+            const hasTempMismatch = aiTemp !== null
+                && currentTemp !== null
                 && Math.abs(aiTemp - currentTemp) >= 3;
 
             if (isStale || hasTempMismatch) {
-                document.getElementById('aiAdvisorSection')?.classList.remove('show');
-                console.log('AI comment hidden because its source data is stale');
+                const reason = isStale ? '前回のAIコメントが古くなりました。' : '観測値が生成時から大きく変化しました。';
+                showAIAdvisorStatus(`${reason}安全のため本文を表示せず、次の生成を待っています。`);
                 return;
             }
 
@@ -313,7 +335,10 @@ async function loadAIComment() {
                 statusParts.push(`${timeStr}生成`);
             }
             const advisorSection = document.getElementById('aiAdvisorSection');
-            if (advisorSection && data.model) advisorSection.dataset.model = data.model;
+            if (advisorSection) {
+                advisorSection.classList.remove('is-waiting');
+                if (data.model) advisorSection.dataset.model = data.model;
+            }
             const sourceErrors = Object.values(data.source_status || {}).filter(Boolean);
             if (sourceErrors.length > 0) statusParts.push('⚠ 一部データ取得失敗');
             document.getElementById('aiAdvisorTime').textContent = statusParts.join(' · ');
@@ -322,7 +347,7 @@ async function loadAIComment() {
             document.getElementById('aiAdvisorSection').classList.add('show');
         }
     } catch (e) {
-        // ai_comment.json not found or parse error, keep hidden
+        showAIAdvisorStatus('AIコメントを読み込めませんでした。次の生成を待っています。');
         console.log('AI comment not available:', e.message);
     }
 }
