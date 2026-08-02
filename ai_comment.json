@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-02T19:00:35.563480+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.6-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-08-02T19:45:26.636207+09:00",
+  "advice": "葛飾区には現在、雷注意報が発表されており、今夜はじめ頃にかけて急な落雷や局地的な激しい雨、突風への警戒が必要です。現時点で雨が降っていなくても大気の状態が不安定なため、屋外での活動は控え、頑丈な建物内で過ごせるよう準備を進めてください。⚡\n\n今夜は急激に雨雲が発達する可能性があるため、ベランダの飛散しやすい物を室内に取り込み、側溝や窓まわりの確認をしておくと安心です。外出が必要な場合は雨雲レーダーで直近の動きを追い、突風や雷鳴を感じたらすぐに頑丈な建物へ避難してください。\n\n外のセンサー実測では気温25.8度、湿度81%を記録しており、10m風速推計を合わせた体感温度は約30度と試算されます。湿度が高く蒸し暑さが残るため、室内でもエアコンを適切に使い、熱中症対策を怠らないようにしてください。",
   "model": "gemini-3.6-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 25.6,
-    "weather_temp": 25.8,
+    "outdoor_temp": 25.8,
+    "weather_temp": 25.4,
     "weather": "薄曇り",
     "alerts_count": 1
   }
