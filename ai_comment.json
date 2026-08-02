@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-02T16:31:25.446811+09:00",
-  "advice": "夜のはじめ頃にかけて、急な激しい雨や落雷、突風への警戒が引き続き必要です。現在雨雲レーダーに反応はありませんが、大気の状態が非常に不安定なため、これから帰宅や外出をする方は安全な移動ルートや避難場所の確認を優先してください。\n\n気象庁の予報では、今夜遅くにかけて雷を伴った局地的な大雨が懸念されています。突風や遠くの雷鳴を感じた際は、屋外での活動をすぐに取りやめ、安全な室内へ移動する判断が求められます。浸水や冠水の恐れがある低地やアンダーパス周辺には近づかないよう注意してください。⚡\n\n屋外の日陰センサーでは気温29.2度、湿度71%を観測し、風による推定の参考体感温度は33.5度となっています。湿度が高く蒸し暑さが続いているため、室内を涼しく保ちながら、最新の雨雲レーダーをこまめにチェックして安全に行動してください。",
+  "generated_at": "2026-08-02T16:59:31.965504+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.6-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.6-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 29.2,
-    "weather_temp": 28.5,
+    "outdoor_temp": 28.1,
+    "weather_temp": 28.1,
     "weather": "晴れ",
     "alerts_count": 1
   }
