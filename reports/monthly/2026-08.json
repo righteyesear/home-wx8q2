@@ -7,7 +7,7 @@
     "end_date": "2026-08-31",
     "label": "2026年8月"
   },
-  "generated_at": "2026-08-03T06:47:25.895400+09:00",
+  "generated_at": "2026-08-03T11:00:35.686935+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -23,14 +23,14 @@
       "title": "月間統計",
       "days": 3,
       "avg_temp": 28.7,
-      "avg_temp_stdev": 4.1,
+      "avg_temp_stdev": 4.0,
       "max_temp": 37.7,
       "max_temp_date": "2026/08/01",
-      "avg_high": 32.2,
+      "avg_high": 32.3,
       "min_temp": 23.8,
       "min_temp_date": "2026/08/03",
       "avg_low": 25.5,
-      "avg_daily_range": 6.7,
+      "avg_daily_range": 6.9,
       "prev_month_diff": 0.6,
       "prev_year_diff": -1.6
     },
@@ -54,10 +54,10 @@
       {
         "date": "2026/08/03",
         "weekday": "月",
-        "high": 25.0,
+        "high": 25.4,
         "low": 23.8,
-        "avg": 24.2,
-        "range": 1.2
+        "avg": 24.3,
+        "range": 1.6
       }
     ],
     "weekly_breakdown": [
@@ -67,14 +67,14 @@
         "label": "8/1〜8/7",
         "days": 3,
         "avg_temp": 28.7,
-        "avg_temp_stdev": 4.1,
+        "avg_temp_stdev": 4.0,
         "max_temp": 37.7,
         "max_temp_date": "2026/08/01",
-        "avg_high": 32.2,
+        "avg_high": 32.3,
         "min_temp": 23.8,
         "min_temp_date": "2026/08/03",
         "avg_low": 25.5,
-        "avg_daily_range": 6.7
+        "avg_daily_range": 6.9
       }
     ],
     "comparison": {
@@ -96,7 +96,7 @@
       "avg_temp_diff": -1.6,
       "max_temp_diff": 0.1,
       "min_temp_diff": -0.5,
-      "avg_daily_range_diff": -1.1,
+      "avg_daily_range_diff": -0.9,
       "ai_comment": "今年は平均気温こそ昨年並みですが、暑さの質が大きく異なります。昨年は日中に体温を超えるような極端な猛暑日があった一方で、夜間は24℃台まで下がり一息つける時間もありました。対して今年は、最高気温こそ抑えられているものの、最低気温が27.6℃と非常に高く、夜になっても気温が下がらない「24時間休みのない持続型の暑さ」が特徴です。☀️\n\n8月のスタート時点から昨年を大きく上回る厳しい暑さとなっており、今年は息の長い熱帯夜が体にこたえる年と言えます。夜間の熱中症リスクが昨年以上に高いため、エアコンを朝まで止めずに賢く使い、睡眠の質を保つ対策が欠かせません。💦"
     },
     "prev_month": {
@@ -116,7 +116,7 @@
       "avg_temp_diff": 0.6,
       "max_temp_diff": 0.1,
       "min_temp_diff": 3.4,
-      "avg_daily_range_diff": -1.2,
+      "avg_daily_range_diff": -1.0,
       "ai_comment": ""
     },
     "baseline": {
@@ -137,7 +137,7 @@
         {
           "date": "2026/08/03",
           "type": "rapid_change",
-          "description": "平均気温が前日比-5.5℃の急低下"
+          "description": "平均気温が前日比-5.4℃の急低下"
         }
       ],
       "ai_comment": ""
@@ -359,7 +359,7 @@
       "highs": [
         37.7,
         33.9,
-        25.0
+        25.4
       ],
       "lows": [
         27.6,
@@ -369,7 +369,7 @@
       "avgs": [
         32.1,
         29.7,
-        24.2
+        24.3
       ]
     },
     "prev_year_comparison": {
@@ -381,7 +381,7 @@
       "this_year": [
         32.1,
         29.7,
-        24.2
+        24.3
       ],
       "last_year": [
         26.6,
@@ -419,7 +419,7 @@
       "this_year_high": [
         37.7,
         33.9,
-        25.0
+        25.4
       ],
       "last_year_high": [
         31.1,
@@ -502,7 +502,7 @@
       "deviations": [
         1.9,
         -0.5,
-        -6.0
+        -5.9
       ],
       "baseline_avg": 30.2
     },
@@ -514,7 +514,7 @@
         28.7
       ],
       "highs": [
-        32.2
+        32.3
       ],
       "lows": [
         25.5
