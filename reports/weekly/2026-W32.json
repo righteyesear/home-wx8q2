@@ -7,7 +7,7 @@
     "end_date": "2026-08-09",
     "label": "2026年 第32週（8/3 〜 8/9）"
   },
-  "generated_at": "2026-08-07T21:43:52.000498+09:00",
+  "generated_at": "2026-08-08T00:47:19.468192+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -15,24 +15,24 @@
       "highlights": [
         "最高気温 34.9℃",
         "最低気温 22.2℃",
-        "前週比 -2.4℃",
-        "前年比 -3.7℃"
+        "前週比 -2.2℃",
+        "前年比 -3.5℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
-      "days": 5,
-      "avg_temp": 27.2,
-      "avg_temp_stdev": 2.0,
+      "days": 6,
+      "avg_temp": 27.4,
+      "avg_temp_stdev": 1.8,
       "max_temp": 34.9,
       "max_temp_date": "2026/08/07",
-      "avg_high": 31.3,
+      "avg_high": 30.9,
       "min_temp": 22.2,
       "min_temp_date": "2026/08/04",
-      "avg_low": 23.7,
-      "avg_daily_range": 7.7,
-      "prev_week_diff": -2.4,
-      "prev_year_diff": -3.7
+      "avg_low": 24.4,
+      "avg_daily_range": 6.4,
+      "prev_week_diff": -2.2,
+      "prev_year_diff": -3.5
     },
     "daily_data": [
       {
@@ -72,8 +72,16 @@
         "weekday": "金",
         "high": 34.9,
         "low": 26.4,
-        "avg": 30.3,
+        "avg": 30.1,
         "range": 8.5
+      },
+      {
+        "date": "2026/08/08",
+        "weekday": "土",
+        "high": 28.5,
+        "low": 28.3,
+        "avg": 28.4,
+        "range": 0.2
       }
     ],
     "comparison": {
@@ -92,16 +100,16 @@
         "avg_low": 27.6,
         "avg_daily_range": 8.1
       },
-      "avg_temp_diff": -3.7,
+      "avg_temp_diff": -3.5,
       "max_temp_diff": -2.1,
       "min_temp_diff": -3.1,
-      "avg_daily_range_diff": -0.4,
+      "avg_daily_range_diff": -1.7,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 30.8,
-      "current_deviation": -3.6,
+      "current_deviation": -3.4,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -321,28 +329,32 @@
         "8/4(火)",
         "8/5(水)",
         "8/6(木)",
-        "8/7(金)"
+        "8/7(金)",
+        "8/8(土)"
       ],
       "highs": [
         27.3,
         29.8,
         31.5,
         33.2,
-        34.9
+        34.9,
+        28.5
       ],
       "lows": [
         23.6,
         22.2,
         23.2,
         22.9,
-        26.4
+        26.4,
+        28.3
       ],
       "avgs": [
         25.0,
         25.9,
         27.1,
         27.6,
-        30.3
+        30.1,
+        28.4
       ]
     },
     "prev_year_comparison": {
@@ -351,14 +363,16 @@
         "火",
         "水",
         "木",
-        "金"
+        "金",
+        "土"
       ],
       "this_year": [
         25.0,
         25.9,
         27.1,
         27.6,
-        30.3
+        30.1,
+        28.4
       ],
       "last_year": [
         30.9,
@@ -374,7 +388,8 @@
         29.8,
         31.5,
         33.2,
-        34.9
+        34.9,
+        28.5
       ],
       "last_year_high": [
         35.3,
@@ -390,7 +405,8 @@
         22.2,
         23.2,
         22.9,
-        26.4
+        26.4,
+        28.3
       ],
       "last_year_low": [
         27.3,
@@ -408,14 +424,16 @@
         "8/4(火)",
         "8/5(水)",
         "8/6(木)",
-        "8/7(金)"
+        "8/7(金)",
+        "8/8(土)"
       ],
       "deviations": [
         -5.8,
         -4.9,
         -3.7,
         -3.2,
-        -0.5
+        -0.7,
+        -2.4
       ],
       "baseline_avg": 30.8
     }
