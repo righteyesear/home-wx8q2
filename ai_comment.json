@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-09T21:41:35.816181+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.6-flash): Server disconnected without sending a response.",
+  "generated_at": "2026-08-09T22:41:41.752266+09:00",
+  "advice": "現在、葛飾区には雷注意報が発表されています。夜遅くにかけて天気が急変し、急な強い雨や雷、突風が発生するおそれがあります。空模様の変化に注意し、安全を第一に行動してください。\n\n雨が降っていない時間帯でも、屋外センサーの観測では湿度が86%と高く、風のデータを踏まえた体感温度の目安は30℃を超えています。蒸し暑い状態が続いているため、夜間も冷房を適切に使い、水分補給を行いましょう。\n\nこの後も雨雲レーダーなどで最新情報を確認し、洗濯物は室内に取り込んでおくと安心です。もし雷鳴が聞こえるなど発達した雲が近づいてきた場合は、すぐに頑丈な建物の中へ避難してください。",
   "model": "gemini-3.6-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 26.8,
-    "weather_temp": 24.8,
+    "outdoor_temp": 25.8,
+    "weather_temp": 24.5,
     "weather": "薄曇り",
     "alerts_count": 1
   }
