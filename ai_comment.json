@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-09T20:35:01.895867+09:00",
-  "advice": "レベル2の雷注意報が出されている葛飾区周辺では、夜のはじめ頃まで突然の激しい雨や落雷に警戒が必要です。直近の雨雲観測ではごく弱い雨が検知されていますが、急な発達に引き続き気を配る必要があります。\n\n雷が近づく気配を感じたら、屋外での移動をやめてすぐに頑丈な建物の中に入りましょう。屋内でも壁や窓、コンセントを入れたままの電気機器から一定の距離を保って過ごすことが身を守る行動につながります。\n\n夜遅くにかけて降水確率は下がる見込みですが、お帰りの際や就寝前には最新の雨雲情報をチェックしておくと安心です。屋外センサーの気温は27.4℃ですが、推定風速から計算した体感温度は32℃を超える蒸し暑さとなっています。室内では適切に冷房を使い、安全と体調の管理を心がけてください。",
+  "generated_at": "2026-08-09T21:41:35.816181+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.6-flash): Server disconnected without sending a response.",
   "model": "gemini-3.6-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 27.4,
-    "weather_temp": 26.2,
-    "weather": "晴れ",
+    "outdoor_temp": 26.8,
+    "weather_temp": 24.8,
+    "weather": "薄曇り",
     "alerts_count": 1
   }
 }
