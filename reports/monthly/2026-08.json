@@ -7,7 +7,7 @@
     "end_date": "2026-08-31",
     "label": "2026年8月"
   },
-  "generated_at": "2026-08-10T19:12:57.685792+09:00",
+  "generated_at": "2026-08-10T21:50:15.334165+09:00",
   "sections": {
     "summary": {
       "title": "月間サマリー",
@@ -23,14 +23,14 @@
       "title": "月間統計",
       "days": 10,
       "avg_temp": 28.5,
-      "avg_temp_stdev": 2.2,
+      "avg_temp_stdev": 2.3,
       "max_temp": 37.7,
       "max_temp_date": "2026/08/01",
       "avg_high": 33.0,
       "min_temp": 22.2,
       "min_temp_date": "2026/08/04",
-      "avg_low": 24.8,
-      "avg_daily_range": 8.2,
+      "avg_low": 24.7,
+      "avg_daily_range": 8.4,
       "prev_month_diff": 0.4,
       "prev_year_diff": -1.8
     },
@@ -111,9 +111,9 @@
         "date": "2026/08/10",
         "weekday": "月",
         "high": 31.6,
-        "low": 25.0,
-        "avg": 27.8,
-        "range": 6.6
+        "low": 23.6,
+        "avg": 27.4,
+        "range": 8.0
       }
     ],
     "weekly_breakdown": [
@@ -137,15 +137,15 @@
         "end_date": "2026-08-14",
         "label": "8/8〜8/14",
         "days": 3,
-        "avg_temp": 29.3,
-        "avg_temp_stdev": 1.5,
+        "avg_temp": 29.1,
+        "avg_temp_stdev": 1.7,
         "max_temp": 35.6,
         "max_temp_date": "2026/08/08",
         "avg_high": 34.1,
-        "min_temp": 25.0,
+        "min_temp": 23.6,
         "min_temp_date": "2026/08/10",
-        "avg_low": 25.8,
-        "avg_daily_range": 8.3
+        "avg_low": 25.3,
+        "avg_daily_range": 8.7
       }
     ],
     "comparison": {
@@ -167,7 +167,7 @@
       "avg_temp_diff": -1.8,
       "max_temp_diff": 0.1,
       "min_temp_diff": -2.1,
-      "avg_daily_range_diff": 0.4,
+      "avg_daily_range_diff": 0.6,
       "ai_comment": "今年は平均気温こそ昨年並みですが、暑さの質が大きく異なります。昨年は日中に体温を超えるような極端な猛暑日があった一方で、夜間は24℃台まで下がり一息つける時間もありました。対して今年は、最高気温こそ抑えられているものの、最低気温が27.6℃と非常に高く、夜になっても気温が下がらない「24時間休みのない持続型の暑さ」が特徴です。☀️\n\n8月のスタート時点から昨年を大きく上回る厳しい暑さとなっており、今年は息の長い熱帯夜が体にこたえる年と言えます。夜間の熱中症リスクが昨年以上に高いため、エアコンを朝まで止めずに賢く使い、睡眠の質を保つ対策が欠かせません。💦"
     },
     "prev_month": {
@@ -187,7 +187,7 @@
       "avg_temp_diff": 0.4,
       "max_temp_diff": 0.1,
       "min_temp_diff": 1.8,
-      "avg_daily_range_diff": 0.3,
+      "avg_daily_range_diff": 0.5,
       "ai_comment": ""
     },
     "baseline": {
@@ -461,7 +461,7 @@
         26.4,
         27.0,
         25.4,
-        25.0
+        23.6
       ],
       "avgs": [
         32.1,
@@ -473,7 +473,7 @@
         30.1,
         30.8,
         29.2,
-        27.8
+        27.4
       ]
     },
     "prev_year_comparison": {
@@ -499,7 +499,7 @@
         30.1,
         30.8,
         29.2,
-        27.8
+        27.4
       ],
       "last_year": [
         26.6,
@@ -589,7 +589,7 @@
         26.4,
         27.0,
         25.4,
-        25.0
+        23.6
       ],
       "last_year_low": [
         24.3,
@@ -648,7 +648,7 @@
         -0.1,
         0.6,
         -1.0,
-        -2.4
+        -2.8
       ],
       "baseline_avg": 30.2
     },
@@ -659,7 +659,7 @@
       ],
       "avgs": [
         28.2,
-        29.3
+        29.1
       ],
       "highs": [
         32.6,
@@ -667,7 +667,7 @@
       ],
       "lows": [
         24.4,
-        25.8
+        25.3
       ]
     }
   }
