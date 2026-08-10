@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-10T10:37:30.564302+09:00",
-  "advice": "屋外の日陰センサーで気温が30℃を超え、湿度も約68%と高いため、推定された体感温度は35℃近くまで跳ね上がっています。湿気が強いと汗が蒸発しづらく体温調節の負担が大きくなるため、室内にいる場合も扇風機を併用してエアコンの冷気を循環させるなど、空間全体の冷却を強めてください。\n\n外出時は水分補給に加えて塩分補給を意識し、日傘や帽子で直射日光を遮る対策が有効です。屋外で過ごす際は連続した作業や運動を避け、喉が渇く前や少しでもだるさを感じた段階で、冷気のある屋内に避難して休息を取るよう心がけてください。\n\nなお、昼過ぎからは急な雨が降る可能性が高まります。熱中症対策とあわせて折りたたみ傘を準備し、空模様の変化にも気を配っておくと安心です。",
+  "generated_at": "2026-08-10T12:07:48.664490+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.6-flash): Server disconnected without sending a response.",
   "model": "gemini-3.6-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 30.2,
-    "weather_temp": 28.9,
-    "weather": "晴れ",
+    "outdoor_temp": 31.2,
+    "weather_temp": 29.9,
+    "weather": "快晴",
     "alerts_count": 0
   }
 }
