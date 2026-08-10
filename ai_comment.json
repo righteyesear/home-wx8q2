@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-10T12:07:48.664490+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.6-flash): Server disconnected without sending a response.",
+  "generated_at": "2026-08-10T12:53:37.594965+09:00",
+  "advice": "屋外の日陰で気温31.0℃ですが、湿度63%の影響で風速から算出した推定体感温度は35℃を超えており、身体に大きな負荷がかかる危険な暑さです。室内にいる場合も我慢せず、今すぐエアコンをつけて適切な室温を保ってください。\n\n高湿度下では汗が蒸発しにくく、体内に熱がこもりやすくなります。喉が渇く前に水分と塩分を補給し、首元や脇の下など太い血管が集まる部位を保冷剤などで冷やす対策が身体への負担軽減に効果的です。室内でも扇風機を併用して空気を動かしましょう。\n\n気象庁の予報では夕方にかけて所により雨の可能性があります。外出の際は日傘や帽子で日差しを遮り、天気の急変にも注意して無理のないよう行動してください。 🌡️",
   "model": "gemini-3.6-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 31.2,
-    "weather_temp": 29.9,
+    "outdoor_temp": 31.0,
+    "weather_temp": 30.4,
     "weather": "快晴",
     "alerts_count": 0
   }
