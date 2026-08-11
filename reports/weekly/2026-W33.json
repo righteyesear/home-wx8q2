@@ -7,7 +7,7 @@
     "end_date": "2026-08-16",
     "label": "2026年 第33週（8/10 〜 8/16）"
   },
-  "generated_at": "2026-08-11T18:53:52.332275+09:00",
+  "generated_at": "2026-08-11T21:45:22.869115+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -23,7 +23,7 @@
       "title": "週間統計",
       "days": 2,
       "avg_temp": 26.4,
-      "avg_temp_stdev": 0.9,
+      "avg_temp_stdev": 0.8,
       "max_temp": 31.6,
       "max_temp_date": "2026/08/10",
       "avg_high": 30.8,
@@ -48,7 +48,7 @@
         "weekday": "火",
         "high": 30.0,
         "low": 22.2,
-        "avg": 25.7,
+        "avg": 25.8,
         "range": 7.8
       }
     ],
@@ -306,7 +306,7 @@
       ],
       "avgs": [
         27.0,
-        25.7
+        25.8
       ]
     },
     "prev_year_comparison": {
@@ -316,7 +316,7 @@
       ],
       "this_year": [
         27.0,
-        25.7
+        25.8
       ],
       "last_year": [
         27.5,
@@ -361,7 +361,7 @@
       ],
       "deviations": [
         -3.0,
-        -4.3
+        -4.2
       ],
       "baseline_avg": 30.0
     }
