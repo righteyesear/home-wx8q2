@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-08-11T12:43:29.667895+09:00",
-  "advice": "強風注意報と雷注意報が出されている葛飾区では、夕方から夜にかけて天気がさらに悪化する見込みです。夕方以降は降水確率が80パーセント以上に高まり、雷を伴う激しい雨や最大で毎秒18メートルを超える突風が発生するおそれがあります。 ⚡\n\n風で飛ばされやすい屋外やベランダの物は早めに固定するか室内に取り込み、急な突風や雷鳴を感じたらすぐに頑丈な建物へ避難してください。夕方以降の外出は雨具だけでなく、足元の冠水や突風にも警戒し、移動は無理のない範囲にとどめましょう。\n\n屋外の日陰に設置したセンサー気温は24.7度で、風の影響を考慮した計算値である参考体感温度は27.6度です。気象庁の最新注意報や自治体からの防災情報をこまめに確認し、急な気象変化に備えて行動してください。",
+  "generated_at": "2026-08-11T13:22:01.236838+09:00",
+  "advice": "現在、強風注意報と雷注意報が発表されています。このあと13時半過ぎから雨が降り始め、夕方から夜にかけては雷を伴う激しい雨や最大で毎秒18メートルを超える突風が発生するおそれがあります。\n\n屋外の日陰に設置したセンサーの気温は29.8度で、風の影響を加味した参考体感温度は32.3度まで上がっています。天候が本格的に崩れる前にベランダや庭にある飛ばされやすい物を固定・格納し、夕方以降のお出かけの際は雨雲レーダーや自治体の防災気象情報を確認してください。\n\nまた、道路の冠水や突風による飛来物にも警戒が必要です。急に周囲が暗くなったり雷鳴が聞こえたりした場合は、無理をせず頑丈な建物内へ退避しましょう。",
   "model": "gemini-3.6-flash",
   "analysis_status": "ok",
   "source_status": {
-    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
+    "spreadsheet_error": null,
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
-    "rain_nowcast_error": "HTTPSConnectionPool(host='yahoo-weather-proxy.miurayukimail.workers.dev', port=443): Read timed out. (read timeout=10)"
+    "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": null,
-    "weather_temp": 24.7,
-    "weather": "雨",
+    "outdoor_temp": 29.8,
+    "weather_temp": 23.7,
+    "weather": "強い霧雨",
     "alerts_count": 2
   }
 }
