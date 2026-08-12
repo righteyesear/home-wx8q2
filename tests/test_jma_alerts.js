@@ -17,9 +17,13 @@ function loadRawJson(name) {
 
 function loadUiNormalizer() {
     const source = fs.readFileSync(path.join(stageRoot, 'js', 'ui.js'), 'utf8');
-    const context = vm.createContext({ console });
-    vm.runInContext(`${source}\nglobalThis.__normalizeJmaAlerts = normalizeJmaAlerts;`, context);
-    return context.__normalizeJmaAlerts;
+    const context = vm.createContext({ console, Date, Intl });
+    vm.runInContext(`${source}\nglobalThis.__jmaHelpers = {
+        normalizeJmaAlerts,
+        selectLatestJmaReportTime,
+        formatJmaReportTime
+    };`, context);
+    return context.__jmaHelpers;
 }
 
 function loadWorker() {
@@ -49,7 +53,8 @@ const expectedCases = [
     ['released-katsushika.json', 0, null]
 ];
 
-const normalizeUi = loadUiNormalizer();
+const jmaHelpers = loadUiNormalizer();
+const normalizeUi = jmaHelpers.normalizeJmaAlerts;
 const { worker, context } = loadWorker();
 
 for (const [file, level, name] of expectedCases) {
@@ -95,6 +100,33 @@ const rawDowngrade = normalizeUi(
 assert(rawDowngrade.some(
     alert => alert.id === 'VPWW55:10' && alert.status === '警報から注意報'
 ));
+
+assert.equal(
+    jmaHelpers.selectLatestJmaReportTime([
+        { reportDatetime: '2026-08-12T04:14:00+09:00' },
+        { reportDatetime: '2026-08-12T21:01:00+09:00' }
+    ]),
+    '2026-08-12T21:01:00+09:00'
+);
+assert.equal(
+    jmaHelpers.formatJmaReportTime('2026-08-11T19:14:00Z'),
+    '8/12 04:14発表',
+    'UTC control time must display in JST'
+);
+
+const activeThenReleased = [
+    {
+        dataTypeCode: 'VPWW55',
+        reportDatetime: '2026-08-12T18:00:00+09:00',
+        warning: { class20Items: [{ areaCode: '1312200', kinds: [{ code: '10', status: '発表' }] }] }
+    },
+    {
+        dataTypeCode: 'VPWW55',
+        reportDatetime: '2026-08-12T21:01:00+09:00',
+        warning: { class20Items: [{ areaCode: '1312200', kinds: [{ code: '10', status: '解除' }] }] }
+    }
+];
+assert.equal(normalizeUi(activeThenReleased, '1312200').length, 0, 'newer release must supersede older active advisory');
 
 // Worker notification state: new -> continuing -> downgrade -> release -> reissue.
 const kvStore = new Map();

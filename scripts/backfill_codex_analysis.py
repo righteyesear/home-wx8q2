@@ -8,7 +8,17 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-from report_analysis import JST, VALID_ANALYSIS_KEYS, apply_analysis, generate_evidence_analysis
+from report_analysis import (
+    ANALYSIS_PROTOCOL_VERSION,
+    JST,
+    VALID_ANALYSIS_KEYS,
+    analysis_fingerprint,
+    apply_analysis,
+    enrich_analysis_context,
+    generate_evidence_analysis,
+    load_reference_reports,
+    mark_report_as_draft,
+)
 
 
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -18,21 +28,35 @@ REPORTS_ROOT = PROJECT_ROOT / "reports"
 def backfill(replace_all: bool = False) -> int:
     generated_at = datetime.now(JST).isoformat()
     updated = 0
-    skipped_open = 0
+    drafts = 0
+    reference_reports = load_reference_reports(REPORTS_ROOT)
     for report_type in ("weekly", "monthly"):
         for path in sorted((REPORTS_ROOT / report_type).glob("*.json")):
             report = json.loads(path.read_text(encoding="utf-8"))
             existing_meta = report.get("analysis_meta", {})
-            if not replace_all and existing_meta.get("source") == "codex":
-                continue
+            if (
+                not replace_all
+                and existing_meta.get("source") == "codex"
+                and existing_meta.get("protocol_version") == ANALYSIS_PROTOCOL_VERSION
+            ):
+                enrich_analysis_context(report, reference_reports)
+                if existing_meta.get("data_fingerprint") == analysis_fingerprint(report):
+                    continue
 
             bundle = generate_evidence_analysis(
                 report,
                 source="codex",
                 generated_at=generated_at,
+                reference_reports=reference_reports,
             )
             if not bundle["analysis_meta"]["period_closed"]:
-                skipped_open += 1
+                if report_type == "weekly":
+                    mark_report_as_draft(report, reference_reports)
+                    path.write_text(
+                        json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+                        encoding="utf-8",
+                    )
+                    drafts += 1
                 continue
 
             bundle["analysis_meta"]["reason"] = "legacy_report_revalidation"
@@ -48,7 +72,7 @@ def backfill(replace_all: bool = False) -> int:
             )
             updated += 1
 
-    print(f"Codex分析を更新: {updated}件（未終了期間のスキップ: {skipped_open}件）")
+    print(f"履歴分析を更新: {updated}件（進行中週の暫定表示: {drafts}件）")
     return updated
 
 

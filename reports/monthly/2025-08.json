@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "月間サマリー",
-      "ai_comment": "対象期間は終了しており、31日分の観測で集計しています。2025年8月の平均気温は30.3℃、最高37.6℃、最低24.3℃でした。前半から後半にかけて平均気温が約2.3℃上がり、明確な昇温傾向でした。前月比+0.8℃、前年比+0.1℃、過去同時期平均との差+0.1℃です。最高気温が35℃以上の日を含むため、日中の外出は時間を選び、冷房・水分・休憩を前提にしてください。",
+      "ai_comment": "2025年8月を特徴づけたのは、日平均の標準偏差1.5℃という期間内の振れ幅です。期間平均は30.3℃、最高37.6℃（8/31）、最低24.3℃（8/1）です。日別には前半と後半の差は0.4℃でほぼ横ばいとなり、日ごとの振れは中程度でした。位置づけは前月比+0.8℃、前年同期比+0.1℃、過去同時期平均との差+0.1℃。猛暑日は21日、最長13日連続でした。総じて、過去平均との差と期間内変化のどちらにも極端な偏りが少ない月でした。",
       "highlights": [
         "月平均 30.3℃",
         "最高 37.6℃",
@@ -381,7 +381,7 @@
       "max_temp_diff": -0.5,
       "min_temp_diff": 0.1,
       "avg_daily_range_diff": -0.4,
-      "ai_comment": "平均気温は30.3℃で、前年同期の30.2℃より+0.1℃、ほぼ同水準でした。内訳は最高気温差-0.5℃、最低気温差+0.1℃、日較差の差-0.4℃です。単年同士の比較なので、季節の長期傾向ではなく、この期間固有の差として見るのが適切です。"
+      "ai_comment": "比較できる他1期間の同時期平均30.2℃に対して+0.1℃です。平均は前年同期より+0.1℃、最高値は-0.5℃、最低値は+0.1℃、平均日較差は-0.4℃。最高値と最低値が同程度に動いており、特定の時間帯だけでなく期間全体の水準差と読めます。前月平均29.5℃からは+0.8℃で、月内の前半・後半差と合わせても月をまたいだ水準変化が数値に表れています。さらに直前4か月の平均22.6℃と比べると+7.7℃で、単一の前年だけでなく直近推移の中でも気温が7.7℃高い状態です。"
     },
     "prev_month": {
       "title": "前月比較",
@@ -616,7 +616,7 @@
       }
     },
     "trend_analysis": {
-      "ai_comment": "前半から後半にかけて平均気温が約2.3℃上がり、明確な昇温傾向でした。最大の上昇は2025/08/01から2025/08/02の+2.9℃でした。最大の低下は2025/08/06から2025/08/07の-2.5℃でした。"
+      "ai_comment": "平均気温の底は8/1の26.6℃、山は8/5の32.6℃でした。前半と後半の差は0.4℃でほぼ横ばいとなり、日ごとの振れは中程度でした。最大上昇は8/1→8/2の+2.9℃、最大低下は8/6→8/7の-2.5℃です。日平均の標準偏差は1.5℃、前日からの平均変化幅は0.9℃で、期間内の変動性は中程度でした。温度基準で見ると猛暑日は21日、最長13日連続でした。"
     }
   },
   "chart_data": {
@@ -1089,13 +1089,124 @@
   },
   "analysis_meta": {
     "source": "codex",
-    "protocol_version": "2.0",
-    "generated_at": "2026-08-12T21:36:54.390359+09:00",
-    "data_fingerprint": "1439113d8eaeb9b5a224",
+    "analysis_available": true,
+    "protocol_version": "3.2",
+    "generated_at": "2026-08-12T22:13:35.139321+09:00",
+    "data_fingerprint": "59b3f33c67c9946a8647",
     "period_closed": true,
     "coverage_complete": true,
     "observed_days": 31,
     "expected_days": 31,
     "reason": "legacy_report_revalidation"
+  },
+  "analysis_context": {
+    "context_version": "3.2",
+    "daily_pattern": {
+      "opening_avg": 30.51,
+      "closing_avg": 30.9,
+      "front_to_back_change": 0.39,
+      "linear_slope_per_day": 0.061,
+      "daily_avg_stdev": 1.51,
+      "mean_absolute_day_change": 0.9,
+      "largest_rise": {
+        "change": 2.8999999999999986,
+        "from_date": "2025/08/01",
+        "to_date": "2025/08/02"
+      },
+      "largest_drop": {
+        "change": -2.5000000000000036,
+        "from_date": "2025/08/06",
+        "to_date": "2025/08/07"
+      },
+      "warmest_average_day": {
+        "date": "2025/08/05",
+        "value": 32.6
+      },
+      "coolest_average_day": {
+        "date": "2025/08/01",
+        "value": 26.6
+      },
+      "days_high_35_or_more": 21,
+      "days_high_30_or_more": 30,
+      "days_low_below_zero": 0,
+      "days_range_10_or_more": 2,
+      "longest_high_35_streak": 13,
+      "longest_high_30_streak": 21
+    },
+    "same_season_history": {
+      "slot": 8,
+      "comparison_periods": [
+        {
+          "key": "monthly:2024-08-01",
+          "period": "2024年8月",
+          "start_date": "2024-08-01",
+          "year": 2024,
+          "avg_temp": 30.2,
+          "max_temp": 38.1,
+          "min_temp": 24.2,
+          "avg_daily_range": 8.2
+        }
+      ],
+      "other_period_count": 1,
+      "sample_count_including_current": 2,
+      "years": [
+        2024,
+        2025
+      ],
+      "peer_average": 30.2,
+      "deviation_from_peer_average": 0.1,
+      "rank_warmest": 1,
+      "rank_coldest": 2,
+      "sample_min": 30.2,
+      "sample_max": 30.3,
+      "sample_stdev": 0.05
+    },
+    "recent_history": {
+      "previous_periods": [
+        {
+          "key": "monthly:2025-04-01",
+          "period": "2025年4月",
+          "start_date": "2025-04-01",
+          "year": 2025,
+          "avg_temp": 15.9,
+          "max_temp": 27.6,
+          "min_temp": 4.2,
+          "avg_daily_range": 8.5
+        },
+        {
+          "key": "monthly:2025-05-01",
+          "period": "2025年5月",
+          "start_date": "2025-05-01",
+          "year": 2025,
+          "avg_temp": 19.6,
+          "max_temp": 30.0,
+          "min_temp": 12.7,
+          "avg_daily_range": 7.5
+        },
+        {
+          "key": "monthly:2025-06-01",
+          "period": "2025年6月",
+          "start_date": "2025-06-01",
+          "year": 2025,
+          "avg_temp": 25.6,
+          "max_temp": 36.3,
+          "min_temp": 16.0,
+          "avg_daily_range": 7.7
+        },
+        {
+          "key": "monthly:2025-07-01",
+          "period": "2025年7月",
+          "start_date": "2025-07-01",
+          "year": 2025,
+          "avg_temp": 29.5,
+          "max_temp": 36.7,
+          "min_temp": 21.1,
+          "avg_daily_range": 7.9
+        }
+      ],
+      "previous_period_count": 4,
+      "previous_period_mean": 22.65,
+      "difference_from_previous_period_mean": 7.65
+    }
   }
 }

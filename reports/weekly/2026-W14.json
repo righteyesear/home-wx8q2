@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "対象期間は終了しており、7日分の観測で集計しています。2026年 第14週（3/30 〜 4/5）の平均気温は15.2℃、最高22.7℃、最低8.7℃でした。前半と後半の平均気温差は0.1℃に収まり、期間全体では大きな一方向変化はありませんでした。前週比+2.0℃、前年比+6.2℃、過去同時期平均との差+3.1℃です。極端な温度域ではありませんが、日ごとの変化に合わせて服装と室温を調整してください。",
+      "ai_comment": "2026年 第14週（3/30 〜 4/5）は、同じ第14週を比べられる2024〜2026年の3期間では高温側1位です。期間平均は15.2℃、最高22.7℃（4/5）、最低8.7℃（4/3）です。日別には前半と後半の差は0.1℃でほぼ横ばいとなり、日ごとの振れは中程度でした。位置づけは前週比+2.0℃、前年同期比+6.2℃、過去同時期平均との差+3.1℃。日較差10℃以上の日が1日ありました。総じて、直前期・前年・同時期平均との差の複数軸が高温側でそろった週でした。",
       "highlights": [
         "最高気温 22.7℃",
         "最低気温 8.7℃",
@@ -112,7 +112,7 @@
       "max_temp_diff": 5.5,
       "min_temp_diff": 4.5,
       "avg_daily_range_diff": 0.4,
-      "ai_comment": "平均気温は15.2℃で、前年同期の9.0℃より+6.2℃、高めでした。内訳は最高気温差+5.5℃、最低気温差+4.5℃、日較差の差+0.4℃です。単年同士の比較なので、季節の長期傾向ではなく、この期間固有の差として見るのが適切です。"
+      "ai_comment": "同じ第14週を比べられる2024〜2026年の3期間では高温側1位です。比較できる他2期間の同時期平均12.2℃に対して+3.0℃です。比較対象全体の平均気温は9.8〜15.2℃の幅で、今回がその上限です。平均は前年同期より+6.2℃、最高値は+5.5℃、最低値は+4.5℃、平均日較差は+0.4℃。前年との差は最低値より最高値側で大きく、日中のピーク温度の違いが中心です。さらに直前4週の平均10.6℃と比べると+4.6℃で、単一の前年だけでなく直近推移の中でも気温が4.6℃高い状態です。"
     },
     "baseline": {
       "title": "2年平均との比較",
@@ -308,7 +308,7 @@
     },
     "trend_analysis": {
       "title": "気温推移の分析",
-      "ai_comment": "前半と後半の平均気温差は0.1℃に収まり、期間全体では大きな一方向変化はありませんでした。最大の上昇は2026/04/04から2026/04/05の+3.3℃でした。最大の低下は2026/03/31から2026/04/01の-2.7℃でした。"
+      "ai_comment": "平均気温の底は4/2の11.5℃、山は4/5の18.1℃でした。前半と後半の差は0.1℃でほぼ横ばいとなり、日ごとの振れは中程度でした。最大上昇は4/4→4/5の+3.3℃、最大低下は3/31→4/1の-2.7℃です。日平均の標準偏差は2.0℃、前日からの平均変化幅は2.1℃で、期間内の変動性は中程度でした。温度基準で見ると日較差10℃以上の日が1日ありました。"
     }
   },
   "chart_data": {
@@ -439,13 +439,135 @@
   },
   "analysis_meta": {
     "source": "codex",
-    "protocol_version": "2.0",
-    "generated_at": "2026-08-12T21:36:54.390359+09:00",
-    "data_fingerprint": "edd4d29114ce4f3ce20a",
+    "analysis_available": true,
+    "protocol_version": "3.2",
+    "generated_at": "2026-08-12T22:13:35.139321+09:00",
+    "data_fingerprint": "3e282aa6b0c971a3a88a",
     "period_closed": true,
     "coverage_complete": true,
     "observed_days": 7,
     "expected_days": 7,
     "reason": "legacy_report_revalidation"
+  },
+  "analysis_context": {
+    "context_version": "3.2",
+    "daily_pattern": {
+      "opening_avg": 16.55,
+      "closing_avg": 16.45,
+      "front_to_back_change": -0.1,
+      "linear_slope_per_day": 0.068,
+      "daily_avg_stdev": 1.98,
+      "mean_absolute_day_change": 2.12,
+      "largest_rise": {
+        "change": 3.3000000000000007,
+        "from_date": "2026/04/04",
+        "to_date": "2026/04/05"
+      },
+      "largest_drop": {
+        "change": -2.6999999999999993,
+        "from_date": "2026/03/31",
+        "to_date": "2026/04/01"
+      },
+      "warmest_average_day": {
+        "date": "2026/04/05",
+        "value": 18.1
+      },
+      "coolest_average_day": {
+        "date": "2026/04/02",
+        "value": 11.5
+      },
+      "days_high_35_or_more": 0,
+      "days_high_30_or_more": 0,
+      "days_low_below_zero": 0,
+      "days_range_10_or_more": 1,
+      "longest_high_35_streak": 0,
+      "longest_high_30_streak": 0
+    },
+    "same_season_history": {
+      "slot": 14,
+      "comparison_periods": [
+        {
+          "key": "weekly:2024-04-01",
+          "period": "2024年 第14週（4/1 〜 4/7）",
+          "start_date": "2024-04-01",
+          "year": 2024,
+          "avg_temp": 14.5,
+          "max_temp": 23.1,
+          "min_temp": 8.9,
+          "avg_daily_range": 7.1
+        },
+        {
+          "key": "weekly:2025-03-31",
+          "period": "2025年 第14週（3/31 〜 4/6）",
+          "start_date": "2025-03-31",
+          "year": 2025,
+          "avg_temp": 9.8,
+          "max_temp": 19.3,
+          "min_temp": 4.2,
+          "avg_daily_range": 6.6
+        }
+      ],
+      "other_period_count": 2,
+      "sample_count_including_current": 3,
+      "years": [
+        2024,
+        2025,
+        2026
+      ],
+      "peer_average": 12.15,
+      "deviation_from_peer_average": 3.05,
+      "rank_warmest": 1,
+      "rank_coldest": 3,
+      "sample_min": 9.8,
+      "sample_max": 15.2,
+      "sample_stdev": 2.4
+    },
+    "recent_history": {
+      "previous_periods": [
+        {
+          "key": "weekly:2026-03-02",
+          "period": "2026年 第10週（3/2 〜 3/8）",
+          "start_date": "2026-03-02",
+          "year": 2026,
+          "avg_temp": 9.6,
+          "max_temp": 16.2,
+          "min_temp": 4.2,
+          "avg_daily_range": 7.8
+        },
+        {
+          "key": "weekly:2026-03-09",
+          "period": "2026年 第11週（3/9 〜 3/15）",
+          "start_date": "2026-03-09",
+          "year": 2026,
+          "avg_temp": 7.9,
+          "max_temp": 15.2,
+          "min_temp": 0.6,
+          "avg_daily_range": 8.1
+        },
+        {
+          "key": "weekly:2026-03-16",
+          "period": "2026年 第12週（3/16 〜 3/22）",
+          "start_date": "2026-03-16",
+          "year": 2026,
+          "avg_temp": 11.7,
+          "max_temp": 19.5,
+          "min_temp": 4.8,
+          "avg_daily_range": 8.1
+        },
+        {
+          "key": "weekly:2026-03-23",
+          "period": "2026年 第13週（3/23 〜 3/29）",
+          "start_date": "2026-03-23",
+          "year": 2026,
+          "avg_temp": 13.2,
+          "max_temp": 21.7,
+          "min_temp": 9.4,
+          "avg_daily_range": 7.0
+        }
+      ],
+      "previous_period_count": 4,
+      "previous_period_mean": 10.6,
+      "difference_from_previous_period_mean": 4.6
+    }
   }
 }

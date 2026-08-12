@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "対象期間は終了しており、7日分の観測で集計しています。2025年 第19週（5/5 〜 5/11）の平均気温は18.7℃、最高26.8℃、最低12.7℃でした。前半から後半にかけて平均気温が約2.3℃上がり、明確な昇温傾向でした。前週比+0.5℃、前年比-0.7℃、過去同時期平均との差-0.7℃です。極端な温度域ではありませんが、日ごとの変化に合わせて服装と室温を調整してください。",
+      "ai_comment": "2025年 第19週（5/5 〜 5/11）は、前半平均17.1℃から後半20.2℃へ上昇し、日ごとの振れは中程度でした。期間平均は18.7℃、最高26.8℃（5/11）、最低12.7℃（5/5）です。位置づけは前週比+0.5℃、前年同期比-0.7℃、過去同時期平均との差-0.7℃。日較差10℃以上の日が2日ありました。総じて、期間平均だけでは捉えにくい、前半から後半への明瞭な上昇が特徴の週でした。",
       "highlights": [
         "最高気温 26.8℃",
         "最低気温 12.7℃",
@@ -112,7 +112,7 @@
       "max_temp_diff": -1.1,
       "min_temp_diff": 3.1,
       "avg_daily_range_diff": -0.7,
-      "ai_comment": "平均気温は18.7℃で、前年同期の19.4℃より-0.7℃、低めでした。内訳は最高気温差-1.1℃、最低気温差+3.1℃、日較差の差-0.7℃です。単年同士の比較なので、季節の長期傾向ではなく、この期間固有の差として見るのが適切です。"
+      "ai_comment": "同じ第19週を比べられる2024〜2026年の3期間では低温側1位です。比較できる他2期間の同時期平均19.8℃に対して-1.1℃です。比較対象全体の平均気温は18.7〜20.3℃の幅で、今回がその下限です。平均は前年同期より-0.7℃、最高値は-1.1℃、最低値は+3.1℃、平均日較差は-0.7℃。前年との差は最高値より最低値側で大きく、夜間・朝方の温度水準の違いが平均を押し動かしています。さらに直前4週の平均17.4℃と比べると+1.2℃で、単一の前年だけでなく直近推移の中でも気温が1.2℃やや高い状態です。"
     },
     "baseline": {
       "title": "2年平均との比較",
@@ -302,7 +302,7 @@
       }
     },
     "trend_analysis": {
-      "ai_comment": "前半から後半にかけて平均気温が約2.3℃上がり、明確な昇温傾向でした。最大の上昇は2025/05/06から2025/05/07の+2.7℃でした。最大の低下は2025/05/05から2025/05/06の-2.9℃でした。"
+      "ai_comment": "平均気温の底は5/6の15.7℃、山は5/11の21.5℃でした。前半平均17.1℃から後半20.2℃へ上昇し、日ごとの振れは中程度でした。最大上昇は5/6→5/7の+2.7℃、最大低下は5/5→5/6の-2.9℃です。日平均の標準偏差は1.6℃、前日からの平均変化幅は1.6℃で、期間内の変動性は中程度でした。温度基準で見ると日較差10℃以上の日が2日ありました。"
     }
   },
   "chart_data": {
@@ -433,13 +433,135 @@
   },
   "analysis_meta": {
     "source": "codex",
-    "protocol_version": "2.0",
-    "generated_at": "2026-08-12T21:36:54.390359+09:00",
-    "data_fingerprint": "39e840dfc9b714b31133",
+    "analysis_available": true,
+    "protocol_version": "3.2",
+    "generated_at": "2026-08-12T22:13:35.139321+09:00",
+    "data_fingerprint": "3e14b28d0cf7b2c6e0e7",
     "period_closed": true,
     "coverage_complete": true,
     "observed_days": 7,
     "expected_days": 7,
     "reason": "legacy_report_revalidation"
+  },
+  "analysis_context": {
+    "context_version": "3.2",
+    "daily_pattern": {
+      "opening_avg": 17.15,
+      "closing_avg": 20.2,
+      "front_to_back_change": 3.05,
+      "linear_slope_per_day": 0.571,
+      "daily_avg_stdev": 1.57,
+      "mean_absolute_day_change": 1.58,
+      "largest_rise": {
+        "change": 2.6999999999999993,
+        "from_date": "2025/05/06",
+        "to_date": "2025/05/07"
+      },
+      "largest_drop": {
+        "change": -2.900000000000002,
+        "from_date": "2025/05/05",
+        "to_date": "2025/05/06"
+      },
+      "warmest_average_day": {
+        "date": "2025/05/11",
+        "value": 21.5
+      },
+      "coolest_average_day": {
+        "date": "2025/05/06",
+        "value": 15.7
+      },
+      "days_high_35_or_more": 0,
+      "days_high_30_or_more": 0,
+      "days_low_below_zero": 0,
+      "days_range_10_or_more": 2,
+      "longest_high_35_streak": 0,
+      "longest_high_30_streak": 0
+    },
+    "same_season_history": {
+      "slot": 19,
+      "comparison_periods": [
+        {
+          "key": "weekly:2024-05-06",
+          "period": "2024年 第19週（5/6 〜 5/12）",
+          "start_date": "2024-05-06",
+          "year": 2024,
+          "avg_temp": 19.3,
+          "max_temp": 25.8,
+          "min_temp": 9.6,
+          "avg_daily_range": 8.4
+        },
+        {
+          "key": "weekly:2026-05-04",
+          "period": "2026年 第19週（5/4 〜 5/10）",
+          "start_date": "2026-05-04",
+          "year": 2026,
+          "avg_temp": 20.3,
+          "max_temp": 26.8,
+          "min_temp": 13.5,
+          "avg_daily_range": 8.7
+        }
+      ],
+      "other_period_count": 2,
+      "sample_count_including_current": 3,
+      "years": [
+        2024,
+        2025,
+        2026
+      ],
+      "peer_average": 19.8,
+      "deviation_from_peer_average": -1.1,
+      "rank_warmest": 3,
+      "rank_coldest": 1,
+      "sample_min": 18.7,
+      "sample_max": 20.3,
+      "sample_stdev": 0.66
+    },
+    "recent_history": {
+      "previous_periods": [
+        {
+          "key": "weekly:2025-04-07",
+          "period": "2025年 第15週（4/7 〜 4/13）",
+          "start_date": "2025-04-07",
+          "year": 2025,
+          "avg_temp": 15.3,
+          "max_temp": 22.2,
+          "min_temp": 8.3,
+          "avg_daily_range": 8.0
+        },
+        {
+          "key": "weekly:2025-04-14",
+          "period": "2025年 第16週（4/14 〜 4/20）",
+          "start_date": "2025-04-14",
+          "year": 2025,
+          "avg_temp": 18.2,
+          "max_temp": 27.6,
+          "min_temp": 9.4,
+          "avg_daily_range": 9.7
+        },
+        {
+          "key": "weekly:2025-04-21",
+          "period": "2025年 第17週（4/21 〜 4/27）",
+          "start_date": "2025-04-21",
+          "year": 2025,
+          "avg_temp": 18.1,
+          "max_temp": 25.1,
+          "min_temp": 9.8,
+          "avg_daily_range": 8.2
+        },
+        {
+          "key": "weekly:2025-04-28",
+          "period": "2025年 第18週（4/28 〜 5/4）",
+          "start_date": "2025-04-28",
+          "year": 2025,
+          "avg_temp": 18.2,
+          "max_temp": 24.8,
+          "min_temp": 12.8,
+          "avg_daily_range": 9.5
+        }
+      ],
+      "previous_period_count": 4,
+      "previous_period_mean": 17.45,
+      "difference_from_previous_period_mean": 1.25
+    }
   }
 }

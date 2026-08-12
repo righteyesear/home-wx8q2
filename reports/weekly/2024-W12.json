@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "対象期間は終了しており、7日分の観測で集計しています。2024年 第12週（3/18 〜 3/24）の平均気温は8.0℃、最高15.9℃、最低2.8℃でした。前半と後半の平均気温差は1.2℃に収まり、期間全体では大きな一方向変化はありませんでした。前週比-3.4℃です。朝晩は一桁まで冷えているため、外出時間に合わせて調整できる上着が役立ちます。",
+      "ai_comment": "2024年 第12週（3/18 〜 3/24）は前週から平均気温が-3.4℃変化し、直近の流れが大きく動いた期間でした。期間平均は8.0℃、最高15.9℃（3/24）、最低2.8℃（3/22）です。日別には前半と後半の差は1.3℃でほぼ横ばいとなり、日ごとの振れは中程度でした。位置づけは前週比-3.4℃。日較差10℃以上の日が2日ありました。総じて、直前期・前年・同時期平均との差の複数軸が低温側でそろった週でした。",
       "highlights": [
         "最高気温 15.9℃",
         "最低気温 2.8℃",
@@ -97,7 +97,7 @@
         "year": 2023,
         "week": 12
       },
-      "ai_comment": "前年同期の観測が不足しているため、信頼できる前年比較はまだできません。"
+      "ai_comment": "同じ第12週を比べられる2024〜2026年の3期間では低温側1位です。比較できる他2期間の同時期平均11.2℃に対して-3.2℃です。比較対象全体の平均気温は8.0〜11.7℃の幅で、今回がその下限です。さらに直前1週の平均11.4℃と比べると-3.4℃で、単一の前年だけでなく直近推移の中でも気温が3.4℃低い状態です。"
     },
     "baseline": {
       "title": "2年平均との比較",
@@ -287,7 +287,7 @@
       }
     },
     "trend_analysis": {
-      "ai_comment": "前半と後半の平均気温差は1.2℃に収まり、期間全体では大きな一方向変化はありませんでした。最大の上昇は2024/03/23から2024/03/24の+4.4℃でした。最大の低下は2024/03/20から2024/03/21の-1.8℃でした。"
+      "ai_comment": "平均気温の底は3/23の5.6℃、山は3/24の10.0℃でした。前半と後半の差は1.3℃でほぼ横ばいとなり、日ごとの振れは中程度でした。最大上昇は3/23→3/24の+4.4℃、最大低下は3/20→3/21の-1.8℃です。日平均の標準偏差は1.5℃、前日からの平均変化幅は1.7℃で、期間内の変動性は中程度でした。温度基準で見ると日較差10℃以上の日が2日ありました。"
     }
   },
   "chart_data": {
@@ -332,13 +332,105 @@
   },
   "analysis_meta": {
     "source": "codex",
-    "protocol_version": "2.0",
-    "generated_at": "2026-08-12T21:36:54.390359+09:00",
-    "data_fingerprint": "2fcb1ef83985913a67bb",
+    "analysis_available": true,
+    "protocol_version": "3.2",
+    "generated_at": "2026-08-12T22:13:35.139321+09:00",
+    "data_fingerprint": "ea968e7d9b017254df77",
     "period_closed": true,
     "coverage_complete": true,
     "observed_days": 7,
     "expected_days": 7,
     "reason": "legacy_report_revalidation"
+  },
+  "analysis_context": {
+    "context_version": "3.2",
+    "daily_pattern": {
+      "opening_avg": 9.1,
+      "closing_avg": 7.8,
+      "front_to_back_change": -1.3,
+      "linear_slope_per_day": -0.207,
+      "daily_avg_stdev": 1.49,
+      "mean_absolute_day_change": 1.67,
+      "largest_rise": {
+        "change": 4.4,
+        "from_date": "2024/03/23",
+        "to_date": "2024/03/24"
+      },
+      "largest_drop": {
+        "change": -1.8000000000000007,
+        "from_date": "2024/03/20",
+        "to_date": "2024/03/21"
+      },
+      "warmest_average_day": {
+        "date": "2024/03/24",
+        "value": 10.0
+      },
+      "coolest_average_day": {
+        "date": "2024/03/23",
+        "value": 5.6
+      },
+      "days_high_35_or_more": 0,
+      "days_high_30_or_more": 0,
+      "days_low_below_zero": 0,
+      "days_range_10_or_more": 2,
+      "longest_high_35_streak": 0,
+      "longest_high_30_streak": 0
+    },
+    "same_season_history": {
+      "slot": 12,
+      "comparison_periods": [
+        {
+          "key": "weekly:2025-03-17",
+          "period": "2025年 第12週（3/17 〜 3/23）",
+          "start_date": "2025-03-17",
+          "year": 2025,
+          "avg_temp": 10.7,
+          "max_temp": 24.0,
+          "min_temp": 1.3,
+          "avg_daily_range": 10.3
+        },
+        {
+          "key": "weekly:2026-03-16",
+          "period": "2026年 第12週（3/16 〜 3/22）",
+          "start_date": "2026-03-16",
+          "year": 2026,
+          "avg_temp": 11.7,
+          "max_temp": 19.5,
+          "min_temp": 4.8,
+          "avg_daily_range": 8.1
+        }
+      ],
+      "other_period_count": 2,
+      "sample_count_including_current": 3,
+      "years": [
+        2024,
+        2025,
+        2026
+      ],
+      "peer_average": 11.2,
+      "deviation_from_peer_average": -3.2,
+      "rank_warmest": 3,
+      "rank_coldest": 1,
+      "sample_min": 8.0,
+      "sample_max": 11.7,
+      "sample_stdev": 1.56
+    },
+    "recent_history": {
+      "previous_periods": [
+        {
+          "key": "weekly:2024-03-11",
+          "period": "2024年 第11週（3/11 〜 3/17）",
+          "start_date": "2024-03-11",
+          "year": 2024,
+          "avg_temp": 11.4,
+          "max_temp": 21.3,
+          "min_temp": 3.4,
+          "avg_daily_range": 9.0
+        }
+      ],
+      "previous_period_count": 1,
+      "previous_period_mean": 11.4,
+      "difference_from_previous_period_mean": -3.4
+    }
   }
 }

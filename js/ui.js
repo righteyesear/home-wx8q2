@@ -124,8 +124,9 @@ function normalizeJmaAlerts(data, areaCode = '1312200') {
         throw new Error('Unexpected JMA warning response schema');
     }
 
-    const alerts = [];
-    const seen = new Set();
+    // 同じ情報種別・コードが複数含まれる場合は、発表日時が最新の状態を採用する。
+    // 解除済みの古い注意報を「発表中」と誤認しないため、非アクティブ状態も一度保持する。
+    const latestById = new Map();
 
     for (const report of data) {
         const dataTypeCode = report.dataTypeCode || '';
@@ -136,8 +137,6 @@ function normalizeJmaAlerts(data, areaCode = '1312200') {
             if (area.areaCode !== areaCode) continue;
 
             for (const kind of (area.kinds || [])) {
-                if (!JMA_ACTIVE_STATUSES.has(kind.status)) continue;
-
                 const code = kind.code?.toString().padStart(2, '0') || '';
                 if (!code) continue;
 
@@ -146,10 +145,7 @@ function normalizeJmaAlerts(data, areaCode = '1312200') {
                     level: 0
                 };
                 const id = `${dataTypeCode}:${code}`;
-                if (seen.has(id)) continue;
-                seen.add(id);
-
-                alerts.push({
+                const candidate = {
                     id,
                     dataTypeCode,
                     code,
@@ -158,12 +154,48 @@ function normalizeJmaAlerts(data, areaCode = '1312200') {
                     status: kind.status,
                     reportDatetime: report.reportDatetime || null,
                     controlDatetime: report.controlDatetime || null
-                });
+                };
+                const existing = latestById.get(id);
+                const candidateTime = Date.parse(candidate.reportDatetime || candidate.controlDatetime || '') || 0;
+                const existingTime = Date.parse(existing?.reportDatetime || existing?.controlDatetime || '') || 0;
+                if (!existing || candidateTime >= existingTime) latestById.set(id, candidate);
             }
         }
     }
 
-    return alerts.sort((a, b) => b.level - a.level || a.id.localeCompare(b.id));
+    return [...latestById.values()]
+        .filter(alert => JMA_ACTIVE_STATUSES.has(alert.status))
+        .sort((a, b) => b.level - a.level || a.id.localeCompare(b.id));
+}
+
+function selectLatestJmaReportTime(alerts) {
+    let latest = null;
+    let latestTimestamp = -Infinity;
+    for (const alert of (alerts || [])) {
+        const value = alert.reportDatetime || alert.controlDatetime;
+        const timestamp = Date.parse(value || '');
+        if (Number.isFinite(timestamp) && timestamp > latestTimestamp) {
+            latest = value;
+            latestTimestamp = timestamp;
+        }
+    }
+    return latest;
+}
+
+function formatJmaReportTime(value) {
+    const timestamp = Date.parse(value || '');
+    if (!Number.isFinite(timestamp)) return '';
+    const parts = Object.fromEntries(
+        new Intl.DateTimeFormat('ja-JP', {
+            timeZone: 'Asia/Tokyo',
+            month: 'numeric',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hourCycle: 'h23',
+        }).formatToParts(new Date(timestamp)).map(part => [part.type, part.value])
+    );
+    return `${parts.month}/${parts.day} ${parts.hour}:${parts.minute}発表`;
 }
 
 // Fetch JMA weather alerts for Katsushika.
@@ -177,11 +209,7 @@ async function fetchAlerts() {
         }
         const data = await response.json();
         const areaWarnings = normalizeJmaAlerts(data, '1312200');
-        const reportTime = areaWarnings
-            .map(alert => alert.reportDatetime)
-            .filter(Boolean)
-            .sort()
-            .at(-1) || null;
+        const reportTime = selectLatestJmaReportTime(areaWarnings);
 
         // Save to global for comment integration
         currentAlerts = areaWarnings;
@@ -287,11 +315,7 @@ function updateAlertBanner(alerts, reportTime = null) {
     }
 
     // Format report time
-    let timeStr = '';
-    if (reportTime) {
-        const dt = new Date(reportTime);
-        timeStr = `${dt.getHours()}:${dt.getMinutes().toString().padStart(2, '0')}発表`;
-    }
+    const timeStr = formatJmaReportTime(reportTime);
 
     // HTML組み立て
     let htmlContent = '';

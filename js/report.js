@@ -1,6 +1,7 @@
 /**
  * Analysis report page
- * Loads completed report JSON files and renders evidence, comparisons and charts.
+ * Loads completed reports plus the current weekly draft. Drafts show observed
+ * values and charts, while narrative analysis stays hidden until the week closes.
  */
 
 const state = {
@@ -114,7 +115,9 @@ function getCurrentMonthKey(now = new Date()) {
 function isClosedIndexEntry(entry, type, now = new Date()) {
     if (!entry || !entry.period) return false;
     // 新形式のindexでは生成側が終了判定済み。ブラウザ時計には依存させない。
-    if (typeof entry.is_final === 'boolean') return entry.is_final;
+    if (typeof entry.is_final === 'boolean') {
+        return entry.is_final || (type === 'weekly' && entry.status === 'draft');
+    }
     // 旧indexとの後方互換: is_finalがない場合のみ現在期間キーで判定する。
     const currentKey = type === 'monthly' ? getCurrentMonthKey(now) : getCurrentIsoWeekKey(now);
     return entry.period < currentKey;
@@ -131,8 +134,12 @@ function loadLatestReport() {
         showError('終了済み期間のレポートはまだありません。');
         return;
     }
-    // 最新期間に欠測がある場合は、最も新しい観測充足済みレポートを初期表示する。
-    const latestComplete = list.find(entry => entry.coverage_complete !== false) || list[0];
+    // 初期表示は文章分析まで確定した最新期間。今週の暫定値は次矢印・履歴一覧から開く。
+    const latestComplete = list.find(entry => (
+        entry.is_final !== false
+        && entry.analysis_available !== false
+        && entry.coverage_complete !== false
+    )) || list.find(entry => entry.is_final !== false) || list[0];
     loadReport(latestComplete.period);
 }
 
@@ -141,7 +148,7 @@ async function loadReport(period) {
     state.currentPeriod = period;
     const entry = getAvailableReports().find(item => item.period === period);
     if (!entry) {
-        showError(`期間 ${period} は未終了、または公開対象外です。`);
+        showError(`期間 ${period} は公開対象外です。`);
         return;
     }
 
@@ -254,7 +261,10 @@ function renderReportList() {
         const label = document.createElement('span');
         label.textContent = entry.label;
         const key = document.createElement('small');
-        key.textContent = entry.period;
+        key.textContent = entry.is_final === false
+            ? `${entry.period} · 暫定 ${entry.observed_days}/${entry.expected_days}日`
+            : entry.period;
+        if (entry.is_final === false) button.classList.add('is-draft');
         button.append(label, key);
         container.appendChild(button);
     });
@@ -285,9 +295,9 @@ function getReportCompleteness(data, entry = {}) {
 }
 
 function analysisSourceLabel(meta = {}) {
-    if (meta.source === 'codex') return 'Codex再分析';
-    if (meta.source === 'gemini') return meta.model || 'Gemini分析';
-    if (meta.source === 'local') return 'ローカル分析';
+    if (meta.source === 'codex' || meta.source === 'local') return '観測データ分析';
+    if (meta.source === 'gemini') return 'AI補助分析';
+    if (meta.source === 'draft') return '分析は週終了後';
     if (meta.source === 'pending') return '分析待ち';
     return '旧形式の分析';
 }
@@ -313,9 +323,11 @@ function renderOverview(data, entry) {
     const completeness = getReportCompleteness(data, entry);
     const meta = data.analysis_meta || {};
     document.getElementById('heroPeriod').textContent = period.label || entry.period;
-    document.getElementById('heroDescription').textContent = data.type === 'monthly'
-        ? '1か月の観測を確定後に集計し、前月・前年・過去同時期と比較します。'
-        : '終了した1週間の観測を集計し、日々の変化と過去比較を読み解きます。';
+    document.getElementById('heroDescription').textContent = !completeness.periodClosed
+        ? '今週ここまでの観測値です。統計とグラフは更新し、文章分析は週の終了後に確定します。'
+        : data.type === 'monthly'
+            ? '1か月の観測を確定後に集計し、前月・前年・過去同時期と比較します。'
+            : '終了した1週間の観測を集計し、日々の変化と複数の比較軸から読み解きます。';
 
     const metaContainer = document.getElementById('reportMeta');
     metaContainer.replaceChildren();
@@ -331,10 +343,13 @@ function renderOverview(data, entry) {
         `観測 ${completeness.observed}/${completeness.expected}日`,
         completeness.coverageComplete ? '' : 'is-warning',
     );
-    appendMetaChip(metaContainer, 'icon-analysis', analysisSourceLabel(meta));
+    appendMetaChip(metaContainer, meta.source === 'draft' ? 'icon-clock' : 'icon-analysis', analysisSourceLabel(meta));
 
     const provenance = document.getElementById('analysisProvenance');
-    provenance.replaceChildren(makeIcon('icon-database'), document.createTextNode(`分析元 ${analysisSourceLabel(meta)}`));
+    provenance.replaceChildren(
+        makeIcon(meta.source === 'draft' ? 'icon-clock' : 'icon-database'),
+        document.createTextNode(meta.source === 'draft' ? '文章分析は期間確定後' : `分析方式 ${analysisSourceLabel(meta)}`),
+    );
 }
 
 
@@ -346,7 +361,10 @@ function renderReport(data, entry) {
     const sections = data.sections || {};
     updatePeriodLabel(data.period?.label || entry.period);
     renderOverview(data, entry);
-    document.getElementById('summaryTitle').textContent = sections.summary?.title || 'サマリー';
+    const analysisAvailable = data.analysis_meta?.analysis_available !== false;
+    document.getElementById('summaryTitle').textContent = analysisAvailable
+        ? sections.summary?.title || 'サマリー'
+        : '今週の途中経過';
 
     renderHighlights(sections.summary?.highlights || []);
     renderAiComment('summaryAiText', sections.summary?.ai_comment, data.analysis_meta);
@@ -380,8 +398,14 @@ function renderAiComment(elementId, comment, meta = {}) {
     const element = document.getElementById(elementId);
     if (!element) return;
     const text = String(comment || '').trim();
-    element.textContent = text || 'この期間の分析コメントはまだ生成されていません。';
     const card = element.closest('.analysis-card');
+    const analysisAvailable = meta.analysis_available !== false && meta.source !== 'draft';
+    if (card) card.hidden = !analysisAvailable;
+    if (!analysisAvailable) {
+        element.textContent = '';
+        return;
+    }
+    element.textContent = text || '比較に必要な分析データを確認中です。';
     const badge = card?.querySelector('[data-analysis-badge]');
     if (badge) badge.textContent = analysisSourceLabel(meta);
 }
@@ -838,7 +862,7 @@ function switchComparisonMode(mode) {
     if (!state.comparisonChartData) return;
     state.comparisonMode = mode;
     const titles = { avg: '平均気温', high: '最高気温', low: '最低気温', deviation: '過去平均との差' };
-    document.getElementById('comparisonTitle').textContent = `前年比較 — ${titles[mode] || ''}`;
+    document.getElementById('comparisonTitle').textContent = `過去比較 — ${titles[mode] || ''}`;
     document.querySelectorAll('#comparisonToggle .toggle-btn').forEach(button => {
         button.classList.toggle('active', button.dataset.mode === mode);
     });

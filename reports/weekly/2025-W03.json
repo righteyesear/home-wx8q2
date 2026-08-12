@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "対象期間は終了しており、7日分の観測で集計しています。2025年 第3週（1/13 〜 1/19）の平均気温は5.4℃、最高13.5℃、最低0.4℃でした。前半と後半の平均気温差は1.4℃に収まり、期間全体では大きな一方向変化はありませんでした。前週比+0.1℃です。朝晩は一桁まで冷えているため、外出時間に合わせて調整できる上着が役立ちます。",
+      "ai_comment": "2025年 第3週（1/13 〜 1/19）は、前半と後半の差は1.1℃でほぼ横ばいとなり、日ごとの差は小さめでした。期間平均は5.4℃、最高13.5℃（1/15）、最低0.4℃（1/14）です。位置づけは前週比+0.1℃。日較差10℃以上の日が2日ありました。総じて、過去平均との差と期間内変化のどちらにも極端な偏りが少ない週でした。",
       "highlights": [
         "最高気温 13.5℃",
         "最低気温 0.4℃",
@@ -97,7 +97,7 @@
         "year": 2024,
         "week": 3
       },
-      "ai_comment": "前年同期の観測が不足しているため、信頼できる前年比較はまだできません。"
+      "ai_comment": "比較できる他1期間の同時期平均7.3℃に対して-1.9℃です。さらに直前4週の平均6.0℃と比べると-0.7℃で、単一の前年だけでなく直近推移の中でも気温が0.7℃やや低い状態です。"
     },
     "baseline": {
       "title": "2年平均との比較",
@@ -287,7 +287,7 @@
       }
     },
     "trend_analysis": {
-      "ai_comment": "前半と後半の平均気温差は1.4℃に収まり、期間全体では大きな一方向変化はありませんでした。最大の上昇は2025/01/14から2025/01/15の+1.5℃でした。最大の低下は2025/01/15から2025/01/16の-2.0℃でした。"
+      "ai_comment": "平均気温の底は1/18の4.3℃、山は1/15の6.8℃でした。前半と後半の差は1.1℃でほぼ横ばいとなり、日ごとの差は小さめでした。最大上昇は1/14→1/15の+1.5℃、最大低下は1/15→1/16の-2.0℃です。日平均の標準偏差は0.8℃、前日からの平均変化幅は1.0℃で、期間内の変動性は安定的でした。温度基準で見ると日較差10℃以上の日が2日ありました。"
     }
   },
   "chart_data": {
@@ -332,13 +332,124 @@
   },
   "analysis_meta": {
     "source": "codex",
-    "protocol_version": "2.0",
-    "generated_at": "2026-08-12T21:36:54.390359+09:00",
-    "data_fingerprint": "c798950a37e279c09989",
+    "analysis_available": true,
+    "protocol_version": "3.2",
+    "generated_at": "2026-08-12T22:13:35.139321+09:00",
+    "data_fingerprint": "53742619a4601d9fc009",
     "period_closed": true,
     "coverage_complete": true,
     "observed_days": 7,
     "expected_days": 7,
     "reason": "legacy_report_revalidation"
+  },
+  "analysis_context": {
+    "context_version": "3.2",
+    "daily_pattern": {
+      "opening_avg": 5.85,
+      "closing_avg": 4.75,
+      "front_to_back_change": -1.1,
+      "linear_slope_per_day": -0.275,
+      "daily_avg_stdev": 0.85,
+      "mean_absolute_day_change": 1.0,
+      "largest_rise": {
+        "change": 1.5,
+        "from_date": "2025/01/14",
+        "to_date": "2025/01/15"
+      },
+      "largest_drop": {
+        "change": -2.0,
+        "from_date": "2025/01/15",
+        "to_date": "2025/01/16"
+      },
+      "warmest_average_day": {
+        "date": "2025/01/15",
+        "value": 6.8
+      },
+      "coolest_average_day": {
+        "date": "2025/01/18",
+        "value": 4.3
+      },
+      "days_high_35_or_more": 0,
+      "days_high_30_or_more": 0,
+      "days_low_below_zero": 0,
+      "days_range_10_or_more": 2,
+      "longest_high_35_streak": 0,
+      "longest_high_30_streak": 0
+    },
+    "same_season_history": {
+      "slot": 3,
+      "comparison_periods": [
+        {
+          "key": "weekly:2026-01-12",
+          "period": "2026年 第3週（1/12 〜 1/18）",
+          "start_date": "2026-01-12",
+          "year": 2026,
+          "avg_temp": 7.3,
+          "max_temp": 16.3,
+          "min_temp": -0.2,
+          "avg_daily_range": 10.6
+        }
+      ],
+      "other_period_count": 1,
+      "sample_count_including_current": 2,
+      "years": [
+        2025,
+        2026
+      ],
+      "peer_average": 7.3,
+      "deviation_from_peer_average": -1.9,
+      "rank_warmest": 2,
+      "rank_coldest": 1,
+      "sample_min": 5.4,
+      "sample_max": 7.3,
+      "sample_stdev": 0.95
+    },
+    "recent_history": {
+      "previous_periods": [
+        {
+          "key": "weekly:2024-12-16",
+          "period": "2024年 第51週（12/16 〜 12/22）",
+          "start_date": "2024-12-16",
+          "year": 2024,
+          "avg_temp": 6.8,
+          "max_temp": 15.3,
+          "min_temp": 0.5,
+          "avg_daily_range": 9.5
+        },
+        {
+          "key": "weekly:2024-12-23",
+          "period": "2024年 第52週（12/23 〜 12/29）",
+          "start_date": "2024-12-23",
+          "year": 2024,
+          "avg_temp": 6.2,
+          "max_temp": 14.2,
+          "min_temp": -0.3,
+          "avg_daily_range": 9.4
+        },
+        {
+          "key": "weekly:2024-12-30",
+          "period": "2025年 第1週（12/30 〜 1/5）",
+          "start_date": "2024-12-30",
+          "year": 2025,
+          "avg_temp": 5.9,
+          "max_temp": 13.5,
+          "min_temp": -0.9,
+          "avg_daily_range": 8.4
+        },
+        {
+          "key": "weekly:2025-01-06",
+          "period": "2025年 第2週（1/6 〜 1/12）",
+          "start_date": "2025-01-06",
+          "year": 2025,
+          "avg_temp": 5.3,
+          "max_temp": 12.2,
+          "min_temp": -1.1,
+          "avg_daily_range": 8.8
+        }
+      ],
+      "previous_period_count": 4,
+      "previous_period_mean": 6.05,
+      "difference_from_previous_period_mean": -0.65
+    }
   }
 }

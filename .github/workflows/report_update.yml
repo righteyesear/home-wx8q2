@@ -1,11 +1,14 @@
 # 分析レポート自動更新ワークフロー
-# ① 毎週月曜 6:00 JST: 終了済みの前週レポート（AI分析付き）
-# ② 毎月1日 9:00 JST: 終了済みの前月レポート（AI分析付き）
+# ① 3時間ごと: 進行中の今週をグラフ・暫定統計だけ更新
+# ② 毎週月曜 6:00 JST: 終了済みの前週レポート（AI分析付き）
+# ③ 毎月1日 9:00 JST: 終了済みの前月レポート（AI分析付き）
 
 name: Report Generator
 
 on:
   schedule:
+    # 3時間ごと（API集中を避け17分開始、Geminiは呼ばない）
+    - cron: '17 */3 * * *'
     # 毎週月曜 6:00 JST = 日曜 21:00 UTC（AI付き週次）
     - cron: '0 21 * * 0'
     # 毎月1日 9:00 JST = 1日 0:00 UTC（AI付き月次）
@@ -21,6 +24,7 @@ on:
         type: choice
         options:
           - weekly
+          - weekly-draft
           - monthly
           - backfill
       target_date:
@@ -41,7 +45,49 @@ permissions:
   contents: write
 
 jobs:
-  # ─── ① 毎週月曜: 前週レポート（AI分析付き）──────────────────
+  # ─── ① 3時間ごと: 今週の暫定統計・グラフ ────────────────
+  weekly-draft:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: >-
+      (github.event_name == 'schedule' && github.event.schedule == '17 */3 * * *') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.report_type == 'weekly-draft')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate current weekly draft without narrative analysis
+        env:
+          SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+        run: python scripts/report_generator.py --type weekly --draft --no-ai
+
+      - name: Commit and push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add reports/weekly/ reports/index.json
+          if ! git diff --staged --quiet; then
+            git commit -m "📈 Update current weekly draft [$(TZ=Asia/Tokyo date +'%Y-%m-%d %H:%M JST')]"
+            git pull --rebase origin main
+            git push
+            echo "✅ Current weekly draft committed"
+          else
+            echo "No changes to commit"
+          fi
+
+  # ─── ② 毎週月曜: 前週レポート（AI分析付き）──────────────────
   weekly-ai:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -91,14 +137,14 @@ jobs:
           git add reports/
           if ! git diff --staged --quiet; then
             git commit -m "📊🤖 Weekly report with AI analysis [$(TZ=Asia/Tokyo date +'%Y-%m-%d %H:%M JST')]"
-            git pull --rebase origin main || true
+            git pull --rebase origin main
             git push
             echo "✅ Weekly AI report committed"
           else
             echo "No changes to commit"
           fi
 
-  # ─── ② 毎月1日: 前月レポート（AI分析付き）──────────────────
+  # ─── ③ 毎月1日: 前月レポート（AI分析付き）──────────────────
   monthly-ai:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -148,7 +194,7 @@ jobs:
           git add reports/
           if ! git diff --staged --quiet; then
             git commit -m "📊🤖 Monthly report with AI analysis [$(TZ=Asia/Tokyo date +'%Y-%m-%d %H:%M JST')]"
-            git pull --rebase origin main || true
+            git pull --rebase origin main
             git push
             echo "✅ Monthly AI report committed"
           else
@@ -196,7 +242,7 @@ jobs:
           git add reports/
           if ! git diff --staged --quiet; then
             git commit -m "📊 Backfill reports [$(TZ=Asia/Tokyo date +'%Y-%m-%d %H:%M JST')]"
-            git pull --rebase origin main || true
+            git pull --rebase origin main
             git push
             echo "✅ Backfill committed"
           else

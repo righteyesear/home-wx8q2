@@ -27,7 +27,10 @@ from report_analysis import (
     analysis_fingerprint,
     apply_analysis,
     build_gemini_protocol_prompt,
+    enrich_analysis_context,
     generate_evidence_analysis,
+    load_reference_reports,
+    mark_report_as_draft,
     parse_gemini_analysis,
     report_completeness,
 )
@@ -1145,7 +1148,7 @@ def build_trend_prompt(report_type: str, period_label: str, stats: Dict,
 # =============================================================================
 
 def generate_weekly_report(all_records: List[Dict], target_date: date,
-                           skip_ai: bool = False) -> Optional[Dict]:
+                           skip_ai: bool = False, draft: bool = False) -> Optional[Dict]:
     """週次レポートを生成"""
     year, week = get_iso_week(target_date)
     monday, sunday = get_week_range(year, week)
@@ -1319,13 +1322,18 @@ def generate_weekly_report(all_records: List[Dict], target_date: date,
         'sections': sections,
         'chart_data': chart_data,
     }
+    references = load_reference_reports(REPORTS_DIR)
+    enrich_analysis_context(report, references)
 
-    # AI分析実行。3セクションを1回で生成し、失敗時も表示可能な分析へ退避する。
-    if not skip_ai:
+    # 進行中の週は統計・グラフだけを公開し、文章分析は期間確定後に行う。
+    if draft:
+        mark_report_as_draft(report, references)
+        print("  → 進行中週のため、文章分析なしの暫定レポートを生成")
+    elif not skip_ai:
         print("  → AI分析を実行中...")
         apply_analysis(report, analyze_report_with_gemini(report))
     else:
-        apply_analysis(report, generate_evidence_analysis(report, source='local'))
+        apply_analysis(report, generate_evidence_analysis(report, source='local', reference_reports=references))
         print("  → Geminiを使わず、ローカル根拠分析を生成")
 
     return report
@@ -1533,12 +1541,14 @@ def generate_monthly_report(all_records: List[Dict], target_date: date,
         'sections': sections,
         'chart_data': chart_data,
     }
+    references = load_reference_reports(REPORTS_DIR)
+    enrich_analysis_context(report, references)
 
     if not skip_ai:
         print("  → AI分析を実行中...")
         apply_analysis(report, analyze_report_with_gemini(report))
     else:
-        apply_analysis(report, generate_evidence_analysis(report, source='local'))
+        apply_analysis(report, generate_evidence_analysis(report, source='local', reference_reports=references))
         print("  → Geminiを使わず、ローカル根拠分析を生成")
 
     return report
@@ -1575,6 +1585,8 @@ def save_report(report: Dict) -> str:
     completeness = report_completeness(report)
     index_entry.update({
         'is_final': completeness['period_closed'],
+        'analysis_available': bool(report.get('analysis_meta', {}).get('analysis_available', completeness['period_closed'])),
+        'status': 'final' if completeness['period_closed'] else 'draft',
         'coverage_complete': completeness['coverage_complete'],
         'observed_days': completeness['observed_days'],
         'expected_days': completeness['expected_days'],
@@ -1646,11 +1658,14 @@ def update_index(entries: List[Dict]):
         else:
             index[report_type].append(entry)
 
-    # 降順ソート（最新が先頭）
-    # 月初・週初に誤生成された未終了期間を公開一覧から除外する。
+    # 降順ソート（最新が先頭）。週次は現在進行中の1件だけ暫定公開する。
+    today = datetime.now(JST).date()
+    current_iso_year, current_iso_week = get_iso_week(today)
+    current_week_key = f"{current_iso_year}-W{current_iso_week:02d}"
     index['weekly'] = [
         entry for entry in index['weekly']
-        if is_period_closed('weekly', entry.get('period', ''))
+        if is_period_closed('weekly', entry.get('period', ''), today=today)
+        or entry.get('period') == current_week_key
     ]
     index['monthly'] = [
         entry for entry in index['monthly']
@@ -1732,11 +1747,7 @@ def main():
     parser.add_argument('--date', help='対象日付 (YYYY-MM-DD or YYYY-MM)')
     parser.add_argument('--backfill', action='store_true', help='過去レポートを一括生成')
     parser.add_argument('--no-ai', action='store_true', help='Geminiを使わずローカル根拠分析を生成')
-    parser.add_argument(
-        '--allow-incomplete',
-        action='store_true',
-        help='未終了期間の暫定レポート生成を明示的に許可（通常運用では使用しない）',
-    )
+    parser.add_argument('--draft', action='store_true', help='進行中の今週を文章分析なしで暫定生成')
     args = parser.parse_args()
 
     print(f"[{datetime.now(JST).isoformat()}] レポート生成 開始")
@@ -1758,7 +1769,11 @@ def main():
         print("[ERROR] --type (weekly/monthly) または --backfill を指定してください")
         sys.exit(1)
 
-    # 対象日付の決定。省略時は直近の「完了した」週・月を選ぶ。
+    if args.draft and report_type != 'weekly':
+        print("[ERROR] --draft は週次レポート専用です")
+        sys.exit(2)
+
+    # 対象日付の決定。draft以外は直近の「完了した」週・月を選ぶ。
     today = datetime.now(JST).date()
     if args.date:
         if len(args.date) == 7:  # YYYY-MM
@@ -1766,7 +1781,9 @@ def main():
         else:
             target = date.fromisoformat(args.date)
     else:
-        if report_type == 'monthly':
+        if args.draft:
+            target = today
+        elif report_type == 'monthly':
             target = date(today.year, today.month, 1) - timedelta(days=1)
         else:
             target = today - timedelta(days=today.weekday() + 1)
@@ -1776,13 +1793,26 @@ def main():
     else:
         iso_year, iso_week = get_iso_week(target)
         period_key = f"{iso_year}-W{iso_week:02d}"
-    if not args.allow_incomplete and not is_period_closed(report_type, period_key, today=today):
-        print(f"[ERROR] 未終了期間 {period_key} は生成しません。完了後に実行してください。")
-        print("        暫定生成が必要な場合のみ --allow-incomplete を指定してください。")
+    period_closed = is_period_closed(report_type, period_key, today=today)
+    if args.draft and period_closed:
+        print(f"[ERROR] 完了済み週 {period_key} を暫定レポートへ戻すことはできません。")
         sys.exit(2)
+    if not period_closed:
+        if report_type == 'monthly':
+            print(f"[ERROR] 未終了月 {period_key} は生成しません。月末確定後に実行してください。")
+            sys.exit(2)
+        if not args.draft:
+            print(f"[ERROR] 未終了週 {period_key} は文章分析付きでは生成しません。")
+            print("        グラフ・暫定統計だけを生成する場合は --draft を指定してください。")
+            sys.exit(2)
+        current_iso_year, current_iso_week = get_iso_week(today)
+        current_week_key = f"{current_iso_year}-W{current_iso_week:02d}"
+        if period_key != current_week_key:
+            print(f"[ERROR] 暫定公開できるのは現在の週 {current_week_key} だけです。")
+            sys.exit(2)
 
     if report_type == 'weekly':
-        report = generate_weekly_report(all_records, target, skip_ai=args.no_ai)
+        report = generate_weekly_report(all_records, target, skip_ai=args.no_ai, draft=args.draft)
     else:
         report = generate_monthly_report(all_records, target, skip_ai=args.no_ai)
 

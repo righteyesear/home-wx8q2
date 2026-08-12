@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "月間サマリー",
-      "ai_comment": "対象期間は終了しており、30日分の観測で集計しています。2024年4月の平均気温は17.5℃、最高28.9℃、最低7.1℃でした。前半から後半にかけて平均気温が約7.6℃上がり、明確な昇温傾向でした。前月比+6.6℃です。朝晩は一桁まで冷えているため、外出時間に合わせて調整できる上着が役立ちます。",
+      "ai_comment": "2024年4月は前月から平均気温が+6.6℃変化し、直近の流れが大きく動いた期間でした。期間平均は17.5℃、最高28.9℃（4/28）、最低7.1℃（4/10）です。日別には前半平均14.5℃から後半20.5℃へ上昇し、日ごとの振れは大きめでした。位置づけは前月比+6.6℃。日較差10℃以上の日が8日ありました。総じて、直前期・前年・同時期平均との差の複数軸が高温側でそろった月でした。",
       "highlights": [
         "月平均 17.5℃",
         "最高 28.9℃",
@@ -358,7 +358,7 @@
         "year": 2023,
         "month": 4
       },
-      "ai_comment": "前年同期の観測が不足しているため、信頼できる前年比較はまだできません。"
+      "ai_comment": "同じ4月を比べられる2024〜2026年の3期間では高温側1位です。比較できる他2期間の同時期平均16.4℃に対して+1.1℃です。比較対象全体の平均気温は15.9〜17.5℃の幅で、今回がその上限です。前月平均10.9℃からは+6.6℃で、月内の前半・後半差と合わせても月をまたいだ水準変化が数値に表れています。さらに直前1か月の平均10.9℃と比べると+6.6℃で、単一の前年だけでなく直近推移の中でも気温が6.6℃高い状態です。"
     },
     "prev_month": {
       "title": "前月比較",
@@ -573,7 +573,7 @@
       }
     },
     "trend_analysis": {
-      "ai_comment": "前半から後半にかけて平均気温が約7.6℃上がり、明確な昇温傾向でした。最大の上昇は2024/04/06から2024/04/07の+5.0℃でした。最大の低下は2024/04/09から2024/04/10の-3.9℃でした。"
+      "ai_comment": "平均気温の底は4/10の11.9℃、山は4/29の22.2℃でした。前半平均14.5℃から後半20.5℃へ上昇し、日ごとの振れは大きめでした。最大上昇は4/6→4/7の+5.0℃、最大低下は4/9→4/10の-3.9℃です。日平均の標準偏差は3.0℃、前日からの平均変化幅は1.6℃で、期間内の変動性は大きめでした。温度基準で見ると日較差10℃以上の日が8日ありました。"
     }
   },
   "chart_data": {
@@ -740,13 +740,105 @@
   },
   "analysis_meta": {
     "source": "codex",
-    "protocol_version": "2.0",
-    "generated_at": "2026-08-12T21:36:54.390359+09:00",
-    "data_fingerprint": "82070b3112924055677f",
+    "analysis_available": true,
+    "protocol_version": "3.2",
+    "generated_at": "2026-08-12T22:13:35.139321+09:00",
+    "data_fingerprint": "f61ff86e9c5b7b3ea2dc",
     "period_closed": true,
     "coverage_complete": true,
     "observed_days": 30,
     "expected_days": 30,
     "reason": "legacy_report_revalidation"
+  },
+  "analysis_context": {
+    "context_version": "3.2",
+    "daily_pattern": {
+      "opening_avg": 14.47,
+      "closing_avg": 20.5,
+      "front_to_back_change": 6.03,
+      "linear_slope_per_day": 0.263,
+      "daily_avg_stdev": 2.97,
+      "mean_absolute_day_change": 1.62,
+      "largest_rise": {
+        "change": 5.0,
+        "from_date": "2024/04/06",
+        "to_date": "2024/04/07"
+      },
+      "largest_drop": {
+        "change": -3.9000000000000004,
+        "from_date": "2024/04/09",
+        "to_date": "2024/04/10"
+      },
+      "warmest_average_day": {
+        "date": "2024/04/29",
+        "value": 22.2
+      },
+      "coolest_average_day": {
+        "date": "2024/04/10",
+        "value": 11.9
+      },
+      "days_high_35_or_more": 0,
+      "days_high_30_or_more": 0,
+      "days_low_below_zero": 0,
+      "days_range_10_or_more": 8,
+      "longest_high_35_streak": 0,
+      "longest_high_30_streak": 0
+    },
+    "same_season_history": {
+      "slot": 4,
+      "comparison_periods": [
+        {
+          "key": "monthly:2025-04-01",
+          "period": "2025年4月",
+          "start_date": "2025-04-01",
+          "year": 2025,
+          "avg_temp": 15.9,
+          "max_temp": 27.6,
+          "min_temp": 4.2,
+          "avg_daily_range": 8.5
+        },
+        {
+          "key": "monthly:2026-04-01",
+          "period": "2026年4月",
+          "start_date": "2026-04-01",
+          "year": 2026,
+          "avg_temp": 16.8,
+          "max_temp": 27.1,
+          "min_temp": 8.3,
+          "avg_daily_range": 8.8
+        }
+      ],
+      "other_period_count": 2,
+      "sample_count_including_current": 3,
+      "years": [
+        2024,
+        2025,
+        2026
+      ],
+      "peer_average": 16.35,
+      "deviation_from_peer_average": 1.15,
+      "rank_warmest": 1,
+      "rank_coldest": 3,
+      "sample_min": 15.9,
+      "sample_max": 17.5,
+      "sample_stdev": 0.65
+    },
+    "recent_history": {
+      "previous_periods": [
+        {
+          "key": "monthly:2024-03-01",
+          "period": "2024年3月",
+          "start_date": "2024-03-01",
+          "year": 2024,
+          "avg_temp": 10.9,
+          "max_temp": 26.6,
+          "min_temp": 2.8,
+          "avg_daily_range": 8.6
+        }
+      ],
+      "previous_period_count": 1,
+      "previous_period_mean": 10.9,
+      "difference_from_previous_period_mean": 6.6
+    }
   }
 }

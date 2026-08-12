@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "月間サマリー",
-      "ai_comment": "対象期間は終了しており、31日分の観測で集計しています。2025年12月の平均気温は7.8℃、最高18.9℃、最低-1.1℃でした。前半から後半にかけて平均気温が約5.2℃下がり、明確な降温傾向でした。前月比-4.9℃、前年比+0.1℃、過去同時期平均との差+0.1℃です。氷点下を記録しているため、朝晩の路面凍結と室内外の温度差に注意が必要です。",
+      "ai_comment": "2025年12月は前月から平均気温が-4.9℃変化し、直近の流れが大きく動いた期間でした。期間平均は7.8℃、最高18.9℃（12/1）、最低-1.1℃（12/28）です。日別には前半平均8.9℃から後半6.4℃へ低下し、日ごとの振れは中程度でした。位置づけは前月比-4.9℃、前年同期比+0.1℃、過去同時期平均との差+0.1℃。最低気温が氷点下の日は1日ありました。総じて、期間平均だけでは捉えにくい、前半から後半への明瞭な下降が特徴の月でした。",
       "highlights": [
         "月平均 7.8℃",
         "最高 18.9℃",
@@ -381,7 +381,7 @@
       "max_temp_diff": 1.7,
       "min_temp_diff": -0.8,
       "avg_daily_range_diff": -0.5,
-      "ai_comment": "平均気温は7.8℃で、前年同期の7.7℃より+0.1℃、ほぼ同水準でした。内訳は最高気温差+1.7℃、最低気温差-0.8℃、日較差の差-0.5℃です。単年同士の比較なので、季節の長期傾向ではなく、この期間固有の差として見るのが適切です。"
+      "ai_comment": "比較できる他1期間の同時期平均7.7℃に対して+0.1℃です。平均は前年同期より+0.1℃、最高値は+1.7℃、最低値は-0.8℃、平均日較差は-0.5℃。前年との差は最低値より最高値側で大きく、日中のピーク温度の違いが中心です。前月平均12.7℃からは-4.9℃で、月内の前半・後半差と合わせても月をまたいだ水準変化が数値に表れています。さらに直前4か月の平均22.2℃と比べると-14.4℃で、単一の前年だけでなく直近推移の中でも気温が14.4℃低い状態です。"
     },
     "prev_month": {
       "title": "前月比較",
@@ -596,7 +596,7 @@
       }
     },
     "trend_analysis": {
-      "ai_comment": "前半から後半にかけて平均気温が約5.2℃下がり、明確な降温傾向でした。最大の上昇は2025/12/20から2025/12/21の+3.4℃でした。最大の低下は2025/12/03から2025/12/04の-4.1℃でした。"
+      "ai_comment": "平均気温の底は12/27の3.4℃、山は12/2の12.8℃でした。前半平均8.9℃から後半6.4℃へ低下し、日ごとの振れは中程度でした。最大上昇は12/20→12/21の+3.4℃、最大低下は12/3→12/4の-4.1℃です。日平均の標準偏差は2.1℃、前日からの平均変化幅は1.6℃で、期間内の変動性は中程度でした。温度基準で見ると最低気温が氷点下の日は1日ありました。"
     }
   },
   "chart_data": {
@@ -1069,13 +1069,124 @@
   },
   "analysis_meta": {
     "source": "codex",
-    "protocol_version": "2.0",
-    "generated_at": "2026-08-12T21:36:54.390359+09:00",
-    "data_fingerprint": "f465ccea478d23f4cce8",
+    "analysis_available": true,
+    "protocol_version": "3.2",
+    "generated_at": "2026-08-12T22:13:35.139321+09:00",
+    "data_fingerprint": "440633dae8fb2bccb898",
     "period_closed": true,
     "coverage_complete": true,
     "observed_days": 31,
     "expected_days": 31,
     "reason": "legacy_report_revalidation"
+  },
+  "analysis_context": {
+    "context_version": "3.2",
+    "daily_pattern": {
+      "opening_avg": 8.93,
+      "closing_avg": 6.44,
+      "front_to_back_change": -2.49,
+      "linear_slope_per_day": -0.103,
+      "daily_avg_stdev": 2.13,
+      "mean_absolute_day_change": 1.65,
+      "largest_rise": {
+        "change": 3.3999999999999995,
+        "from_date": "2025/12/20",
+        "to_date": "2025/12/21"
+      },
+      "largest_drop": {
+        "change": -4.1,
+        "from_date": "2025/12/03",
+        "to_date": "2025/12/04"
+      },
+      "warmest_average_day": {
+        "date": "2025/12/02",
+        "value": 12.8
+      },
+      "coolest_average_day": {
+        "date": "2025/12/27",
+        "value": 3.4
+      },
+      "days_high_35_or_more": 0,
+      "days_high_30_or_more": 0,
+      "days_low_below_zero": 1,
+      "days_range_10_or_more": 9,
+      "longest_high_35_streak": 0,
+      "longest_high_30_streak": 0
+    },
+    "same_season_history": {
+      "slot": 12,
+      "comparison_periods": [
+        {
+          "key": "monthly:2024-12-01",
+          "period": "2024年12月",
+          "start_date": "2024-12-01",
+          "year": 2024,
+          "avg_temp": 7.7,
+          "max_temp": 17.2,
+          "min_temp": -0.3,
+          "avg_daily_range": 9.0
+        }
+      ],
+      "other_period_count": 1,
+      "sample_count_including_current": 2,
+      "years": [
+        2024,
+        2025
+      ],
+      "peer_average": 7.7,
+      "deviation_from_peer_average": 0.1,
+      "rank_warmest": 1,
+      "rank_coldest": 2,
+      "sample_min": 7.7,
+      "sample_max": 7.8,
+      "sample_stdev": 0.05
+    },
+    "recent_history": {
+      "previous_periods": [
+        {
+          "key": "monthly:2025-08-01",
+          "period": "2025年8月",
+          "start_date": "2025-08-01",
+          "year": 2025,
+          "avg_temp": 30.3,
+          "max_temp": 37.6,
+          "min_temp": 24.3,
+          "avg_daily_range": 7.8
+        },
+        {
+          "key": "monthly:2025-09-01",
+          "period": "2025年9月",
+          "start_date": "2025-09-01",
+          "year": 2025,
+          "avg_temp": 27.1,
+          "max_temp": 36.2,
+          "min_temp": 18.0,
+          "avg_daily_range": 7.2
+        },
+        {
+          "key": "monthly:2025-10-01",
+          "period": "2025年10月",
+          "start_date": "2025-10-01",
+          "year": 2025,
+          "avg_temp": 18.8,
+          "max_temp": 29.2,
+          "min_temp": 9.9,
+          "avg_daily_range": 6.1
+        },
+        {
+          "key": "monthly:2025-11-01",
+          "period": "2025年11月",
+          "start_date": "2025-11-01",
+          "year": 2025,
+          "avg_temp": 12.7,
+          "max_temp": 21.3,
+          "min_temp": 4.7,
+          "avg_daily_range": 8.0
+        }
+      ],
+      "previous_period_count": 4,
+      "previous_period_mean": 22.23,
+      "difference_from_previous_period_mean": -14.43
+    }
   }
 }

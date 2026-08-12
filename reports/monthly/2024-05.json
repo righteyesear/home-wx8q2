@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "月間サマリー",
-      "ai_comment": "対象期間は終了しており、31日分の観測で集計しています。2024年5月の平均気温は20.6℃、最高29.6℃、最低9.6℃でした。前半から後半にかけて平均気温が約5.3℃上がり、明確な昇温傾向でした。前月比+3.1℃です。極端な温度域ではありませんが、日ごとの変化に合わせて服装と室温を調整してください。",
+      "ai_comment": "2024年5月は前月から平均気温が+3.1℃変化し、直近の流れが大きく動いた期間でした。期間平均は20.6℃、最高29.6℃（5/21）、最低9.6℃（5/10）です。日別には前半平均19.5℃から後半22.6℃へ上昇し、日ごとの振れは大きめでした。位置づけは前月比+3.1℃。日較差10℃以上の日が10日ありました。総じて、平均との差そのものよりも、期間内の日ごとの振れの大きさが特徴的な月でした。",
       "highlights": [
         "月平均 20.6℃",
         "最高 29.6℃",
@@ -366,7 +366,7 @@
         "year": 2023,
         "month": 5
       },
-      "ai_comment": "前年同期の観測が不足しているため、信頼できる前年比較はまだできません。"
+      "ai_comment": "同じ5月を比べられる2024〜2026年の3期間では低温側2位です。比較できる他2期間の同時期平均20.4℃に対して+0.2℃です。比較対象全体の平均気温は19.6〜21.1℃の幅で、今回は下限より1.0℃高く、上限より0.5℃低い位置です。前月平均17.5℃からは+3.1℃で、月内の前半・後半差と合わせても月をまたいだ水準変化が数値に表れています。さらに直前2か月の平均14.2℃と比べると+6.4℃で、単一の前年だけでなく直近推移の中でも気温が6.4℃高い状態です。"
     },
     "prev_month": {
       "title": "前月比較",
@@ -575,7 +575,7 @@
       }
     },
     "trend_analysis": {
-      "ai_comment": "前半から後半にかけて平均気温が約5.3℃上がり、明確な昇温傾向でした。最大の上昇は2024/05/20から2024/05/21の+4.4℃でした。最大の低下は2024/05/08から2024/05/09の-4.6℃でした。"
+      "ai_comment": "平均気温の底は5/9の14.1℃、山は5/24の24.0℃でした。前半平均19.5℃から後半22.6℃へ上昇し、日ごとの振れは大きめでした。最大上昇は5/20→5/21の+4.4℃、最大低下は5/8→5/9の-4.6℃です。日平均の標準偏差は2.4℃、前日からの平均変化幅は1.9℃で、期間内の変動性は大きめでした。温度基準で見ると日較差10℃以上の日が10日ありました。"
     }
   },
   "chart_data": {
@@ -746,13 +746,115 @@
   },
   "analysis_meta": {
     "source": "codex",
-    "protocol_version": "2.0",
-    "generated_at": "2026-08-12T21:36:54.390359+09:00",
-    "data_fingerprint": "4dd33d5e767b6dfb0fcf",
+    "analysis_available": true,
+    "protocol_version": "3.2",
+    "generated_at": "2026-08-12T22:13:35.139321+09:00",
+    "data_fingerprint": "3c7f9709bd89906966d5",
     "period_closed": true,
     "coverage_complete": true,
     "observed_days": 31,
     "expected_days": 31,
     "reason": "legacy_report_revalidation"
+  },
+  "analysis_context": {
+    "context_version": "3.2",
+    "daily_pattern": {
+      "opening_avg": 19.49,
+      "closing_avg": 22.57,
+      "front_to_back_change": 3.09,
+      "linear_slope_per_day": 0.169,
+      "daily_avg_stdev": 2.44,
+      "mean_absolute_day_change": 1.89,
+      "largest_rise": {
+        "change": 4.399999999999999,
+        "from_date": "2024/05/20",
+        "to_date": "2024/05/21"
+      },
+      "largest_drop": {
+        "change": -4.6,
+        "from_date": "2024/05/08",
+        "to_date": "2024/05/09"
+      },
+      "warmest_average_day": {
+        "date": "2024/05/24",
+        "value": 24.0
+      },
+      "coolest_average_day": {
+        "date": "2024/05/09",
+        "value": 14.1
+      },
+      "days_high_35_or_more": 0,
+      "days_high_30_or_more": 0,
+      "days_low_below_zero": 0,
+      "days_range_10_or_more": 10,
+      "longest_high_35_streak": 0,
+      "longest_high_30_streak": 0
+    },
+    "same_season_history": {
+      "slot": 5,
+      "comparison_periods": [
+        {
+          "key": "monthly:2025-05-01",
+          "period": "2025年5月",
+          "start_date": "2025-05-01",
+          "year": 2025,
+          "avg_temp": 19.6,
+          "max_temp": 30.0,
+          "min_temp": 12.7,
+          "avg_daily_range": 7.5
+        },
+        {
+          "key": "monthly:2026-05-01",
+          "period": "2026年5月",
+          "start_date": "2026-05-01",
+          "year": 2026,
+          "avg_temp": 21.1,
+          "max_temp": 31.8,
+          "min_temp": 11.2,
+          "avg_daily_range": 9.3
+        }
+      ],
+      "other_period_count": 2,
+      "sample_count_including_current": 3,
+      "years": [
+        2024,
+        2025,
+        2026
+      ],
+      "peer_average": 20.35,
+      "deviation_from_peer_average": 0.25,
+      "rank_warmest": 2,
+      "rank_coldest": 2,
+      "sample_min": 19.6,
+      "sample_max": 21.1,
+      "sample_stdev": 0.62
+    },
+    "recent_history": {
+      "previous_periods": [
+        {
+          "key": "monthly:2024-03-01",
+          "period": "2024年3月",
+          "start_date": "2024-03-01",
+          "year": 2024,
+          "avg_temp": 10.9,
+          "max_temp": 26.6,
+          "min_temp": 2.8,
+          "avg_daily_range": 8.6
+        },
+        {
+          "key": "monthly:2024-04-01",
+          "period": "2024年4月",
+          "start_date": "2024-04-01",
+          "year": 2024,
+          "avg_temp": 17.5,
+          "max_temp": 28.9,
+          "min_temp": 7.1,
+          "avg_daily_range": 8.1
+        }
+      ],
+      "previous_period_count": 2,
+      "previous_period_mean": 14.2,
+      "difference_from_previous_period_mean": 6.4
+    }
   }
 }

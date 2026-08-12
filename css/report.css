@@ -513,6 +513,15 @@ html.light-mode .report-tab.active {
     background: var(--ui-blue-soft);
 }
 
+.report-list-item.is-draft {
+    border-color: color-mix(in srgb, var(--ui-accent) 20%, transparent);
+    background: color-mix(in srgb, var(--ui-accent-soft) 55%, transparent);
+}
+
+.report-list-item.is-draft small {
+    color: var(--ui-accent);
+}
+
 .report-list-item small {
     color: var(--ui-text-muted);
     font-family: "Inter", monospace;

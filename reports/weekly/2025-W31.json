@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "対象期間は終了しており、7日分の観測で集計しています。2025年 第31週（7/28 〜 8/3）の平均気温は29.5℃、最高36.7℃、最低24.3℃でした。前半と後半の平均気温差は1.6℃に収まり、期間全体では大きな一方向変化はありませんでした。前週比-1.4℃、前年比-1.9℃、過去同時期平均との差-1.9℃です。最高気温が35℃以上の日を含むため、日中の外出は時間を選び、冷房・水分・休憩を前提にしてください。",
+      "ai_comment": "2025年 第31週（7/28 〜 8/3）は前週から平均気温が-1.4℃変化し、直近の流れが大きく動いた期間でした。期間平均は29.5℃、最高36.7℃（7/28）、最低24.3℃（8/1）です。日別には前半と後半の差は1.1℃でほぼ横ばいとなり、日ごとの振れは中程度でした。位置づけは前週比-1.4℃、前年同期比-1.9℃、過去同時期平均との差-1.9℃。猛暑日は4日、最長2日連続でした。総じて、直前期・前年・同時期平均との差の複数軸が低温側でそろった週でした。",
       "highlights": [
         "最高気温 36.7℃",
         "最低気温 24.3℃",
@@ -112,7 +112,7 @@
       "max_temp_diff": -2.4,
       "min_temp_diff": -2.0,
       "avg_daily_range_diff": -0.6,
-      "ai_comment": "平均気温は29.5℃で、前年同期の31.4℃より-1.9℃、低めでした。内訳は最高気温差-2.4℃、最低気温差-2.0℃、日較差の差-0.6℃です。単年同士の比較なので、季節の長期傾向ではなく、この期間固有の差として見るのが適切です。"
+      "ai_comment": "同じ第31週を比べられる2024〜2026年の3期間では低温側1位です。比較できる他2期間の同時期平均30.4℃に対して-0.9℃です。比較対象全体の平均気温は29.5〜31.2℃の幅で、今回がその下限です。平均は前年同期より-1.9℃、最高値は-2.4℃、最低値は-2.0℃、平均日較差は-0.6℃。最高値と最低値が同程度に動いており、特定の時間帯だけでなく期間全体の水準差と読めます。さらに直前4週の平均29.4℃と比べると+0.1℃で、単一の前年だけでなく直近推移の中でも気温差が0.1℃でほぼ同水準状態です。"
     },
     "baseline": {
       "title": "2年平均との比較",
@@ -323,7 +323,7 @@
       }
     },
     "trend_analysis": {
-      "ai_comment": "前半と後半の平均気温差は1.6℃に収まり、期間全体では大きな一方向変化はありませんでした。最大の上昇は2025/08/01から2025/08/02の+2.9℃でした。最大の低下は2025/07/29から2025/07/30の-1.9℃でした。"
+      "ai_comment": "平均気温の底は8/1の26.6℃、山は7/28の31.4℃でした。前半と後半の差は1.1℃でほぼ横ばいとなり、日ごとの振れは中程度でした。最大上昇は8/1→8/2の+2.9℃、最大低下は7/29→7/30の-1.9℃です。日平均の標準偏差は1.7℃、前日からの平均変化幅は1.5℃で、期間内の変動性は中程度でした。温度基準で見ると猛暑日は4日、最長2日連続でした。"
     }
   },
   "chart_data": {
@@ -454,13 +454,135 @@
   },
   "analysis_meta": {
     "source": "codex",
-    "protocol_version": "2.0",
-    "generated_at": "2026-08-12T21:36:54.390359+09:00",
-    "data_fingerprint": "4e11e6978826adf9f224",
+    "analysis_available": true,
+    "protocol_version": "3.2",
+    "generated_at": "2026-08-12T22:13:35.139321+09:00",
+    "data_fingerprint": "58fb132bffbf27d004c1",
     "period_closed": true,
     "coverage_complete": true,
     "observed_days": 7,
     "expected_days": 7,
     "reason": "legacy_report_revalidation"
+  },
+  "analysis_context": {
+    "context_version": "3.2",
+    "daily_pattern": {
+      "opening_avg": 31.3,
+      "closing_avg": 30.2,
+      "front_to_back_change": -1.1,
+      "linear_slope_per_day": -0.271,
+      "daily_avg_stdev": 1.67,
+      "mean_absolute_day_change": 1.52,
+      "largest_rise": {
+        "change": 2.8999999999999986,
+        "from_date": "2025/08/01",
+        "to_date": "2025/08/02"
+      },
+      "largest_drop": {
+        "change": -1.8999999999999986,
+        "from_date": "2025/07/29",
+        "to_date": "2025/07/30"
+      },
+      "warmest_average_day": {
+        "date": "2025/07/28",
+        "value": 31.4
+      },
+      "coolest_average_day": {
+        "date": "2025/08/01",
+        "value": 26.6
+      },
+      "days_high_35_or_more": 4,
+      "days_high_30_or_more": 7,
+      "days_low_below_zero": 0,
+      "days_range_10_or_more": 1,
+      "longest_high_35_streak": 2,
+      "longest_high_30_streak": 7
+    },
+    "same_season_history": {
+      "slot": 31,
+      "comparison_periods": [
+        {
+          "key": "weekly:2024-07-29",
+          "period": "2024年 第31週（7/29 〜 8/4）",
+          "start_date": "2024-07-29",
+          "year": 2024,
+          "avg_temp": 31.2,
+          "max_temp": 39.1,
+          "min_temp": 26.3,
+          "avg_daily_range": 8.9
+        },
+        {
+          "key": "weekly:2026-07-27",
+          "period": "2026年 第31週（7/27 〜 8/2）",
+          "start_date": "2026-07-27",
+          "year": 2026,
+          "avg_temp": 29.6,
+          "max_temp": 37.7,
+          "min_temp": 23.1,
+          "avg_daily_range": 9.4
+        }
+      ],
+      "other_period_count": 2,
+      "sample_count_including_current": 3,
+      "years": [
+        2024,
+        2025,
+        2026
+      ],
+      "peer_average": 30.4,
+      "deviation_from_peer_average": -0.9,
+      "rank_warmest": 3,
+      "rank_coldest": 1,
+      "sample_min": 29.5,
+      "sample_max": 31.2,
+      "sample_stdev": 0.78
+    },
+    "recent_history": {
+      "previous_periods": [
+        {
+          "key": "weekly:2025-06-30",
+          "period": "2025年 第27週（6/30 〜 7/6）",
+          "start_date": "2025-06-30",
+          "year": 2025,
+          "avg_temp": 29.8,
+          "max_temp": 35.8,
+          "min_temp": 25.4,
+          "avg_daily_range": 8.2
+        },
+        {
+          "key": "weekly:2025-07-07",
+          "period": "2025年 第28週（7/7 〜 7/13）",
+          "start_date": "2025-07-07",
+          "year": 2025,
+          "avg_temp": 28.3,
+          "max_temp": 36.5,
+          "min_temp": 21.1,
+          "avg_daily_range": 8.4
+        },
+        {
+          "key": "weekly:2025-07-14",
+          "period": "2025年 第29週（7/14 〜 7/20）",
+          "start_date": "2025-07-14",
+          "year": 2025,
+          "avg_temp": 28.5,
+          "max_temp": 35.3,
+          "min_temp": 24.6,
+          "avg_daily_range": 6.5
+        },
+        {
+          "key": "weekly:2025-07-21",
+          "period": "2025年 第30週（7/21 〜 7/27）",
+          "start_date": "2025-07-21",
+          "year": 2025,
+          "avg_temp": 30.9,
+          "max_temp": 36.7,
+          "min_temp": 27.0,
+          "avg_daily_range": 8.3
+        }
+      ],
+      "previous_period_count": 4,
+      "previous_period_mean": 29.38,
+      "difference_from_previous_period_mean": 0.12
+    }
   }
 }

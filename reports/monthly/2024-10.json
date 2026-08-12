@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "月間サマリー",
-      "ai_comment": "対象期間は終了しており、31日分の観測で集計しています。2024年10月の平均気温は20.8℃、最高31.6℃、最低10.7℃でした。前半から後半にかけて平均気温が約8.2℃下がり、明確な降温傾向でした。前月比-6.5℃です。30℃以上の暑さを含むため、屋外活動では水分補給と休憩を早めに取るのが安全です。",
+      "ai_comment": "2024年10月は前月から平均気温が-6.5℃変化し、直近の流れが大きく動いた期間でした。期間平均は20.8℃、最高31.6℃（10/2）、最低10.7℃（10/21）です。日別には前半平均24.1℃から後半18.3℃へ低下し、日ごとの振れは大きめでした。位置づけは前月比-6.5℃。真夏日は2日でした。総じて、同時期より高温側に位置した一方で後半は下降し、暑さの山を前半に越えた月でした。",
       "highlights": [
         "月平均 20.8℃",
         "最高 31.6℃",
@@ -366,7 +366,7 @@
         "year": 2023,
         "month": 10
       },
-      "ai_comment": "前年同期の観測が不足しているため、信頼できる前年比較はまだできません。"
+      "ai_comment": "比較できる他1期間の同時期平均18.8℃に対して+2.0℃です。前月平均27.3℃からは-6.5℃で、月内の前半・後半差と合わせても月をまたいだ水準変化が数値に表れています。さらに直前4か月の平均27.8℃と比べると-7.0℃で、単一の前年だけでなく直近推移の中でも気温が7.0℃低い状態です。"
     },
     "prev_month": {
       "title": "前月比較",
@@ -586,7 +586,7 @@
       }
     },
     "trend_analysis": {
-      "ai_comment": "前半から後半にかけて平均気温が約8.2℃下がり、明確な降温傾向でした。最大の上昇は2024/10/21から2024/10/22の+4.0℃でした。最大の低下は2024/10/19から2024/10/20の-6.9℃でした。"
+      "ai_comment": "平均気温の底は10/21の15.8℃、山は10/2の26.9℃でした。前半平均24.1℃から後半18.3℃へ低下し、日ごとの振れは大きめでした。最大上昇は10/21→10/22の+4.0℃、最大低下は10/19→10/20の-6.9℃です。日平均の標準偏差は2.9℃、前日からの平均変化幅は2.1℃で、期間内の変動性は大きめでした。温度基準で見ると真夏日は2日でした。"
     }
   },
   "chart_data": {
@@ -757,13 +757,124 @@
   },
   "analysis_meta": {
     "source": "codex",
-    "protocol_version": "2.0",
-    "generated_at": "2026-08-12T21:36:54.390359+09:00",
-    "data_fingerprint": "a696965bea8c83cb2c20",
+    "analysis_available": true,
+    "protocol_version": "3.2",
+    "generated_at": "2026-08-12T22:13:35.139321+09:00",
+    "data_fingerprint": "0fc0d85e0ee7a48c36b1",
     "period_closed": true,
     "coverage_complete": true,
     "observed_days": 31,
     "expected_days": 31,
     "reason": "legacy_report_revalidation"
+  },
+  "analysis_context": {
+    "context_version": "3.2",
+    "daily_pattern": {
+      "opening_avg": 24.13,
+      "closing_avg": 18.34,
+      "front_to_back_change": -5.79,
+      "linear_slope_per_day": -0.18,
+      "daily_avg_stdev": 2.94,
+      "mean_absolute_day_change": 2.1,
+      "largest_rise": {
+        "change": 4.0,
+        "from_date": "2024/10/21",
+        "to_date": "2024/10/22"
+      },
+      "largest_drop": {
+        "change": -6.899999999999999,
+        "from_date": "2024/10/19",
+        "to_date": "2024/10/20"
+      },
+      "warmest_average_day": {
+        "date": "2024/10/02",
+        "value": 26.9
+      },
+      "coolest_average_day": {
+        "date": "2024/10/21",
+        "value": 15.8
+      },
+      "days_high_35_or_more": 0,
+      "days_high_30_or_more": 2,
+      "days_low_below_zero": 0,
+      "days_range_10_or_more": 1,
+      "longest_high_35_streak": 0,
+      "longest_high_30_streak": 1
+    },
+    "same_season_history": {
+      "slot": 10,
+      "comparison_periods": [
+        {
+          "key": "monthly:2025-10-01",
+          "period": "2025年10月",
+          "start_date": "2025-10-01",
+          "year": 2025,
+          "avg_temp": 18.8,
+          "max_temp": 29.2,
+          "min_temp": 9.9,
+          "avg_daily_range": 6.1
+        }
+      ],
+      "other_period_count": 1,
+      "sample_count_including_current": 2,
+      "years": [
+        2024,
+        2025
+      ],
+      "peer_average": 18.8,
+      "deviation_from_peer_average": 2.0,
+      "rank_warmest": 1,
+      "rank_coldest": 2,
+      "sample_min": 18.8,
+      "sample_max": 20.8,
+      "sample_stdev": 1.0
+    },
+    "recent_history": {
+      "previous_periods": [
+        {
+          "key": "monthly:2024-06-01",
+          "period": "2024年6月",
+          "start_date": "2024-06-01",
+          "year": 2024,
+          "avg_temp": 24.0,
+          "max_temp": 34.5,
+          "min_temp": 16.1,
+          "avg_daily_range": 8.2
+        },
+        {
+          "key": "monthly:2024-07-01",
+          "period": "2024年7月",
+          "start_date": "2024-07-01",
+          "year": 2024,
+          "avg_temp": 29.6,
+          "max_temp": 39.1,
+          "min_temp": 22.5,
+          "avg_daily_range": 8.8
+        },
+        {
+          "key": "monthly:2024-08-01",
+          "period": "2024年8月",
+          "start_date": "2024-08-01",
+          "year": 2024,
+          "avg_temp": 30.2,
+          "max_temp": 38.1,
+          "min_temp": 24.2,
+          "avg_daily_range": 8.2
+        },
+        {
+          "key": "monthly:2024-09-01",
+          "period": "2024年9月",
+          "start_date": "2024-09-01",
+          "year": 2024,
+          "avg_temp": 27.3,
+          "max_temp": 35.6,
+          "min_temp": 17.8,
+          "avg_daily_range": 7.0
+        }
+      ],
+      "previous_period_count": 4,
+      "previous_period_mean": 27.77,
+      "difference_from_previous_period_mean": -6.97
+    }
   }
 }

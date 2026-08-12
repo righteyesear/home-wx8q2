@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "月間サマリー",
-      "ai_comment": "対象期間は終了していますが、観測は20/31日分のため欠測を含む集計です。2024年3月の平均気温は10.9℃、最高26.6℃、最低2.8℃でした。前半から後半にかけて平均気温が約8.0℃上がり、明確な昇温傾向でした。比較可能な過去データは限定的です。朝晩は一桁まで冷えているため、外出時間に合わせて調整できる上着が役立ちます。",
+      "ai_comment": "2024年3月を特徴づけたのは、日平均の標準偏差3.5℃という期間内の振れ幅です。期間平均は10.9℃、最高26.6℃（3/31）、最低2.8℃（3/22）です。日別には前半平均11.4℃から後半13.7℃へ上昇し、日ごとの振れは大きめでした。比較可能な過去期間はまだ限られます。日較差10℃以上の日が8日ありました。総じて、平均との差そのものよりも、期間内の日ごとの振れの大きさが特徴的な月でした。なお観測は20/31日分で、欠測を含むため比較値には幅があります。",
       "highlights": [
         "月平均 10.9℃",
         "最高 26.6℃"
@@ -262,7 +262,7 @@
         "year": 2023,
         "month": 3
       },
-      "ai_comment": "前年同期の観測が不足しているため、信頼できる前年比較はまだできません。"
+      "ai_comment": "同じ3月を比べられる2024〜2026年の3期間では低温側2位です。比較できる他2期間の同時期平均10.8℃に対して+0.1℃です。比較対象全体の平均気温は10.7〜11.0℃の幅で、今回は下限より0.2℃高く、上限より0.1℃低い位置です。"
     },
     "prev_month": {
       "title": "前月比較",
@@ -462,7 +462,7 @@
       }
     },
     "trend_analysis": {
-      "ai_comment": "前半から後半にかけて平均気温が約8.0℃上がり、明確な昇温傾向でした。最大の上昇は2024/03/28から2024/03/29の+4.8℃でした。最大の低下は2024/03/17から2024/03/18の-6.2℃でした。欠測または未到来の日を含むため、傾向の強さは暫定的に解釈してください。"
+      "ai_comment": "平均気温の底は3/23の5.6℃、山は3/31の18.4℃でした。前半平均11.4℃から後半13.7℃へ上昇し、日ごとの振れは大きめでした。最大上昇は3/28→3/29の+4.8℃、最大低下は3/17→3/18の-6.2℃です。日平均の標準偏差は3.5℃、前日からの平均変化幅は1.9℃で、期間内の変動性は大きめでした。温度基準で見ると日較差10℃以上の日が8日ありました。"
     }
   },
   "chart_data": {
@@ -585,13 +585,94 @@
   },
   "analysis_meta": {
     "source": "codex",
-    "protocol_version": "2.0",
-    "generated_at": "2026-08-12T21:36:54.390359+09:00",
-    "data_fingerprint": "9bfd68aa7ade02c33aba",
+    "analysis_available": true,
+    "protocol_version": "3.2",
+    "generated_at": "2026-08-12T22:13:35.139321+09:00",
+    "data_fingerprint": "6f89e4193bd58a20c7b4",
     "period_closed": true,
     "coverage_complete": false,
     "observed_days": 20,
     "expected_days": 31,
     "reason": "legacy_report_revalidation"
+  },
+  "analysis_context": {
+    "context_version": "3.2",
+    "daily_pattern": {
+      "opening_avg": 11.42,
+      "closing_avg": 13.73,
+      "front_to_back_change": 2.32,
+      "linear_slope_per_day": 0.251,
+      "daily_avg_stdev": 3.49,
+      "mean_absolute_day_change": 1.94,
+      "largest_rise": {
+        "change": 4.799999999999999,
+        "from_date": "2024/03/28",
+        "to_date": "2024/03/29"
+      },
+      "largest_drop": {
+        "change": -6.200000000000001,
+        "from_date": "2024/03/17",
+        "to_date": "2024/03/18"
+      },
+      "warmest_average_day": {
+        "date": "2024/03/31",
+        "value": 18.4
+      },
+      "coolest_average_day": {
+        "date": "2024/03/23",
+        "value": 5.6
+      },
+      "days_high_35_or_more": 0,
+      "days_high_30_or_more": 0,
+      "days_low_below_zero": 0,
+      "days_range_10_or_more": 8,
+      "longest_high_35_streak": 0,
+      "longest_high_30_streak": 0
+    },
+    "same_season_history": {
+      "slot": 3,
+      "comparison_periods": [
+        {
+          "key": "monthly:2025-03-01",
+          "period": "2025年3月",
+          "start_date": "2025-03-01",
+          "year": 2025,
+          "avg_temp": 10.7,
+          "max_temp": 25.1,
+          "min_temp": 0.8,
+          "avg_daily_range": 8.8
+        },
+        {
+          "key": "monthly:2026-03-01",
+          "period": "2026年3月",
+          "start_date": "2026-03-01",
+          "year": 2026,
+          "avg_temp": 11.0,
+          "max_temp": 21.7,
+          "min_temp": 0.6,
+          "avg_daily_range": 7.7
+        }
+      ],
+      "other_period_count": 2,
+      "sample_count_including_current": 3,
+      "years": [
+        2024,
+        2025,
+        2026
+      ],
+      "peer_average": 10.85,
+      "deviation_from_peer_average": 0.05,
+      "rank_warmest": 2,
+      "rank_coldest": 2,
+      "sample_min": 10.7,
+      "sample_max": 11.0,
+      "sample_stdev": 0.12
+    },
+    "recent_history": {
+      "previous_periods": [],
+      "previous_period_count": 0,
+      "previous_period_mean": null,
+      "difference_from_previous_period_mean": null
+    }
   }
 }

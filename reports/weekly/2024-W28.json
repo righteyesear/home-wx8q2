@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "対象期間は終了しており、7日分の観測で集計しています。2024年 第28週（7/8 〜 7/14）の平均気温は28.7℃、最高37.7℃、最低22.7℃でした。前半から後半にかけて平均気温が約5.2℃下がり、明確な降温傾向でした。前週比-0.5℃です。最高気温が35℃以上の日を含むため、日中の外出は時間を選び、冷房・水分・休憩を前提にしてください。",
+      "ai_comment": "2024年 第28週（7/8 〜 7/14）は、前半平均31.6℃から後半26.5℃へ低下し、日ごとの振れは大きめでした。期間平均は28.7℃、最高37.7℃（7/8）、最低22.7℃（7/12）です。位置づけは前週比-0.5℃。猛暑日は3日、最長3日連続でした。総じて、同時期より高温側に位置した一方で後半は下降し、暑さの山を前半に越えた週でした。",
       "highlights": [
         "最高気温 37.7℃",
         "最低気温 22.7℃",
@@ -97,7 +97,7 @@
         "year": 2023,
         "week": 28
       },
-      "ai_comment": "前年同期の観測が不足しているため、信頼できる前年比較はまだできません。"
+      "ai_comment": "同じ第28週を比べられる2024〜2026年の3期間では高温側1位です。比較できる他2期間の同時期平均27.4℃に対して+1.2℃です。比較対象全体の平均気温は26.6〜28.7℃の幅で、今回がその上限です。さらに直前4週の平均26.1℃と比べると+2.6℃で、単一の前年だけでなく直近推移の中でも気温が2.6℃高い状態です。"
     },
     "baseline": {
       "title": "2年平均との比較",
@@ -293,7 +293,7 @@
       }
     },
     "trend_analysis": {
-      "ai_comment": "前半から後半にかけて平均気温が約5.2℃下がり、明確な降温傾向でした。最大の上昇は2024/07/12から2024/07/13の+2.0℃でした。最大の低下は2024/07/11から2024/07/12の-3.6℃でした。"
+      "ai_comment": "平均気温の底は7/12の25.3℃、山は7/8の32.0℃でした。前半平均31.6℃から後半26.5℃へ低下し、日ごとの振れは大きめでした。最大上昇は7/12→7/13の+2.0℃、最大低下は7/11→7/12の-3.6℃です。日平均の標準偏差は2.5℃、前日からの平均変化幅は1.7℃で、期間内の変動性は大きめでした。温度基準で見ると猛暑日は3日、最長3日連続でした。"
     }
   },
   "chart_data": {
@@ -338,13 +338,135 @@
   },
   "analysis_meta": {
     "source": "codex",
-    "protocol_version": "2.0",
-    "generated_at": "2026-08-12T21:36:54.390359+09:00",
-    "data_fingerprint": "2006193ee82d59ebff61",
+    "analysis_available": true,
+    "protocol_version": "3.2",
+    "generated_at": "2026-08-12T22:13:35.139321+09:00",
+    "data_fingerprint": "ed5b0aabcb5bcc7e0b06",
     "period_closed": true,
     "coverage_complete": true,
     "observed_days": 7,
     "expected_days": 7,
     "reason": "legacy_report_revalidation"
+  },
+  "analysis_context": {
+    "context_version": "3.2",
+    "daily_pattern": {
+      "opening_avg": 31.6,
+      "closing_avg": 26.5,
+      "front_to_back_change": -5.1,
+      "linear_slope_per_day": -1.15,
+      "daily_avg_stdev": 2.51,
+      "mean_absolute_day_change": 1.72,
+      "largest_rise": {
+        "change": 2.0,
+        "from_date": "2024/07/12",
+        "to_date": "2024/07/13"
+      },
+      "largest_drop": {
+        "change": -3.599999999999998,
+        "from_date": "2024/07/11",
+        "to_date": "2024/07/12"
+      },
+      "warmest_average_day": {
+        "date": "2024/07/08",
+        "value": 32.0
+      },
+      "coolest_average_day": {
+        "date": "2024/07/12",
+        "value": 25.3
+      },
+      "days_high_35_or_more": 3,
+      "days_high_30_or_more": 5,
+      "days_low_below_zero": 0,
+      "days_range_10_or_more": 1,
+      "longest_high_35_streak": 3,
+      "longest_high_30_streak": 4
+    },
+    "same_season_history": {
+      "slot": 28,
+      "comparison_periods": [
+        {
+          "key": "weekly:2025-07-07",
+          "period": "2025年 第28週（7/7 〜 7/13）",
+          "start_date": "2025-07-07",
+          "year": 2025,
+          "avg_temp": 28.3,
+          "max_temp": 36.5,
+          "min_temp": 21.1,
+          "avg_daily_range": 8.4
+        },
+        {
+          "key": "weekly:2026-07-06",
+          "period": "2026年 第28週（7/6 〜 7/12）",
+          "start_date": "2026-07-06",
+          "year": 2026,
+          "avg_temp": 26.6,
+          "max_temp": 32.7,
+          "min_temp": 21.6,
+          "avg_daily_range": 7.1
+        }
+      ],
+      "other_period_count": 2,
+      "sample_count_including_current": 3,
+      "years": [
+        2024,
+        2025,
+        2026
+      ],
+      "peer_average": 27.45,
+      "deviation_from_peer_average": 1.25,
+      "rank_warmest": 1,
+      "rank_coldest": 3,
+      "sample_min": 26.6,
+      "sample_max": 28.7,
+      "sample_stdev": 0.91
+    },
+    "recent_history": {
+      "previous_periods": [
+        {
+          "key": "weekly:2024-06-10",
+          "period": "2024年 第24週（6/10 〜 6/16）",
+          "start_date": "2024-06-10",
+          "year": 2024,
+          "avg_temp": 25.1,
+          "max_temp": 33.1,
+          "min_temp": 19.1,
+          "avg_daily_range": 8.4
+        },
+        {
+          "key": "weekly:2024-06-17",
+          "period": "2024年 第25週（6/17 〜 6/23）",
+          "start_date": "2024-06-17",
+          "year": 2024,
+          "avg_temp": 23.7,
+          "max_temp": 32.0,
+          "min_temp": 17.3,
+          "avg_daily_range": 8.3
+        },
+        {
+          "key": "weekly:2024-06-24",
+          "period": "2024年 第26週（6/24 〜 6/30）",
+          "start_date": "2024-06-24",
+          "year": 2024,
+          "avg_temp": 26.3,
+          "max_temp": 34.5,
+          "min_temp": 21.3,
+          "avg_daily_range": 7.4
+        },
+        {
+          "key": "weekly:2024-07-01",
+          "period": "2024年 第27週（7/1 〜 7/7）",
+          "start_date": "2024-07-01",
+          "year": 2024,
+          "avg_temp": 29.2,
+          "max_temp": 36.4,
+          "min_temp": 23.9,
+          "avg_daily_range": 8.8
+        }
+      ],
+      "previous_period_count": 4,
+      "previous_period_mean": 26.07,
+      "difference_from_previous_period_mean": 2.62
+    }
   }
 }

@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "月間サマリー",
-      "ai_comment": "対象期間は終了しており、30日分の観測で集計しています。2025年6月の平均気温は25.6℃、最高36.3℃、最低16.0℃でした。前半から後半にかけて平均気温が約9.0℃上がり、明確な昇温傾向でした。前月比+6.0℃、前年比+1.6℃、過去同時期平均との差+1.6℃です。最高気温が35℃以上の日を含むため、日中の外出は時間を選び、冷房・水分・休憩を前提にしてください。",
+      "ai_comment": "2025年6月は前月から平均気温が+6.0℃変化し、直近の流れが大きく動いた期間でした。期間平均は25.6℃、最高36.3℃（6/17）、最低16.0℃（6/1）です。日別には前半平均22.3℃から後半28.2℃へ上昇し、日ごとの振れは大きめでした。位置づけは前月比+6.0℃、前年同期比+1.6℃、過去同時期平均との差+1.6℃。猛暑日は2日でした。総じて、同時期より明確に高温側で、猛暑日も伴った暑さの強い月でした。",
       "highlights": [
         "月平均 25.6℃",
         "最高 36.3℃",
@@ -373,7 +373,7 @@
       "max_temp_diff": 1.8,
       "min_temp_diff": -0.1,
       "avg_daily_range_diff": -0.5,
-      "ai_comment": "平均気温は25.6℃で、前年同期の24.0℃より+1.6℃、高めでした。内訳は最高気温差+1.8℃、最低気温差-0.1℃、日較差の差-0.5℃です。単年同士の比較なので、季節の長期傾向ではなく、この期間固有の差として見るのが適切です。"
+      "ai_comment": "同じ6月を比べられる2024〜2026年の3期間では高温側1位です。比較できる他2期間の同時期平均23.1℃に対して+2.5℃です。比較対象全体の平均気温は22.2〜25.6℃の幅で、今回がその上限です。平均は前年同期より+1.6℃、最高値は+1.8℃、最低値は-0.1℃、平均日較差は-0.5℃。前年との差は最低値より最高値側で大きく、日中のピーク温度の違いが中心です。前月平均19.6℃からは+6.0℃で、月内の前半・後半差と合わせても月をまたいだ水準変化が数値に表れています。さらに直前4か月の平均13.1℃と比べると+12.5℃で、単一の前年だけでなく直近推移の中でも気温が12.5℃高い状態です。"
     },
     "prev_month": {
       "title": "前月比較",
@@ -593,7 +593,7 @@
       }
     },
     "trend_analysis": {
-      "ai_comment": "前半から後半にかけて平均気温が約9.0℃上がり、明確な昇温傾向でした。最大の上昇は2025/06/03から2025/06/04の+3.3℃でした。最大の低下は2025/06/09から2025/06/10の-2.2℃でした。"
+      "ai_comment": "平均気温の底は6/1の19.6℃、山は6/17の30.0℃でした。前半平均22.3℃から後半28.2℃へ上昇し、日ごとの振れは大きめでした。最大上昇は6/3→6/4の+3.3℃、最大低下は6/9→6/10の-2.2℃です。日平均の標準偏差は3.2℃、前日からの平均変化幅は1.0℃で、期間内の変動性は大きめでした。温度基準で見ると猛暑日は2日でした。"
     }
   },
   "chart_data": {
@@ -1053,13 +1053,135 @@
   },
   "analysis_meta": {
     "source": "codex",
-    "protocol_version": "2.0",
-    "generated_at": "2026-08-12T21:36:54.390359+09:00",
-    "data_fingerprint": "8646a95257fead5df3b1",
+    "analysis_available": true,
+    "protocol_version": "3.2",
+    "generated_at": "2026-08-12T22:13:35.139321+09:00",
+    "data_fingerprint": "7c747626fa2e03b180c7",
     "period_closed": true,
     "coverage_complete": true,
     "observed_days": 30,
     "expected_days": 30,
     "reason": "legacy_report_revalidation"
+  },
+  "analysis_context": {
+    "context_version": "3.2",
+    "daily_pattern": {
+      "opening_avg": 22.27,
+      "closing_avg": 28.21,
+      "front_to_back_change": 5.94,
+      "linear_slope_per_day": 0.311,
+      "daily_avg_stdev": 3.21,
+      "mean_absolute_day_change": 1.02,
+      "largest_rise": {
+        "change": 3.299999999999997,
+        "from_date": "2025/06/03",
+        "to_date": "2025/06/04"
+      },
+      "largest_drop": {
+        "change": -2.1999999999999993,
+        "from_date": "2025/06/09",
+        "to_date": "2025/06/10"
+      },
+      "warmest_average_day": {
+        "date": "2025/06/17",
+        "value": 30.0
+      },
+      "coolest_average_day": {
+        "date": "2025/06/01",
+        "value": 19.6
+      },
+      "days_high_35_or_more": 2,
+      "days_high_30_or_more": 14,
+      "days_low_below_zero": 0,
+      "days_range_10_or_more": 3,
+      "longest_high_35_streak": 1,
+      "longest_high_30_streak": 9
+    },
+    "same_season_history": {
+      "slot": 6,
+      "comparison_periods": [
+        {
+          "key": "monthly:2024-06-01",
+          "period": "2024年6月",
+          "start_date": "2024-06-01",
+          "year": 2024,
+          "avg_temp": 24.0,
+          "max_temp": 34.5,
+          "min_temp": 16.1,
+          "avg_daily_range": 8.2
+        },
+        {
+          "key": "monthly:2026-06-01",
+          "period": "2026年6月",
+          "start_date": "2026-06-01",
+          "year": 2026,
+          "avg_temp": 22.2,
+          "max_temp": 34.1,
+          "min_temp": 15.6,
+          "avg_daily_range": 6.9
+        }
+      ],
+      "other_period_count": 2,
+      "sample_count_including_current": 3,
+      "years": [
+        2024,
+        2025,
+        2026
+      ],
+      "peer_average": 23.1,
+      "deviation_from_peer_average": 2.5,
+      "rank_warmest": 1,
+      "rank_coldest": 3,
+      "sample_min": 22.2,
+      "sample_max": 25.6,
+      "sample_stdev": 1.39
+    },
+    "recent_history": {
+      "previous_periods": [
+        {
+          "key": "monthly:2025-02-01",
+          "period": "2025年2月",
+          "start_date": "2025-02-01",
+          "year": 2025,
+          "avg_temp": 6.3,
+          "max_temp": 16.3,
+          "min_temp": -0.8,
+          "avg_daily_range": 8.7
+        },
+        {
+          "key": "monthly:2025-03-01",
+          "period": "2025年3月",
+          "start_date": "2025-03-01",
+          "year": 2025,
+          "avg_temp": 10.7,
+          "max_temp": 25.1,
+          "min_temp": 0.8,
+          "avg_daily_range": 8.8
+        },
+        {
+          "key": "monthly:2025-04-01",
+          "period": "2025年4月",
+          "start_date": "2025-04-01",
+          "year": 2025,
+          "avg_temp": 15.9,
+          "max_temp": 27.6,
+          "min_temp": 4.2,
+          "avg_daily_range": 8.5
+        },
+        {
+          "key": "monthly:2025-05-01",
+          "period": "2025年5月",
+          "start_date": "2025-05-01",
+          "year": 2025,
+          "avg_temp": 19.6,
+          "max_temp": 30.0,
+          "min_temp": 12.7,
+          "avg_daily_range": 7.5
+        }
+      ],
+      "previous_period_count": 4,
+      "previous_period_mean": 13.12,
+      "difference_from_previous_period_mean": 12.48
+    }
   }
 }
