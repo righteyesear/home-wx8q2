@@ -2,13 +2,13 @@
   "weekly": [
     {
       "period": "2026-W33",
-      "label": "2026年 第33週（8/10 〜 8/16）",
+      "label": "08/10 〜 08/16",
       "file": "weekly/2026-W33.json",
       "is_final": false,
       "analysis_available": false,
       "status": "draft",
       "coverage_complete": false,
-      "observed_days": 3,
+      "observed_days": 4,
       "expected_days": 7
     },
     {
@@ -1719,5 +1719,5 @@
       "expected_days": 31
     }
   ],
-  "updated_at": "2026-08-12T22:13:37.777495+09:00"
+  "updated_at": "2026-08-13T01:11:15.584707+09:00"
 }
