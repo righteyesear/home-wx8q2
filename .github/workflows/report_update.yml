@@ -1,14 +1,11 @@
 # 分析レポート自動更新ワークフロー
-# ① 3時間ごと: データのみ更新（AIなし）
-# ② 毎週月曜 6:00 JST: 週次レポート（AI分析付き）
-# ③ 毎月1日 9:00 JST: 月次レポート（AI分析付き）
+# ① 毎週月曜 6:00 JST: 終了済みの前週レポート（AI分析付き）
+# ② 毎月1日 9:00 JST: 終了済みの前月レポート（AI分析付き）
 
 name: Report Generator
 
 on:
   schedule:
-    # 3時間ごとのデータ更新（UTC: 0,3,6,9,12,15,18,21時）
-    - cron: '0 */3 * * *'
     # 毎週月曜 6:00 JST = 日曜 21:00 UTC（AI付き週次）
     - cron: '0 21 * * 0'
     # 毎月1日 9:00 JST = 1日 0:00 UTC（AI付き月次）
@@ -31,7 +28,7 @@ on:
         required: false
         type: string
       skip_ai:
-        description: 'Skip AI analysis'
+        description: 'Skip Gemini (use local evidence analysis)'
         required: false
         default: false
         type: boolean
@@ -44,61 +41,7 @@ permissions:
   contents: write
 
 jobs:
-  # ─── ① 3時間ごとのデータ更新（AIなし）─────────────────────
-  data-update:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    # スケジュール実行で、AI付きタイミング以外のとき
-    if: >-
-      github.event_name == 'schedule' &&
-      github.event.schedule != '0 21 * * 0' &&
-      github.event.schedule != '0 0 1 * *'
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-          cache: 'pip'
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Generate weekly report (no AI)
-        env:
-          SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
-        run: |
-          echo "=== 定期更新: 週次レポート（AIなし）==="
-          python scripts/report_generator.py --type weekly --no-ai
-
-      - name: Generate monthly report (no AI)
-        env:
-          SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
-        run: |
-          CURRENT_MONTH=$(TZ=Asia/Tokyo date +%Y-%m)
-          echo "=== 定期更新: 月次レポート（AIなし）==="
-          python scripts/report_generator.py --type monthly --date "$CURRENT_MONTH" --no-ai
-
-      - name: Commit and push
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add reports/
-          if ! git diff --staged --quiet; then
-            git commit -m "📊 Update report data [$(TZ=Asia/Tokyo date +'%Y-%m-%d %H:%M JST')]"
-            git pull --rebase origin main || true
-            git push
-            echo "✅ Data update committed"
-          else
-            echo "No changes to commit"
-          fi
-
-  # ─── ② 毎週月曜: 週次レポート（AI分析付き）──────────────────
+  # ─── ① 毎週月曜: 前週レポート（AI分析付き）──────────────────
   weekly-ai:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -155,7 +98,7 @@ jobs:
             echo "No changes to commit"
           fi
 
-  # ─── ③ 毎月1日: 月次レポート（AI分析付き）──────────────────
+  # ─── ② 毎月1日: 前月レポート（AI分析付き）──────────────────
   monthly-ai:
     runs-on: ubuntu-latest
     timeout-minutes: 10

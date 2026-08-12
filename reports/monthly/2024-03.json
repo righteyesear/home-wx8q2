@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "月間サマリー",
-      "ai_comment": "",
+      "ai_comment": "対象期間は終了していますが、観測は20/31日分のため欠測を含む集計です。2024年3月の平均気温は10.9℃、最高26.6℃、最低2.8℃でした。前半から後半にかけて平均気温が約8.0℃上がり、明確な昇温傾向でした。比較可能な過去データは限定的です。朝晩は一桁まで冷えているため、外出時間に合わせて調整できる上着が役立ちます。",
       "highlights": [
         "月平均 10.9℃",
         "最高 26.6℃"
@@ -262,19 +262,17 @@
         "year": 2023,
         "month": 3
       },
-      "ai_comment": ""
+      "ai_comment": "前年同期の観測が不足しているため、信頼できる前年比較はまだできません。"
     },
     "prev_month": {
       "title": "前月比較",
-      "prev_month_stats": {},
-      "ai_comment": ""
+      "prev_month_stats": {}
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": null,
       "current_deviation": null,
-      "years_count": 0,
-      "ai_comment": ""
+      "years_count": 0
     },
     "events": {
       "title": "特筆イベント",
@@ -284,8 +282,7 @@
           "type": "rapid_change",
           "description": "平均気温が前日比-6.2℃の急低下"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "season": {
       "title": "季節の進み具合",
@@ -326,8 +323,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -464,6 +460,9 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "ai_comment": "前半から後半にかけて平均気温が約8.0℃上がり、明確な昇温傾向でした。最大の上昇は2024/03/28から2024/03/29の+4.8℃でした。最大の低下は2024/03/17から2024/03/18の-6.2℃でした。欠測または未到来の日を含むため、傾向の強さは暫定的に解釈してください。"
     }
   },
   "chart_data": {
@@ -583,5 +582,16 @@
         12.2
       ]
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "9bfd68aa7ade02c33aba",
+    "period_closed": true,
+    "coverage_complete": false,
+    "observed_days": 20,
+    "expected_days": 31,
+    "reason": "legacy_report_revalidation"
   }
 }

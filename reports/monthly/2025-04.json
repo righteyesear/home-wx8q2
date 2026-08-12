@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "月間サマリー",
-      "ai_comment": "",
+      "ai_comment": "対象期間は終了しており、30日分の観測で集計しています。2025年4月の平均気温は15.9℃、最高27.6℃、最低4.2℃でした。前半から後半にかけて平均気温が約10.3℃上がり、明確な昇温傾向でした。前月比+5.2℃、前年比-1.6℃、過去同時期平均との差-1.6℃です。朝晩は一桁まで冷えているため、外出時間に合わせて調整できる上着が役立ちます。",
       "highlights": [
         "月平均 15.9℃",
         "最高 27.6℃",
@@ -373,7 +373,7 @@
       "max_temp_diff": -1.3,
       "min_temp_diff": -2.9,
       "avg_daily_range_diff": 0.4,
-      "ai_comment": ""
+      "ai_comment": "平均気温は15.9℃で、前年同期の17.5℃より-1.6℃、低めでした。内訳は最高気温差-1.3℃、最低気温差-2.9℃、日較差の差+0.4℃です。単年同士の比較なので、季節の長期傾向ではなく、この期間固有の差として見るのが適切です。"
     },
     "prev_month": {
       "title": "前月比較",
@@ -392,20 +392,17 @@
       "avg_temp_diff": 5.2,
       "max_temp_diff": 2.5,
       "min_temp_diff": 3.4,
-      "avg_daily_range_diff": -0.3,
-      "ai_comment": ""
+      "avg_daily_range_diff": -0.3
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 17.5,
       "current_deviation": -1.6,
-      "years_count": 1,
-      "ai_comment": ""
+      "years_count": 1
     },
     "events": {
       "title": "特筆イベント",
-      "items": [],
-      "ai_comment": ""
+      "items": []
     },
     "season": {
       "title": "季節の進み具合",
@@ -446,8 +443,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -584,6 +580,9 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "ai_comment": "前半から後半にかけて平均気温が約10.3℃上がり、明確な昇温傾向でした。最大の上昇は2025/04/01から2025/04/02の+4.3℃でした。最大の低下は2025/04/25から2025/04/26の-3.3℃でした。"
     }
   },
   "chart_data": {
@@ -1040,5 +1039,16 @@
         13.2
       ]
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "174fb23bb91d0fa071ab",
+    "period_closed": true,
+    "coverage_complete": true,
+    "observed_days": 30,
+    "expected_days": 30,
+    "reason": "legacy_report_revalidation"
   }
 }

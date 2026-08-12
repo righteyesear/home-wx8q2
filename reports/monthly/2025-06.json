@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "月間サマリー",
-      "ai_comment": "",
+      "ai_comment": "対象期間は終了しており、30日分の観測で集計しています。2025年6月の平均気温は25.6℃、最高36.3℃、最低16.0℃でした。前半から後半にかけて平均気温が約9.0℃上がり、明確な昇温傾向でした。前月比+6.0℃、前年比+1.6℃、過去同時期平均との差+1.6℃です。最高気温が35℃以上の日を含むため、日中の外出は時間を選び、冷房・水分・休憩を前提にしてください。",
       "highlights": [
         "月平均 25.6℃",
         "最高 36.3℃",
@@ -373,7 +373,7 @@
       "max_temp_diff": 1.8,
       "min_temp_diff": -0.1,
       "avg_daily_range_diff": -0.5,
-      "ai_comment": ""
+      "ai_comment": "平均気温は25.6℃で、前年同期の24.0℃より+1.6℃、高めでした。内訳は最高気温差+1.8℃、最低気温差-0.1℃、日較差の差-0.5℃です。単年同士の比較なので、季節の長期傾向ではなく、この期間固有の差として見るのが適切です。"
     },
     "prev_month": {
       "title": "前月比較",
@@ -392,15 +392,13 @@
       "avg_temp_diff": 6.0,
       "max_temp_diff": 6.3,
       "min_temp_diff": 3.3,
-      "avg_daily_range_diff": 0.2,
-      "ai_comment": ""
+      "avg_daily_range_diff": 0.2
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 24.0,
       "current_deviation": 1.6,
-      "years_count": 1,
-      "ai_comment": ""
+      "years_count": 1
     },
     "events": {
       "title": "特筆イベント",
@@ -415,8 +413,7 @@
           "type": "extreme_heat",
           "description": "猛暑日: 最高気温35.3℃"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "season": {
       "title": "季節の進み具合",
@@ -457,8 +454,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -595,6 +591,9 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "ai_comment": "前半から後半にかけて平均気温が約9.0℃上がり、明確な昇温傾向でした。最大の上昇は2025/06/03から2025/06/04の+3.3℃でした。最大の低下は2025/06/09から2025/06/10の-2.2℃でした。"
     }
   },
   "chart_data": {
@@ -1051,5 +1050,16 @@
         24.9
       ]
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "8646a95257fead5df3b1",
+    "period_closed": true,
+    "coverage_complete": true,
+    "observed_days": 30,
+    "expected_days": 30,
+    "reason": "legacy_report_revalidation"
   }
 }

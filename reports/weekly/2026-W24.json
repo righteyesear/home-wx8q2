@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "分析中にエラーが発生しました: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}",
+      "ai_comment": "対象期間は終了しており、7日分の観測で集計しています。2026年 第24週（6/8 〜 6/14）の平均気温は22.0℃、最高28.9℃、最低17.9℃でした。前半から後半にかけて平均気温が約2.5℃上がり、明確な昇温傾向でした。前週比+1.1℃、前年比-0.8℃、過去同時期平均との差-1.7℃です。極端な温度域ではありませんが、日ごとの変化に合わせて服装と室温を調整してください。",
       "highlights": [
         "最高気温 28.9℃",
         "最低気温 17.9℃",
@@ -112,19 +112,17 @@
       "max_temp_diff": -0.6,
       "min_temp_diff": -2.1,
       "avg_daily_range_diff": 2.0,
-      "ai_comment": "分析中にエラーが発生しました: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
+      "ai_comment": "平均気温は22.0℃で、前年同期の22.8℃より-0.8℃、低めでした。内訳は最高気温差-0.6℃、最低気温差-2.1℃、日較差の差+2.0℃です。単年同士の比較なので、季節の長期傾向ではなく、この期間固有の差として見るのが適切です。"
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 23.7,
       "current_deviation": -1.7,
-      "years_count": 2,
-      "ai_comment": ""
+      "years_count": 2
     },
     "events": {
       "title": "特筆イベント",
-      "items": [],
-      "ai_comment": ""
+      "items": []
     },
     "season": {
       "title": "季節の進み具合",
@@ -165,8 +163,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -321,7 +318,7 @@
     },
     "trend_analysis": {
       "title": "気温推移の分析",
-      "ai_comment": "分析中にエラーが発生しました: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
+      "ai_comment": "前半から後半にかけて平均気温が約2.5℃上がり、明確な昇温傾向でした。最大の上昇は2026/06/10から2026/06/11の+2.2℃でした。最大の低下は2026/06/11から2026/06/12の-1.3℃でした。"
     }
   },
   "chart_data": {
@@ -449,5 +446,16 @@
       ],
       "baseline_avg": 23.7
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "68d281c76257b79c79c1",
+    "period_closed": true,
+    "coverage_complete": true,
+    "observed_days": 7,
+    "expected_days": 7,
+    "reason": "legacy_report_revalidation"
   }
 }

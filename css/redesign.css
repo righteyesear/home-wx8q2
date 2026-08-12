@@ -628,6 +628,10 @@ html.light-mode .precipitation-card {
     box-shadow: var(--ui-shadow-soft);
 }
 
+.precipitation-chart-container {
+    height: 144px;
+}
+
 .ai-advisor-section,
 html.light-mode .ai-advisor-section {
     min-height: 0;
@@ -1409,6 +1413,10 @@ body.simple-mode .chart-card[data-chart-id="chart24h"] {
     html.light-mode .precipitation-card {
         padding: 19px 17px;
         border-radius: 18px;
+    }
+
+    .precipitation-chart-container {
+        height: 132px;
     }
 
     .ai-advisor-content,

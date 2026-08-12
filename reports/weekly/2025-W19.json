@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "",
+      "ai_comment": "対象期間は終了しており、7日分の観測で集計しています。2025年 第19週（5/5 〜 5/11）の平均気温は18.7℃、最高26.8℃、最低12.7℃でした。前半から後半にかけて平均気温が約2.3℃上がり、明確な昇温傾向でした。前週比+0.5℃、前年比-0.7℃、過去同時期平均との差-0.7℃です。極端な温度域ではありませんが、日ごとの変化に合わせて服装と室温を調整してください。",
       "highlights": [
         "最高気温 26.8℃",
         "最低気温 12.7℃",
@@ -112,19 +112,17 @@
       "max_temp_diff": -1.1,
       "min_temp_diff": 3.1,
       "avg_daily_range_diff": -0.7,
-      "ai_comment": ""
+      "ai_comment": "平均気温は18.7℃で、前年同期の19.4℃より-0.7℃、低めでした。内訳は最高気温差-1.1℃、最低気温差+3.1℃、日較差の差-0.7℃です。単年同士の比較なので、季節の長期傾向ではなく、この期間固有の差として見るのが適切です。"
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 19.4,
       "current_deviation": -0.7,
-      "years_count": 1,
-      "ai_comment": ""
+      "years_count": 1
     },
     "events": {
       "title": "特筆イベント",
-      "items": [],
-      "ai_comment": ""
+      "items": []
     },
     "season": {
       "title": "季節の進み具合",
@@ -165,8 +163,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -303,6 +300,9 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "ai_comment": "前半から後半にかけて平均気温が約2.3℃上がり、明確な昇温傾向でした。最大の上昇は2025/05/06から2025/05/07の+2.7℃でした。最大の低下は2025/05/05から2025/05/06の-2.9℃でした。"
     }
   },
   "chart_data": {
@@ -430,5 +430,16 @@
       ],
       "baseline_avg": 19.4
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "39e840dfc9b714b31133",
+    "period_closed": true,
+    "coverage_complete": true,
+    "observed_days": 7,
+    "expected_days": 7,
+    "reason": "legacy_report_revalidation"
   }
 }

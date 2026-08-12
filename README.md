@@ -20,8 +20,8 @@
 - **PWA対応** — ホーム画面に追加可能
 
 ### 📈 分析レポート（`report.html`）
-- **週次・月次レポート**の自動生成（3時間ごとデータ更新）
-- **AI分析コメント** — Gemini APIによるサマリー・前年比較・気温推移の分析
+- **終了済みの週次・月次レポート**を自動生成（進行中の期間は公開しない）
+- **根拠付き分析コメント** — Gemini 3.6 Flashを1レポート1回だけ使用し、失敗時はローカル分析へ自動切り替え
 - **前年比較チャート** — 平均/最高/最低気温の切り替え機能
 - **過去平均との比較バー** — 偏差をビジュアルで表示
 - **気温ヒートマップ**
@@ -53,6 +53,8 @@ temperature-dashboard/
 │   └── report.js              # レポートページ用JS
 ├── scripts/
 │   ├── report_generator.py    # レポート生成（メイン）
+│   ├── report_analysis.py     # 共通分析プロトコル・ローカル根拠分析
+│   ├── backfill_codex_analysis.py # 過去コメントのCodex再分析
 │   ├── ai_advisor.py          # AI気象アドバイザー
 │   ├── precipitation.py       # 降水データ取得
 │   ├── moon_data.py           # 月齢データ取得
@@ -83,13 +85,14 @@ temperature-dashboard/
 
 | タイミング | 内容 | AI分析 |
 |---|---|---|
-| 3時間ごと | 週次・月次レポートをデータのみ更新 | ❌ |
-| 毎週月曜 6:00 JST | 週次レポート生成 | ✅ |
-| 毎月1日 9:00 JST | 月次レポート生成 | ✅ |
+| 毎週月曜 6:00 JST | 直前に終了した週次レポートを生成 | Gemini最大1回 |
+| 毎月1日 9:00 JST | 直前に終了した月次レポートを生成 | Gemini最大1回 |
+
+進行中の週・月は通常生成できません。検証目的で明示的に必要な場合のみ `--allow-incomplete` を付けます。
 
 ### 🤖 AI Weather Advisor（`ai_update.yml`）
 
-昼間（7〜22時）は毎時、夜間は1時・4時に更新（計18回/日）
+昼間（7〜22時）は毎時、夜間は4時に更新（計17回/日）。通常の週次・月次生成を含めても最大19回/日に収まる設計です。
 
 ### 🌙 Moon Data（`moon_update.yml`）
 
@@ -129,7 +132,7 @@ cp .env.example .env
 # 週次レポート（AI分析付き）
 python scripts/report_generator.py --type weekly
 
-# 月次レポート（AIなし）
+# 月次レポート（Geminiなし・ローカル根拠分析）
 python scripts/report_generator.py --type monthly --no-ai
 
 # 特定の日付を指定
@@ -137,7 +140,12 @@ python scripts/report_generator.py --type weekly --date 2026-03-01
 
 # 全期間一括生成
 python scripts/report_generator.py --backfill --no-ai
+
+# 既存レポートの空欄・旧分析をCodex分析で再構築
+python scripts/backfill_codex_analysis.py --all
 ```
+
+`--no-ai` はコメントを空欄にせず、Gemini APIを呼ばないローカル根拠分析を生成します。
 
 ---
 
@@ -147,8 +155,8 @@ python scripts/report_generator.py --backfill --no-ai
 |---|---|
 | フロントエンド | HTML5, CSS3, JavaScript (Vanilla) |
 | グラフ | Chart.js |
-| フォント | Noto Sans JP (Google Fonts) |
-| AI分析 | Google Gemini API (`gemini-3.5-flash`) |
+| フォント | Noto Sans JP / Inter / システムフォント |
+| AI分析 | Google Gemini API (`gemini-3.6-flash`)、Codex設計のローカル根拠分析 |
 | データソース | Google Sheets API (CSV公開) |
 | 気象警報 | 気象庁 XML API |
 | 降水判定 | Yahoo 天気 API + 独自スコアリング |
@@ -178,6 +186,7 @@ python scripts/report_generator.py --backfill --no-ai
 
 ## 更新履歴
 
+- **2026/08/12**: 完了期間のみ生成するレポート運用、Gemini 1回プロトコル、Codex再分析、分析画面の全面刷新を実装
 - **2026/03/02**: レポート自動更新を3時間ごと＋週月AI分析に分離
 - **2026/03/01**: 分析レポートに前年比較の最高/最低気温切り替え機能を追加
 - **2026/03/01**: 0.0℃異常データの自動修正機能を実装

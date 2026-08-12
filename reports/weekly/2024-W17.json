@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "",
+      "ai_comment": "対象期間は終了しており、7日分の観測で集計しています。2024年 第17週（4/22 〜 4/28）の平均気温は19.0℃、最高28.9℃、最低13.8℃でした。前半から後半にかけて平均気温が約4.8℃上がり、明確な昇温傾向でした。前週比-0.3℃です。極端な温度域ではありませんが、日ごとの変化に合わせて服装と室温を調整してください。",
       "highlights": [
         "最高気温 28.9℃",
         "最低気温 13.8℃",
@@ -97,19 +97,17 @@
         "year": 2023,
         "week": 17
       },
-      "ai_comment": ""
+      "ai_comment": "前年同期の観測が不足しているため、信頼できる前年比較はまだできません。"
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": null,
       "current_deviation": null,
-      "years_count": 0,
-      "ai_comment": ""
+      "years_count": 0
     },
     "events": {
       "title": "特筆イベント",
-      "items": [],
-      "ai_comment": ""
+      "items": []
     },
     "season": {
       "title": "季節の進み具合",
@@ -150,8 +148,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -288,6 +285,9 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "ai_comment": "前半から後半にかけて平均気温が約4.8℃上がり、明確な昇温傾向でした。最大の上昇は2024/04/24から2024/04/25の+4.4℃でした。最大の低下は2024/04/23から2024/04/24の-1.9℃でした。"
     }
   },
   "chart_data": {
@@ -329,5 +329,16 @@
         22.0
       ]
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "95c19da080fce251cfa6",
+    "period_closed": true,
+    "coverage_complete": true,
+    "observed_days": 7,
+    "expected_days": 7,
+    "reason": "legacy_report_revalidation"
   }
 }

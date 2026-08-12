@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "",
+      "ai_comment": "対象期間は終了しており、7日分の観測で集計しています。2025年 第7週（2/10 〜 2/16）の平均気温は7.2℃、最高15.6℃、最低-0.5℃でした。前半から後半にかけて平均気温が約4.2℃上がり、明確な昇温傾向でした。前週比+2.2℃です。氷点下を記録しているため、朝晩の路面凍結と室内外の温度差に注意が必要です。",
       "highlights": [
         "最高気温 15.6℃",
         "最低気温 -0.5℃",
@@ -97,14 +97,13 @@
         "year": 2024,
         "week": 7
       },
-      "ai_comment": ""
+      "ai_comment": "前年同期の観測が不足しているため、信頼できる前年比較はまだできません。"
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": null,
       "current_deviation": null,
-      "years_count": 0,
-      "ai_comment": ""
+      "years_count": 0
     },
     "events": {
       "title": "特筆イベント",
@@ -119,8 +118,7 @@
           "type": "frost_day",
           "description": "冬日: 最低気温-0.5℃"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "season": {
       "title": "季節の進み具合",
@@ -161,8 +159,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -299,6 +296,9 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "ai_comment": "前半から後半にかけて平均気温が約4.2℃上がり、明確な昇温傾向でした。最大の上昇は2025/02/15から2025/02/16の+2.4℃でした。最大の低下は2025/02/10から2025/02/11の-0.8℃でした。"
     }
   },
   "chart_data": {
@@ -340,5 +340,16 @@
         11.3
       ]
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "d283e27097395e73ee6f",
+    "period_closed": true,
+    "coverage_complete": true,
+    "observed_days": 7,
+    "expected_days": 7,
+    "reason": "legacy_report_revalidation"
   }
 }

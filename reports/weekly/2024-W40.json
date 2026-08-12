@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "",
+      "ai_comment": "対象期間は終了しており、7日分の観測で集計しています。2024年 第40週（9/30 〜 10/6）の平均気温は23.8℃、最高31.6℃、最低19.6℃でした。前半と後半の平均気温差は1.2℃に収まり、期間全体では大きな一方向変化はありませんでした。前週比+0.9℃です。30℃以上の暑さを含むため、屋外活動では水分補給と休憩を早めに取るのが安全です。",
       "highlights": [
         "最高気温 31.6℃",
         "最低気温 19.6℃",
@@ -97,19 +97,17 @@
         "year": 2023,
         "week": 40
       },
-      "ai_comment": ""
+      "ai_comment": "前年同期の観測が不足しているため、信頼できる前年比較はまだできません。"
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": null,
       "current_deviation": null,
-      "years_count": 0,
-      "ai_comment": ""
+      "years_count": 0
     },
     "events": {
       "title": "特筆イベント",
-      "items": [],
-      "ai_comment": ""
+      "items": []
     },
     "season": {
       "title": "季節の進み具合",
@@ -150,8 +148,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -288,6 +285,9 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "ai_comment": "前半と後半の平均気温差は1.2℃に収まり、期間全体では大きな一方向変化はありませんでした。最大の上昇は2024/10/01から2024/10/02の+3.3℃でした。最大の低下は2024/10/04から2024/10/05の-4.1℃でした。"
     }
   },
   "chart_data": {
@@ -329,5 +329,16 @@
         21.8
       ]
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "b1406382d4dba31db9e9",
+    "period_closed": true,
+    "coverage_complete": true,
+    "observed_days": 7,
+    "expected_days": 7,
+    "reason": "legacy_report_revalidation"
   }
 }

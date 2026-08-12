@@ -3,7 +3,7 @@
 週次・月次 分析レポート生成スクリプト
 Daily シートから日別データを取得 → 統計計算 → Gemini で AI 分析 → JSON 出力
 
-Usage:
+Usage (日付省略時は直近の完了期間を生成):
     python scripts/report_generator.py --type weekly
     python scripts/report_generator.py --type monthly
     python scripts/report_generator.py --type weekly --date 2025-06-15
@@ -18,12 +18,19 @@ import math
 import argparse
 import statistics
 import requests
-from datetime import datetime, timedelta, timezone, date
+from datetime import datetime, timedelta, date
 from typing import Dict, Any, List, Optional, Tuple
 from pathlib import Path
 
-# JST タイムゾーン
-JST = timezone(timedelta(hours=9))
+from report_analysis import (
+    JST,
+    analysis_fingerprint,
+    apply_analysis,
+    build_gemini_protocol_prompt,
+    generate_evidence_analysis,
+    parse_gemini_analysis,
+    report_completeness,
+)
 
 # .env ファイルから環境変数を読み込み
 from dotenv import load_dotenv
@@ -37,6 +44,10 @@ from google import genai
 # =============================================================================
 SPREADSHEET_ID = os.environ.get('SPREADSHEET_ID', '1nbmJIIUzw8n2PcHp98NaiKnaAVciBx_Egpokjjx7uW8')
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
+GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.6-flash')
+# 1レポートを1回で分析する。誤操作や将来のループでも無料枠を浪費しない。
+GEMINI_MAX_CALLS_PER_RUN = max(0, min(int(os.environ.get('GEMINI_MAX_CALLS_PER_RUN', '1')), 20))
+_gemini_calls = 0
 
 # 東京都葛飾区東金町5丁目
 LATITUDE = 35.7727
@@ -635,26 +646,47 @@ def generate_chart_data_monthly(records: List[Dict], prev_year_records: List[Dic
 # Gemini AI 分析
 # =============================================================================
 
-def analyze_with_gemini(section_name: str, prompt: str) -> str:
-    """Gemini でセクション別の分析を実行"""
+def analyze_report_with_gemini(report: Dict[str, Any]) -> Dict[str, Any]:
+    """1レポート3セクションを1回のGemini呼び出しで分析する。
+
+    APIキー未設定、日次上限ガード、応答エラー、JSON検証失敗のいずれでも、
+    エラーメッセージを表示用データに保存せず、根拠限定のローカル分析へ退避する。
+    """
+    global _gemini_calls
+    fallback = generate_evidence_analysis(report, source='local')
+
     if not GEMINI_API_KEY:
-        return "AI分析は利用できません（APIキー未設定）"
+        fallback['analysis_meta']['fallback_reason'] = 'api_key_missing'
+        return fallback
+    if _gemini_calls >= GEMINI_MAX_CALLS_PER_RUN:
+        fallback['analysis_meta']['fallback_reason'] = 'run_budget_exhausted'
+        return fallback
 
     try:
         client = genai.Client(api_key=GEMINI_API_KEY)
+        _gemini_calls += 1
         response = client.models.generate_content(
-            model='gemini-3.5-flash',
-            contents=prompt,
+            model=GEMINI_MODEL,
+            contents=build_gemini_protocol_prompt(report),
             config={
-                'temperature': 0.7,
-            }
+                'temperature': 0.2,
+                'response_mime_type': 'application/json',
+            },
         )
-        result = response.text.strip()
-        print(f"  → AI分析完了: {section_name} ({len(result)}文字)")
-        return result
+        comments = parse_gemini_analysis(response.text)
+        fallback['comments'] = comments
+        fallback['analysis_meta'].update({
+            'source': 'gemini',
+            'model': GEMINI_MODEL,
+            'api_calls': 1,
+        })
+        fallback['analysis_meta'].pop('fallback_reason', None)
+        print(f"  → AI分析完了: {GEMINI_MODEL}（1回で3セクション）")
+        return fallback
     except Exception as e:
-        print(f"  [WARN] AI分析エラー ({section_name}): {e}")
-        return f"分析中にエラーが発生しました: {e}"
+        print(f"  [WARN] AI分析エラー。ローカル分析へ切替: {e}")
+        fallback['analysis_meta']['fallback_reason'] = type(e).__name__
+        return fallback
 
 
 def compute_advanced_analytics(all_records: List[Dict], current_stats: Dict,
@@ -743,7 +775,8 @@ def compute_recent_weeks(all_records: List[Dict], target_monday: date, count: in
 
 
 # =============================================================================
-# AI プロンプト構築
+# 旧プロンプト構築（互換参照のみ・現在の生成経路では未使用）
+# 現行の単一呼び出しプロトコルは report_analysis.build_gemini_protocol_prompt を使用する。
 # =============================================================================
 
 def _get_season_context(month: int) -> tuple:
@@ -1241,17 +1274,14 @@ def generate_weekly_report(all_records: List[Dict], target_date: date,
         'baseline': {
             'title': '2年平均との比較',
             **baseline_info,
-            'ai_comment': '',
         },
         'events': {
             'title': '特筆イベント',
             'items': events,
-            'ai_comment': '',
         },
         'season': {
             'title': '季節の進み具合',
             'milestones': milestones,
-            'ai_comment': '',
         },
         'heatmap': {
             'title': '気温ヒートマップ',
@@ -1275,35 +1305,6 @@ def generate_weekly_report(all_records: List[Dict], target_date: date,
     avg_values = [r.get('avg') for r in current_records if r.get('avg') is not None]
     trend = compute_trend(avg_values)
 
-    # AI分析実行
-    if not skip_ai:
-        print("  → AI分析を実行中...")
-
-        sections['summary']['ai_comment'] = analyze_with_gemini(
-            'サマリー',
-            build_summary_prompt('weekly', period_label, stats, prev_diff, events,
-                                daily_data_formatted, prev_year_daily,
-                                recent_weeks, baseline_info, analytics)
-        )
-        if prev_year_stats:
-            sections['comparison']['ai_comment'] = analyze_with_gemini(
-                '前年比較',
-                build_comparison_prompt(period_label, stats, prev_year_stats, prev_year_diff,
-                                       daily_data_formatted, prev_year_daily)
-            )
-        # 気温推移の分析
-        sections['trend_analysis'] = {
-            'title': '気温推移の分析',
-            'ai_comment': analyze_with_gemini(
-                '気温推移',
-                build_trend_prompt('weekly', period_label, stats,
-                                  daily_data_formatted, trend,
-                                  prev_year_daily, baseline_info, analytics)
-            ),
-        }
-    else:
-        print("  → AI分析をスキップ")
-
     # レポート組み立て
     report = {
         'type': 'weekly',
@@ -1318,6 +1319,14 @@ def generate_weekly_report(all_records: List[Dict], target_date: date,
         'sections': sections,
         'chart_data': chart_data,
     }
+
+    # AI分析実行。3セクションを1回で生成し、失敗時も表示可能な分析へ退避する。
+    if not skip_ai:
+        print("  → AI分析を実行中...")
+        apply_analysis(report, analyze_report_with_gemini(report))
+    else:
+        apply_analysis(report, generate_evidence_analysis(report, source='local'))
+        print("  → Geminiを使わず、ローカル根拠分析を生成")
 
     return report
 
@@ -1476,22 +1485,18 @@ def generate_monthly_report(all_records: List[Dict], target_date: date,
             'title': '前月比較',
             'prev_month_stats': prev_stats,
             **prev_diff,
-            'ai_comment': '',
         },
         'baseline': {
             'title': '2年平均との比較',
             **baseline_info,
-            'ai_comment': '',
         },
         'events': {
             'title': '特筆イベント',
             'items': events,
-            'ai_comment': '',
         },
         'season': {
             'title': '季節の進み具合',
             'milestones': milestones,
-            'ai_comment': '',
         },
         'heatmap': {
             'title': '気温ヒートマップ',
@@ -1515,35 +1520,6 @@ def generate_monthly_report(all_records: List[Dict], target_date: date,
     avg_values = [r.get('avg') for r in current_records if r.get('avg') is not None]
     trend = compute_trend(avg_values)
 
-    # AI分析実行
-    if not skip_ai:
-        print("  → AI分析を実行中...")
-
-        sections['summary']['ai_comment'] = analyze_with_gemini(
-            'サマリー',
-            build_summary_prompt('monthly', period_label, stats, prev_diff, events,
-                                daily_data_formatted, prev_year_daily,
-                                recent_weeks, baseline_info, analytics)
-        )
-        if prev_year_stats:
-            sections['comparison']['ai_comment'] = analyze_with_gemini(
-                '前年同月比較',
-                build_comparison_prompt(period_label, stats, prev_year_stats, prev_year_diff,
-                                       daily_data_formatted, prev_year_daily)
-            )
-        # 気温推移の分析
-        sections['trend_analysis'] = {
-            'title': '気温推移の分析',
-            'ai_comment': analyze_with_gemini(
-                '気温推移',
-                build_trend_prompt('monthly', period_label, stats,
-                                  daily_data_formatted, trend,
-                                  prev_year_daily, baseline_info, analytics)
-            ),
-        }
-    else:
-        print("  → AI分析をスキップ")
-
     report = {
         'type': 'monthly',
         'period': {
@@ -1558,6 +1534,13 @@ def generate_monthly_report(all_records: List[Dict], target_date: date,
         'chart_data': chart_data,
     }
 
+    if not skip_ai:
+        print("  → AI分析を実行中...")
+        apply_analysis(report, analyze_report_with_gemini(report))
+    else:
+        apply_analysis(report, generate_evidence_analysis(report, source='local'))
+        print("  → Geminiを使わず、ローカル根拠分析を生成")
+
     return report
 
 
@@ -1566,7 +1549,7 @@ def generate_monthly_report(all_records: List[Dict], target_date: date,
 # =============================================================================
 
 def save_report(report: Dict) -> str:
-    """レポートをJSONファイルに保存。既存ファイルにAIコメントがあれば引き継ぐ。"""
+    """レポートを保存し、同じデータ根拠の分析だけを安全に引き継ぐ。"""
     report_type = report['type']
     period = report['period']
 
@@ -1589,33 +1572,35 @@ def save_report(report: Dict) -> str:
             'file': f"monthly/{filename}",
         }
 
-    # 既存ファイルのAIコメントを引き継ぐ
+    completeness = report_completeness(report)
+    index_entry.update({
+        'is_final': completeness['period_closed'],
+        'coverage_complete': completeness['coverage_complete'],
+        'observed_days': completeness['observed_days'],
+        'expected_days': completeness['expected_days'],
+    })
+
+    # データが更新されていない場合に限り、既存分析を引き継ぐ。
+    # 旧実装は月初1日分の分析を月末まで保持していたため、指紋のない旧コメントは引き継がない。
     if filepath.exists():
         try:
             with open(filepath, 'r', encoding='utf-8') as f:
                 existing = json.load(f)
-            existing_sections = existing.get('sections', {})
-            new_sections = report.get('sections', {})
-
-            # 引き継ぎ対象のセクション名と ai_comment キー
-            ai_sections = [
-                'summary', 'comparison', 'trend_analysis',
-                'baseline', 'events', 'season',
-            ]
-            preserved = 0
-            for sec_name in ai_sections:
-                existing_comment = existing_sections.get(sec_name, {}).get('ai_comment', '')
-                new_comment = new_sections.get(sec_name, {}).get('ai_comment', '')
-                # 既存コメントが空でなく、新しい側が空の場合のみ引き継ぐ
-                if existing_comment and not new_comment:
-                    if sec_name in new_sections:
-                        new_sections[sec_name]['ai_comment'] = existing_comment
-                    else:
-                        new_sections[sec_name] = {'ai_comment': existing_comment}
-                    preserved += 1
-
-            if preserved:
-                print(f"  → 既存AIコメントを {preserved} セクション引き継ぎました")
+            existing_meta = existing.get('analysis_meta', {})
+            new_meta = report.get('analysis_meta', {})
+            same_basis = (
+                existing_meta.get('data_fingerprint')
+                and existing_meta.get('data_fingerprint') == analysis_fingerprint(report)
+            )
+            if new_meta.get('source') == 'pending' and same_basis:
+                for sec_name in ('summary', 'comparison', 'trend_analysis'):
+                    comment = existing.get('sections', {}).get(sec_name, {}).get('ai_comment', '')
+                    if comment:
+                        report.setdefault('sections', {}).setdefault(sec_name, {})['ai_comment'] = comment
+                report['analysis_meta'] = existing_meta
+                print("  → 同一データ指紋の既存分析を引き継ぎました")
+            elif new_meta.get('source') == 'pending' and existing_meta:
+                print("  → 観測データが変わったため、旧分析を無効化しました")
         except Exception as e:
             print(f"  → 既存ファイル読み込み失敗（引き継ぎなし）: {e}")
 
@@ -1624,6 +1609,21 @@ def save_report(report: Dict) -> str:
 
     print(f"  → 保存: {filepath}")
     return index_entry
+
+
+def is_period_closed(report_type: str, period_key: str, today: Optional[date] = None) -> bool:
+    """期間キーが現在日より前に完全終了しているか判定する。"""
+    today = today or datetime.now(JST).date()
+    try:
+        if report_type == 'monthly':
+            year, month = map(int, period_key.split('-'))
+            _, end = get_month_range(year, month)
+        else:
+            year_text, week_text = period_key.split('-W')
+            _, end = get_week_range(int(year_text), int(week_text))
+        return end < today
+    except (TypeError, ValueError):
+        return False
 
 
 def update_index(entries: List[Dict]):
@@ -1647,6 +1647,15 @@ def update_index(entries: List[Dict]):
             index[report_type].append(entry)
 
     # 降順ソート（最新が先頭）
+    # 月初・週初に誤生成された未終了期間を公開一覧から除外する。
+    index['weekly'] = [
+        entry for entry in index['weekly']
+        if is_period_closed('weekly', entry.get('period', ''))
+    ]
+    index['monthly'] = [
+        entry for entry in index['monthly']
+        if is_period_closed('monthly', entry.get('period', ''))
+    ]
     index['weekly'].sort(key=lambda x: x['period'], reverse=True)
     index['monthly'].sort(key=lambda x: x['period'], reverse=True)
     index['updated_at'] = datetime.now(JST).isoformat()
@@ -1662,7 +1671,12 @@ def update_index(entries: List[Dict]):
 # =============================================================================
 
 def backfill(all_records: List[Dict], skip_ai: bool = True):
-    """2024年3月〜現在の過去レポートを一括生成"""
+    """観測開始〜直近の完了期間を一括生成する。
+
+    バックフィルは件数が多いため、Gemini無料枠を保護して常にAPIを使わず、
+    ローカル根拠分析を同時生成する。既存JSONだけを再検証する場合は
+    backfill_codex_analysis.py を使用する。
+    """
     if not all_records:
         print("[ERROR] データがありません")
         return
@@ -1675,10 +1689,15 @@ def backfill(all_records: List[Dict], skip_ai: bool = True):
 
     entries = []
 
-    # 月次レポート
+    if not skip_ai:
+        print("  [INFO] バックフィルではGeminiを使用せず、API無料枠を保護します")
+    skip_ai = True
+
+    # 月次レポート（終了済みの月のみ）
     current = date(earliest.year, earliest.month, 1)
-    today = date.today()
-    while current <= today:
+    today = datetime.now(JST).date()
+    current_month = date(today.year, today.month, 1)
+    while current < current_month:
         report = generate_monthly_report(all_records, current, skip_ai=skip_ai)
         if report:
             entry = save_report(report)
@@ -1689,9 +1708,10 @@ def backfill(all_records: List[Dict], skip_ai: bool = True):
         else:
             current = date(current.year, current.month + 1, 1)
 
-    # 週次レポート
+    # 週次レポート（終了済みの週のみ）
     current = earliest - timedelta(days=earliest.weekday())  # 最初の月曜日
-    while current <= today:
+    current_week_monday = today - timedelta(days=today.weekday())
+    while current < current_week_monday:
         report = generate_weekly_report(all_records, current, skip_ai=skip_ai)
         if report:
             entry = save_report(report)
@@ -1711,7 +1731,12 @@ def main():
     parser.add_argument('--type', choices=['weekly', 'monthly'], help='レポートタイプ')
     parser.add_argument('--date', help='対象日付 (YYYY-MM-DD or YYYY-MM)')
     parser.add_argument('--backfill', action='store_true', help='過去レポートを一括生成')
-    parser.add_argument('--no-ai', action='store_true', help='AI分析をスキップ')
+    parser.add_argument('--no-ai', action='store_true', help='Geminiを使わずローカル根拠分析を生成')
+    parser.add_argument(
+        '--allow-incomplete',
+        action='store_true',
+        help='未終了期間の暫定レポート生成を明示的に許可（通常運用では使用しない）',
+    )
     args = parser.parse_args()
 
     print(f"[{datetime.now(JST).isoformat()}] レポート生成 開始")
@@ -1728,19 +1753,33 @@ def main():
         backfill(all_records, skip_ai=args.no_ai)
         return
 
-    # 対象日付の決定
+    report_type = args.type
+    if not report_type:
+        print("[ERROR] --type (weekly/monthly) または --backfill を指定してください")
+        sys.exit(1)
+
+    # 対象日付の決定。省略時は直近の「完了した」週・月を選ぶ。
+    today = datetime.now(JST).date()
     if args.date:
         if len(args.date) == 7:  # YYYY-MM
             target = date(int(args.date[:4]), int(args.date[5:7]), 1)
         else:
             target = date.fromisoformat(args.date)
     else:
-        target = date.today()
+        if report_type == 'monthly':
+            target = date(today.year, today.month, 1) - timedelta(days=1)
+        else:
+            target = today - timedelta(days=today.weekday() + 1)
 
-    report_type = args.type
-    if not report_type:
-        print("[ERROR] --type (weekly/monthly) または --backfill を指定してください")
-        sys.exit(1)
+    if report_type == 'monthly':
+        period_key = f"{target.year}-{target.month:02d}"
+    else:
+        iso_year, iso_week = get_iso_week(target)
+        period_key = f"{iso_year}-W{iso_week:02d}"
+    if not args.allow_incomplete and not is_period_closed(report_type, period_key, today=today):
+        print(f"[ERROR] 未終了期間 {period_key} は生成しません。完了後に実行してください。")
+        print("        暫定生成が必要な場合のみ --allow-incomplete を指定してください。")
+        sys.exit(2)
 
     if report_type == 'weekly':
         report = generate_weekly_report(all_records, target, skip_ai=args.no_ai)

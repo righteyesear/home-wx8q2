@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "",
+      "ai_comment": "対象期間は終了しており、7日分の観測で集計しています。2025年 第24週（6/9 〜 6/15）の平均気温は22.9℃、最高29.4℃、最低20.0℃でした。前半から後半にかけて平均気温が約2.0℃上がり、明確な昇温傾向でした。前週比+0.0℃、前年比-2.1℃、過去同時期平均との差-2.1℃です。極端な温度域ではありませんが、日ごとの変化に合わせて服装と室温を調整してください。",
       "highlights": [
         "最高気温 29.4℃",
         "最低気温 20.0℃",
@@ -112,19 +112,17 @@
       "max_temp_diff": -3.7,
       "min_temp_diff": 0.9,
       "avg_daily_range_diff": -2.6,
-      "ai_comment": ""
+      "ai_comment": "平均気温は22.9℃で、前年同期の25.0℃より-2.1℃、低めでした。内訳は最高気温差-3.7℃、最低気温差+0.9℃、日較差の差-2.6℃です。単年同士の比較なので、季節の長期傾向ではなく、この期間固有の差として見るのが適切です。"
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 25.0,
       "current_deviation": -2.1,
-      "years_count": 1,
-      "ai_comment": ""
+      "years_count": 1
     },
     "events": {
       "title": "特筆イベント",
-      "items": [],
-      "ai_comment": ""
+      "items": []
     },
     "season": {
       "title": "季節の進み具合",
@@ -165,8 +163,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -303,6 +300,9 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "ai_comment": "前半から後半にかけて平均気温が約2.0℃上がり、明確な昇温傾向でした。最大の上昇は2025/06/11から2025/06/12の+2.5℃でした。最大の低下は2025/06/09から2025/06/10の-2.2℃でした。"
     }
   },
   "chart_data": {
@@ -430,5 +430,16 @@
       ],
       "baseline_avg": 25.0
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "4c22c41d1b103bb70293",
+    "period_closed": true,
+    "coverage_complete": true,
+    "observed_days": 7,
+    "expected_days": 7,
+    "reason": "legacy_report_revalidation"
   }
 }

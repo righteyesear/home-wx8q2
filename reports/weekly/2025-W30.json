@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "",
+      "ai_comment": "対象期間は終了しており、7日分の観測で集計しています。2025年 第30週（7/21 〜 7/27）の平均気温は30.9℃、最高36.7℃、最低27.0℃でした。前半と後半の平均気温差は0.3℃に収まり、期間全体では大きな一方向変化はありませんでした。前週比+2.4℃、前年比+0.0℃、過去同時期平均との差+0.0℃です。最高気温が35℃以上の日を含むため、日中の外出は時間を選び、冷房・水分・休憩を前提にしてください。",
       "highlights": [
         "最高気温 36.7℃",
         "最低気温 27.0℃",
@@ -112,14 +112,13 @@
       "max_temp_diff": -1.5,
       "min_temp_diff": 1.3,
       "avg_daily_range_diff": -2.1,
-      "ai_comment": ""
+      "ai_comment": "平均気温は30.9℃で、前年同期の30.9℃より+0.0℃、ほぼ同水準でした。内訳は最高気温差-1.5℃、最低気温差+1.3℃、日較差の差-2.1℃です。単年同士の比較なので、季節の長期傾向ではなく、この期間固有の差として見るのが適切です。"
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 30.9,
       "current_deviation": 0.0,
-      "years_count": 1,
-      "ai_comment": ""
+      "years_count": 1
     },
     "events": {
       "title": "特筆イベント",
@@ -129,8 +128,7 @@
           "type": "extreme_heat",
           "description": "猛暑日7日連続（最高気温35.9℃〜最高気温35.2℃）"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "season": {
       "title": "季節の進み具合",
@@ -171,8 +169,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -309,6 +306,9 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "ai_comment": "前半と後半の平均気温差は0.3℃に収まり、期間全体では大きな一方向変化はありませんでした。最大の上昇は2025/07/23から2025/07/24の+0.4℃でした。最大の低下は2025/07/26から2025/07/27の-0.6℃でした。"
     }
   },
   "chart_data": {
@@ -436,5 +436,16 @@
       ],
       "baseline_avg": 30.9
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "380f074b6a2be3dddc8d",
+    "period_closed": true,
+    "coverage_complete": true,
+    "observed_days": 7,
+    "expected_days": 7,
+    "reason": "legacy_report_revalidation"
   }
 }

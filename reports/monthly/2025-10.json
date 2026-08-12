@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "月間サマリー",
-      "ai_comment": "",
+      "ai_comment": "対象期間は終了していますが、観測は26/31日分のため欠測を含む集計です。2025年10月の平均気温は18.8℃、最高29.2℃、最低9.9℃でした。前半から後半にかけて平均気温が約8.1℃下がり、明確な降温傾向でした。前月比-8.3℃、前年比-2.0℃、過去同時期平均との差-2.0℃です。極端な温度域ではありませんが、日ごとの変化に合わせて服装と室温を調整してください。",
       "highlights": [
         "月平均 18.8℃",
         "最高 29.2℃",
@@ -341,7 +341,7 @@
       "max_temp_diff": -2.4,
       "min_temp_diff": -0.8,
       "avg_daily_range_diff": -0.7,
-      "ai_comment": ""
+      "ai_comment": "平均気温は18.8℃で、前年同期の20.8℃より-2.0℃、低めでした。内訳は最高気温差-2.4℃、最低気温差-0.8℃、日較差の差-0.7℃です。単年同士の比較なので、季節の長期傾向ではなく、この期間固有の差として見るのが適切です。"
     },
     "prev_month": {
       "title": "前月比較",
@@ -360,20 +360,17 @@
       "avg_temp_diff": -8.3,
       "max_temp_diff": -7.0,
       "min_temp_diff": -8.1,
-      "avg_daily_range_diff": -1.1,
-      "ai_comment": ""
+      "avg_daily_range_diff": -1.1
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 20.8,
       "current_deviation": -2.0,
-      "years_count": 1,
-      "ai_comment": ""
+      "years_count": 1
     },
     "events": {
       "title": "特筆イベント",
-      "items": [],
-      "ai_comment": ""
+      "items": []
     },
     "season": {
       "title": "季節の進み具合",
@@ -414,8 +411,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -552,6 +548,9 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "ai_comment": "前半から後半にかけて平均気温が約8.1℃下がり、明確な降温傾向でした。最大の上昇は2025/10/26から2025/10/27の+3.5℃でした。最大の低下は2025/10/16から2025/10/22の-3.4℃でした。欠測または未到来の日を含むため、傾向の強さは暫定的に解釈してください。"
     }
   },
   "chart_data": {
@@ -971,5 +970,16 @@
         11.2
       ]
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "fee7865fe125c65f4210",
+    "period_closed": true,
+    "coverage_complete": false,
+    "observed_days": 26,
+    "expected_days": 31,
+    "reason": "legacy_report_revalidation"
   }
 }

@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "",
+      "ai_comment": "対象期間は終了しており、7日分の観測で集計しています。2024年 第28週（7/8 〜 7/14）の平均気温は28.7℃、最高37.7℃、最低22.7℃でした。前半から後半にかけて平均気温が約5.2℃下がり、明確な降温傾向でした。前週比-0.5℃です。最高気温が35℃以上の日を含むため、日中の外出は時間を選び、冷房・水分・休憩を前提にしてください。",
       "highlights": [
         "最高気温 37.7℃",
         "最低気温 22.7℃",
@@ -97,14 +97,13 @@
         "year": 2023,
         "week": 28
       },
-      "ai_comment": ""
+      "ai_comment": "前年同期の観測が不足しているため、信頼できる前年比較はまだできません。"
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": null,
       "current_deviation": null,
-      "years_count": 0,
-      "ai_comment": ""
+      "years_count": 0
     },
     "events": {
       "title": "特筆イベント",
@@ -114,8 +113,7 @@
           "type": "extreme_heat",
           "description": "猛暑日3日連続（最高気温37.7℃〜最高気温35.2℃）"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "season": {
       "title": "季節の進み具合",
@@ -156,8 +154,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -294,6 +291,9 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "ai_comment": "前半から後半にかけて平均気温が約5.2℃下がり、明確な降温傾向でした。最大の上昇は2024/07/12から2024/07/13の+2.0℃でした。最大の低下は2024/07/11から2024/07/12の-3.6℃でした。"
     }
   },
   "chart_data": {
@@ -335,5 +335,16 @@
         25.7
       ]
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "2006193ee82d59ebff61",
+    "period_closed": true,
+    "coverage_complete": true,
+    "observed_days": 7,
+    "expected_days": 7,
+    "reason": "legacy_report_revalidation"
   }
 }

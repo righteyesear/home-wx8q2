@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "月間サマリー",
-      "ai_comment": "",
+      "ai_comment": "対象期間は終了しており、30日分の観測で集計しています。2024年4月の平均気温は17.5℃、最高28.9℃、最低7.1℃でした。前半から後半にかけて平均気温が約7.6℃上がり、明確な昇温傾向でした。前月比+6.6℃です。朝晩は一桁まで冷えているため、外出時間に合わせて調整できる上着が役立ちます。",
       "highlights": [
         "月平均 17.5℃",
         "最高 28.9℃",
@@ -358,7 +358,7 @@
         "year": 2023,
         "month": 4
       },
-      "ai_comment": ""
+      "ai_comment": "前年同期の観測が不足しているため、信頼できる前年比較はまだできません。"
     },
     "prev_month": {
       "title": "前月比較",
@@ -377,15 +377,13 @@
       "avg_temp_diff": 6.6,
       "max_temp_diff": 2.3,
       "min_temp_diff": 4.3,
-      "avg_daily_range_diff": -0.5,
-      "ai_comment": ""
+      "avg_daily_range_diff": -0.5
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": null,
       "current_deviation": null,
-      "years_count": 0,
-      "ai_comment": ""
+      "years_count": 0
     },
     "events": {
       "title": "特筆イベント",
@@ -395,8 +393,7 @@
           "type": "rapid_change",
           "description": "平均気温が前日比+5.0℃の急上昇"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "season": {
       "title": "季節の進み具合",
@@ -437,8 +434,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -575,6 +571,9 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "ai_comment": "前半から後半にかけて平均気温が約7.6℃上がり、明確な昇温傾向でした。最大の上昇は2024/04/06から2024/04/07の+5.0℃でした。最大の低下は2024/04/09から2024/04/10の-3.9℃でした。"
     }
   },
   "chart_data": {
@@ -738,5 +737,16 @@
         19.1
       ]
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "82070b3112924055677f",
+    "period_closed": true,
+    "coverage_complete": true,
+    "observed_days": 30,
+    "expected_days": 30,
+    "reason": "legacy_report_revalidation"
   }
 }

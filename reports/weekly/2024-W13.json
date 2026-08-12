@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "",
+      "ai_comment": "対象期間は終了しており、7日分の観測で集計しています。2024年 第13週（3/25 〜 3/31）の平均気温は13.5℃、最高26.6℃、最低5.9℃でした。前半から後半にかけて平均気温が約6.2℃上がり、明確な昇温傾向でした。前週比+5.5℃です。朝晩は一桁まで冷えているため、外出時間に合わせて調整できる上着が役立ちます。",
       "highlights": [
         "最高気温 26.6℃",
         "最低気温 5.9℃",
@@ -97,19 +97,17 @@
         "year": 2023,
         "week": 13
       },
-      "ai_comment": ""
+      "ai_comment": "前年同期の観測が不足しているため、信頼できる前年比較はまだできません。"
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": null,
       "current_deviation": null,
-      "years_count": 0,
-      "ai_comment": ""
+      "years_count": 0
     },
     "events": {
       "title": "特筆イベント",
-      "items": [],
-      "ai_comment": ""
+      "items": []
     },
     "season": {
       "title": "季節の進み具合",
@@ -150,8 +148,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -288,6 +285,9 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "ai_comment": "前半から後半にかけて平均気温が約6.2℃上がり、明確な昇温傾向でした。最大の上昇は2024/03/28から2024/03/29の+4.8℃でした。最大の低下は2024/03/25から2024/03/26の-2.4℃でした。"
     }
   },
   "chart_data": {
@@ -329,5 +329,16 @@
         18.4
       ]
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "cc1eb3703184dbfa7514",
+    "period_closed": true,
+    "coverage_complete": true,
+    "observed_days": 7,
+    "expected_days": 7,
+    "reason": "legacy_report_revalidation"
   }
 }

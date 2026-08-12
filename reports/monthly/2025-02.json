@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "月間サマリー",
-      "ai_comment": "",
+      "ai_comment": "対象期間は終了しており、28日分の観測で集計しています。2025年2月の平均気温は6.3℃、最高16.3℃、最低-0.8℃でした。前半から後半にかけて平均気温が約4.1℃上がり、明確な昇温傾向でした。前月比+0.2℃です。氷点下を記録しているため、朝晩の路面凍結と室内外の温度差に注意が必要です。",
       "highlights": [
         "月平均 6.3℃",
         "最高 16.3℃",
@@ -327,7 +327,7 @@
         "year": 2024,
         "month": 2
       },
-      "ai_comment": ""
+      "ai_comment": "前年同期の観測が不足しているため、信頼できる前年比較はまだできません。"
     },
     "prev_month": {
       "title": "前月比較",
@@ -346,15 +346,13 @@
       "avg_temp_diff": 0.2,
       "max_temp_diff": 2.8,
       "min_temp_diff": 0.3,
-      "avg_daily_range_diff": 0.2,
-      "ai_comment": ""
+      "avg_daily_range_diff": 0.2
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": null,
       "current_deviation": null,
-      "years_count": 0,
-      "ai_comment": ""
+      "years_count": 0
     },
     "events": {
       "title": "特筆イベント",
@@ -374,8 +372,7 @@
           "type": "frost_day",
           "description": "冬日: 最低気温-0.5℃"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "season": {
       "title": "季節の進み具合",
@@ -416,8 +413,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -554,6 +550,9 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "ai_comment": "前半から後半にかけて平均気温が約4.1℃上がり、明確な昇温傾向でした。最大の上昇は2025/02/25から2025/02/26の+3.5℃でした。最大の低下は2025/02/17から2025/02/18の-4.6℃でした。"
     }
   },
   "chart_data": {
@@ -705,5 +704,16 @@
         2.2
       ]
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "b20200b7a7588aa1b4ab",
+    "period_closed": true,
+    "coverage_complete": true,
+    "observed_days": 28,
+    "expected_days": 28,
+    "reason": "legacy_report_revalidation"
   }
 }

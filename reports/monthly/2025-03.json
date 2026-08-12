@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "月間サマリー",
-      "ai_comment": "",
+      "ai_comment": "対象期間は終了しており、31日分の観測で集計しています。2025年3月の平均気温は10.7℃、最高25.1℃、最低0.8℃でした。前半から後半にかけて平均気温が約2.7℃下がり、明確な降温傾向でした。前月比+4.4℃、前年比-0.2℃、過去同時期平均との差-0.2℃です。朝晩は一桁まで冷えているため、外出時間に合わせて調整できる上着が役立ちます。",
       "highlights": [
         "月平均 10.7℃",
         "最高 25.1℃",
@@ -381,7 +381,7 @@
       "max_temp_diff": -1.5,
       "min_temp_diff": -2.0,
       "avg_daily_range_diff": 0.2,
-      "ai_comment": ""
+      "ai_comment": "平均気温は10.7℃で、前年同期の10.9℃より-0.2℃、ほぼ同水準でした。内訳は最高気温差-1.5℃、最低気温差-2.0℃、日較差の差+0.2℃です。単年同士の比較なので、季節の長期傾向ではなく、この期間固有の差として見るのが適切です。"
     },
     "prev_month": {
       "title": "前月比較",
@@ -400,15 +400,13 @@
       "avg_temp_diff": 4.4,
       "max_temp_diff": 8.8,
       "min_temp_diff": 1.6,
-      "avg_daily_range_diff": 0.1,
-      "ai_comment": ""
+      "avg_daily_range_diff": 0.1
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 10.9,
       "current_deviation": -0.2,
-      "years_count": 1,
-      "ai_comment": ""
+      "years_count": 1
     },
     "events": {
       "title": "特筆イベント",
@@ -423,8 +421,7 @@
           "type": "rapid_change",
           "description": "平均気温が前日比-11.7℃の急低下"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "season": {
       "title": "季節の進み具合",
@@ -465,8 +462,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -603,6 +599,9 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "ai_comment": "前半から後半にかけて平均気温が約2.7℃下がり、明確な降温傾向でした。最大の上昇は2025/03/05から2025/03/06の+4.4℃でした。最大の低下は2025/03/28から2025/03/29の-11.7℃でした。"
     }
   },
   "chart_data": {
@@ -1039,5 +1038,16 @@
         5.7
       ]
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "99e4ed5c28367ed967b3",
+    "period_closed": true,
+    "coverage_complete": true,
+    "observed_days": 31,
+    "expected_days": 31,
+    "reason": "legacy_report_revalidation"
   }
 }

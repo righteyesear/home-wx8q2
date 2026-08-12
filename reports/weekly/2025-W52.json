@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "",
+      "ai_comment": "対象期間は終了しており、7日分の観測で集計しています。2025年 第52週（12/22 〜 12/28）の平均気温は6.8℃、最高12.5℃、最低-1.1℃でした。前半から後半にかけて平均気温が約2.6℃下がり、明確な降温傾向でした。前週比-1.3℃、前年比+0.3℃、過去同時期平均との差+0.3℃です。氷点下を記録しているため、朝晩の路面凍結と室内外の温度差に注意が必要です。",
       "highlights": [
         "最高気温 12.5℃",
         "最低気温 -1.1℃",
@@ -112,14 +112,13 @@
       "max_temp_diff": -1.7,
       "min_temp_diff": -1.5,
       "avg_daily_range_diff": -2.1,
-      "ai_comment": ""
+      "ai_comment": "平均気温は6.8℃で、前年同期の6.5℃より+0.3℃、ほぼ同水準でした。内訳は最高気温差-1.7℃、最低気温差-1.5℃、日較差の差-2.1℃です。単年同士の比較なので、季節の長期傾向ではなく、この期間固有の差として見るのが適切です。"
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 6.5,
       "current_deviation": 0.3,
-      "years_count": 1,
-      "ai_comment": ""
+      "years_count": 1
     },
     "events": {
       "title": "特筆イベント",
@@ -129,8 +128,7 @@
           "type": "frost_day",
           "description": "冬日: 最低気温-1.1℃"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "season": {
       "title": "季節の進み具合",
@@ -171,8 +169,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -309,6 +306,9 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "ai_comment": "前半から後半にかけて平均気温が約2.6℃下がり、明確な降温傾向でした。最大の上昇は2025/12/24から2025/12/25の+2.4℃でした。最大の低下は2025/12/26から2025/12/27の-4.1℃でした。"
     }
   },
   "chart_data": {
@@ -436,5 +436,16 @@
       ],
       "baseline_avg": 6.5
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "ba2fb377f5719394cc7a",
+    "period_closed": true,
+    "coverage_complete": true,
+    "observed_days": 7,
+    "expected_days": 7,
+    "reason": "legacy_report_revalidation"
   }
 }

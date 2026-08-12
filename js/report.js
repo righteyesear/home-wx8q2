@@ -1,578 +1,668 @@
 /**
- * 分析レポートページ - JavaScript
- * JSON レポートの読み込み、表示、ナビゲーションを管理
+ * Analysis report page
+ * Loads completed report JSON files and renders evidence, comparisons and charts.
  */
 
-// =============================================================================
-// 状態管理
-// =============================================================================
 const state = {
-    reportType: 'weekly',       // 'weekly' | 'monthly'
-    currentPeriod: null,        // 現在表示中のレポート期間キー
-    reportIndex: null,          // reports/index.json のデータ
-    currentReport: null,        // 現在読み込まれたレポート
-    charts: {},                 // Chart.js インスタンス
-    listOpen: false,            // レポート一覧の表示状態
+    reportType: 'weekly',
+    currentPeriod: null,
+    reportIndex: null,
+    currentReport: null,
+    charts: {},
+    listOpen: false,
+    heatmapData: {},
+    heatmapMode: 'avg',
+    comparisonMode: 'avg',
+    comparisonChartData: null,
+    deviationChartData: null,
 };
 
+function loadChartLibrary() {
+    if (typeof Chart !== 'undefined' || document.querySelector('script[data-chart-loader]')) return;
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+    script.async = true;
+    script.dataset.chartLoader = 'true';
+    script.onload = () => {
+        window.chartJsLoaded = true;
+        window.dispatchEvent(new Event('chartjs-ready'));
+    };
+    script.onerror = () => {
+        window.chartJsLoaded = false;
+        console.warn('Chart.jsを読み込めなかったため、グラフ以外のレポートを表示します。');
+    };
+    document.head.appendChild(script);
+}
 
-// =============================================================================
-// 初期化
-// =============================================================================
-document.addEventListener('DOMContentLoaded', async () => {
+
+async function initializeReport() {
+    syncThemeIcon();
     await loadReportIndex();
     loadLatestReport();
+    loadChartLibrary();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeReport, { once: true });
+} else {
+    initializeReport();
+}
+
+window.addEventListener('chartjs-ready', () => {
+    if (!state.currentReport || typeof Chart === 'undefined') return;
+    renderDailyChart(state.currentReport.chart_data?.daily_temps);
+    if (state.comparisonMode === 'deviation') {
+        _buildDeviationChart(state.currentReport.chart_data?.deviation);
+    } else if (state.currentReport.chart_data?.prev_year_comparison) {
+        _buildComparisonChart(
+            state.currentReport.chart_data.prev_year_comparison,
+            state.comparisonMode,
+        );
+    }
 });
 
 
 // =============================================================================
-// テーマ
+// Theme
 // =============================================================================
+
+function syncThemeIcon() {
+    const use = document.getElementById('themeIconUse');
+    if (!use) return;
+    const isLight = document.documentElement.classList.contains('light-mode');
+    use.setAttribute('href', isLight ? '#icon-moon' : '#icon-sun');
+}
+
 function toggleReportTheme() {
     document.documentElement.classList.toggle('light-mode');
     const isLight = document.documentElement.classList.contains('light-mode');
     localStorage.setItem('theme', isLight ? 'light' : 'dark');
-
-    const icon = document.getElementById('themeIcon');
-    if (icon) {
-        icon.innerHTML = isLight
-            ? '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>'
-            : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
-    }
-
-    // チャートの色を更新
+    syncThemeIcon();
     updateChartColors();
 }
 
 
 // =============================================================================
-// データ読み込み
+// Data loading and completed-period guard
 // =============================================================================
+
 async function loadReportIndex() {
     try {
-        const resp = await fetch('reports/index.json');
-        if (!resp.ok) throw new Error('index.json not found');
-        state.reportIndex = await resp.json();
-    } catch (e) {
-        console.warn('Report index load failed:', e);
+        const response = await fetch('reports/index.json', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        state.reportIndex = await response.json();
+    } catch (error) {
+        console.warn('Report index load failed:', error);
         state.reportIndex = { weekly: [], monthly: [] };
     }
 }
 
-
-function loadLatestReport() {
-    const list = state.reportIndex[state.reportType] || [];
-    if (list.length === 0) {
-        showError('レポートがまだ生成されていません。');
-        return;
-    }
-
-    const now = new Date();
-    let currentPeriodStr;
-
-    if (state.reportType === 'weekly') {
-        // 現在のISO週番号を計算
-        const d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const dayNum = d.getDay() || 7;
-        d.setDate(d.getDate() + 4 - dayNum);
-        const year = d.getFullYear();
-        const week = Math.ceil((((d - new Date(year, 0, 1)) / 86400000) + 1) / 7);
-        currentPeriodStr = `${year}-W${week.toString().padStart(2, '0')}`;
-    } else {
-        // 月次
-        currentPeriodStr = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
-    }
-
-    // リスト内から完全に終了した期間（現在の期間より前）を探す
-    let targetIndex = 0;
-    for (let i = 0; i < list.length; i++) {
-        if (list[i].period < currentPeriodStr) {
-            targetIndex = i;
-            break;
-        }
-    }
-
-    loadReport(list[targetIndex].period);
+function getCurrentIsoWeekKey(now = new Date()) {
+    const target = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const day = target.getDay() || 7;
+    target.setDate(target.getDate() + 4 - day);
+    const year = target.getFullYear();
+    const first = new Date(year, 0, 1);
+    const week = Math.ceil((((target - first) / 86400000) + 1) / 7);
+    return `${year}-W${String(week).padStart(2, '0')}`;
 }
 
+function getCurrentMonthKey(now = new Date()) {
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+}
+
+function isClosedIndexEntry(entry, type, now = new Date()) {
+    if (!entry || !entry.period) return false;
+    // 新形式のindexでは生成側が終了判定済み。ブラウザ時計には依存させない。
+    if (typeof entry.is_final === 'boolean') return entry.is_final;
+    // 旧indexとの後方互換: is_finalがない場合のみ現在期間キーで判定する。
+    const currentKey = type === 'monthly' ? getCurrentMonthKey(now) : getCurrentIsoWeekKey(now);
+    return entry.period < currentKey;
+}
+
+function getAvailableReports(type = state.reportType) {
+    const list = state.reportIndex?.[type] || [];
+    return list.filter(entry => isClosedIndexEntry(entry, type));
+}
+
+function loadLatestReport() {
+    const list = getAvailableReports();
+    if (!list.length) {
+        showError('終了済み期間のレポートはまだありません。');
+        return;
+    }
+    // 最新期間に欠測がある場合は、最も新しい観測充足済みレポートを初期表示する。
+    const latestComplete = list.find(entry => entry.coverage_complete !== false) || list[0];
+    loadReport(latestComplete.period);
+}
 
 async function loadReport(period) {
     showLoading();
     state.currentPeriod = period;
-
-    const list = state.reportIndex[state.reportType] || [];
-    const entry = list.find(e => e.period === period);
+    const entry = getAvailableReports().find(item => item.period === period);
     if (!entry) {
-        showError(`期間 ${period} のレポートが見つかりません。`);
+        showError(`期間 ${period} は未終了、または公開対象外です。`);
         return;
     }
 
     try {
-        const resp = await fetch(`reports/${entry.file}`);
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-        state.currentReport = await resp.json();
-        renderReport(state.currentReport);
-    } catch (e) {
-        console.error('Report load error:', e);
-        showError(`レポートの読み込みに失敗しました: ${e.message}`);
+        const response = await fetch(`reports/${entry.file}`, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        state.currentReport = await response.json();
+        renderReport(state.currentReport, entry);
+    } catch (error) {
+        console.error('Report load error:', error);
+        showError(`レポートの読み込みに失敗しました（${error.message}）。`);
     }
 }
 
 
 // =============================================================================
-// UI 表示制御
+// UI state and navigation
 // =============================================================================
+
 function showLoading() {
-    document.getElementById('reportLoading').style.display = 'flex';
-    document.getElementById('reportError').style.display = 'none';
-    document.getElementById('reportContent').style.display = 'none';
+    document.getElementById('reportLoading').hidden = false;
+    document.getElementById('reportError').hidden = true;
+    document.getElementById('reportContent').hidden = true;
 }
 
 function showError(message) {
-    document.getElementById('reportLoading').style.display = 'none';
-    document.getElementById('reportError').style.display = 'flex';
+    document.getElementById('reportLoading').hidden = true;
+    document.getElementById('reportError').hidden = false;
     document.getElementById('errorMessage').textContent = message;
-    document.getElementById('reportContent').style.display = 'none';
+    document.getElementById('reportContent').hidden = true;
     updatePeriodLabel('--');
+    document.getElementById('heroPeriod').textContent = 'レポートを表示できません';
+    document.getElementById('reportMeta').replaceChildren();
 }
 
 function showContent() {
-    document.getElementById('reportLoading').style.display = 'none';
-    document.getElementById('reportError').style.display = 'none';
-    document.getElementById('reportContent').style.display = 'block';
+    document.getElementById('reportLoading').hidden = true;
+    document.getElementById('reportError').hidden = true;
+    document.getElementById('reportContent').hidden = false;
 }
 
-
-// =============================================================================
-// レポートタイプ切り替え
-// =============================================================================
 function switchReportType(type) {
+    if (!['weekly', 'monthly'].includes(type)) return;
     state.reportType = type;
-
     document.querySelectorAll('.report-tab').forEach(tab => {
-        tab.classList.toggle('active', tab.dataset.type === type);
+        const active = tab.dataset.type === type;
+        tab.classList.toggle('active', active);
+        tab.setAttribute('aria-selected', String(active));
     });
-
     closeReportList();
     loadLatestReport();
 }
 
-
-// =============================================================================
-// 期間ナビゲーション
-// =============================================================================
 function navigateReport(direction) {
-    const list = state.reportIndex[state.reportType] || [];
-    const currentIdx = list.findIndex(e => e.period === state.currentPeriod);
-    if (currentIdx < 0) return;
-
-    // list は降順（最新が先頭）なので、direction = -1 → 前の期間 = index + 1
-    const newIdx = currentIdx - direction;
-    if (newIdx >= 0 && newIdx < list.length) {
-        loadReport(list[newIdx].period);
-    }
+    const list = getAvailableReports();
+    const currentIndex = list.findIndex(entry => entry.period === state.currentPeriod);
+    if (currentIndex < 0) return;
+    // 降順: 古い期間は index + 1、新しい期間は index - 1
+    const nextIndex = currentIndex - direction;
+    if (nextIndex >= 0 && nextIndex < list.length) loadReport(list[nextIndex].period);
 }
-
 
 function updatePeriodLabel(label) {
     document.getElementById('periodLabel').textContent = label;
     updateNavButtons();
 }
 
-
 function updateNavButtons() {
-    const list = state.reportIndex[state.reportType] || [];
-    const currentIdx = list.findIndex(e => e.period === state.currentPeriod);
-
-    // 次（新しい方）: idx - 1
-    document.getElementById('nextBtn').disabled = currentIdx <= 0;
-    // 前（古い方）: idx + 1
-    document.getElementById('prevBtn').disabled = currentIdx >= list.length - 1;
+    const list = getAvailableReports();
+    const index = list.findIndex(entry => entry.period === state.currentPeriod);
+    document.getElementById('nextBtn').disabled = index <= 0;
+    document.getElementById('prevBtn').disabled = index < 0 || index >= list.length - 1;
 }
 
-
-// =============================================================================
-// レポート一覧
-// =============================================================================
 function toggleReportList() {
     state.listOpen = !state.listOpen;
     const dropdown = document.getElementById('reportListDropdown');
-
-    if (state.listOpen) {
-        renderReportList();
-        dropdown.style.display = 'block';
-    } else {
-        dropdown.style.display = 'none';
-    }
+    const button = document.getElementById('historyBtn');
+    dropdown.hidden = !state.listOpen;
+    button.setAttribute('aria-expanded', String(state.listOpen));
+    if (state.listOpen) renderReportList();
 }
 
 function closeReportList() {
     state.listOpen = false;
-    document.getElementById('reportListDropdown').style.display = 'none';
+    document.getElementById('reportListDropdown').hidden = true;
+    document.getElementById('historyBtn').setAttribute('aria-expanded', 'false');
 }
 
 function renderReportList() {
-    const list = state.reportIndex[state.reportType] || [];
+    const list = getAvailableReports();
     const container = document.getElementById('reportListContent');
-
-    if (list.length === 0) {
-        container.innerHTML = '<div class="no-events">レポートがありません</div>';
+    container.replaceChildren();
+    if (!list.length) {
+        const empty = document.createElement('div');
+        empty.className = 'no-events';
+        empty.textContent = '終了済み期間のレポートはありません';
+        container.appendChild(empty);
         return;
     }
 
-    container.innerHTML = list.map(entry => `
-        <div class="report-list-item ${entry.period === state.currentPeriod ? 'active' : ''}"
-             onclick="selectReport('${entry.period}')">
-            <span>${entry.label}</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted)">${entry.period}</span>
-        </div>
-    `).join('');
-}
-
-function selectReport(period) {
-    closeReportList();
-    loadReport(period);
+    list.forEach(entry => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `report-list-item${entry.period === state.currentPeriod ? ' active' : ''}`;
+        button.addEventListener('click', () => {
+            closeReportList();
+            loadReport(entry.period);
+        });
+        const label = document.createElement('span');
+        label.textContent = entry.label;
+        const key = document.createElement('small');
+        key.textContent = entry.period;
+        button.append(label, key);
+        container.appendChild(button);
+    });
 }
 
 
 // =============================================================================
-// レポート描画
+// Report overview and provenance
 // =============================================================================
-function renderReport(data) {
-    const sections = data.sections;
-    const period = data.period;
 
-    // 期間ラベル
-    updatePeriodLabel(period.label);
+function expectedDays(data) {
+    const start = new Date(`${data.period?.start_date}T00:00:00`);
+    const end = new Date(`${data.period?.end_date}T00:00:00`);
+    if (!Number.isFinite(start.getTime()) || !Number.isFinite(end.getTime())) return 0;
+    return Math.round((end - start) / 86400000) + 1;
+}
 
-    // セクションタイトル
+function getReportCompleteness(data, entry = {}) {
+    const observed = Number(data.analysis_meta?.observed_days ?? entry.observed_days ?? data.sections?.statistics?.days ?? 0);
+    const expected = Number(data.analysis_meta?.expected_days ?? entry.expected_days ?? expectedDays(data));
+    const periodClosed = data.analysis_meta?.period_closed ?? entry.is_final ?? true;
+    return {
+        observed,
+        expected,
+        periodClosed: Boolean(periodClosed),
+        coverageComplete: observed >= expected && expected > 0,
+    };
+}
+
+function analysisSourceLabel(meta = {}) {
+    if (meta.source === 'codex') return 'Codex再分析';
+    if (meta.source === 'gemini') return meta.model || 'Gemini分析';
+    if (meta.source === 'local') return 'ローカル分析';
+    if (meta.source === 'pending') return '分析待ち';
+    return '旧形式の分析';
+}
+
+function makeIcon(iconId) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'icon');
+    const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+    use.setAttribute('href', `#${iconId}`);
+    svg.appendChild(use);
+    return svg;
+}
+
+function appendMetaChip(container, iconId, text, className = '') {
+    const chip = document.createElement('span');
+    chip.className = `meta-chip ${className}`.trim();
+    chip.append(makeIcon(iconId), document.createTextNode(text));
+    container.appendChild(chip);
+}
+
+function renderOverview(data, entry) {
+    const period = data.period || {};
+    const completeness = getReportCompleteness(data, entry);
+    const meta = data.analysis_meta || {};
+    document.getElementById('heroPeriod').textContent = period.label || entry.period;
+    document.getElementById('heroDescription').textContent = data.type === 'monthly'
+        ? '1か月の観測を確定後に集計し、前月・前年・過去同時期と比較します。'
+        : '終了した1週間の観測を集計し、日々の変化と過去比較を読み解きます。';
+
+    const metaContainer = document.getElementById('reportMeta');
+    metaContainer.replaceChildren();
+    appendMetaChip(
+        metaContainer,
+        completeness.periodClosed ? 'icon-calendar' : 'icon-warning',
+        completeness.periodClosed ? '確定期間' : '暫定期間',
+        completeness.periodClosed ? 'is-final' : 'is-warning',
+    );
+    appendMetaChip(
+        metaContainer,
+        completeness.coverageComplete ? 'icon-database' : 'icon-warning',
+        `観測 ${completeness.observed}/${completeness.expected}日`,
+        completeness.coverageComplete ? '' : 'is-warning',
+    );
+    appendMetaChip(metaContainer, 'icon-analysis', analysisSourceLabel(meta));
+
+    const provenance = document.getElementById('analysisProvenance');
+    provenance.replaceChildren(makeIcon('icon-database'), document.createTextNode(`分析元 ${analysisSourceLabel(meta)}`));
+}
+
+
+// =============================================================================
+// Report rendering
+// =============================================================================
+
+function renderReport(data, entry) {
+    const sections = data.sections || {};
+    updatePeriodLabel(data.period?.label || entry.period);
+    renderOverview(data, entry);
     document.getElementById('summaryTitle').textContent = sections.summary?.title || 'サマリー';
 
-    // サマリーハイライト
     renderHighlights(sections.summary?.highlights || []);
-
-    // AIコメント - サマリー
-    renderAiComment('summaryAiText', sections.summary?.ai_comment);
-
-    // 統計
+    renderAiComment('summaryAiText', sections.summary?.ai_comment, data.analysis_meta);
     renderStatistics(sections.statistics || {});
-
-    // グラフ
     renderDailyChart(data.chart_data?.daily_temps);
 
-    // 前年比較
-    const compSection = document.getElementById('comparisonSection');
+    const comparisonSection = document.getElementById('comparisonSection');
     if (data.chart_data?.prev_year_comparison) {
-        compSection.style.display = 'block';
+        comparisonSection.hidden = false;
         state.deviationChartData = data.chart_data.deviation || null;
         renderComparisonChart(data.chart_data.prev_year_comparison);
-        renderAiComment('comparisonAiText', sections.comparison?.ai_comment);
+        renderAiComment('comparisonAiText', sections.comparison?.ai_comment, data.analysis_meta);
     } else {
-        compSection.style.display = 'none';
+        comparisonSection.hidden = true;
     }
 
-    // ベースライン
     renderBaseline(sections.baseline || {});
-
-    // イベント
     renderEvents(sections.events || {});
-
-    // 季節
     renderMilestones(sections.season?.milestones || []);
-
-    // 気温推移のAI分析
-    const trendComment = document.getElementById('trendComment');
-    if (trendComment) {
-        trendComment.style.display = 'block';
-        renderAiComment('trendAiText', sections.trend_analysis?.ai_comment || '');
-    }
-
-    // ヒートマップ
+    renderAiComment('trendAiText', sections.trend_analysis?.ai_comment, data.analysis_meta);
     renderHeatmap(sections.heatmap?.data || {});
 
-    // フッター
-    const genAt = data.generated_at ? new Date(data.generated_at).toLocaleString('ja-JP') : '--';
-    document.getElementById('generatedAt').textContent = genAt;
-
+    const generated = data.generated_at ? new Date(data.generated_at) : null;
+    document.getElementById('generatedAt').textContent = generated && Number.isFinite(generated.getTime())
+        ? generated.toLocaleString('ja-JP')
+        : '--';
     showContent();
 }
 
-
-// =============================================================================
-// セクション描画関数
-// =============================================================================
-
-function renderAiComment(elementId, comment) {
-    const el = document.getElementById(elementId);
-    if (el) {
-        const text = comment || 'AI分析はまだ生成されていません。';
-        // XSSを防ぐためにHTMLエスケープ → 改行文字をHTMLの改行に変換
-        const escaped = text
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
-        // 段落区切り（空行）を <br><br> に、単純な改行を <br> に変換
-        el.innerHTML = escaped
-            .replace(/\n\n/g, '<br><br>')
-            .replace(/\n/g, '<br>');
-    }
+function renderAiComment(elementId, comment, meta = {}) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+    const text = String(comment || '').trim();
+    element.textContent = text || 'この期間の分析コメントはまだ生成されていません。';
+    const card = element.closest('.analysis-card');
+    const badge = card?.querySelector('[data-analysis-badge]');
+    if (badge) badge.textContent = analysisSourceLabel(meta);
 }
-
 
 function renderHighlights(highlights) {
     const container = document.getElementById('summaryHighlights');
-    container.innerHTML = highlights
-        .map(h => `<span class="highlight-chip">${h}</span>`)
-        .join('');
+    container.replaceChildren();
+    highlights.forEach(value => {
+        const chip = document.createElement('span');
+        chip.className = 'highlight-chip';
+        chip.textContent = String(value);
+        container.appendChild(chip);
+    });
 }
-
 
 function renderStatistics(stats) {
-    // 数値を小数点第一位に統一するヘルパー
-    const fmt = (v) => (v != null ? Number(v).toFixed(1) : null);
-
+    const format = value => value != null ? Number(value).toFixed(1) : null;
     const items = [];
+    if (stats.avg_temp != null) items.push({ label: '平均気温', value: format(stats.avg_temp), unit: '℃' });
+    if (stats.max_temp != null) items.push({ label: '最高気温', value: format(stats.max_temp), unit: '℃', sub: stats.max_temp_date || '' });
+    if (stats.min_temp != null) items.push({ label: '最低気温', value: format(stats.min_temp), unit: '℃', sub: stats.min_temp_date || '' });
+    if (stats.avg_daily_range != null) items.push({ label: '平均日較差', value: format(stats.avg_daily_range), unit: '℃' });
 
-    if (stats.avg_temp != null) {
-        items.push({ label: '平均気温', value: fmt(stats.avg_temp), unit: '℃' });
-    }
-    if (stats.max_temp != null) {
-        let sub = stats.max_temp_date ? `(${stats.max_temp_date})` : '';
-        items.push({ label: '最高気温', value: fmt(stats.max_temp), unit: '℃', sub });
-    }
-    if (stats.min_temp != null) {
-        let sub = stats.min_temp_date ? `(${stats.min_temp_date})` : '';
-        items.push({ label: '最低気温', value: fmt(stats.min_temp), unit: '℃', sub });
-    }
-    if (stats.avg_daily_range != null) {
-        items.push({ label: '平均日較差', value: fmt(stats.avg_daily_range), unit: '℃' });
-    }
-    if (stats.prev_week_diff != null) {
-        const v = fmt(stats.prev_week_diff);
-        const diffClass = stats.prev_week_diff > 0 ? 'stat-diff-positive' : 'stat-diff-negative';
+    [
+        ['prev_week_diff', '前週比'],
+        ['prev_month_diff', '前月比'],
+        ['prev_year_diff', '前年比'],
+    ].forEach(([key, label]) => {
+        if (stats[key] == null) return;
+        const value = Number(stats[key]);
         items.push({
-            label: '前週比',
-            value: (stats.prev_week_diff > 0 ? '+' : '') + v,
+            label,
+            value: `${value > 0 ? '+' : ''}${value.toFixed(1)}`,
             unit: '℃',
-            className: diffClass,
+            className: value > 0 ? 'stat-diff-positive' : value < 0 ? 'stat-diff-negative' : '',
         });
-    }
-    if (stats.prev_month_diff != null) {
-        const v = fmt(stats.prev_month_diff);
-        const diffClass = stats.prev_month_diff > 0 ? 'stat-diff-positive' : 'stat-diff-negative';
-        items.push({
-            label: '前月比',
-            value: (stats.prev_month_diff > 0 ? '+' : '') + v,
-            unit: '℃',
-            className: diffClass,
-        });
-    }
-    if (stats.prev_year_diff != null) {
-        const v = fmt(stats.prev_year_diff);
-        const diffClass = stats.prev_year_diff > 0 ? 'stat-diff-positive' : 'stat-diff-negative';
-        items.push({
-            label: '前年比',
-            value: (stats.prev_year_diff > 0 ? '+' : '') + v,
-            unit: '℃',
-            className: diffClass,
-        });
-    }
-    // ※ データ日数（days）は週次・月次では自明なため表示しない
+    });
 
     const grid = document.getElementById('statsGrid');
-    grid.innerHTML = items.map(item => `
-        <div class="stat-item">
-            <div class="stat-item-label">${item.label}</div>
-            <div class="stat-item-value ${item.className || ''}">${item.value}<span class="stat-item-unit">${item.unit}</span></div>
-            ${item.sub ? `<div class="stat-item-sub">${item.sub}</div>` : ''}
-        </div>
-    `).join('');
+    grid.replaceChildren();
+    items.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'stat-item';
+        const label = document.createElement('div');
+        label.className = 'stat-item-label';
+        label.textContent = item.label;
+        const value = document.createElement('div');
+        value.className = `stat-item-value ${item.className || ''}`.trim();
+        value.append(document.createTextNode(item.value));
+        const unit = document.createElement('span');
+        unit.className = 'stat-item-unit';
+        unit.textContent = item.unit;
+        value.appendChild(unit);
+        card.append(label, value);
+        if (item.sub) {
+            const sub = document.createElement('div');
+            sub.className = 'stat-item-sub';
+            sub.textContent = item.sub;
+            card.appendChild(sub);
+        }
+        grid.appendChild(card);
+    });
 }
-
 
 function renderBaseline(baseline) {
     const container = document.getElementById('baselineDisplay');
-    const avg = baseline.baseline_avg;
-    const deviation = baseline.current_deviation;
-
-    if (avg == null || deviation == null) {
-        container.innerHTML = '<div class="no-events">ベースラインデータなし</div>';
+    container.replaceChildren();
+    const average = Number(baseline.baseline_avg);
+    const deviation = Number(baseline.current_deviation);
+    if (!Number.isFinite(average) || !Number.isFinite(deviation)) {
+        const empty = document.createElement('div');
+        empty.className = 'no-events';
+        empty.textContent = '比較可能な過去同時期データがありません';
+        container.appendChild(empty);
         return;
     }
 
-    const isPositive = deviation > 0;
-    const color = isPositive ? 'var(--accent-red)' : 'var(--accent-blue)';
+    const years = baseline.years_count;
+    const yearsLabel = years ? `${years}年平均` : '過去平均';
+    document.getElementById('baselineTitle').textContent = `${yearsLabel}との比較`;
+    const position = Math.min(90, Math.max(10, 50 + deviation * (40 / 3)));
+    const color = deviation > 0 ? 'var(--ui-accent)' : 'var(--ui-blue)';
 
-    // ±3℃で端（10%/90%）に到達するスケール
-    const scale = 40 / 3;
-    const position = Math.min(90, Math.max(10, 50 + deviation * scale));
+    const bar = document.createElement('div');
+    bar.className = 'baseline-bar';
+    const baseMarker = document.createElement('div');
+    baseMarker.className = 'baseline-marker baseline-marker--base';
+    baseMarker.style.left = '50%';
+    baseMarker.textContent = '基';
+    const nowMarker = document.createElement('div');
+    nowMarker.className = 'baseline-marker baseline-marker--now';
+    nowMarker.style.left = `${position}%`;
+    nowMarker.style.background = color;
+    nowMarker.textContent = '今';
+    const chip = document.createElement('span');
+    chip.className = 'baseline-chip';
+    chip.style.color = color;
+    chip.textContent = `${deviation > 0 ? '+' : ''}${deviation.toFixed(1)}℃`;
+    nowMarker.appendChild(chip);
+    bar.append(baseMarker, nowMarker);
 
-    const yearsCount = baseline.years_count;
-    const yearsLabel = yearsCount != null ? `${yearsCount}年平均` : '過去平均';
-
-    // ベースラインセクションのタイトルを更新
-    const titleEl = document.getElementById('baselineTitle');
-    if (titleEl) titleEl.textContent = `📏 ${yearsLabel}との比較`;
-
-    const deviationStr = `${isPositive ? '+' : ''}${Number(deviation).toFixed(1)}℃`;
-
-    // 「今」マーカーの上に偏差チップを浮かせるシンプルなデザイン
-    container.innerHTML = `
-        <div class="baseline-bar">
-            <div class="baseline-marker baseline-marker--base" style="left:50%;">基</div>
-            <div class="baseline-marker baseline-marker--now" style="left:${position}%; background:${color};">
-                <span class="baseline-chip" style="color:${color}; border-color:${color};">${deviationStr}</span>
-                今
-            </div>
-        </div>
-        <div class="baseline-axis">
-            <span>← 低い</span>
-            <span>${yearsLabel} ${Number(avg).toFixed(1)}℃</span>
-            <span>高い →</span>
-        </div>
-    `;
+    const axis = document.createElement('div');
+    axis.className = 'baseline-axis';
+    ['低い', `${yearsLabel} ${average.toFixed(1)}℃`, '高い'].forEach(text => {
+        const span = document.createElement('span');
+        span.textContent = text;
+        axis.appendChild(span);
+    });
+    container.append(bar, axis);
 }
-
-
 
 function renderEvents(events) {
     const timeline = document.getElementById('eventsTimeline');
-    const items = events.items || [];
-
-    if (items.length === 0) {
-        timeline.innerHTML = '<div class="no-events">この期間に特筆すべきイベントはありませんでした</div>';
-    } else {
-        timeline.innerHTML = items.map(e => `
-            <div class="event-item">
-                <div class="event-dot ${e.type}"></div>
-                <div class="event-date">${e.date}</div>
-                <div class="event-desc">${e.description}</div>
-            </div>
-        `).join('');
-    }
-}
-
-
-function renderMilestones(milestones) {
-    const container = document.getElementById('milestonesList');
-
-    if (!milestones || milestones.length === 0) {
-        container.innerHTML = '<div class="no-events">マイルストーンデータなし</div>';
+    timeline.replaceChildren();
+    const items = Array.isArray(events.items) ? events.items : [];
+    if (!items.length) {
+        const empty = document.createElement('div');
+        empty.className = 'no-events';
+        empty.textContent = 'この期間に基準を超える特筆イベントはありませんでした';
+        timeline.appendChild(empty);
         return;
     }
 
-    container.innerHTML = milestones.map(m => {
-        const years = Object.entries(m)
-            .filter(([k]) => k !== 'label')
-            .map(([year, dateVal]) => {
-                const display = dateVal || '未到達';
-                return `<span class="milestone-year"><strong>${year}:</strong> ${display}</span>`;
-            })
-            .join('');
+    items.forEach(event => {
+        const item = document.createElement('div');
+        item.className = 'event-item';
+        const dot = document.createElement('span');
+        dot.className = `event-dot ${String(event.type || '')}`.trim();
+        const dateElement = document.createElement('span');
+        dateElement.className = 'event-date';
+        dateElement.textContent = String(event.date || '');
+        const description = document.createElement('span');
+        description.className = 'event-desc';
+        description.textContent = String(event.description || '');
+        item.append(dot, dateElement, description);
+        timeline.appendChild(item);
+    });
+}
 
-        return `
-            <div class="milestone-item">
-                <div class="milestone-label">${m.label}</div>
-                <div class="milestone-years">${years}</div>
-            </div>
-        `;
-    }).join('');
+function renderMilestones(milestones) {
+    const container = document.getElementById('milestonesList');
+    container.replaceChildren();
+    if (!Array.isArray(milestones) || !milestones.length) {
+        const empty = document.createElement('div');
+        empty.className = 'no-events';
+        empty.textContent = '季節マイルストーンの比較データがありません';
+        container.appendChild(empty);
+        return;
+    }
+
+    milestones.forEach(milestone => {
+        const item = document.createElement('div');
+        item.className = 'milestone-item';
+        const label = document.createElement('div');
+        label.className = 'milestone-label';
+        label.textContent = String(milestone.label || '');
+        const years = document.createElement('div');
+        years.className = 'milestone-years';
+        Object.entries(milestone).filter(([key]) => key !== 'label').forEach(([year, value]) => {
+            const chip = document.createElement('span');
+            chip.className = 'milestone-year';
+            const strong = document.createElement('strong');
+            strong.textContent = `${year}: `;
+            chip.append(strong, document.createTextNode(String(value || '未到達')));
+            years.appendChild(chip);
+        });
+        item.append(label, years);
+        container.appendChild(item);
+    });
 }
 
 
+// =============================================================================
+// Heatmap
+// =============================================================================
+
 function renderHeatmap(data) {
-    // データをstateに保存して切り替え時に参照
-    state.heatmapData = data;
-    state.heatmapMode = state.heatmapMode || 'avg';
-    _buildHeatmap(data, state.heatmapMode);
+    state.heatmapData = data || {};
+    _buildHeatmap(state.heatmapData, state.heatmapMode);
 }
 
 function switchHeatmapMode(mode) {
-    state.heatmapMode = mode;
-    document.querySelectorAll('#heatmapToggle .toggle-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.mode === mode);
+    state.heatmapMode = ['avg', 'high', 'low'].includes(mode) ? mode : 'avg';
+    document.querySelectorAll('#heatmapToggle .toggle-btn').forEach(button => {
+        button.classList.toggle('active', button.dataset.mode === state.heatmapMode);
     });
-    _buildHeatmap(state.heatmapData, mode);
+    _buildHeatmap(state.heatmapData, state.heatmapMode);
+}
+
+function interpolateColor(start, end, ratio) {
+    const values = start.map((value, index) => Math.round(value + (end[index] - value) * ratio));
+    return `rgb(${values.join(',')})`;
+}
+
+function tempToColor(temperature) {
+    const value = Math.max(-5, Math.min(38, Number(temperature)));
+    const cool = [58, 117, 197];
+    const neutral = [82, 96, 118];
+    const warm = [230, 107, 61];
+    if (value <= 17) return interpolateColor(cool, neutral, (value + 5) / 22);
+    return interpolateColor(neutral, warm, (value - 17) / 21);
+}
+
+function heatmapTextColor(temperature) {
+    return Number(temperature) > 28 ? '#231710' : '#f8fafc';
 }
 
 function _buildHeatmap(data, mode) {
     const container = document.getElementById('heatmapContainer');
     const legend = document.getElementById('heatmapLegend');
-
-    const years = Object.keys(data).sort();
-    if (years.length === 0) {
-        container.innerHTML = '<div class="no-events">ヒートマップデータなし</div>';
-        legend.innerHTML = '';
+    container.replaceChildren();
+    legend.replaceChildren();
+    const years = Object.keys(data || {}).sort();
+    if (!years.length) {
+        const empty = document.createElement('div');
+        empty.className = 'no-events';
+        empty.textContent = 'ヒートマップデータがありません';
+        container.appendChild(empty);
         return;
     }
 
-    const months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
-    const modeLabels = { avg: '平均', high: '最高', low: '最低' };
-
-    let html = `<div class="heatmap-grid" style="grid-template-columns: 60px repeat(${months.length}, 1fr);">`;
-
-    // ヘッダー行
-    html += '<div class="heatmap-label"></div>';
-    months.forEach(m => {
-        html += `<div class="heatmap-label">${m}</div>`;
+    const months = Array.from({ length: 12 }, (_, index) => `${index + 1}月`);
+    const labels = { avg: '平均', high: '最高', low: '最低' };
+    const grid = document.createElement('div');
+    grid.className = 'heatmap-grid';
+    grid.style.gridTemplateColumns = '60px repeat(12, 1fr)';
+    grid.appendChild(Object.assign(document.createElement('div'), { className: 'heatmap-label' }));
+    months.forEach(month => {
+        const cell = document.createElement('div');
+        cell.className = 'heatmap-label';
+        cell.textContent = month;
+        grid.appendChild(cell);
     });
 
-    // データ行
     years.forEach(year => {
-        html += `<div class="heatmap-label">${year}</div>`;
-        for (let m = 1; m <= 12; m++) {
-            const cell = data[year]?.[String(m)];
-            // 旧形式（数値）と新形式（オブジェクト）の両対応
-            const val = cell != null
-                ? (typeof cell === 'object' ? cell[mode] : cell)
-                : null;
-            if (val != null) {
-                const bg = tempToColor(val);
-                const textColor = val > 20 ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.9)';
-                html += `<div class="heatmap-cell" style="background:${bg}; color:${textColor};" title="${year}年${m}月(${modeLabels[mode]}): ${val}℃">${val}</div>`;
+        const yearLabel = document.createElement('div');
+        yearLabel.className = 'heatmap-label';
+        yearLabel.textContent = year;
+        grid.appendChild(yearLabel);
+        for (let month = 1; month <= 12; month += 1) {
+            const source = data[year]?.[String(month)];
+            const value = source == null ? null : typeof source === 'object' ? source[mode] : source;
+            const cell = document.createElement('div');
+            cell.className = 'heatmap-cell';
+            if (value == null) {
+                cell.style.background = 'var(--ui-surface-soft)';
+                cell.style.color = 'var(--ui-text-muted)';
+                cell.textContent = '—';
             } else {
-                html += `<div class="heatmap-cell" style="background:rgba(128,128,128,0.1); color:var(--text-muted);">-</div>`;
+                cell.style.background = tempToColor(value);
+                cell.style.color = heatmapTextColor(value);
+                cell.textContent = Number(value).toFixed(1);
+                cell.title = `${year}年${month}月（${labels[mode]}）: ${Number(value).toFixed(1)}℃`;
             }
+            grid.appendChild(cell);
         }
     });
+    container.appendChild(grid);
 
-    html += '</div>';
-    container.innerHTML = html;
-
-    // 凡例（滑らかなグラデーションバー）
-    legend.innerHTML = '<span>低</span><div class="heatmap-legend-bar"></div><span>高</span>';
-}
-
-
-function tempToColor(temp) {
-    // -10℃（青:240°、明度35%）〜 +40℃（赤:0°、明度45%）の滑らかなHSLグラデーション
-    const minTemp = -10, maxTemp = 40;
-    const minHue = 240, maxHue = 0;
-    const minL = 35, maxL = 55;
-
-    const ratio = Math.max(0, Math.min(1, (temp - minTemp) / (maxTemp - minTemp)));
-    const hue = Math.round(minHue + (maxHue - minHue) * ratio);
-    const sat = Math.round(65 + ratio * 20);            // 65%〜85%
-    const lig = Math.round(minL + (maxL - minL) * ratio); // 35%〜55%
-
-    return `hsl(${hue}, ${sat}%, ${lig}%)`;
+    const low = document.createElement('span');
+    low.textContent = '低温';
+    const bar = document.createElement('div');
+    bar.className = 'heatmap-legend-bar';
+    const high = document.createElement('span');
+    high.textContent = '高温';
+    legend.append(low, bar, high);
 }
 
 
 // =============================================================================
-// Chart.js グラフ
+// Chart.js
 // =============================================================================
 
 function getChartTextColor() {
-    return document.documentElement.classList.contains('light-mode')
-        ? '#334155'
-        : '#94a3b8';
+    return document.documentElement.classList.contains('light-mode') ? '#506078' : '#a9b4c6';
 }
 
 function getChartGridColor() {
     return document.documentElement.classList.contains('light-mode')
-        ? 'rgba(0, 0, 0, 0.06)'
-        : 'rgba(255, 255, 255, 0.06)';
+        ? 'rgba(30, 41, 59, 0.08)'
+        : 'rgba(203, 213, 225, 0.08)';
 }
 
 function destroyChart(name) {
@@ -587,273 +677,209 @@ function updateChartColors() {
         if (!chart) return;
         const textColor = getChartTextColor();
         const gridColor = getChartGridColor();
-
         Object.values(chart.options.scales || {}).forEach(scale => {
             if (scale.ticks) scale.ticks.color = textColor;
             if (scale.grid) scale.grid.color = gridColor;
+            if (scale.border) scale.border.color = gridColor;
         });
-        if (chart.options.plugins?.legend?.labels) {
-            chart.options.plugins.legend.labels.color = textColor;
-        }
+        if (chart.options.plugins?.legend?.labels) chart.options.plugins.legend.labels.color = textColor;
         chart.update('none');
     });
 }
 
-
-function renderDailyChart(chartData) {
-    if (!chartData) return;
-    destroyChart('dailyTemp');
-
-    const ctx = document.getElementById('dailyTempChart').getContext('2d');
+function sharedChartOptions() {
     const textColor = getChartTextColor();
     const gridColor = getChartGridColor();
+    return {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { intersect: false, mode: 'index' },
+        plugins: {
+            legend: {
+                position: 'top',
+                align: 'end',
+                labels: { color: textColor, usePointStyle: true, boxWidth: 7, padding: 15, font: { size: 11 } },
+            },
+            tooltip: {
+                backgroundColor: 'rgba(5, 11, 20, 0.94)',
+                titleColor: '#f5f7fb',
+                bodyColor: '#dbe3ee',
+                borderColor: 'rgba(203, 213, 225, 0.14)',
+                borderWidth: 1,
+                padding: 11,
+            },
+        },
+        scales: {
+            x: {
+                ticks: { color: textColor, maxRotation: 0, autoSkip: true, maxTicksLimit: 12, font: { size: 10 } },
+                grid: { display: false },
+                border: { color: gridColor },
+            },
+            y: {
+                grace: '8%',
+                ticks: { color: textColor, callback: value => `${value}℃`, font: { size: 10 } },
+                grid: { color: gridColor },
+                border: { display: false },
+            },
+        },
+    };
+}
 
-    state.charts.dailyTemp = new Chart(ctx, {
+function renderDailyChart(chartData) {
+    destroyChart('dailyTemp');
+    if (!chartData || typeof Chart === 'undefined') return;
+    const labels = chartData.labels || [];
+    const pointRadius = labels.length > 14 ? 2 : 3.5;
+    const options = sharedChartOptions();
+    options.plugins.tooltip.callbacks = {
+        label: context => `${context.dataset.label}: ${context.parsed.y != null ? context.parsed.y.toFixed(1) : '--'}℃`,
+    };
+    state.charts.dailyTemp = new Chart(document.getElementById('dailyTempChart'), {
         type: 'line',
         data: {
-            labels: chartData.labels,
+            labels,
             datasets: [
                 {
                     label: '最高',
                     data: chartData.highs,
-                    borderColor: '#ef4444',
-                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    borderColor: '#e66b3d',
+                    backgroundColor: 'rgba(230, 107, 61, 0.08)',
                     fill: '+1',
-                    tension: 0.3,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
+                    tension: 0.32,
+                    pointRadius,
+                    pointHoverRadius: 5,
                     borderWidth: 2,
                 },
                 {
                     label: '最低',
                     data: chartData.lows,
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderColor: '#3a75c5',
+                    backgroundColor: 'rgba(58, 117, 197, 0.07)',
                     fill: false,
-                    tension: 0.3,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
+                    tension: 0.32,
+                    pointRadius,
+                    pointHoverRadius: 5,
                     borderWidth: 2,
                 },
                 {
                     label: '平均',
                     data: chartData.avgs,
-                    borderColor: '#a855f7',
+                    borderColor: '#8391a7',
+                    backgroundColor: 'transparent',
                     borderDash: [5, 5],
                     fill: false,
-                    tension: 0.3,
-                    pointRadius: 3,
-                    pointHoverRadius: 5,
-                    borderWidth: 1.5,
+                    tension: 0.32,
+                    pointRadius: labels.length > 14 ? 1 : 2.5,
+                    pointHoverRadius: 4,
+                    borderWidth: 1.6,
                 },
             ],
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: { intersect: false, mode: 'index' },
-            plugins: {
-                legend: {
-                    labels: { color: textColor, usePointStyle: true, padding: 16 },
-                },
-                tooltip: {
-                    callbacks: {
-                        label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}℃`,
-                    },
-                },
-            },
-            scales: {
-                x: { ticks: { color: textColor }, grid: { color: gridColor } },
-                y: {
-                    ticks: { color: textColor, callback: v => v + '℃' },
-                    grid: { color: gridColor },
-                },
-            },
-        },
+        options,
     });
 }
 
-
 function renderComparisonChart(chartData) {
     if (!chartData) return;
-
-    // チャートデータをstateに保存しておき、切り替え時に参照する
     state.comparisonChartData = chartData;
-    state.comparisonMode = state.comparisonMode || 'avg';
-
     _buildComparisonChart(chartData, state.comparisonMode);
 }
 
 function _buildComparisonChart(chartData, mode) {
     destroyChart('comparison');
-
-    const ctx = document.getElementById('comparisonChart').getContext('2d');
-    const textColor = getChartTextColor();
-    const gridColor = getChartGridColor();
-
-    // モードに合わせてデータ系列を選択
-    const modeConfig = {
-        avg: { thisKey: 'this_year', lastKey: 'last_year', label: '平均気温', emoji: '📊', thisColor: '#8b5cf6', lastColor: '#64748b' },
-        high: { thisKey: 'this_year_high', lastKey: 'last_year_high', label: '最高気温', emoji: '🌡️', thisColor: '#ef4444', lastColor: '#f87171' },
-        low: { thisKey: 'this_year_low', lastKey: 'last_year_low', label: '最低気温', emoji: '❄️', thisColor: '#3b82f6', lastColor: '#93c5fd' },
+    if (typeof Chart === 'undefined') return;
+    const configs = {
+        avg: { current: 'this_year', previous: 'last_year', label: '平均気温' },
+        high: { current: 'this_year_high', previous: 'last_year_high', label: '最高気温' },
+        low: { current: 'this_year_low', previous: 'last_year_low', label: '最低気温' },
     };
-    const cfg = modeConfig[mode] || modeConfig['avg'];
-    const thisYearData = chartData[cfg.thisKey] || chartData['this_year'];
-    const lastYearData = chartData[cfg.lastKey] || chartData['last_year'];
-
-    state.charts.comparison = new Chart(ctx, {
+    const config = configs[mode] || configs.avg;
+    const labels = chartData.labels || [];
+    const pointRadius = labels.length > 14 ? 2 : 3;
+    const options = sharedChartOptions();
+    options.plugins.tooltip.callbacks = {
+        label: context => `${context.dataset.label}: ${context.parsed.y != null ? context.parsed.y.toFixed(1) : '--'}℃`,
+    };
+    state.charts.comparison = new Chart(document.getElementById('comparisonChart'), {
         type: 'line',
         data: {
-            labels: chartData.labels,
+            labels,
             datasets: [
                 {
-                    label: `今年（${cfg.label}）`,
-                    data: thisYearData,
-                    borderColor: cfg.thisColor,
-                    backgroundColor: cfg.thisColor + '1a',
-                    fill: true,
+                    label: `今年 ${config.label}`,
+                    data: chartData[config.current] || chartData.this_year,
+                    borderColor: '#e66b3d',
+                    backgroundColor: 'rgba(230, 107, 61, 0.08)',
+                    fill: false,
                     tension: 0.3,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    borderWidth: 2,
+                    pointRadius,
+                    pointHoverRadius: 5,
+                    borderWidth: 2.3,
                 },
                 {
-                    label: `昨年（${cfg.label}）`,
-                    data: lastYearData,
-                    borderColor: cfg.lastColor,
-                    backgroundColor: cfg.lastColor + '0d',
-                    fill: true,
+                    label: `前年 ${config.label}`,
+                    data: chartData[config.previous] || chartData.last_year,
+                    borderColor: '#6aa9ff',
+                    backgroundColor: 'transparent',
+                    fill: false,
                     tension: 0.3,
-                    pointRadius: 3,
+                    pointRadius: Math.max(1, pointRadius - 1),
                     pointHoverRadius: 5,
-                    borderWidth: 1.5,
-                    borderDash: [4, 4],
+                    borderWidth: 1.7,
+                    borderDash: [6, 5],
                 },
             ],
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: { intersect: false, mode: 'index' },
-            plugins: {
-                legend: {
-                    labels: { color: textColor, usePointStyle: true, padding: 16 },
-                },
-                tooltip: {
-                    callbacks: {
-                        label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y != null ? ctx.parsed.y.toFixed(1) : '--'}℃`,
-                    },
-                },
-            },
-            scales: {
-                x: { ticks: { color: textColor }, grid: { color: gridColor } },
-                y: {
-                    ticks: { color: textColor, callback: v => v + '℃' },
-                    grid: { color: gridColor },
-                },
-            },
-        },
+        options,
     });
 }
 
 function switchComparisonMode(mode) {
     if (!state.comparisonChartData) return;
-
     state.comparisonMode = mode;
-
-    // タイトルを更新
-    const titleMap = { avg: '平均気温', high: '最高気温', low: '最低気温', deviation: '平年偏差' };
-    const titleEl = document.getElementById('comparisonTitle');
-    if (titleEl) titleEl.textContent = `📆 前年比較（${titleMap[mode] || ''}）`;
-
-    // アクティブボタンを切り替える
-    document.querySelectorAll('#comparisonToggle .toggle-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.mode === mode);
+    const titles = { avg: '平均気温', high: '最高気温', low: '最低気温', deviation: '過去平均との差' };
+    document.getElementById('comparisonTitle').textContent = `前年比較 — ${titles[mode] || ''}`;
+    document.querySelectorAll('#comparisonToggle .toggle-btn').forEach(button => {
+        button.classList.toggle('active', button.dataset.mode === mode);
     });
-
-    // 偏差モードの表示切り替え
-    const compWrapper = document.getElementById('comparisonChartWrapper');
-    const devWrapper = document.getElementById('deviationChartWrapper');
-
+    const comparison = document.getElementById('comparisonChartWrapper');
+    const deviation = document.getElementById('deviationChartWrapper');
     if (mode === 'deviation') {
-        compWrapper.style.display = 'none';
-        devWrapper.style.display = 'block';
+        comparison.hidden = true;
+        deviation.hidden = false;
         _buildDeviationChart(state.deviationChartData);
     } else {
-        compWrapper.style.display = 'block';
-        devWrapper.style.display = 'none';
+        comparison.hidden = false;
+        deviation.hidden = true;
         _buildComparisonChart(state.comparisonChartData, mode);
     }
 }
 
-
-function _buildDeviationChart(deviationData) {
+function _buildDeviationChart(data) {
     destroyChart('deviation');
-
-    if (!deviationData || !deviationData.deviations) {
-        const ctx = document.getElementById('deviationChart').getContext('2d');
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        return;
-    }
-
-    const ctx = document.getElementById('deviationChart').getContext('2d');
-    const textColor = getChartTextColor();
-    const gridColor = getChartGridColor();
-
-    // 正の偏差=赤系、負の偏差=青系
-    const barColors = deviationData.deviations.map(v =>
-        v == null ? 'transparent' : v >= 0 ? 'rgba(239, 68, 68, 0.75)' : 'rgba(59, 130, 246, 0.75)'
-    );
-    const borderColors = deviationData.deviations.map(v =>
-        v == null ? 'transparent' : v >= 0 ? '#ef4444' : '#3b82f6'
-    );
-
-    state.charts.deviation = new Chart(ctx, {
+    if (!data?.deviations || typeof Chart === 'undefined') return;
+    const options = sharedChartOptions();
+    options.plugins.tooltip.callbacks = {
+        label: context => `偏差: ${context.parsed.y >= 0 ? '+' : ''}${context.parsed.y.toFixed(1)}℃`,
+    };
+    options.scales.y.ticks.callback = value => `${value >= 0 ? '+' : ''}${value}℃`;
+    options.scales.y.grid = {
+        color: context => context.tick.value === 0 ? getChartTextColor() : getChartGridColor(),
+        lineWidth: context => context.tick.value === 0 ? 1.5 : 1,
+    };
+    state.charts.deviation = new Chart(document.getElementById('deviationChart'), {
         type: 'bar',
         data: {
-            labels: deviationData.labels,
+            labels: data.labels,
             datasets: [{
-                label: `平年偏差（基準: ${deviationData.baseline_avg}℃）`,
-                data: deviationData.deviations,
-                backgroundColor: barColors,
-                borderColor: borderColors,
+                label: `過去平均 ${data.baseline_avg}℃からの偏差`,
+                data: data.deviations,
+                backgroundColor: data.deviations.map(value => value == null ? 'transparent' : value >= 0 ? 'rgba(230, 107, 61, 0.72)' : 'rgba(58, 117, 197, 0.72)'),
+                borderColor: data.deviations.map(value => value == null ? 'transparent' : value >= 0 ? '#e66b3d' : '#3a75c5'),
                 borderWidth: 1,
-                borderRadius: 3,
+                borderRadius: 4,
             }],
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: { intersect: false, mode: 'index' },
-            plugins: {
-                legend: {
-                    labels: { color: textColor, usePointStyle: true, padding: 16 },
-                },
-                tooltip: {
-                    callbacks: {
-                        label: ctx => {
-                            const v = ctx.parsed.y;
-                            if (v == null) return '--';
-                            const sign = v >= 0 ? '+' : '';
-                            return `偏差: ${sign}${v.toFixed(1)}℃`;
-                        },
-                    },
-                },
-            },
-            scales: {
-                x: { ticks: { color: textColor }, grid: { color: gridColor } },
-                y: {
-                    ticks: {
-                        color: textColor,
-                        callback: v => (v >= 0 ? '+' : '') + v + '℃',
-                    },
-                    grid: {
-                        color: (ctx) => ctx.tick.value === 0 ? textColor : gridColor,
-                        lineWidth: (ctx) => ctx.tick.value === 0 ? 2 : 1,
-                    },
-                },
-            },
-        },
+        options,
     });
 }
-

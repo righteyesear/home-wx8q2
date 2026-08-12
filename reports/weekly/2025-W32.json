@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "",
+      "ai_comment": "対象期間は終了しており、7日分の観測で集計しています。2025年 第32週（8/4 〜 8/10）の平均気温は30.4℃、最高37.0℃、最低25.3℃でした。前半から後半にかけて平均気温が約3.5℃下がり、明確な降温傾向でした。前週比+0.9℃、前年比-0.1℃、過去同時期平均との差-0.1℃です。最高気温が35℃以上の日を含むため、日中の外出は時間を選び、冷房・水分・休憩を前提にしてください。",
       "highlights": [
         "最高気温 37.0℃",
         "最低気温 25.3℃",
@@ -112,14 +112,13 @@
       "max_temp_diff": -0.4,
       "min_temp_diff": -0.1,
       "avg_daily_range_diff": -1.7,
-      "ai_comment": ""
+      "ai_comment": "平均気温は30.4℃で、前年同期の30.5℃より-0.1℃、ほぼ同水準でした。内訳は最高気温差-0.4℃、最低気温差-0.1℃、日較差の差-1.7℃です。単年同士の比較なので、季節の長期傾向ではなく、この期間固有の差として見るのが適切です。"
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 30.5,
       "current_deviation": -0.1,
-      "years_count": 1,
-      "ai_comment": ""
+      "years_count": 1
     },
     "events": {
       "title": "特筆イベント",
@@ -134,8 +133,7 @@
           "type": "extreme_heat",
           "description": "猛暑日: 最高気温36.6℃"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "season": {
       "title": "季節の進み具合",
@@ -176,8 +174,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -314,6 +311,9 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "ai_comment": "前半から後半にかけて平均気温が約3.5℃下がり、明確な降温傾向でした。最大の上昇は2025/08/04から2025/08/05の+0.5℃でした。最大の低下は2025/08/06から2025/08/07の-2.5℃でした。"
     }
   },
   "chart_data": {
@@ -441,5 +441,16 @@
       ],
       "baseline_avg": 30.5
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "11d1f913d5665e32568b",
+    "period_closed": true,
+    "coverage_complete": true,
+    "observed_days": 7,
+    "expected_days": 7,
+    "reason": "legacy_report_revalidation"
   }
 }

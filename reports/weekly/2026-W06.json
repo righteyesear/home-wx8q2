@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "",
+      "ai_comment": "対象期間は終了しており、7日分の観測で集計しています。2026年 第6週（2/2 〜 2/8）の平均気温は5.1℃、最高14.5℃、最低-1.6℃でした。前半と後半の平均気温差は1.7℃に収まり、期間全体では大きな一方向変化はありませんでした。前週比+0.8℃、前年比+0.0℃、過去同時期平均との差+0.0℃です。氷点下を記録しているため、朝晩の路面凍結と室内外の温度差に注意が必要です。",
       "highlights": [
         "最高気温 14.5℃",
         "最低気温 -1.6℃",
@@ -112,14 +112,13 @@
       "max_temp_diff": 4.7,
       "min_temp_diff": -0.8,
       "avg_daily_range_diff": 1.8,
-      "ai_comment": ""
+      "ai_comment": "平均気温は5.1℃で、前年同期の5.1℃より+0.0℃、ほぼ同水準でした。内訳は最高気温差+4.7℃、最低気温差-0.8℃、日較差の差+1.8℃です。単年同士の比較なので、季節の長期傾向ではなく、この期間固有の差として見るのが適切です。"
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 5.1,
       "current_deviation": 0.0,
-      "years_count": 1,
-      "ai_comment": ""
+      "years_count": 1
     },
     "events": {
       "title": "特筆イベント",
@@ -129,8 +128,7 @@
           "type": "frost_day",
           "description": "冬日: 最低気温-1.6℃"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "season": {
       "title": "季節の進み具合",
@@ -171,8 +169,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -309,6 +306,9 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "ai_comment": "前半と後半の平均気温差は1.7℃に収まり、期間全体では大きな一方向変化はありませんでした。最大の上昇は2026/02/04から2026/02/05の+1.3℃でした。最大の低下は2026/02/07から2026/02/08の-4.4℃でした。"
     }
   },
   "chart_data": {
@@ -436,5 +436,16 @@
       ],
       "baseline_avg": 5.1
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "7b99ff1fb87bb4c268d1",
+    "period_closed": true,
+    "coverage_complete": true,
+    "observed_days": 7,
+    "expected_days": 7,
+    "reason": "legacy_report_revalidation"
   }
 }

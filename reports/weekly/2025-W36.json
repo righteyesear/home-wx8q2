@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "",
+      "ai_comment": "対象期間は終了しており、7日分の観測で集計しています。2025年 第36週（9/1 〜 9/7）の平均気温は29.1℃、最高36.2℃、最低23.1℃でした。前半から後半にかけて平均気温が約3.8℃下がり、明確な降温傾向でした。前週比-1.8℃、前年比+1.4℃、過去同時期平均との差+1.4℃です。最高気温が35℃以上の日を含むため、日中の外出は時間を選び、冷房・水分・休憩を前提にしてください。",
       "highlights": [
         "最高気温 36.2℃",
         "最低気温 23.1℃",
@@ -112,14 +112,13 @@
       "max_temp_diff": 1.8,
       "min_temp_diff": 0.4,
       "avg_daily_range_diff": -0.6,
-      "ai_comment": ""
+      "ai_comment": "平均気温は29.1℃で、前年同期の27.7℃より+1.4℃、高めでした。内訳は最高気温差+1.8℃、最低気温差+0.4℃、日較差の差-0.6℃です。単年同士の比較なので、季節の長期傾向ではなく、この期間固有の差として見るのが適切です。"
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 27.7,
       "current_deviation": 1.4,
-      "years_count": 1,
-      "ai_comment": ""
+      "years_count": 1
     },
     "events": {
       "title": "特筆イベント",
@@ -129,8 +128,7 @@
           "type": "extreme_heat",
           "description": "猛暑日3日連続（最高気温35.9℃〜最高気温36.0℃）"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "season": {
       "title": "季節の進み具合",
@@ -171,8 +169,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -309,6 +306,9 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "ai_comment": "前半から後半にかけて平均気温が約3.8℃下がり、明確な降温傾向でした。最大の上昇は2025/09/05から2025/09/06の+2.1℃でした。最大の低下は2025/09/03から2025/09/04の-2.7℃でした。"
     }
   },
   "chart_data": {
@@ -436,5 +436,16 @@
       ],
       "baseline_avg": 27.7
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "64e4e142180b9d1fec90",
+    "period_closed": true,
+    "coverage_complete": true,
+    "observed_days": 7,
+    "expected_days": 7,
+    "reason": "legacy_report_revalidation"
   }
 }

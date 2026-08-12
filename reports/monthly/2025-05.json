@@ -11,7 +11,7 @@
   "sections": {
     "summary": {
       "title": "月間サマリー",
-      "ai_comment": "",
+      "ai_comment": "対象期間は終了しており、31日分の観測で集計しています。2025年5月の平均気温は19.6℃、最高30.0℃、最低12.7℃でした。前半と後半の平均気温差は0.9℃に収まり、期間全体では大きな一方向変化はありませんでした。前月比+3.7℃、前年比-1.0℃、過去同時期平均との差-1.0℃です。30℃以上の暑さを含むため、屋外活動では水分補給と休憩を早めに取るのが安全です。",
       "highlights": [
         "月平均 19.6℃",
         "最高 30.0℃",
@@ -381,7 +381,7 @@
       "max_temp_diff": 0.4,
       "min_temp_diff": 3.1,
       "avg_daily_range_diff": -1.2,
-      "ai_comment": ""
+      "ai_comment": "平均気温は19.6℃で、前年同期の20.6℃より-1.0℃、低めでした。内訳は最高気温差+0.4℃、最低気温差+3.1℃、日較差の差-1.2℃です。単年同士の比較なので、季節の長期傾向ではなく、この期間固有の差として見るのが適切です。"
     },
     "prev_month": {
       "title": "前月比較",
@@ -400,20 +400,17 @@
       "avg_temp_diff": 3.7,
       "max_temp_diff": 2.4,
       "min_temp_diff": 8.5,
-      "avg_daily_range_diff": -1.0,
-      "ai_comment": ""
+      "avg_daily_range_diff": -1.0
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 20.6,
       "current_deviation": -1.0,
-      "years_count": 1,
-      "ai_comment": ""
+      "years_count": 1
     },
     "events": {
       "title": "特筆イベント",
-      "items": [],
-      "ai_comment": ""
+      "items": []
     },
     "season": {
       "title": "季節の進み具合",
@@ -454,8 +451,7 @@
           "2025": "2025/01/05",
           "2026": "2026/01/08"
         }
-      ],
-      "ai_comment": ""
+      ]
     },
     "heatmap": {
       "title": "気温ヒートマップ",
@@ -592,6 +588,9 @@
           }
         }
       }
+    },
+    "trend_analysis": {
+      "ai_comment": "前半と後半の平均気温差は0.9℃に収まり、期間全体では大きな一方向変化はありませんでした。最大の上昇は2025/05/19から2025/05/20の+3.9℃でした。最大の低下は2025/05/29から2025/05/30の-4.9℃でした。"
     }
   },
   "chart_data": {
@@ -1061,5 +1060,16 @@
         15.4
       ]
     }
+  },
+  "analysis_meta": {
+    "source": "codex",
+    "protocol_version": "2.0",
+    "generated_at": "2026-08-12T21:36:54.390359+09:00",
+    "data_fingerprint": "997726624864e5dd74ae",
+    "period_closed": true,
+    "coverage_complete": true,
+    "observed_days": 31,
+    "expected_days": 31,
+    "reason": "legacy_report_revalidation"
   }
 }
