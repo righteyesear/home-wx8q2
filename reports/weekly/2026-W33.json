@@ -7,7 +7,7 @@
     "end_date": "2026-08-16",
     "label": "2026年 第33週（8/10 〜 8/16）"
   },
-  "generated_at": "2026-08-13T04:20:51.993914+09:00",
+  "generated_at": "2026-08-13T07:04:23.938682+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -15,14 +15,14 @@
       "highlights": [
         "最高気温 31.6℃",
         "最低気温 22.1℃",
-        "前週比 -2.5℃",
-        "前年比 -3.2℃"
+        "前週比 -2.6℃",
+        "前年比 -3.3℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 4,
-      "avg_temp": 25.5,
+      "avg_temp": 25.4,
       "avg_temp_stdev": 1.1,
       "max_temp": 31.6,
       "max_temp_date": "2026/08/10",
@@ -31,8 +31,8 @@
       "min_temp_date": "2026/08/12",
       "avg_low": 23.0,
       "avg_daily_range": 6.2,
-      "prev_week_diff": -2.5,
-      "prev_year_diff": -3.2
+      "prev_week_diff": -2.6,
+      "prev_year_diff": -3.3
     },
     "daily_data": [
       {
@@ -63,9 +63,9 @@
         "date": "2026/08/13",
         "weekday": "木",
         "high": 24.6,
-        "low": 24.2,
-        "avg": 24.4,
-        "range": 0.4
+        "low": 24.0,
+        "avg": 24.3,
+        "range": 0.6
       }
     ],
     "comparison": {
@@ -84,7 +84,7 @@
         "avg_low": 26.2,
         "avg_daily_range": 6.2
       },
-      "avg_temp_diff": -3.2,
+      "avg_temp_diff": -3.3,
       "max_temp_diff": -3.8,
       "min_temp_diff": -3.0,
       "avg_daily_range_diff": 0.0,
@@ -93,7 +93,7 @@
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 30.0,
-      "current_deviation": -4.5,
+      "current_deviation": -4.6,
       "years_count": 2
     },
     "events": {
@@ -324,13 +324,13 @@
         23.6,
         22.2,
         22.1,
-        24.2
+        24.0
       ],
       "avgs": [
         27.0,
         25.5,
         25.0,
-        24.4
+        24.3
       ]
     },
     "prev_year_comparison": {
@@ -344,7 +344,7 @@
         27.0,
         25.5,
         25.0,
-        24.4
+        24.3
       ],
       "last_year": [
         27.5,
@@ -374,7 +374,7 @@
         23.6,
         22.2,
         22.1,
-        24.2
+        24.0
       ],
       "last_year_low": [
         26.4,
@@ -397,7 +397,7 @@
         -3.0,
         -4.5,
         -5.0,
-        -5.6
+        -5.7
       ],
       "baseline_avg": 30.0
     }
@@ -406,11 +406,11 @@
     "context_version": "3.2",
     "daily_pattern": {
       "opening_avg": 27.0,
-      "closing_avg": 24.4,
-      "front_to_back_change": -2.6,
-      "linear_slope_per_day": -0.83,
-      "daily_avg_stdev": 0.96,
-      "mean_absolute_day_change": 0.87,
+      "closing_avg": 24.3,
+      "front_to_back_change": -2.7,
+      "linear_slope_per_day": -0.86,
+      "daily_avg_stdev": 0.99,
+      "mean_absolute_day_change": 0.9,
       "largest_rise": {
         "change": -0.5,
         "from_date": "2026/08/11",
@@ -427,7 +427,7 @@
       },
       "coolest_average_day": {
         "date": "2026/08/13",
-        "value": 24.4
+        "value": 24.3
       },
       "days_high_35_or_more": 0,
       "days_high_30_or_more": 3,
@@ -468,12 +468,12 @@
         2026
       ],
       "peer_average": 30.1,
-      "deviation_from_peer_average": -4.6,
+      "deviation_from_peer_average": -4.7,
       "rank_warmest": 3,
       "rank_coldest": 1,
-      "sample_min": 25.5,
+      "sample_min": 25.4,
       "sample_max": 31.0,
-      "sample_stdev": 2.29
+      "sample_stdev": 2.33
     },
     "recent_history": {
       "previous_periods": [
@@ -520,15 +520,15 @@
       ],
       "previous_period_count": 4,
       "previous_period_mean": 29.43,
-      "difference_from_previous_period_mean": -3.93
+      "difference_from_previous_period_mean": -4.03
     }
   },
   "analysis_meta": {
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-08-13T04:20:52.046974+09:00",
-    "data_fingerprint": "1bdd92c46f9ea82a1c47",
+    "generated_at": "2026-08-13T07:04:24.002373+09:00",
+    "data_fingerprint": "a88589b0c221957f9011",
     "period_closed": false,
     "coverage_complete": false,
     "observed_days": 4,
