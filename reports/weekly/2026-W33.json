@@ -7,7 +7,7 @@
     "end_date": "2026-08-16",
     "label": "2026年 第33週（8/10 〜 8/16）"
   },
-  "generated_at": "2026-08-12T16:12:38.882779+09:00",
+  "generated_at": "2026-08-12T18:56:19.064425+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -15,15 +15,15 @@
       "highlights": [
         "最高気温 31.6℃",
         "最低気温 22.1℃",
-        "前週比 -2.2℃",
-        "前年比 -2.9℃"
+        "前週比 -2.1℃",
+        "前年比 -2.8℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 3,
-      "avg_temp": 25.8,
-      "avg_temp_stdev": 1.1,
+      "avg_temp": 25.9,
+      "avg_temp_stdev": 1.0,
       "max_temp": 31.6,
       "max_temp_date": "2026/08/10",
       "avg_high": 30.7,
@@ -31,8 +31,8 @@
       "min_temp_date": "2026/08/12",
       "avg_low": 22.6,
       "avg_daily_range": 8.1,
-      "prev_week_diff": -2.2,
-      "prev_year_diff": -2.9
+      "prev_week_diff": -2.1,
+      "prev_year_diff": -2.8
     },
     "daily_data": [
       {
@@ -56,7 +56,7 @@
         "weekday": "水",
         "high": 30.6,
         "low": 22.1,
-        "avg": 24.9,
+        "avg": 25.1,
         "range": 8.5
       }
     ],
@@ -76,7 +76,7 @@
         "avg_low": 26.2,
         "avg_daily_range": 6.2
       },
-      "avg_temp_diff": -2.9,
+      "avg_temp_diff": -2.8,
       "max_temp_diff": -3.8,
       "min_temp_diff": -3.0,
       "avg_daily_range_diff": 1.9,
@@ -85,7 +85,7 @@
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 30.0,
-      "current_deviation": -4.2,
+      "current_deviation": -4.1,
       "years_count": 2,
       "ai_comment": ""
     },
@@ -318,7 +318,7 @@
       "avgs": [
         27.0,
         25.5,
-        24.9
+        25.1
       ]
     },
     "prev_year_comparison": {
@@ -330,7 +330,7 @@
       "this_year": [
         27.0,
         25.5,
-        24.9
+        25.1
       ],
       "last_year": [
         27.5,
@@ -379,7 +379,7 @@
       "deviations": [
         -3.0,
         -4.5,
-        -5.1
+        -4.9
       ],
       "baseline_avg": 30.0
     }
