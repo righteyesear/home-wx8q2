@@ -7,7 +7,7 @@
     "end_date": "2026-08-16",
     "label": "2026年 第33週（8/10 〜 8/16）"
   },
-  "generated_at": "2026-08-13T14:05:16.465810+09:00",
+  "generated_at": "2026-08-13T16:53:37.819004+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -15,24 +15,24 @@
       "highlights": [
         "最高気温 31.6℃",
         "最低気温 22.1℃",
-        "前週比 -2.2℃",
-        "前年比 -2.9℃"
+        "前週比 -2.3℃",
+        "前年比 -3.0℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 4,
-      "avg_temp": 25.8,
+      "avg_temp": 25.7,
       "avg_temp_stdev": 0.9,
       "max_temp": 31.6,
       "max_temp_date": "2026/08/10",
       "avg_high": 30.4,
       "min_temp": 22.1,
       "min_temp_date": "2026/08/12",
-      "avg_low": 23.0,
-      "avg_daily_range": 7.4,
-      "prev_week_diff": -2.2,
-      "prev_year_diff": -2.9
+      "avg_low": 22.8,
+      "avg_daily_range": 7.7,
+      "prev_week_diff": -2.3,
+      "prev_year_diff": -3.0
     },
     "daily_data": [
       {
@@ -63,9 +63,9 @@
         "date": "2026/08/13",
         "weekday": "木",
         "high": 29.4,
-        "low": 24.0,
-        "avg": 25.6,
-        "range": 5.4
+        "low": 23.1,
+        "avg": 25.4,
+        "range": 6.3
       }
     ],
     "comparison": {
@@ -84,16 +84,16 @@
         "avg_low": 26.2,
         "avg_daily_range": 6.2
       },
-      "avg_temp_diff": -2.9,
+      "avg_temp_diff": -3.0,
       "max_temp_diff": -3.8,
       "min_temp_diff": -3.0,
-      "avg_daily_range_diff": 1.2,
+      "avg_daily_range_diff": 1.5,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 30.0,
-      "current_deviation": -4.2,
+      "current_deviation": -4.3,
       "years_count": 2
     },
     "events": {
@@ -324,13 +324,13 @@
         23.6,
         22.2,
         22.1,
-        24.0
+        23.1
       ],
       "avgs": [
         27.0,
         25.5,
         25.0,
-        25.6
+        25.4
       ]
     },
     "prev_year_comparison": {
@@ -344,7 +344,7 @@
         27.0,
         25.5,
         25.0,
-        25.6
+        25.4
       ],
       "last_year": [
         27.5,
@@ -374,7 +374,7 @@
         23.6,
         22.2,
         22.1,
-        24.0
+        23.1
       ],
       "last_year_low": [
         26.4,
@@ -397,7 +397,7 @@
         -3.0,
         -4.5,
         -5.0,
-        -4.4
+        -4.6
       ],
       "baseline_avg": 30.0
     }
@@ -406,13 +406,13 @@
     "context_version": "3.2",
     "daily_pattern": {
       "opening_avg": 27.0,
-      "closing_avg": 25.6,
-      "front_to_back_change": -1.4,
-      "linear_slope_per_day": -0.47,
-      "daily_avg_stdev": 0.74,
-      "mean_absolute_day_change": 0.87,
+      "closing_avg": 25.4,
+      "front_to_back_change": -1.6,
+      "linear_slope_per_day": -0.53,
+      "daily_avg_stdev": 0.76,
+      "mean_absolute_day_change": 0.8,
       "largest_rise": {
-        "change": 0.6000000000000014,
+        "change": 0.3999999999999986,
         "from_date": "2026/08/12",
         "to_date": "2026/08/13"
       },
@@ -468,12 +468,12 @@
         2026
       ],
       "peer_average": 30.1,
-      "deviation_from_peer_average": -4.3,
+      "deviation_from_peer_average": -4.4,
       "rank_warmest": 3,
       "rank_coldest": 1,
-      "sample_min": 25.8,
+      "sample_min": 25.7,
       "sample_max": 31.0,
-      "sample_stdev": 2.16
+      "sample_stdev": 2.2
     },
     "recent_history": {
       "previous_periods": [
@@ -520,15 +520,15 @@
       ],
       "previous_period_count": 4,
       "previous_period_mean": 29.43,
-      "difference_from_previous_period_mean": -3.62
+      "difference_from_previous_period_mean": -3.73
     }
   },
   "analysis_meta": {
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-08-13T14:05:16.534081+09:00",
-    "data_fingerprint": "3b1b2f410d51b7c6b5b3",
+    "generated_at": "2026-08-13T16:53:37.871899+09:00",
+    "data_fingerprint": "c93457d885bd991988bd",
     "period_closed": false,
     "coverage_complete": false,
     "observed_days": 4,
