@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-14T19:56:32.430226+09:00",
-  "advice": "気温は26.6度と控えめですが、湿度が89％と高いため、風速を考慮した推定体感温度は32度を超えています。汗が蒸発する際の気化熱で体温を下げる働きが弱まり、室内でも知らず知らずのうちに熱がこもって身体へ負担がかかっています。今すぐできる対策として、エアコンの除湿運転とともに扇風機やサーキュレーターを併用し、部屋の中に緩やかな空気の流れを作りましょう。肌のまわりに溜まる高湿度の空気を散らすことで、効率よく涼しさを感じられます。また、就寝前や入浴前にはコップ1杯の水やスポーツドリンクを飲む習慣をつけてください。気象庁の予報では今夜これから雨が降る見込みで、外の湿気はさらに増していきます。窓を閉め切る夜間もエアコンの除湿や冷房を適温で稼働させ続け、室内の環境を整えておきましょう。💧",
+  "generated_at": "2026-08-14T20:49:30.134440+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.6-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.6-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 26.6,
-    "weather_temp": 25.2,
-    "weather": "霧雨",
+    "outdoor_temp": 26.3,
+    "weather_temp": 25.0,
+    "weather": "晴れ",
     "alerts_count": 1
   }
 }
