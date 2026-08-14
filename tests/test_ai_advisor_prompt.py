@@ -36,9 +36,9 @@ spec.loader.exec_module(module)
 
 class FakeResponse:
     text = (
-        "風は穏やかで、体感温度も過ごしやすい範囲です。"
-        "今後6時間も大きな崩れは見込みにくいため、"
-        "薄手の羽織で調整できます。"
+        "現在は風が穏やかで、体感温度も過ごしやすい範囲です。\n\n"
+        "今後6時間も大きな天気の崩れは見込みにくいでしょう。\n\n"
+        "外出時は薄手の羽織で調整するとよさそうです。"
     )
 
 
@@ -49,7 +49,7 @@ class FakeModels:
 
     def generate_content(self, *, model, contents):
         self.calls.append((model, contents))
-        if self.fail_primary and model == "gemini-3.6-flash":
+        if self.fail_primary and model == "gemini-3.7-flash":
             raise RuntimeError("primary unavailable")
         return FakeResponse()
 
@@ -57,7 +57,7 @@ class FakeModels:
 def run_with(fake_models, alerts=None):
     module.genai.Client = lambda **_kwargs: types.SimpleNamespace(models=fake_models)
     module.GEMINI_API_KEY = "test-key"
-    module.GEMINI_MODEL = "gemini-3.6-flash"
+    module.GEMINI_MODEL = "gemini-3.7-flash"
     module.load_moon_data = lambda: {"age": 1, "phase": "新月"}
 
     spreadsheet = {
@@ -90,7 +90,7 @@ def run_with(fake_models, alerts=None):
 
 primary = FakeModels()
 result = run_with(primary)
-assert primary.calls[0][0] == "gemini-3.6-flash"
+assert primary.calls[0][0] == "gemini-3.7-flash"
 assert "気象データ:" in primary.calls[0][1]
 assert "直前と同じ書き出し" in primary.calls[0][1]
 assert "Steadman参考値" in primary.calls[0][1]
@@ -98,6 +98,9 @@ assert "estimated_sensor_height_wind_ms" in primary.calls[0][1]
 assert "次回更新" not in primary.calls[0][1]
 assert "次回更新" not in result
 assert len(result) < 620
+assert result.count("\n\n") == 2
+assert "各段落の間には必ず空行" in primary.calls[0][1]
+assert "気象予報士の短い解説" in primary.calls[0][1]
 
 lightning_models = FakeModels()
 run_with(
@@ -136,26 +139,15 @@ run_with(
     },
 )
 lightning_prompt = lightning_models.calls[0][1]
-assert '"name":"雷注意報"' not in lightning_prompt
-assert '"id":"VPWW61:14"' not in lightning_prompt
+assert '"name":"雷注意報"' in lightning_prompt
+assert '"id":"VPWW61:14"' in lightning_prompt
 assert '"name":"レベル4 大雨危険警報"' in lightning_prompt
-assert "雷注意報はAI文章の対象外" in lightning_prompt
-
-filtered = module.filter_alerts_for_ai({
-    "alerts": [
-        {"data_type_code": "VPWW61", "code": "14", "name": "雷注意報"},
-        {"data_type_code": "VPWW55", "code": "03", "name": "レベル3 大雨警報"},
-    ]
-})
-assert [alert["name"] for alert in filtered["alerts"]] == ["レベル3 大雨警報"]
-assert module._remove_lightning_advisory_mentions(
-    "気温は高めです。雷注意報が出ています。水分補給をしてください。"
-) == "気温は高めです。水分補給をしてください。"
+assert "雷注意報は判断材料に含め" in lightning_prompt
 
 failed = FakeModels(fail_primary=True)
 failed_result = run_with(failed)
-assert [call[0] for call in failed.calls] == ["gemini-3.6-flash"]
-assert failed_result.startswith("⚠️ 分析エラー (gemini-3.6-flash):")
+assert [call[0] for call in failed.calls] == ["gemini-3.7-flash"]
+assert failed_result.startswith("⚠️ 分析エラー (gemini-3.7-flash):")
 
 no_data_models = FakeModels()
 module.genai.Client = lambda **_kwargs: types.SimpleNamespace(models=no_data_models)
@@ -182,6 +174,15 @@ assert module._select_editorial_focus(
     25,
     {},
     {"alerts": [{"level": 4}]},
+    {},
+).startswith("防災情報")
+
+assert not module._select_editorial_focus(
+    module.datetime.now(module.JST),
+    25,
+    25,
+    {},
+    {"alerts": [{"level": 2, "name": "雷注意報"}]},
     {},
 ).startswith("防災情報")
 

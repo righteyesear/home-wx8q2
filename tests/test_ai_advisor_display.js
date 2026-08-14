@@ -30,7 +30,7 @@ const context = {
     document: { getElementById(id) { return elements[id] || element(); } },
     fetch: async () => ({ ok: true, json: async () => responseData }),
     summaryData: { currentTemp: 37.7 },
-    simpleMarkdownToHtml: value => value,
+    simpleMarkdownToHtml: value => value.replace(/\n/g, '<br>'),
     setTimeout,
     Date,
     Object,
@@ -58,6 +58,18 @@ assert.strictEqual(context.optionalFiniteNumber('34.6'), 34.6);
     assert(elements.aiAdvisorSection.classList.contains('show'));
     assert(!elements.aiAdvisorSection.classList.contains('is-waiting'));
     assert.match(elements.aiAdvisorText.innerHTML, /夕方の雷雨/);
+
+    responseData = {
+        generated_at: new Date().toISOString(),
+        advice: '現在の状況です。\n\n今後の見通しです。\n\n行動の目安です。',
+        data_summary: { outdoor_temp: null }
+    };
+    await context.loadAIComment();
+    assert.match(
+        elements.aiAdvisorText.innerHTML,
+        /現在の状況です。<br><br>今後の見通しです。<br><br>行動の目安です。/,
+        'blank lines between the three paragraphs must survive rendering'
+    );
 
     responseData = {
         generated_at: '2026-01-01T00:00:00+09:00',

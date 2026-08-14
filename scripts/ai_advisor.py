@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """
-AI気象アドバイザー - Gemini 3.6 Flash による総合分析
+AI気象アドバイザー - Gemini 3.7 Flash による総合分析
 データ収集 → Gemini APIで分析 → ai_comment.json 出力
 """
 
 import os
 import json
-import re
 import requests
 from datetime import datetime, timedelta, timezone
 from typing import Optional, Dict, Any, List
@@ -28,7 +27,7 @@ from data_analysis import analyze_data_comprehensive
 # =============================================================================
 SPREADSHEET_ID = os.environ.get('SPREADSHEET_ID', '1nbmJIIUzw8n2PcHp98NaiKnaAVciBx_Egpokjjx7uW8')
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
-GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.6-flash')
+GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.7-flash')
 
 # 東京都葛飾区東金町5丁目
 LATITUDE = 35.7727
@@ -715,30 +714,6 @@ def normalize_jma_alerts(data: Any, area_code: str = AREA_CODE) -> Dict[str, Any
     return result
 
 
-def _is_lightning_advisory(alert: Any) -> bool:
-    """雷注意報だけをAI文章の材料から識別する。画面表示用の元データは変えない。"""
-    if not isinstance(alert, dict):
-        return False
-    name = str(alert.get('name') or '')
-    data_type_code = str(
-        alert.get('data_type_code') or alert.get('dataTypeCode') or ''
-    )
-    raw_code = alert.get('code')
-    code = str(raw_code).zfill(2) if raw_code is not None else ''
-    return name == '雷注意報' or (data_type_code == 'VPWW61' and code == '14')
-
-
-def filter_alerts_for_ai(alerts_data: Dict[str, Any]) -> Dict[str, Any]:
-    """雷注意報を除いたAI専用コピーを返す。"""
-    filtered = dict(alerts_data or {})
-    for key in ('alerts', 'special_warnings', 'warnings', 'advisories', 'transitions'):
-        filtered[key] = [
-            item for item in ((alerts_data or {}).get(key) or [])
-            if not _is_lightning_advisory(item)
-        ]
-    return filtered
-
-
 def fetch_jma_alerts() -> Dict[str, Any]:
     """気象庁APIから葛飾区の警報・注意報を取得"""
     try:
@@ -873,8 +848,9 @@ def _select_editorial_focus(
 ) -> str:
     """危険度と観測状況を優先し、平常時だけ観点をローテーションする。"""
     alerts = alerts_data.get('alerts') or []
-    if alerts:
-        highest_level = max((alert.get('level') or 0) for alert in alerts)
+    urgent_alerts = [alert for alert in alerts if (alert.get('level') or 0) >= 3]
+    if urgent_alerts:
+        highest_level = max((alert.get('level') or 0) for alert in urgent_alerts)
         return (
             f'防災情報を最優先。最高レベル{highest_level}の内容、'
             '取るべき行動、今後の確認事項を簡潔に伝える'
@@ -925,12 +901,6 @@ def _trim_advice_body(text: str, max_length: int = 540) -> str:
     return candidate.rstrip('、， ') + '…'
 
 
-def _remove_lightning_advisory_mentions(text: str) -> str:
-    """モデルがルールを外した場合も、雷注意報に触れる文を最終出力から除く。"""
-    chunks = re.split(r'(?<=[。！？])|\n+', text)
-    return ''.join(chunk for chunk in chunks if '雷注意報' not in chunk).strip()
-
-
 def analyze_with_gemini(
     spreadsheet_data: Dict,
     weather_data: Dict,
@@ -940,7 +910,6 @@ def analyze_with_gemini(
     if not GEMINI_API_KEY:
         return "⚠️ APIキーが設定されていません"
 
-    advisor_alerts = filter_alerts_for_ai(alerts_data)
     now = datetime.now(JST)
     current_hour = now.hour
     weekday_names = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日', '日曜日']
@@ -1025,7 +994,7 @@ def analyze_with_gemini(
         sensor_temp,
         sensor_feels_like,
         weather_data,
-        advisor_alerts,
+        alerts_data,
         analysis,
     )
 
@@ -1100,8 +1069,8 @@ def analyze_with_gemini(
             'near_forecasts': rain_forecasts,
         },
         'snow判断': weather_data.get('snow_detection') or {},
-        'jma_alerts': advisor_alerts.get('alerts') or [],
-        'jma_transitions': advisor_alerts.get('transitions') or [],
+        'jma_alerts': alerts_data.get('alerts') or [],
+        'jma_transitions': alerts_data.get('transitions') or [],
         'recent_analysis': {
             'statistics': analysis.get('statistics') or {},
             'trends': analysis.get('trends') or {},
@@ -1120,12 +1089,12 @@ def analyze_with_gemini(
             'jma_forecast_error': (
                 (weather_data.get('jma_forecast') or {}).get('error')
             ),
-            'jma_error': advisor_alerts.get('error'),
+            'jma_error': alerts_data.get('error'),
             'rain_nowcast_error': rain.get('error'),
         },
     }
 
-    prompt = f"""あなたは東京都葛飾区の個人向け「AI気象アドバイザー」です。
+    prompt = f"""あなたは東京都葛飾区の個人向け「AI気象アドバイザー」です。気象予報士の解説のように、観測事実と見通しを分け、落ち着いた専門家の口調で伝えてください。
 
 目的:
 - いま重要な気象変化を見抜き、生活上の判断につながる短い日本語文を書く。
@@ -1147,7 +1116,7 @@ def analyze_with_gemini(
 - 雨の実況と約1時間先はYahooのrain_nowcast、先の天気と降水確率はofficial_jma_forecastを優先する。
 - Open-Meteoの天気・降水予報は、Yahooや気象庁が取得できない場合の補足に限る。風・気圧・UVなどは参考値として扱う。
 - 今日の実測最高・最低を、一日全体の予報最高・最低として扱わない。
-- 雷注意報はAI文章の対象外とし、雷注意報の発表・継続・解除には触れない。他の警報・注意報は通常どおり扱う。
+- 雷注意報は判断材料に含め、雷や強雨の具体的な裏付けがある場合は簡潔に触れてよい。ただし、注意報が継続しているだけなら毎回の主題にせず、同じ警戒文を繰り返さない。注意報単独で危険度を誇張しない。
 - 警報がない場合は「警報はありません」と書かない。
 - source_statusにエラーがある情報源について、取得できた・異常なしとは断定しない。
 - 科学解説はデータで裏付けられるものを最大1つ。用語辞典のようにしない。
@@ -1156,7 +1125,9 @@ def analyze_with_gemini(
 文章:
 - 今回もっとも重要な話題を1つ、必要なら補助話題を1つに絞る。
 - 結論から始める。定型的な挨拶、曜日だけの導入、「データによると」は不要。
-- 2〜4段落、通常260〜440文字程度。緊急時は安全情報を優先してよい。
+- 基本は3段落、通常260〜440文字程度。第1段落は結論と現在、第2段落は今後の推移と根拠、第3段落は具体的な行動判断を書く。緊急時は安全情報を優先してよい。
+- 各段落の間には必ず空行を1行入れる。意味の異なる内容を一続きに詰め込まない。
+- 気象予報士の短い解説のように、「見込みです」「注意が必要です」「〜とみられます」を自然に使う。ただし断定しすぎず、同じ語尾を連続させない。
 - 親しみは保つが、毎回「〜ですね」「お過ごしください」で締めない。
 - 絵文字は必要な場合だけ0〜2個。見出し、箇条書き、Markdown装飾は使わない。
 
@@ -1173,7 +1144,7 @@ def analyze_with_gemini(
 気象データ:
 {json.dumps(context, ensure_ascii=False, separators=(',', ':'), default=str)}
 
-本文だけを出力してください。"""
+本文だけを出力し、3段落の間を空行で区切ってください。"""
 
     if not has_sensor_source and not has_weather_source:
         return '⚠️ 気象データを取得できなかったため、AI分析を実行しませんでした。'
@@ -1188,10 +1159,7 @@ def analyze_with_gemini(
         raw_advice = (response.text or '').strip()
         if not raw_advice:
             raise ValueError('空のレスポンス')
-        filtered_advice = _remove_lightning_advisory_mentions(raw_advice)
-        if not filtered_advice:
-            raise ValueError('雷注意報を除外した結果、本文が空になりました')
-        return _trim_advice_body(filtered_advice)
+        return _trim_advice_body(raw_advice)
     except Exception as exc:
         print(f'  [WARN] Gemini生成エラー ({GEMINI_MODEL}): {exc}')
         return f'⚠️ 分析エラー ({GEMINI_MODEL}): {str(exc)[:160]}'

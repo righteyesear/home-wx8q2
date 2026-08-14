@@ -47,7 +47,7 @@ from google import genai
 # =============================================================================
 SPREADSHEET_ID = os.environ.get('SPREADSHEET_ID', '1nbmJIIUzw8n2PcHp98NaiKnaAVciBx_Egpokjjx7uW8')
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
-GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.6-flash')
+GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.7-flash')
 # 1レポートを1回で分析する。誤操作や将来のループでも無料枠を浪費しない。
 GEMINI_MAX_CALLS_PER_RUN = max(0, min(int(os.environ.get('GEMINI_MAX_CALLS_PER_RUN', '1')), 20))
 _gemini_calls = 0

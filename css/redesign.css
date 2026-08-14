@@ -629,7 +629,7 @@ html.light-mode .precipitation-card {
 }
 
 .precipitation-chart-container {
-    height: 144px;
+    height: 172px;
 }
 
 .ai-advisor-section,
@@ -1416,7 +1416,7 @@ body.simple-mode .chart-card[data-chart-id="chart24h"] {
     }
 
     .precipitation-chart-container {
-        height: 132px;
+        height: 150px;
     }
 
     .ai-advisor-content,

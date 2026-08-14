@@ -55,4 +55,24 @@ assert.strictEqual(actualRain.isActive, true);
 assert.strictEqual(actualRain.precipType, 'rain');
 assert.match(actualRain.condition, /雨/);
 
+const redesignCss = fs.readFileSync(
+    path.resolve(__dirname, '..', 'css', 'redesign.css'),
+    'utf8'
+);
+const indexHtml = fs.readFileSync(
+    path.resolve(__dirname, '..', 'index.html'),
+    'utf8'
+);
+assert.match(
+    redesignCss,
+    /\.precipitation-chart-container\s*\{\s*height:\s*172px;/,
+    'desktop precipitation chart height must remain enlarged'
+);
+assert.match(
+    redesignCss,
+    /\.precipitation-chart-container\s*\{\s*height:\s*150px;/,
+    'mobile precipitation chart height must remain enlarged'
+);
+assert.match(indexHtml, /redesign\.css\?v=20260815a/);
+
 console.log('precipitation override tests: ok');
