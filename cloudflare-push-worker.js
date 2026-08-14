@@ -4,14 +4,22 @@ export default {
         const url = new URL(request.url);
         const path = url.pathname;
 
+        const requestOrigin = request.headers.get('Origin');
+        const originAllowed = this.isAllowedOrigin(requestOrigin, env);
         const corsHeaders = {
-            'Access-Control-Allow-Origin': '*',
+            ...(originAllowed ? {
+                'Access-Control-Allow-Origin': requestOrigin || '*'
+            } : {}),
             'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            'Vary': 'Origin',
         };
 
         if (request.method === 'OPTIONS') {
-            return new Response(null, { headers: corsHeaders });
+            return new Response(null, {
+                status: originAllowed ? 204 : 403,
+                headers: corsHeaders
+            });
         }
 
         const adminPaths = new Set([
@@ -40,6 +48,12 @@ export default {
 
         switch (path) {
             case '/api/subscribe':
+                if (!originAllowed) {
+                    return new Response(JSON.stringify({ error: 'Origin not allowed' }), {
+                        status: 403,
+                        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                    });
+                }
                 if (request.method === 'POST') return this.subscribe(request, env, corsHeaders);
                 if (request.method === 'DELETE') return this.unsubscribe(request, env, corsHeaders);
                 break;
@@ -96,6 +110,30 @@ export default {
         });
     },
 
+    isAllowedOrigin(origin, env) {
+        // OriginヘッダーがないWorker間通信・手動診断は許可する。
+        if (!origin) return true;
+
+        const configured = String(
+            env.ALLOWED_ORIGINS || 'https://righteyesear.github.io'
+        )
+            .split(',')
+            .map(value => value.trim())
+            .filter(Boolean);
+        if (configured.includes(origin)) return true;
+
+        // ローカル開発だけは任意ポートを許可する。
+        try {
+            const parsed = new URL(origin);
+            return (
+                (parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1')
+                && parsed.protocol === 'http:'
+            );
+        } catch {
+            return false;
+        }
+    },
+
     async subscribe(request, env, corsHeaders) {
         try {
             const subscription = await request.json();
@@ -128,6 +166,12 @@ export default {
     async unsubscribe(request, env, corsHeaders) {
         try {
             const { endpoint } = await request.json();
+            if (typeof endpoint !== 'string' || !endpoint.startsWith('https://')) {
+                return new Response(JSON.stringify({ error: 'Invalid push endpoint' }), {
+                    status: 400,
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                });
+            }
             const key = this.hashEndpoint(endpoint);
             await env.KV.delete(key);
             return new Response(JSON.stringify({ success: true }), {
@@ -268,7 +312,9 @@ export default {
             const results = await this.sendToAll(env, {
                 title,
                 body,
-                data: { url: './#precipitationCard' }
+                tag: 'rain-status',
+                data: { url: './#precipitationCard' },
+                pushOptions: { ttl: 900, urgency: 'high', topic: 'rain-status' }
             });
 
             return new Response(JSON.stringify({ success: true, currentRain, results }), {
@@ -390,9 +436,8 @@ export default {
             '警報から注意報'
         ]);
 
-        const active = [];
+        const latestById = new Map();
         const transitions = [];
-        const seen = new Set();
         let latestControlDatetime = '';
 
         for (const report of data) {
@@ -409,6 +454,14 @@ export default {
                     const status = kind.status || '';
                     const code = kind.code?.toString().padStart(2, '0') || '';
 
+                    if (!code) continue;
+                    const id = `${dataTypeCode}:${code}`;
+                    const timestamp = Date.parse(
+                        report.reportDatetime || report.controlDatetime || ''
+                    ) || 0;
+                    const previous = latestById.get(id);
+                    if (previous && previous.timestamp > timestamp) continue;
+
                     if (!activeStatuses.has(status)) {
                         if (status && status !== '発表警報・注意報はなし') {
                             transitions.push({
@@ -418,32 +471,35 @@ export default {
                                 reportDatetime: report.reportDatetime || null
                             });
                         }
+                        latestById.set(id, { active: false, timestamp });
                         continue;
                     }
-                    if (!code) continue;
-
-                    const id = `${dataTypeCode}:${code}`;
-                    if (seen.has(id)) continue;
-                    seen.add(id);
 
                     const definition = codeDefinitions[code] || {
                         name: `気象警報等（${dataTypeCode}/${code}）`,
                         level: 0
                     };
-                    active.push({
-                        id,
-                        dataTypeCode,
-                        code,
-                        name: definition.name,
-                        level: definition.level,
-                        status,
-                        reportDatetime: report.reportDatetime || null,
-                        controlDatetime: report.controlDatetime || null
+                    latestById.set(id, {
+                        active: true,
+                        timestamp,
+                        alert: {
+                            id,
+                            dataTypeCode,
+                            code,
+                            name: definition.name,
+                            level: definition.level,
+                            status,
+                            reportDatetime: report.reportDatetime || null,
+                            controlDatetime: report.controlDatetime || null
+                        }
                     });
                 }
             }
         }
 
+        const active = [...latestById.values()]
+            .filter(item => item.active && item.alert)
+            .map(item => item.alert);
         active.sort((a, b) => b.level - a.level || a.id.localeCompare(b.id));
         return { areaCode, latestControlDatetime, active, transitions };
     },
@@ -513,7 +569,11 @@ export default {
                 await this.sendToAll(env, {
                     title,
                     body: `${alerts.map(alert => alert.name).join(' ')}${timeStr ? `（${timeStr}発表）` : ''}\n${guidance}`,
-                    data: { url: './#alertBanner' }
+                    tag: 'jma-warning',
+                    requireInteraction: true,
+                    renotify: true,
+                    data: { url: './#alertBanner' },
+                    pushOptions: { ttl: 1800, urgency: 'high', topic: 'jma-warning' }
                 });
             };
 
@@ -543,13 +603,19 @@ export default {
                     await this.sendToAll(env, {
                         title: '⚠️ 気象警報の切替',
                         body: `${resolvedUrgent.map(alert => alert.name).join('・')}は解除され、${replacements.map(alert => alert.name).join('・')}に切り替わりました。`,
-                        data: { url: './#alertBanner' }
+                        tag: 'jma-warning',
+                        renotify: true,
+                        data: { url: './#alertBanner' },
+                        pushOptions: { ttl: 1800, urgency: 'high', topic: 'jma-warning' }
                     });
                 } else {
                     await this.sendToAll(env, {
                         title: '✅ 気象警報解除',
                         body: `${resolvedUrgent.map(alert => alert.name).join('・')}は解除されました。`,
-                        data: { url: './#alertBanner' }
+                        tag: 'jma-warning',
+                        renotify: true,
+                        data: { url: './#alertBanner' },
+                        pushOptions: { ttl: 3600, urgency: 'normal', topic: 'jma-warning' }
                     });
                 }
             }
@@ -652,7 +718,18 @@ export default {
 
                 const lastNotify = await env.KV.get(rainKey);
                 if (!lastNotify) {
-                    await this.sendToAll(env, { title, body, data: { url: './#precipitationCard' } });
+                    await this.sendToAll(env, {
+                        title,
+                        body,
+                        tag: 'rain-forecast',
+                        renotify: true,
+                        data: { url: './#precipitationCard' },
+                        pushOptions: {
+                            ttl: 1800,
+                            urgency: level >= 2 ? 'high' : 'normal',
+                            topic: 'rain-forecast'
+                        }
+                    });
                     await env.KV.put(rainKey, 'true', { expirationTtl: 3600 }); // 1時間クールダウン
                 }
 
@@ -694,7 +771,9 @@ export default {
                 await this.sendToAll(env, {
                     title: '🌕 今夜は満月',
                     body: `${moonName}が見られます`,
-                    data: { url: './#moonCard' }
+                    tag: 'moon-calendar',
+                    data: { url: './#moonCard' },
+                    pushOptions: { ttl: 43200, urgency: 'low', topic: 'moon-calendar' }
                 });
 
                 await env.KV.put('fullmoon_' + jstDate, 'true', { expirationTtl: 86400 });
@@ -807,7 +886,16 @@ export default {
                     ? '⚠️ 気温警報'
                     : '🌡️ 気温情報',
                 body: message,
-                data: { url: './#weatherHero' }
+                tag: 'temperature-alert',
+                renotify: true,
+                data: { url: './#weatherHero' },
+                pushOptions: {
+                    ttl: 3600,
+                    urgency: alertType === 'freezing' || alertType === 'heatwave'
+                        ? 'high'
+                        : 'normal',
+                    topic: 'temperature-alert'
+                }
             });
 
             // 送信済みフラグ（回復するまで有効、最大24時間）
@@ -917,7 +1005,9 @@ export default {
             await this.sendToAll(env, {
                 title: '🌡️ 気温の変化',
                 body: message,
-                data: { url: './#weatherHero' }
+                tag: 'temperature-change',
+                data: { url: './#weatherHero' },
+                pushOptions: { ttl: 3600, urgency: 'normal', topic: 'temperature-change' }
             });
 
             await env.KV.put(key, 'true', { expirationTtl: 21600 }); // 6時間
@@ -962,6 +1052,7 @@ export default {
         const delivery = {
             attemptedAt: new Date().toISOString(),
             title: String(payload?.title || '').slice(0, 100),
+            transport: this.getPushTransportOptions(payload),
             subscribers: list.keys.length,
             sent,
             failed,
@@ -982,6 +1073,27 @@ export default {
         return { sent, failed, cleaned };
     },
 
+    getPushTransportOptions(payload = {}) {
+        const requested = payload.pushOptions || {};
+        const parsedTtl = Number.parseInt(requested.ttl, 10);
+        const ttl = Number.isFinite(parsedTtl)
+            ? Math.min(Math.max(parsedTtl, 0), 172800)
+            : 3600;
+        const allowedUrgencies = new Set(['very-low', 'low', 'normal', 'high']);
+        const urgency = allowedUrgencies.has(requested.urgency)
+            ? requested.urgency
+            : 'normal';
+        const rawTopic = String(requested.topic || '');
+        const topic = /^[A-Za-z0-9_-]{1,32}$/.test(rawTopic) ? rawTopic : null;
+        return { ttl, urgency, topic };
+    },
+
+    getClientPushPayload(payload = {}) {
+        const clientPayload = { ...payload };
+        delete clientPayload.pushOptions;
+        return clientPayload;
+    },
+
     async sendWebPush(env, subscription, payload) {
         try {
             const vapidHeaders = await this.generateVapidHeaders(
@@ -994,20 +1106,25 @@ export default {
             console.log('[Push] Sending to:', subscription.endpoint.slice(-30));
 
             // ペイロードを暗号化
-            const payloadText = JSON.stringify(payload);
+            const transport = this.getPushTransportOptions(payload);
+            const payloadText = JSON.stringify(this.getClientPushPayload(payload));
             const encrypted = await this.encryptPayload(subscription, payloadText);
 
             console.log('[Push] Encrypted payload size:', encrypted.byteLength);
 
+            const headers = {
+                'Authorization': vapidHeaders.authorization,
+                'Crypto-Key': vapidHeaders.cryptoKey,
+                'Content-Encoding': 'aes128gcm',
+                'Content-Type': 'application/octet-stream',
+                'TTL': String(transport.ttl),
+                'Urgency': transport.urgency,
+            };
+            if (transport.topic) headers.Topic = transport.topic;
+
             const response = await fetch(subscription.endpoint, {
                 method: 'POST',
-                headers: {
-                    'Authorization': vapidHeaders.authorization,
-                    'Crypto-Key': vapidHeaders.cryptoKey,
-                    'Content-Encoding': 'aes128gcm',
-                    'Content-Type': 'application/octet-stream',
-                    'TTL': '86400',
-                },
+                headers,
                 body: encrypted
             });
 
@@ -1236,8 +1353,8 @@ export default {
             }
         }
 
-        // 夕方17時0分: 日没時刻通知
-        if (hour === 17 && minute === 0) {
+        // 15時0分: 季節を問わず日没前に届くよう通知
+        if (hour === 15 && minute === 0) {
             try {
                 await this.checkSunset(env);
                 console.log('[Cron] Sunset check done');
@@ -1373,7 +1490,10 @@ export default {
             await this.sendToAll(env, {
                 title: '🧊 明日の朝は凍結注意',
                 body: message,
-                data: { url: './#weatherHero' }
+                tag: 'frost-alert',
+                renotify: true,
+                data: { url: './#weatherHero' },
+                pushOptions: { ttl: 21600, urgency: 'normal', topic: 'frost-alert' }
             });
 
             await env.KV.put('frost_alert_' + today, 'true', { expirationTtl: 43200 }); // 12時間
@@ -1418,7 +1538,7 @@ export default {
             // 2. 現在の気温と今日の予報気温
             try {
                 const meteoResp = await fetch(
-                    'https://api.open-meteo.com/v1/forecast?latitude=35.6895&longitude=139.6917&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max&timezone=Asia%2FTokyo&forecast_days=1'
+                    'https://api.open-meteo.com/v1/forecast?latitude=35.6895&longitude=139.6917&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max&wind_speed_unit=ms&timezone=Asia%2FTokyo&forecast_days=1'
                 );
                 if (meteoResp.ok) {
                     const meteo = await meteoResp.json();
@@ -1426,6 +1546,7 @@ export default {
                     const todayMin = meteo.daily?.temperature_2m_min?.[0];
                     const precipProb = meteo.daily?.precipitation_probability_max?.[0] ?? null;
                     const windMax = meteo.daily?.wind_speed_10m_max?.[0] ?? null;
+                    const gustMax = meteo.daily?.wind_gusts_10m_max?.[0] ?? null;
 
                     if (todayMax !== null && todayMin !== null) {
                         summaryParts.push(`🌡️ ${todayMin?.toFixed(0)}°C～${todayMax?.toFixed(0)}°Cの見込み`);
@@ -1434,15 +1555,18 @@ export default {
                         summaryParts.push(`☔ 降水確率 ${precipProb}%`);
                     }
 
-                    // ① 洗澯日和判定
+                    // ① 洗濯日和判定（風速はm/s）
                     if (precipProb !== null && windMax !== null && todayMax !== null) {
-                        if (precipProb <= 20 && todayMax >= 10 && windMax <= 15) {
-                            summaryParts.push('👕 洗澯日和です！屋外干しがおすすめ');
+                        if (precipProb <= 20 && todayMax >= 10 && windMax < 10) {
+                            summaryParts.push('👕 洗濯日和です！屋外干しがおすすめ');
                         } else if (precipProb >= 50) {
                             summaryParts.push('🏠 室内干しをおすすめします');
-                        } else if (windMax > 15) {
-                            summaryParts.push('💨 風が強いので洗澯物の扱いに注意');
+                        } else if (windMax >= 10) {
+                            summaryParts.push('💨 風が強いので洗濯物の扱いに注意');
                         }
+                    }
+                    if (gustMax !== null && gustMax >= 15) {
+                        summaryParts.push(`💨 最大瞬間風速${gustMax.toFixed(0)}m/s見込み。飛散物に注意`);
                     }
                 }
             } catch (e) {
@@ -1478,7 +1602,9 @@ export default {
             await this.sendToAll(env, {
                 title: '🌅 おはよう！今日の天気',
                 body: summaryParts.join('\n'),
-                data: { url: './#weatherHero' }
+                tag: 'daily-summary',
+                data: { url: './#weatherHero' },
+                pushOptions: { ttl: 14400, urgency: 'normal', topic: 'daily-summary' }
             });
 
             await env.KV.put('daily_summary_' + today, 'true', { expirationTtl: 86400 });
@@ -1590,7 +1716,9 @@ export default {
             await this.sendToAll(env, {
                 title: '🌤️ 雨が上がりました',
                 body: '雨が止んで、この先1時間は降水の予報がありません',
-                data: { url: './#precipitationCard' }
+                tag: 'rain-status',
+                data: { url: './#precipitationCard' },
+                pushOptions: { ttl: 3600, urgency: 'low', topic: 'rain-status' }
             });
 
             await env.KV.put(stopKey, 'true', { expirationTtl: 7200 }); // 2時間クールダウン
@@ -1641,7 +1769,10 @@ export default {
             await this.sendToAll(env, {
                 title: `🌡️ 急な気温${isRising ? '上昇' : '低下'}`,
                 body: `${Math.abs(diff).toFixed(1)}°C${isRising ? '上昇' : '低下'}して現在${currentTemp.toFixed(1)}°C\n服装・体調管理に注意してください`,
-                data: { url: './#weatherHero' }
+                tag: 'rapid-temperature',
+                renotify: true,
+                data: { url: './#weatherHero' },
+                pushOptions: { ttl: 3600, urgency: 'normal', topic: 'rapid-temperature' }
             });
             await env.KV.put(key, 'true', { expirationTtl: 10800 }); // 3時間
             return { currentTemp, diff, alerted: true };
@@ -1673,7 +1804,9 @@ export default {
             await this.sendToAll(env, {
                 title: '🌇 今日の日没時刻',
                 body: `今日の日没は ${timeStr} です\n洗濯物の取り込みをお忘れなく`,
-                data: { url: './#weatherHero' }
+                tag: 'sunset-reminder',
+                data: { url: './#weatherHero' },
+                pushOptions: { ttl: 10800, urgency: 'low', topic: 'sunset-reminder' }
             });
             await env.KV.put('sunset_' + dateKey, 'true', { expirationTtl: 86400 });
             return { sunset: timeStr };
@@ -1687,7 +1820,7 @@ export default {
     async sendWeeklySummary(env) {
         try {
             const jstNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
-            const weekKey = `weekly_${jstNow.getFullYear()}_W${Math.ceil(jstNow.getDate() / 7)}`;
+            const weekKey = `weekly_${jstNow.getFullYear()}-${String(jstNow.getMonth() + 1).padStart(2, '0')}-${String(jstNow.getDate()).padStart(2, '0')}`;
             if (await env.KV.get(weekKey)) return { skipped: 'already_sent' };
 
             const SPREADSHEET_ID = '1nbmJIIUzw8n2PcHp98NaiKnaAVciBx_Egpokjjx7uW8';
@@ -1717,9 +1850,11 @@ export default {
             await this.sendToAll(env, {
                 title: '📊 今週の気温まとめ',
                 body: `最高: ${weekHigh}°C / 最低: ${weekLow}°C\n平均最高: ${avgHigh}°C（直近${temps.length}日）`,
-                data: { url: './#temperatureChart' }
+                tag: 'weekly-summary',
+                data: { url: './#temperatureChart' },
+                pushOptions: { ttl: 86400, urgency: 'low', topic: 'weekly-summary' }
             });
-            await env.KV.put(weekKey, 'true', { expirationTtl: 604800 }); // 7日
+            await env.KV.put(weekKey, 'true', { expirationTtl: 691200 }); // 8日
             return { weekHigh, weekLow, avgHigh };
         } catch (e) {
             console.error('[WeeklySummary Error]', e.message);

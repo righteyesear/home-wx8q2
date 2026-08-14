@@ -108,4 +108,32 @@ except ValueError as error:
 else:
     raise AssertionError("legacy schema must be rejected")
 
+active_then_released = [
+    {
+        "dataTypeCode": "VPWW61",
+        "reportDatetime": "2026-08-12T18:00:00+09:00",
+        "warning": {
+            "class20Items": [
+                {
+                    "areaCode": "1312200",
+                    "kinds": [{"code": "14", "status": "発表"}],
+                }
+            ]
+        },
+    },
+    {
+        "dataTypeCode": "VPWW61",
+        "reportDatetime": "2026-08-12T21:01:00+09:00",
+        "warning": {
+            "class20Items": [
+                {
+                    "areaCode": "1312200",
+                    "kinds": [{"code": "14", "status": "解除"}],
+                }
+            ]
+        },
+    },
+]
+assert module.normalize_jma_alerts(active_then_released, "1312200")["alerts"] == []
+
 print(f"Python JMA tests passed: {len(cases)} cases + raw fixtures")

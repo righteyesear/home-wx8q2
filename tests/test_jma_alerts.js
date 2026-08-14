@@ -127,6 +127,11 @@ const activeThenReleased = [
     }
 ];
 assert.equal(normalizeUi(activeThenReleased, '1312200').length, 0, 'newer release must supersede older active advisory');
+assert.equal(
+    worker.normalizeJMAWarnings(activeThenReleased, '1312200').active.length,
+    0,
+    'Worker must also let a newer release supersede an older active advisory'
+);
 
 // Worker notification state: new -> continuing -> downgrade -> release -> reissue.
 const kvStore = new Map();
@@ -158,6 +163,9 @@ context.fetch = async () => ({
 (async () => {
     await worker.checkJMAWarnings(env);
     assert.equal(notifications.length, 1, 'new level 3 must notify once');
+    assert.equal(notifications[0].tag, 'jma-warning');
+    assert.equal(notifications[0].pushOptions.ttl, 1800);
+    assert.equal(notifications[0].pushOptions.urgency, 'high');
 
     responseData = loadJson('continuing-katsushika.json');
     await worker.checkJMAWarnings(env);

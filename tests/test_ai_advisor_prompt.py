@@ -54,7 +54,7 @@ class FakeModels:
         return FakeResponse()
 
 
-def run_with(fake_models):
+def run_with(fake_models, alerts=None):
     module.genai.Client = lambda **_kwargs: types.SimpleNamespace(models=fake_models)
     module.GEMINI_API_KEY = "test-key"
     module.GEMINI_MODEL = "gemini-3.6-flash"
@@ -84,7 +84,7 @@ def run_with(fake_models):
         "daily": {},
         "yahoo_precip": {},
     }
-    alerts = {"alerts": [], "transitions": []}
+    alerts = alerts or {"alerts": [], "transitions": []}
     return module.analyze_with_gemini(spreadsheet, weather, alerts)
 
 
@@ -98,6 +98,59 @@ assert "estimated_sensor_height_wind_ms" in primary.calls[0][1]
 assert "次回更新" not in primary.calls[0][1]
 assert "次回更新" not in result
 assert len(result) < 620
+
+lightning_models = FakeModels()
+run_with(
+    lightning_models,
+    {
+        "alerts": [
+            {
+                "id": "VPWW61:14",
+                "data_type_code": "VPWW61",
+                "code": "14",
+                "name": "雷注意報",
+                "level": 2,
+            },
+            {
+                "id": "VPWW55:43",
+                "data_type_code": "VPWW55",
+                "code": "43",
+                "name": "レベル4 大雨危険警報",
+                "level": 4,
+            },
+        ],
+        "advisories": [
+            {
+                "data_type_code": "VPWW61",
+                "code": "14",
+                "name": "雷注意報",
+            }
+        ],
+        "transitions": [
+            {
+                "data_type_code": "VPWW61",
+                "code": "14",
+                "status": "解除",
+            }
+        ],
+    },
+)
+lightning_prompt = lightning_models.calls[0][1]
+assert '"name":"雷注意報"' not in lightning_prompt
+assert '"id":"VPWW61:14"' not in lightning_prompt
+assert '"name":"レベル4 大雨危険警報"' in lightning_prompt
+assert "雷注意報はAI文章の対象外" in lightning_prompt
+
+filtered = module.filter_alerts_for_ai({
+    "alerts": [
+        {"data_type_code": "VPWW61", "code": "14", "name": "雷注意報"},
+        {"data_type_code": "VPWW55", "code": "03", "name": "レベル3 大雨警報"},
+    ]
+})
+assert [alert["name"] for alert in filtered["alerts"]] == ["レベル3 大雨警報"]
+assert module._remove_lightning_advisory_mentions(
+    "気温は高めです。雷注意報が出ています。水分補給をしてください。"
+) == "気温は高めです。水分補給をしてください。"
 
 failed = FakeModels(fail_primary=True)
 failed_result = run_with(failed)

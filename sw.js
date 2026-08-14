@@ -1,6 +1,6 @@
 // Service Worker for 外気温モニター PWA
 // Version 4 - Push Notification Support
-const CACHE_NAME = 'temp-monitor-v15';
+const CACHE_NAME = 'temp-monitor-v16';
 const urlsToCache = [
     './',
     './index.html'
@@ -75,7 +75,10 @@ self.addEventListener('push', event => {
             badge: data.badge,
             tag: data.tag,
             requireInteraction: data.requireInteraction,
-            vibrate: [100, 50, 100],
+            renotify: Boolean(data.renotify && data.tag),
+            silent: Boolean(data.silent),
+            timestamp: data.timestamp || Date.now(),
+            vibrate: data.vibrate || [100, 50, 100],
             data: data.data,
             actions: data.actions || []
         })
@@ -87,19 +90,20 @@ self.addEventListener('notificationclick', event => {
     console.log('[SW] Notification clicked:', event);
     event.notification.close();
 
-    const urlToOpen = event.notification.data?.url || './';
+    const urlToOpen = new URL(
+        event.notification.data?.url || './',
+        self.registration.scope
+    ).href;
 
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true })
             .then(windowClients => {
-                // Check if app is already open
+                // ディレクトリURLで開いている場合も既存タブを再利用する。
                 for (const client of windowClients) {
-                    if (client.url.includes('index.html') && 'focus' in client) {
-                        // ディープリンクURLがある場合はナビゲート
-                        if (urlToOpen !== './' && 'navigate' in client) {
+                    if (client.url.startsWith(self.registration.scope) && 'focus' in client) {
+                        if ('navigate' in client && client.url !== urlToOpen) {
                             return client.navigate(urlToOpen).then(() => client.focus());
                         }
-                        // navigateが使えない場合はpostMessageでフロントに通知
                         client.postMessage({ type: 'NOTIFICATION_CLICK', url: urlToOpen });
                         return client.focus();
                     }

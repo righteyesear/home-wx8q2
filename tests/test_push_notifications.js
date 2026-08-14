@@ -183,6 +183,22 @@ function createKv() {
     );
     assert.equal(response.status, 400, 'invalid subscription is rejected');
 
+    response = await worker.fetch(
+        new Request('https://worker.example/api/subscribe', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Origin': 'https://attacker.example'
+            },
+            body: JSON.stringify({
+                endpoint: 'https://push.example/untrusted',
+                keys: { p256dh: 'public-key', auth: 'auth-key' }
+            })
+        }),
+        { KV: kv.api }
+    );
+    assert.equal(response.status, 403, 'untrusted browser origin is rejected');
+
     const subscription = {
         endpoint: 'https://push.example/valid',
         keys: { p256dh: 'public-key', auth: 'auth-key' }
@@ -197,6 +213,35 @@ function createKv() {
     );
     assert.equal(response.status, 200);
 
+    response = await worker.fetch(
+        new Request('https://worker.example/api/subscribe', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ endpoint: null })
+        }),
+        { KV: kv.api }
+    );
+    assert.equal(response.status, 400, 'invalid unsubscribe endpoint is rejected');
+
+    assert.deepEqual(
+        { ...worker.getPushTransportOptions({}) },
+        { ttl: 3600, urgency: 'normal', topic: null }
+    );
+    assert.deepEqual(
+        { ...worker.getPushTransportOptions({
+            pushOptions: { ttl: 900, urgency: 'high', topic: 'rain-forecast' }
+        }) },
+        { ttl: 900, urgency: 'high', topic: 'rain-forecast' }
+    );
+    assert.equal(
+        worker.getPushTransportOptions({ pushOptions: { topic: 'bad topic' } }).topic,
+        null
+    );
+    assert.equal(
+        worker.getClientPushPayload({ title: 'Client', pushOptions: { ttl: 1 } }).pushOptions,
+        undefined
+    );
+
     worker.sendWebPush = async () => ({ success: true, gone: false });
     const delivery = await worker.sendToAll(
         { KV: kv.api },
@@ -205,6 +250,7 @@ function createKv() {
     assert.equal(delivery.sent, 1);
     assert.equal(delivery.failed, 0);
     assert(kv.values.has('push_last_delivery'));
+    assert.equal(JSON.parse(kv.values.get('push_last_delivery')).transport.ttl, 3600);
 
     kv.values.set('cron_last_run', new Date().toISOString());
     response = await worker.getDetailedStatus(

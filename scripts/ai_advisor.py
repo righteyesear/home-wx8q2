@@ -6,6 +6,7 @@ AI気象アドバイザー - Gemini 3.6 Flash による総合分析
 
 import os
 import json
+import re
 import requests
 from datetime import datetime, timedelta, timezone
 from typing import Optional, Dict, Any, List
@@ -636,7 +637,7 @@ def normalize_jma_alerts(data: Any, area_code: str = AREA_CODE) -> Dict[str, Any
     if not isinstance(data, list):
         raise ValueError('Unexpected JMA warning response schema')
 
-    seen = set()
+    latest_by_id: Dict[str, Dict[str, Any]] = {}
     for report in data:
         data_type_code = str(report.get('dataTypeCode') or '')
         definitions = JMA_WARNING_DEFINITIONS.get(data_type_code, {})
@@ -651,6 +652,18 @@ def normalize_jma_alerts(data: Any, area_code: str = AREA_CODE) -> Dict[str, Any
                 raw_code = kind.get('code')
                 code = str(raw_code).zfill(2) if raw_code is not None else ''
 
+                if not code:
+                    continue
+                alert_id = f'{data_type_code}:{code}'
+                timestamp = str(
+                    report.get('reportDatetime')
+                    or report.get('controlDatetime')
+                    or ''
+                )
+                previous = latest_by_id.get(alert_id)
+                if previous and str(previous.get('timestamp') or '') > timestamp:
+                    continue
+
                 if status not in JMA_ACTIVE_STATUSES:
                     if status and status != '発表警報・注意報はなし':
                         result['transitions'].append({
@@ -659,14 +672,11 @@ def normalize_jma_alerts(data: Any, area_code: str = AREA_CODE) -> Dict[str, Any
                             'status': status,
                             'report_datetime': report.get('reportDatetime'),
                         })
+                    latest_by_id[alert_id] = {
+                        'active': False,
+                        'timestamp': timestamp,
+                    }
                     continue
-                if not code:
-                    continue
-
-                alert_id = f'{data_type_code}:{code}'
-                if alert_id in seen:
-                    continue
-                seen.add(alert_id)
 
                 definition = definitions.get(code, {
                     'name': f'気象警報等（{data_type_code}/{code}）',
@@ -682,17 +692,51 @@ def normalize_jma_alerts(data: Any, area_code: str = AREA_CODE) -> Dict[str, Any
                     'report_datetime': report.get('reportDatetime'),
                     'control_datetime': report.get('controlDatetime'),
                 }
-                result['alerts'].append(alert_info)
+                latest_by_id[alert_id] = {
+                    'active': True,
+                    'timestamp': timestamp,
+                    'alert': alert_info,
+                }
 
-                if '特別警報' in alert_info['name'] or alert_info['level'] >= 5:
-                    result['special_warnings'].append(alert_info)
-                elif '注意報' in alert_info['name'] or alert_info['level'] == 2:
-                    result['advisories'].append(alert_info)
-                elif '警報' in alert_info['name'] or alert_info['level'] >= 3:
-                    result['warnings'].append(alert_info)
+    result['alerts'] = [
+        item['alert']
+        for item in latest_by_id.values()
+        if item.get('active') and item.get('alert')
+    ]
+    for alert_info in result['alerts']:
+        if '特別警報' in alert_info['name'] or alert_info['level'] >= 5:
+            result['special_warnings'].append(alert_info)
+        elif '注意報' in alert_info['name'] or alert_info['level'] == 2:
+            result['advisories'].append(alert_info)
+        elif '警報' in alert_info['name'] or alert_info['level'] >= 3:
+            result['warnings'].append(alert_info)
 
     result['alerts'].sort(key=lambda alert: (-alert['level'], alert['id']))
     return result
+
+
+def _is_lightning_advisory(alert: Any) -> bool:
+    """雷注意報だけをAI文章の材料から識別する。画面表示用の元データは変えない。"""
+    if not isinstance(alert, dict):
+        return False
+    name = str(alert.get('name') or '')
+    data_type_code = str(
+        alert.get('data_type_code') or alert.get('dataTypeCode') or ''
+    )
+    raw_code = alert.get('code')
+    code = str(raw_code).zfill(2) if raw_code is not None else ''
+    return name == '雷注意報' or (data_type_code == 'VPWW61' and code == '14')
+
+
+def filter_alerts_for_ai(alerts_data: Dict[str, Any]) -> Dict[str, Any]:
+    """雷注意報を除いたAI専用コピーを返す。"""
+    filtered = dict(alerts_data or {})
+    for key in ('alerts', 'special_warnings', 'warnings', 'advisories', 'transitions'):
+        filtered[key] = [
+            item for item in ((alerts_data or {}).get(key) or [])
+            if not _is_lightning_advisory(item)
+        ]
+    return filtered
 
 
 def fetch_jma_alerts() -> Dict[str, Any]:
@@ -881,6 +925,12 @@ def _trim_advice_body(text: str, max_length: int = 540) -> str:
     return candidate.rstrip('、， ') + '…'
 
 
+def _remove_lightning_advisory_mentions(text: str) -> str:
+    """モデルがルールを外した場合も、雷注意報に触れる文を最終出力から除く。"""
+    chunks = re.split(r'(?<=[。！？])|\n+', text)
+    return ''.join(chunk for chunk in chunks if '雷注意報' not in chunk).strip()
+
+
 def analyze_with_gemini(
     spreadsheet_data: Dict,
     weather_data: Dict,
@@ -890,6 +940,7 @@ def analyze_with_gemini(
     if not GEMINI_API_KEY:
         return "⚠️ APIキーが設定されていません"
 
+    advisor_alerts = filter_alerts_for_ai(alerts_data)
     now = datetime.now(JST)
     current_hour = now.hour
     weekday_names = ['月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日', '日曜日']
@@ -974,7 +1025,7 @@ def analyze_with_gemini(
         sensor_temp,
         sensor_feels_like,
         weather_data,
-        alerts_data,
+        advisor_alerts,
         analysis,
     )
 
@@ -1049,8 +1100,8 @@ def analyze_with_gemini(
             'near_forecasts': rain_forecasts,
         },
         'snow判断': weather_data.get('snow_detection') or {},
-        'jma_alerts': alerts_data.get('alerts') or [],
-        'jma_transitions': alerts_data.get('transitions') or [],
+        'jma_alerts': advisor_alerts.get('alerts') or [],
+        'jma_transitions': advisor_alerts.get('transitions') or [],
         'recent_analysis': {
             'statistics': analysis.get('statistics') or {},
             'trends': analysis.get('trends') or {},
@@ -1069,7 +1120,7 @@ def analyze_with_gemini(
             'jma_forecast_error': (
                 (weather_data.get('jma_forecast') or {}).get('error')
             ),
-            'jma_error': alerts_data.get('error'),
+            'jma_error': advisor_alerts.get('error'),
             'rain_nowcast_error': rain.get('error'),
         },
     }
@@ -1096,6 +1147,7 @@ def analyze_with_gemini(
 - 雨の実況と約1時間先はYahooのrain_nowcast、先の天気と降水確率はofficial_jma_forecastを優先する。
 - Open-Meteoの天気・降水予報は、Yahooや気象庁が取得できない場合の補足に限る。風・気圧・UVなどは参考値として扱う。
 - 今日の実測最高・最低を、一日全体の予報最高・最低として扱わない。
+- 雷注意報はAI文章の対象外とし、雷注意報の発表・継続・解除には触れない。他の警報・注意報は通常どおり扱う。
 - 警報がない場合は「警報はありません」と書かない。
 - source_statusにエラーがある情報源について、取得できた・異常なしとは断定しない。
 - 科学解説はデータで裏付けられるものを最大1つ。用語辞典のようにしない。
@@ -1136,7 +1188,10 @@ def analyze_with_gemini(
         raw_advice = (response.text or '').strip()
         if not raw_advice:
             raise ValueError('空のレスポンス')
-        return _trim_advice_body(raw_advice)
+        filtered_advice = _remove_lightning_advisory_mentions(raw_advice)
+        if not filtered_advice:
+            raise ValueError('雷注意報を除外した結果、本文が空になりました')
+        return _trim_advice_body(filtered_advice)
     except Exception as exc:
         print(f'  [WARN] Gemini生成エラー ({GEMINI_MODEL}): {exc}')
         return f'⚠️ 分析エラー ({GEMINI_MODEL}): {str(exc)[:160]}'

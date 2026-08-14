@@ -22,6 +22,29 @@ enough; the bindings, secrets, and Cron Trigger below must also exist.
    * * * * *
    ```
 
+7. `ALLOWED_ORIGINS` is optional. When omitted, subscription writes are
+   accepted from `https://righteyesear.github.io` and local development only.
+   If the dashboard origin changes, set this Worker variable to a comma-separated
+   allowlist such as `https://example.github.io,https://weather.example.com`.
+
+## What to upload to Cloudflare
+
+Upload only `cloudflare-push-worker.js` as the Worker code. The following files
+must be published with the GitHub Pages dashboard instead and are not pasted into
+Cloudflare:
+
+- `sw.js`
+- `js/notifications.js`
+- `scripts/ai_advisor.py`
+
+The existing `KV`, `YAHOO_PROXY`, VAPID secrets, admin secret, and `* * * * *`
+Cron Trigger remain required. No new mandatory binding or secret was added.
+
+Urgent rain and warning pushes now use short delivery TTLs and high urgency, while
+calendar and summary messages use longer TTLs and low urgency. A category-specific
+Web Push topic replaces only stale messages in the same category instead of
+replacing unrelated alerts.
+
 ## Verification
 
 Open the public status endpoint:
