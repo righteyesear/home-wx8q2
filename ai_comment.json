@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-15T02:00:31.723578+09:00",
-  "advice": "未明の葛飾区周辺は雨の止み間となっていますが、2時5分過ぎから再び雨雲が流れ込んでくる見込みです。\n\n雨雲レーダーの予測では、2時台を通じて断続的に雨が降り、2時20分前後や2時40分頃には1時間あたり2ミリ前後のややしっかりとした降り方になる可能性があります。その後、3時前にかけて雨雲は抜けていく見通しです。\n\nこの時間帯に移動される場合は、濡れを防ぐためしっかりとした傘の携行をおすすめします。濡れた路面で見通しも悪いため、夜間の歩行や運転は慎重になさってください。なお、屋外センサーの実測では湿度が94%と高く蒸し暑さが続いています。就寝中も冷房や除湿を活用して室内の湿度を適切に保つと良さそうです。",
+  "generated_at": "2026-08-15T02:28:23.342334+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,7 +11,7 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 24.8,
+    "outdoor_temp": 24.3,
     "weather_temp": 23.9,
     "weather": "晴れ",
     "alerts_count": 1
