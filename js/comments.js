@@ -13,6 +13,59 @@ function commentClamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
 }
 
+function commentOptionalNumber(value) {
+    if (value === null || value === undefined || value === '') return null;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+}
+
+function calculateCommentDewPoint(temp, humidity) {
+    const rh = commentClamp(commentNumber(humidity, 0), 1, 100);
+    const a = 17.625;
+    const b = 243.04;
+    const gamma = Math.log(rh / 100) + (a * temp) / (b + temp);
+    return (b * gamma) / (a - gamma);
+}
+
+function findCommentRecordNear(records, targetTime, toleranceMinutes) {
+    let nearest = null;
+    let nearestDistance = Infinity;
+    for (const record of records) {
+        const date = record?.date instanceof Date
+            ? record.date
+            : new Date(record?.date || record?.datetime || '');
+        const temperature = commentOptionalNumber(record?.temperature);
+        if (Number.isNaN(date.getTime()) || temperature === null) continue;
+        const distance = Math.abs(date.getTime() - targetTime.getTime());
+        if (distance < nearestDistance) {
+            nearestDistance = distance;
+            nearest = { date, temperature };
+        }
+    }
+    return nearestDistance <= toleranceMinutes * 60 * 1000 ? nearest : null;
+}
+
+function getCommentTemperatureComparisons(temp, now) {
+    const source = Array.isArray(weeklyData) && weeklyData.length > 0
+        ? weeklyData
+        : Array.isArray(recentData) ? recentData : [];
+    if (source.length === 0) {
+        return { change1h: null, change3h: null, vsYesterday: null };
+    }
+
+    const compare = (hours, toleranceMinutes) => {
+        const target = new Date(now.getTime() - hours * 60 * 60 * 1000);
+        const record = findCommentRecordNear(source, target, toleranceMinutes);
+        return record ? temp - record.temperature : null;
+    };
+
+    return {
+        change1h: compare(1, 25),
+        change3h: compare(3, 40),
+        vsYesterday: compare(24, 55)
+    };
+}
+
 function formatWeatherComment(comment) {
     return String(comment || '')
         .replace(
@@ -257,6 +310,14 @@ function buildWeatherCommentContext(temp, humidity, now = new Date()) {
     );
     const uv = Math.max(0, commentNumber(sourceWeather.uvIndex, 0));
     const feelsLike = calculateFeelsLike(airTemp, relativeHumidity, wind10m);
+    const dewPoint = calculateCommentDewPoint(airTemp, relativeHumidity);
+    const comparisons = getCommentTemperatureComparisons(airTemp, now);
+    const forecastReferenceTemp = commentOptionalNumber(sourceWeather.groundTemp)
+        ?? airTemp;
+    const forecastTempDelta = sourceWeather.tempIn3Hours == null
+        ? null
+        : commentNumber(sourceWeather.tempIn3Hours, forecastReferenceTemp)
+            - forecastReferenceTemp;
     const estimatedWbgt = 0.735 * airTemp + 0.0374 * relativeHumidity
         + 0.00292 * airTemp * relativeHumidity - 4.064;
     const alerts = summarizeAlerts(
@@ -286,6 +347,12 @@ function buildWeatherCommentContext(temp, humidity, now = new Date()) {
         precipProbability,
         uv,
         feelsLike,
+        dewPoint,
+        forecastReferenceTemp,
+        change1h: comparisons.change1h,
+        change3h: comparisons.change3h,
+        vsYesterday: comparisons.vsYesterday,
+        forecastTempDelta,
         estimatedWbgt,
         alerts,
         precipitation,
@@ -324,6 +391,11 @@ function buildWeatherCommentContext(temp, humidity, now = new Date()) {
         context.visibility == null ? 'na' : Math.round(context.visibility / 1000),
         Math.round(context.precipProbability / 10) * 10,
         Math.floor(context.uv / 3),
+        Math.round(context.dewPoint / 2) * 2,
+        context.change1h == null ? 'na' : Math.round(context.change1h),
+        context.forecastTempDelta == null
+            ? 'na'
+            : Math.round(context.forecastTempDelta),
         context.alerts.highestLevel,
         context.alerts.names.join(','),
         context.time.period,
@@ -358,7 +430,7 @@ function makeAlertPrimary(context) {
 
 function precipitationPrimary(context) {
     const precip = context.precipitation;
-    const measured = precip.observed ? '実測で' : '';
+    const measured = precip.observed ? '降水実況では、' : '';
     if (precip.type === 'snow') {
         if (precip.intensity >= 3) {
             return {
@@ -453,19 +525,83 @@ function makeNormalPrimary(context) {
         };
     }
 
-    const humidText = context.humidity >= 75
-        ? '湿度が高く、少し蒸しやすい空気です。'
-        : context.humidity <= 30
-            ? '空気が乾いています。'
-            : '';
+    const isMuggy = context.dewPoint >= 22 && context.temp >= 24;
+    const isHumid = context.dewPoint >= 18 && context.temp >= 20;
+    const isDry = context.humidity <= 30 || context.dewPoint <= 2;
+    const isWindy = context.displayWind >= 5 || (context.gust ?? 0) >= 10;
+
+    if (context.time.isNight && context.temp >= 24 && isHumid) {
+        return {
+            topic: 'humid-night',
+            severity: context.temp >= 28 ? 2 : 1,
+            text: stableCommentChoice([
+                '🌙 夜になっても気温と湿り気が残り、蒸し暑く感じられます。就寝前も室温を調整してください。',
+                '🌙 夜も空気が湿っており、体に熱がこもりやすい状態です。無理に冷房を切らず、寝苦しさを避けましょう。'
+            ], seed)
+        };
+    }
+
+    if (context.temp >= 27 && isMuggy) {
+        return {
+            topic: 'humid-heat',
+            severity: context.estimatedWbgt >= 28 ? 3 : 2,
+            text: stableCommentChoice([
+                '🌡️ 湿った空気に覆われ、気温以上に蒸し暑さが強まりやすい状況です。風通しを確保し、早めに水分を取ってください。',
+                '🌡️ かなり蒸し暑い空気です。日陰でも体に熱がこもりやすいため、無理をせず休憩を挟みましょう。',
+                '🌡️ 気温に加えて空気の湿り気が強く、汗が乾きにくい暑さです。室内でも暑さ対策が必要です。'
+            ], seed)
+        };
+    }
+
+    if (context.temp >= 27 && isDry && context.time.isDay
+        && ['clear', 'mostly-clear', 'partly-cloudy'].includes(context.wmo.key)) {
+        return {
+            topic: 'dry-heat',
+            severity: 2,
+            text: stableCommentChoice([
+                '☀️ 乾いた暑さで、日なたでは気温の数字以上に厳しく感じられそうです。汗に気づきにくくても水分補給を。',
+                '☀️ 空気は比較的乾いていますが、日差しの下ではしっかり暑い陽気です。外では日陰を選んでください。'
+            ], seed)
+        };
+    }
+
+    if (context.temp <= 13 && isWindy) {
+        return {
+            topic: 'wind-chill',
+            severity: context.temp <= 8 ? 2 : 1,
+            text: stableCommentChoice([
+                `🧥 風があるため、気温${context.temp.toFixed(0)}°Cより肌寒く感じられます。風を通しにくい上着が役立ちそうです。`,
+                '🧥 冷たい風で体感が下がりやすい状況です。首元を覆える服装がよいでしょう。'
+            ], seed)
+        };
+    }
+
+    if (context.change1h !== null && context.change1h >= 1.5
+        && context.temp < 30) {
+        return {
+            topic: 'warming-trend',
+            severity: 1,
+            text: `🌡️ この1時間で気温が約${context.change1h.toFixed(1)}°C上がっています。体を動かすなら、脱ぎ着しやすい服装がよさそうです。`
+        };
+    }
+
+    if (context.change1h !== null && context.change1h <= -1.5
+        && context.temp > 5) {
+        return {
+            topic: 'cooling-trend',
+            severity: 1,
+            text: `🌡️ この1時間で気温が約${Math.abs(context.change1h).toFixed(1)}°C下がりました。外では一枚足せる用意があると安心です。`
+        };
+    }
 
     if (context.temp >= 28) {
         return {
             topic: 'temperature',
             severity: 2,
             text: stableCommentChoice([
-                `🌡️ 暑さを感じる気温です。${humidText || '無理をせず、こまめに休憩してください。'}`,
-                `☀️ 体に熱がこもりやすい陽気です。${humidText || '水分を取りながら過ごしてください。'}`
+                '🌡️ 暑さがはっきり感じられる気温です。無理をせず、こまめに休憩してください。',
+                '☀️ 体に熱がこもりやすい陽気です。水分を取りながら過ごしてください。',
+                '🌡️ 日中らしい暑さです。長く外にいる場合は、日陰で休む時間をつくりましょう。'
             ], seed)
         };
     }
@@ -474,8 +610,8 @@ function makeNormalPrimary(context) {
             topic: 'temperature',
             severity: 1,
             text: stableCommentChoice([
-                `🧥 冷え込んでいます。${humidText || '暖かい上着が必要です。'}`,
-                `🌡️ 寒さを感じる気温です。${humidText || '体を冷やさない服装で。'}`
+                `🧥 冷え込んでいます。${isDry ? '空気も乾いているため、暖かさと乾燥の両方に備えてください。' : '暖かい上着が必要です。'}`,
+                `🌡️ 寒さを感じる気温です。${context.humidity >= 85 ? '湿った冷たさなので、体を濡らさないように。' : '体を冷やさない服装で。'}`
             ], seed)
         };
     }
@@ -490,17 +626,22 @@ function makeNormalPrimary(context) {
                     ? '雲の多い空です。'
                     : '落ち着いた天気です。';
     const comfortText = context.temp >= 22
-        ? '動くと少し暖かく感じそうです。'
+        ? isHumid ? '湿り気があり、動くとやや蒸し暑く感じそうです。' : '動くと少し暖かく感じそうです。'
         : context.temp >= 18
             ? '過ごしやすい気温です。'
             : context.temp >= 14
                 ? '少しひんやりします。'
                 : '上着があると安心です。';
+    const airText = isDry
+        ? '空気は乾燥気味です。'
+        : context.temp < 18 && context.humidity >= 85
+            ? '湿り気のある、ひんやりした空気です。'
+            : '';
 
     return {
         topic: 'weather',
         severity: 0,
-        text: `${context.emoji} ${weatherText}${comfortText}${humidText}`
+        text: `${context.emoji} ${weatherText}${comfortText}${airText}`
     };
 }
 
@@ -544,79 +685,96 @@ function selectPrimaryComment(context) {
 
 function getSupplementCandidates(context, primary) {
     const candidates = [];
-    const add = (topic, priority, text) => candidates.push({ topic, priority, text });
+    const add = (topic, priority, importance, text) => {
+        candidates.push({ topic, priority, importance, text });
+    };
 
     // 注意報は直上の公式警報バナーで常時表示する。
     // 一言コメントでは重複させず、暑さ・降雨など今必要な行動に集中する。
 
     if (primary.topic === 'alert') {
         if (context.wmo.thunder) {
-            add('thunder', 1, '⛈️ 現在は雷にも警戒し、屋外から離れてください。');
+            add('thunder', 1, 4, '⛈️ 現在は雷にも警戒が必要です。屋外から離れてください。');
         } else if (context.precipitation.active
             && context.precipitation.observed) {
-            const source = context.precipitation.observed ? '実測で' : '';
+            const source = context.precipitation.observed ? '降水実況では、' : '';
             const type = context.precipitation.type === 'snow' ? '雪'
                 : context.precipitation.type === 'sleet' ? 'みぞれ' : '雨';
-            add('precipitation', 2, `${context.precipitation.type === 'snow' ? '❄️' : '🌧️'} ${source}${type}が降っています。`);
+            add('precipitation', 2, 3, `${context.precipitation.type === 'snow' ? '❄️' : '🌧️'} ${source}${type}が降っています。`);
         } else if (context.wmo.freezing) {
-            add('freezing-precipitation', 1, '🧊 着氷や路面凍結にも警戒してください。');
+            add('freezing-precipitation', 1, 4, '🧊 着氷や路面凍結にも警戒してください。');
         } else if (context.precipitation.active) {
             const type = context.precipitation.type === 'snow' ? '雪'
                 : context.precipitation.type === 'sleet' ? 'みぞれ' : '雨';
-            add('precipitation', 2, `${context.precipitation.type === 'snow' ? '❄️' : '🌧️'} ${type}が降っています。`);
+            add('precipitation', 2, 3, `${context.precipitation.type === 'snow' ? '❄️' : '🌧️'} ${type}が降っています。`);
         }
     }
 
     if (context.temp >= 35 && primary.topic !== 'heat') {
-        add('heat', 2, '🥵 危険な暑さも重なっています。涼しい場所で体を冷やしてください。');
+        add('heat', 2, 4, '🥵 危険な暑さも重なっています。涼しい場所で体を冷やしてください。');
     } else if (context.temp <= 0 && primary.topic !== 'cold') {
-        add('cold', 3, '🥶 氷点下です。濡れた場所の凍結にも注意してください。');
+        add('cold', 3, 3, '🥶 氷点下です。濡れた場所の凍結にも注意してください。');
     }
 
     if (context.gust !== null && context.gust >= 20 && primary.topic !== 'wind') {
-        add('wind', 3, `💨 瞬間風速は約${context.gust.toFixed(0)}m/s。飛ばされやすい物から離れてください。`);
-    } else if (context.displayWind >= 10 && primary.topic !== 'wind') {
-        add('wind', 5, '💨 風が強いため、傘や自転車の扱いに注意してください。');
+        add('wind', 3, 4, `💨 瞬間風速は約${context.gust.toFixed(0)}m/s。飛ばされやすい物から離れてください。`);
+    } else if (context.displayWind >= 8 && primary.topic !== 'wind') {
+        add('wind', 5, 2, '💨 風が強めです。傘や自転車は風にあおられないよう注意してください。');
     }
 
     if (context.visibility !== null && context.visibility < 4000
         && primary.topic !== 'visibility') {
-        add('visibility', 3, '🌫️ 見通しが悪いため、移動時は周囲をよく確認してください。');
+        add('visibility', 3, 3, '🌫️ 見通しが悪いため、移動時は周囲をよく確認してください。');
     }
 
     if (!context.precipitation.active) {
         if (context.yahooForecastPrecip) {
             const type = context.yahooForecastType === 'snow' ? '雪'
                 : context.yahooForecastType === 'sleet' ? 'みぞれ' : '雨';
-            add('precipitation-forecast', 4, `☂️ 1時間以内に${type}が降る可能性があります。`);
+            add('precipitation-forecast', 4, 3, `☂️ 1時間以内に${type}が降る可能性があります。外出には傘があると安心です。`);
         } else if (context.precipProbability >= 70) {
-            add('precipitation-forecast', 5, `☂️ 降水確率${context.precipProbability.toFixed(0)}%。傘を持って出ると安心です。`);
+            add('precipitation-forecast', 5, 3, `☂️ 降水確率は${context.precipProbability.toFixed(0)}%。外出には傘があると安心です。`);
         } else if (context.willWorsen && context.maxFuturePrecipProb >= 60) {
-            add('precipitation-forecast', 5, '🌥️ 数時間以内に天気が崩れる可能性があります。');
+            add('precipitation-forecast', 5, 3, '🌥️ 数時間以内に天気が崩れる可能性があります。空模様の変化に注意してください。');
         }
     }
 
     const feelsDiff = context.feelsLike - context.temp;
     if (Number.isFinite(feelsDiff)
-        && Math.abs(feelsDiff) >= 5
-        && !['heat', 'cold'].includes(primary.topic)) {
+        && Math.abs(feelsDiff) >= 4
+        && !['heat', 'cold', 'humid-heat', 'wind-chill'].includes(primary.topic)) {
         add(
             'feels-like',
             6,
-            `🌡️ 参考体感温度は約${context.feelsLike.toFixed(0)}°Cです。`
+            2,
+            feelsDiff > 0
+                ? `🌡️ 湿り気の影響で、参考体感温度は約${context.feelsLike.toFixed(0)}°Cです。`
+                : `🌡️ 風の影響で、参考体感温度は約${context.feelsLike.toFixed(0)}°Cです。`
+        );
+    }
+
+    if (context.forecastTempDelta !== null
+        && Math.abs(context.forecastTempDelta) >= 3
+        && !['warming-trend', 'cooling-trend'].includes(primary.topic)) {
+        const direction = context.forecastTempDelta > 0 ? '上がる' : '下がる';
+        add(
+            'temperature-outlook',
+            6,
+            2,
+            `🌡️ 3時間後には気温が約${Math.abs(context.forecastTempDelta).toFixed(0)}°C${direction}見込みです。服装で調整できるようにしてください。`
         );
     }
 
     if (context.time.isDay && context.uv >= 8
         && !context.precipitation.active
         && primary.severity < 3) {
-        add('uv', 7, `🧴 UV指数${context.uv.toFixed(0)}。短時間の外出でも紫外線対策を。`);
+        add('uv', 7, 2, `☀️ UV指数は${context.uv.toFixed(0)}。短時間の外出でも紫外線対策を。`);
     }
 
     if (context.humidity <= 30
         && !context.precipitation.active
         && primary.severity < 3) {
-        add('dryness', 8, `💧 湿度${context.humidity.toFixed(0)}%。乾燥対策を忘れずに。`);
+        add('dryness', 8, 1, `💧 湿度は${context.humidity.toFixed(0)}%。乾燥対策を忘れずに。`);
     }
 
     if (context.temp >= 28 && context.estimatedWbgt >= 28
@@ -625,6 +783,7 @@ function getSupplementCandidates(context, primary) {
         add(
             'heat',
             4,
+            3,
             `⚠️ 簡易推定WBGTは${context.estimatedWbgt.toFixed(0)}。こまめに休憩してください。`
         );
     }
@@ -632,24 +791,50 @@ function getSupplementCandidates(context, primary) {
     return candidates;
 }
 
-function composeWeatherComment(context) {
+function selectWeatherCommentParts(context) {
     const primary = selectPrimaryComment(context);
     const usedTopics = new Set([primary.topic]);
-    const supplements = [];
+    const parts = [primary];
     const candidates = getSupplementCandidates(context, primary)
-        .sort((a, b) => a.priority - b.priority || a.topic.localeCompare(b.topic));
+        .filter(candidate => candidate.importance >= 2)
+        .sort((a, b) => a.priority - b.priority
+            || b.importance - a.importance
+            || a.topic.localeCompare(b.topic));
+
+    const topicFamily = topic => {
+        if (['heat', 'humid-heat', 'dry-heat', 'humid-night', 'feels-like'].includes(topic)) {
+            return 'heat-feel';
+        }
+        if (['cold', 'wind-chill'].includes(topic)) return 'cold-feel';
+        if (['warming-trend', 'cooling-trend', 'temperature-outlook'].includes(topic)) {
+            return 'temperature-change';
+        }
+        if (['precipitation', 'precipitation-forecast'].includes(topic)) {
+            return 'precipitation';
+        }
+        return topic;
+    };
+    const usedFamilies = new Set([topicFamily(primary.topic)]);
 
     for (const candidate of candidates) {
         if (usedTopics.has(candidate.topic)) continue;
-        if (candidate.topic === 'feels-like' && usedTopics.has('heat')) continue;
-        if (candidate.topic === 'precipitation-forecast'
-            && usedTopics.has('precipitation')) continue;
-        supplements.push(candidate.text);
+        if (usedFamilies.has(topicFamily(candidate.topic))) continue;
+        const supplementCount = parts.length - 1;
+        if (supplementCount >= 1
+            && !(primary.severity >= 3 && candidate.importance >= 3)) continue;
+        parts.push(candidate);
         usedTopics.add(candidate.topic);
-        if (supplements.length >= 2) break;
+        usedFamilies.add(topicFamily(candidate.topic));
+        if (parts.length >= 3) break;
     }
 
-    return formatWeatherComment([primary.text, ...supplements].join(' '));
+    return parts;
+}
+
+function composeWeatherComment(context) {
+    return formatWeatherComment(
+        selectWeatherCommentParts(context).map(part => part.text).join(' ')
+    );
 }
 
 function updateHeroSection(temp, humidity, emoji, wc, fl, ws, pp) {

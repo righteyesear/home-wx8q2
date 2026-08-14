@@ -101,6 +101,11 @@ assert len(result) < 620
 assert result.count("\n\n") == 2
 assert "各段落の間には必ず空行" in primary.calls[0][1]
 assert "気象予報士の短い解説" in primary.calls[0][1]
+assert '"advisor_signals":' in primary.calls[0][1]
+assert '"sensor_vs_grid_temperature_c":-0.5' in primary.calls[0][1]
+assert "まずadvisor_signalsを確認" in primary.calls[0][1]
+assert "直近1・3時間、昨日同時刻、同時間帯平均、今後6時間" in primary.calls[0][1]
+assert "単なる予報の言い換えではなく" in primary.calls[0][1]
 
 lightning_models = FakeModels()
 run_with(
@@ -185,6 +190,60 @@ assert not module._select_editorial_focus(
     {"alerts": [{"level": 2, "name": "雷注意報"}]},
     {},
 ).startswith("防災情報")
+
+assert "直近1時間の気温上昇" in module._select_editorial_focus(
+    module.datetime.now(module.JST),
+    25,
+    25,
+    {"current": {"temperature": 25}},
+    {"alerts": []},
+    {"trends": {"change_rate_1h": 1.5}},
+)
+
+signals = module._build_advisor_signals(
+    {
+        "today_high": 29,
+        "today_low": 22,
+        "yesterday_high": 27,
+        "yesterday_low": 20,
+    },
+    28,
+    75,
+    32,
+    True,
+    {"temperature": 26, "humidity": 65},
+    {
+        "hourly_forecast": [
+            {"time": "13:00", "temperature": 27, "precip_prob": 20, "wind_speed": 2},
+            {"time": "18:00", "temperature": 23, "precip_prob": 70, "wind_speed": 6},
+        ]
+    },
+    {
+        "trends": {"change_rate_1h": 1.2, "total_change_3h": 2.4},
+        "patterns": {"vs_yesterday": 2.0, "vs_time_slot_avg": 1.5},
+        "statistics": {"current_percentile": 85},
+    },
+    {
+        "current_rainfall": 1.0,
+        "forecast_30m": 2.0,
+        "forecast_1h": 3.0,
+        "consecutive_minutes": 20,
+    },
+)
+assert signals["comparison_values"]["sensor_vs_grid_temperature_c"] == 2.0
+assert signals["recent_sensor_change"]["change_last_1h_c"] == 1.2
+assert signals["next_6_hours_summary"]["temperature_change_first_to_last_c"] == -4.0
+assert signals["next_6_hours_summary"]["max_precip_probability_percent"] == 70.0
+assert signals["rain_change_summary"]["change_current_to_1h_mm_h"] == 2.0
+assert {item["topic"] for item in signals["notable_findings"]} >= {
+    "観測地点差",
+    "体感",
+    "直近変化",
+    "昨日比較",
+    "数時間先",
+    "降水見通し",
+    "雨の実況",
+}
 
 
 class FakeWeatherResponse:

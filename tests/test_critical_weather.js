@@ -156,7 +156,7 @@ const yahooRain = renderComment({
     isRaining: true,
     rainfall: 3
 });
-assert.match(yahooRain, /実測で.*雨/);
+assert.match(yahooRain, /降水実況では、.*雨/);
 assert.doesNotMatch(yahooRain, /晴れ/);
 
 const deadlyHeat = renderComment({

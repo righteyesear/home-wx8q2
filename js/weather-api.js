@@ -62,7 +62,7 @@ async function fetchAll() {
                 maxFuturePrecipProb: maxFuturePrecipProb,
                 willWorsen: willWorsen,
                 willImprove: willImprove,
-                tempIn3Hours: hourlyTemp[hour + 3] || null,
+                tempIn3Hours: hourlyTemp[hour + 3] ?? null,
                 sunrise: data.daily?.sunrise?.[0] || null,
                 sunset: data.daily?.sunset?.[0] || null,
                 groundTemp: data.current?.temperature_2m ?? hourlyTemp[hour] ?? null,
