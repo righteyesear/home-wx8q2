@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-15T17:32:48.868575+09:00",
-  "advice": "日没が近づき手元のセンサーでは気温27.9℃まで下がってきているものの、湿度が72％と高く、風の推定値を加味した参考体感温度は32.0℃と実際より4℃以上高くなっています。気温の数字以上に蒸し暑さを感じやすく、身体から熱が逃げにくい状態です。\n\nこの先も夜遅くにかけて気温は緩やかに低下し、22時頃には23℃台まで下がる見込みです。ただし夜間も湿度の高い状態が続くため、気温の下がり方に対して体感的な蒸し暑さは残りやすいとみられます。\n\n屋外の気温が下がってきても油断せず、室内では除湿運転を上手に使って湿度を下げることが効果的です。入浴前後や就寝前のこまめな水分補給を心がけ、身体に熱をため込まないよう整えておきましょう。",
+  "generated_at": "2026-08-15T18:31:54.827192+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 27.9,
-    "weather_temp": 27.8,
+    "outdoor_temp": 26.6,
+    "weather_temp": 26.4,
     "weather": "晴れ",
     "alerts_count": 0
   }
