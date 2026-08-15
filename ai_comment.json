@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-16T07:21:45.698869+09:00",
-  "advice": "現在は雨が止んでいますが、このあと1時間足らずで再び雨が降り始める見通しです。手元の屋外センサーでは気温24.0℃、湿度87％を観測しており、朝から湿度が高く蒸し暑さを感じる空気感となっています。\n\n雨雲の動きをみると、7時55分頃から葛飾周辺に雨雲がかかり始め、8時過ぎには時間あたり0.6ミリ前後の弱い雨が降り出す予想です。気象庁の予報でも昼前にかけて所により雨とされており、午前中は次第に傘が必要な空模様へと移り変わる見込みです。\n\nこれから外出される方は、折りたたみ傘などの雨具を忘れずにお持ちください。近所での買い物や屋外での用事がある場合は、雨が降り出す前の今のうちに済ませておくと安心です。",
+  "generated_at": "2026-08-16T08:20:54.918550+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 24.0,
+    "outdoor_temp": 24.4,
     "weather_temp": 22.4,
-    "weather": "薄曇り",
+    "weather": "弱い霧雨",
     "alerts_count": 0
   }
 }
