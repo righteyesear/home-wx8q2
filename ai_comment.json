@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-08-15T15:16:16.215224+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-08-15T16:22:13.944667+09:00",
+  "advice": "現在の気温は推定29.5℃ですが、湿度が57％とやや高く、推定される参考体感温度は32.5℃と実際より3℃ほど高くなっています。数字以上の蒸し暑さがあり、身体に熱がこもりやすい状態です。\n\nこの後は日没に向けて気温が徐々に下がり、夜遅くには24℃台まで約5℃下がる見込みです。しかし、夕方の時間帯はまだ湿度の高さが残り蒸し暑く感じられるため、気温が下がり始める時間帯でも油断はできません。\n\n室内にいる場合も我慢せずにエアコンを適切に稼働させ、のどの渇きを感じる前に水分を補給してください。夕方の外出時も風通しの良い服装を選び、汗をかいたら早めに拭き取るなど、身体への負担を減らす対策を意識しましょう。",
   "model": "gemini-3.7-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
-    "spreadsheet_error": null,
+    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 27.4,
-    "weather_temp": 29.3,
+    "outdoor_temp": null,
+    "weather_temp": 29.5,
     "weather": "晴れ",
     "alerts_count": 0
   }
