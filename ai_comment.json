@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-16T11:58:35.761696+09:00",
-  "advice": "手元の屋外日陰センサーでは気温26.5℃、湿度82％を観測しています。広域を対象とした格子推定値の24.3℃に比べて2℃以上高く推移しており、推定される参考体感温度は31℃を超えてかなり蒸し暑い状態です。\n\n雨雲レーダーの予測では直近1時間に降水の見込みはなく、気象庁の予報でも午後の降水確率は20％と低めに抑えられています。広域の気温予測でも午後にかけて25℃台後半へ緩やかに上がる見通しとなっており、手元の日陰環境でも当面は高めの湿気と気温が続くとみられます。\n\n広域の数値よりも身の回りの空間には熱気が滞りやすくなっています。屋外での作業や移動の際は通気性の良い服装を選び、喉の渇きを感じる前にこまめな水分補給を心がけてください。",
+  "generated_at": "2026-08-16T12:50:52.267879+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 26.5,
-    "weather_temp": 24.3,
-    "weather": "薄曇り",
+    "outdoor_temp": 25.2,
+    "weather_temp": 24.9,
+    "weather": "弱い霧雨",
     "alerts_count": 0
   }
 }
