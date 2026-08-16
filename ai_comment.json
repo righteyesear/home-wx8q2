@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-17T04:22:45.864421+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-08-17T07:21:21.545192+09:00",
+  "advice": "現在雨は降っておらず、手元の屋外センサーでは気温24.2℃、湿度91％を観測しています。朝のうちは穏やかな空模様ですが、湿度が高く風が穏やかなため、推定される参考体感温度では29℃前後と早くも蒸し暑さを感じる状況です。\n\nこのあとは昼にかけて気温が約29℃まで上がり、暑さが増す見通しです。大気の状態がやや不安定となるため、昼前からは局地的に雨雲が発生しやすくなるとみられ、天気の急な変化に注意が必要です。\n\n外出される際は、念のため折りたたみ傘をお持ちになると安心です。日差しとともに蒸し暑さも厳しくなりますので、午前中から意識して水分を補給するなど、熱中症への対策を行ってください。🌂",
   "model": "gemini-3.7-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 23.2,
-    "weather_temp": 22.0,
+    "outdoor_temp": 24.2,
+    "weather_temp": 22.7,
     "weather": "晴れ",
     "alerts_count": 0
   }
