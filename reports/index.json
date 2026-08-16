@@ -15,9 +15,9 @@
       "period": "2026-W33",
       "label": "08/10 〜 08/16",
       "file": "weekly/2026-W33.json",
-      "is_final": false,
-      "analysis_available": false,
-      "status": "draft",
+      "is_final": true,
+      "analysis_available": true,
+      "status": "final",
       "coverage_complete": true,
       "observed_days": 7,
       "expected_days": 7
@@ -1730,5 +1730,5 @@
       "expected_days": 31
     }
   ],
-  "updated_at": "2026-08-17T03:47:22.511212+09:00"
+  "updated_at": "2026-08-17T06:28:32.862042+09:00"
 }
