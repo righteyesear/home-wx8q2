@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-16T22:23:40.722320+09:00",
-  "advice": "屋外センサーの気温は23.5℃と落ち着いていますが、湿度が91%と非常に高く、推定される参考体感温度は27℃台後半と蒸し暑さが残っています。雨雲ナウキャストでも周辺に雨雲はなく、雨の心配はいったん落ち着いた状況です。\n\nこの先明け方にかけては、気温が22℃台まで約1℃緩やかに下がる見込みで、天気が大きく崩れる兆行はなく安定して推移する見通しです。風も1m/s前後と穏やかな状態が続くため、外気温の割に湿気がこもりやすい状態が継続するとみられます。\n\n雨の心配はありませんが、高湿度の影響で室内でも寝苦しさを感じやすくなります。就寝時はエアコンの除湿機能を適度に活用するなど、室内の湿度を整えて快適な環境を保つようにしてください。",
+  "generated_at": "2026-08-17T04:22:45.864421+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 23.5,
-    "weather_temp": 23.2,
-    "weather": "快晴",
+    "outdoor_temp": 23.2,
+    "weather_temp": 22.0,
+    "weather": "晴れ",
     "alerts_count": 0
   }
 }
