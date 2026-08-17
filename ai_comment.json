@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-17T22:32:07.933649+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-08-18T04:29:47.331976+09:00",
+  "advice": "早朝の葛飾区周辺は雨の心配がなく落ち着いた空模様ですが、手元のセンサーでは気温24.5度に対して湿度が89%と高く、推定の体感温度は29度前後と蒸し暑さを感じる状況です。\n\n雨雲レーダーの観測でも直近1時間の降水はなく、この先もしばらくは天気が保たれる見込みです。空気中に含まれる水蒸気の量が多いと、汗が蒸発しにくくなり体感的な暑さが増す性質があります。朝9時にかけて気温は緩やかに24度台後半まで上がっていく見通しです。\n\n早朝の散歩や通勤の段階では雨具の出番はなさそうです。ただ、朝のうちから湿度が高く熱がこもりやすいため、風通しの良い服装を選び、こまめな水分補給を心がけて行動してください。",
   "model": "gemini-3.7-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 25.6,
-    "weather_temp": 24.4,
+    "outdoor_temp": 24.5,
+    "weather_temp": 22.7,
     "weather": "晴れ",
     "alerts_count": 0
   }
