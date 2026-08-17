@@ -7,7 +7,7 @@
     "end_date": "2026-08-23",
     "label": "2026年 第34週（8/17 〜 8/23）"
   },
-  "generated_at": "2026-08-17T18:58:08.034344+09:00",
+  "generated_at": "2026-08-17T22:06:15.095752+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -465,7 +465,7 @@
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-08-17T18:58:08.097687+09:00",
+    "generated_at": "2026-08-17T22:06:15.161664+09:00",
     "data_fingerprint": "5e2f5179671af20b3349",
     "period_closed": false,
     "coverage_complete": false,
