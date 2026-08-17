@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-17T11:10:45.249348+09:00",
-  "advice": "手元のセンサーでは気温29.3℃に対し湿度が71％と高く、推定される体感温度は34℃前後に達しています。湿度が高いために汗が蒸発しにくく、実際の気温以上に身体へ熱がこもりやすい蒸し暑さとなっています。\n\n午後は日差しとともに気温が30℃を超え、30.5℃程度まで上がる見込みです。風速も1〜2メートル前後と穏やかな状態が続くため、屋外はもちろん風通しの悪い室内でも熱が逃げにくい状況が続くとみられます。\n\n無理をせず早めにエアコンや扇風機を活用し、室温を適切に保ってください。喉の渇きを感じる前に定期的な水分補給を行い、外出や屋外での作業時は日傘や帽子を活用して、こまめな日陰での休息を心がけましょう。",
+  "generated_at": "2026-08-17T11:58:52.042927+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 29.3,
-    "weather_temp": 28.6,
-    "weather": "晴れ",
+    "outdoor_temp": 29.5,
+    "weather_temp": 29.2,
+    "weather": "薄曇り",
     "alerts_count": 0
   }
 }
