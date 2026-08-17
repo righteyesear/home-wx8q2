@@ -7,41 +7,41 @@
     "end_date": "2026-08-23",
     "label": "2026年 第34週（8/17 〜 8/23）"
   },
-  "generated_at": "2026-08-17T13:02:40.022730+09:00",
+  "generated_at": "2026-08-17T16:16:38.675786+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
       "ai_comment": "",
       "highlights": [
-        "最高気温 30.3℃",
+        "最高気温 31.6℃",
         "最低気温 23.1℃",
-        "前週比 -0.3℃",
-        "前年比 -5.8℃"
+        "前週比 +0.8℃",
+        "前年比 -4.7℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 1,
-      "avg_temp": 25.3,
+      "avg_temp": 26.4,
       "avg_temp_stdev": 0,
-      "max_temp": 30.3,
+      "max_temp": 31.6,
       "max_temp_date": "2026/08/17",
-      "avg_high": 30.3,
+      "avg_high": 31.6,
       "min_temp": 23.1,
       "min_temp_date": "2026/08/17",
       "avg_low": 23.1,
-      "avg_daily_range": 7.2,
-      "prev_week_diff": -0.3,
-      "prev_year_diff": -5.8
+      "avg_daily_range": 8.5,
+      "prev_week_diff": 0.8,
+      "prev_year_diff": -4.7
     },
     "daily_data": [
       {
         "date": "2026/08/17",
         "weekday": "月",
-        "high": 30.3,
+        "high": 31.6,
         "low": 23.1,
-        "avg": 25.3,
-        "range": 7.2
+        "avg": 26.4,
+        "range": 8.5
       }
     ],
     "comparison": {
@@ -60,16 +60,16 @@
         "avg_low": 27.5,
         "avg_daily_range": 8.5
       },
-      "avg_temp_diff": -5.8,
-      "max_temp_diff": -7.1,
+      "avg_temp_diff": -4.7,
+      "max_temp_diff": -5.8,
       "min_temp_diff": -3.7,
-      "avg_daily_range_diff": -1.3,
+      "avg_daily_range_diff": 0.0,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 30.5,
-      "current_deviation": -5.2,
+      "current_deviation": -4.1,
       "years_count": 2
     },
     "events": {
@@ -271,7 +271,7 @@
             "low": 20.4
           },
           "8": {
-            "avg": 27.2,
+            "avg": 27.3,
             "high": 37.7,
             "low": 22.1
           }
@@ -288,13 +288,13 @@
         "8/17(月)"
       ],
       "highs": [
-        30.3
+        31.6
       ],
       "lows": [
         23.1
       ],
       "avgs": [
-        25.3
+        26.4
       ]
     },
     "prev_year_comparison": {
@@ -302,7 +302,7 @@
         "月"
       ],
       "this_year": [
-        25.3
+        26.4
       ],
       "last_year": [
         30.9,
@@ -314,7 +314,7 @@
         31.5
       ],
       "this_year_high": [
-        30.3
+        31.6
       ],
       "last_year_high": [
         35.4,
@@ -343,7 +343,7 @@
         "8/17(月)"
       ],
       "deviations": [
-        -5.2
+        -4.1
       ],
       "baseline_avg": 30.5
     }
@@ -351,8 +351,8 @@
   "analysis_context": {
     "context_version": "3.2",
     "daily_pattern": {
-      "opening_avg": 25.3,
-      "closing_avg": 25.3,
+      "opening_avg": 26.4,
+      "closing_avg": 26.4,
       "front_to_back_change": 0.0,
       "linear_slope_per_day": 0.0,
       "daily_avg_stdev": 0.0,
@@ -361,11 +361,11 @@
       "largest_drop": null,
       "warmest_average_day": {
         "date": "2026/08/17",
-        "value": 25.3
+        "value": 26.4
       },
       "coolest_average_day": {
         "date": "2026/08/17",
-        "value": 25.3
+        "value": 26.4
       },
       "days_high_35_or_more": 0,
       "days_high_30_or_more": 1,
@@ -406,12 +406,12 @@
         2026
       ],
       "peer_average": 30.55,
-      "deviation_from_peer_average": -5.25,
+      "deviation_from_peer_average": -4.15,
       "rank_warmest": 3,
       "rank_coldest": 1,
-      "sample_min": 25.3,
+      "sample_min": 26.4,
       "sample_max": 31.3,
-      "sample_stdev": 2.55
+      "sample_stdev": 2.05
     },
     "recent_history": {
       "previous_periods": [
@@ -458,15 +458,15 @@
       ],
       "previous_period_count": 4,
       "previous_period_mean": 28.48,
-      "difference_from_previous_period_mean": -3.18
+      "difference_from_previous_period_mean": -2.08
     }
   },
   "analysis_meta": {
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-08-17T13:02:40.087884+09:00",
-    "data_fingerprint": "613846ac81a528fc8c1f",
+    "generated_at": "2026-08-17T16:16:38.757244+09:00",
+    "data_fingerprint": "47812415d27e8428f5c9",
     "period_closed": false,
     "coverage_complete": false,
     "observed_days": 1,
