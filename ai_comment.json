@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-18T07:24:50.228431+09:00",
-  "advice": "広域の格子推定値である23.3度に比べ、屋外の日陰に設置したセンサーでは26.0度を観測しており、局所的な昇温が先行しています。湿度も88%と高めで、風の推定値を加味した参考体感温度は31度台半ばに達しており、朝から強い蒸し暑さを感じる状況です。\n\n雨雲レーダーでは直近1時間の降水は予想されておらず、落ち着いた天気が続く見込みです。気象予測では正午にかけて気温が29度台まで上がる見通しですが、手元の観測で既に熱がこもり始めていることから、実際の生活環境では予想よりも早い段階から厳しい暑さに変わるとみられます。\n\n朝の移動時に雨具の出番はありませんが、湿度が高く汗が引きにくいため、こまめな水分補給が欠かせません。日差しが届く時間帯に向けて通気性の良い服装を選び、室内でも無理をせず適切に冷房を活用してください。",
+  "generated_at": "2026-08-18T08:23:21.542304+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 26.0,
-    "weather_temp": 23.3,
+    "outdoor_temp": 27.9,
+    "weather_temp": 25.1,
     "weather": "曇り",
     "alerts_count": 0
   }
