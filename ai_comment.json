@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-18T19:25:32.809636+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-08-18T20:30:14.224945+09:00",
+  "advice": "日没後も屋外のセンサーで気温28.1℃、湿度76%を観測しており、厳しい蒸し暑さが続いています。風が非常に弱いため熱が逃げにくく、計算上の体感温度は33℃を上回るなど身体への負担が大きい状態です。\n\nこの先未明にかけて雨の心配はなく、気温は24℃台まで約2℃下がる見通しです。ただし、湿度が終始高めで推移するため、夜間の気温低下は緩やかで、熱帯夜に近い寝苦しさが続くとみられます。\n\n夜間も室内で熱中症を発症するリスクがあります。就寝中も我慢せずエアコンを活用して室温と湿度を適切に保ち、寝る前には意識して水分を補給してください。",
   "model": "gemini-3.7-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 28.6,
-    "weather_temp": 27.2,
-    "weather": "薄曇り",
+    "outdoor_temp": 28.1,
+    "weather_temp": 26.2,
+    "weather": "晴れ",
     "alerts_count": 0
   }
 }
