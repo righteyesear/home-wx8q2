@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-18T08:23:21.542304+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-08-18T10:05:33.100386+09:00",
+  "advice": "午前10時現在、屋外の日陰センサーで気温29.7℃、湿度72%を観測しており、高湿度のため推定体感温度は35℃を上回っています。雨雲の接近はなく日差しが届く中、午前中から身体への熱負荷が急速に強まっています。\n\n日中は31℃前後まで気温が上昇する見込みで、空気中の水分量が多いため汗が蒸発しにくく、身体から熱が逃げにくいコンディションが続く見通しです。これから午後のピークにかけて、体力を奪われやすい蒸し暑さが一段と本格化するとみられます。\n\n室内では我慢をせず早めに冷房や除湿を活用し、涼しい環境を保ってください。外出時や屋外での作業時は日傘や帽子で直射日光を遮り、喉の渇きを感じる前から定期的に水分と塩分を補給するなど、熱中症対策を万全に行いましょう。",
   "model": "gemini-3.7-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 27.9,
-    "weather_temp": 25.1,
-    "weather": "曇り",
+    "outdoor_temp": 29.7,
+    "weather_temp": 28.6,
+    "weather": "晴れ",
     "alerts_count": 0
   }
 }
