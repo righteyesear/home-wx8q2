@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-18T12:47:39.141464+09:00",
-  "advice": "屋外の日陰に設置したセンサーでは33.1℃を観測しており、広域の格子推定値である30.9℃を2.2℃上回っています。湿度も57%前後あるため、推定風速を考慮した参考体感温度は37.8℃に達しており、身の回りでは厳しい蒸し暑さとなっています。\n\nこの先も晴天が続き、雨の心配はほとんどない見込みです。広域予報では気温は15時頃まで30℃前後を維持し、夕方17時頃にかけて28℃台へ緩やかに下がる推移を示しています。ただし、局所的には日差しや周囲の蓄熱の影響を受けやすく、夕方前までは予報値以上の強い暑さが続く見通しです。\n\n日中の長時間の外出や屋外作業は控え、室内でもためらわずに冷房を活用してください。喉の渇きを感じる前にこまめな水分補給を行い、熱中症への対策を万全にしておく必要があります。",
+  "generated_at": "2026-08-18T13:24:48.768033+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,7 +11,7 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 33.1,
+    "outdoor_temp": 32.9,
     "weather_temp": 30.9,
     "weather": "晴れ",
     "alerts_count": 0
