@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-19T14:29:49.139191+09:00",
-  "advice": "手元の屋外センサーでは気温33.6℃、湿度56％を観測しており、厳しい暑さとなっています。風が弱く湿度もやや高いため、風速等を加味した参考体感温度は38℃台後半に達しており、身体に熱がこもりやすい危険な状況です。\n\nこの厳しい暑さは15時台まで続く見込みですが、夕方17時を回ると28℃台へ、日没後の19時頃には27℃台へと徐々に和らいでいく見通しです。直近で雨による気温低下は見込めないため、夕方までは強い日差しと高い気温が継続するとみられます。\n\n屋外での無理な運動は避け、日傘や帽子を活用して直射日光を遮ってください。室内でも無理をせず冷房を適切に稼働させ、喉の渇きを感じる前にこまめな水分・塩分補給を行いましょう。",
+  "generated_at": "2026-08-19T15:21:29.825305+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -12,8 +12,8 @@
   },
   "data_summary": {
     "outdoor_temp": 33.6,
-    "weather_temp": 32.0,
-    "weather": "快晴",
+    "weather_temp": 31.5,
+    "weather": "晴れ",
     "alerts_count": 0
   }
 }
