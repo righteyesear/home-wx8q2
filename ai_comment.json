@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-19T08:22:44.711121+09:00",
-  "advice": "朝から強い日差しとともに気温が上昇しており、手元の屋外センサーでは28.9℃を観測しています。広域の格子推定値（26.0℃）と比べても身の回りの温度上昇が早く、湿度も加わって推定体感温度はすでに34℃台に達しています。\n\nこの後も日中は晴れて気温がさらに上がり、午後は31℃を超える暑さとなる見込みです。風が穏やかで熱気がこもりやすい状況が続くため、広域予報の数字以上に屋外や日当たりの良い場所では体への負担が大きくなるとみられます。\n\n朝のうちから無理のない冷房の使用やこまめな水分補給を心がけ、熱中症への対策を万全にしてお過ごしください。外出時は日傘や帽子などで直射日光を避けるのが効果的です。",
+  "generated_at": "2026-08-19T10:05:15.311469+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 28.9,
-    "weather_temp": 26.0,
+    "outdoor_temp": 30.3,
+    "weather_temp": 29.1,
     "weather": "快晴",
     "alerts_count": 0
   }
