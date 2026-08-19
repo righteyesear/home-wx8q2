@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-19T18:40:30.507195+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-08-19T19:26:39.789943+09:00",
+  "advice": "日没後も厳しい蒸し暑さが続いており、夜間の熱中症対策が欠かせない状況です。屋外センサーの実測では気温29.0℃、湿度75％を観測しており、高湿度の影響で風の推定を加味した参考体感温度は34℃を超えています。\n\n日付が変わる深夜にかけて気温は25℃台まで約2℃下がる見通しですが、降水の心配がない一方で空気中の水分が多く、夜間も熱気がスムーズに逃げにくいとみられます。\n\n屋内にいても身体への負担が蓄積しやすいため、無理をせず冷房を活用して室温を適切に保ち、就寝前にはコップ1杯の水分を補給するなど具体的な対策をとってください。",
   "model": "gemini-3.7-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 29.4,
-    "weather_temp": 27.8,
-    "weather": "晴れ",
+    "outdoor_temp": 29.0,
+    "weather_temp": 27.4,
+    "weather": "薄曇り",
     "alerts_count": 0
   }
 }
