@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-20T19:27:55.774719+09:00",
-  "advice": "屋外に設置された個人センサーの実測値は29.4℃で、広域の格子推定値である27.3℃より2.1℃高くなっています。日没後も敷地周辺に熱が残りやすい環境とみられ、風速の推定値を踏まえた参考体感温度は33.9℃と、厳しい蒸し暑さが続いています。\n\n広域の気象予測では、日付が変わる頃にかけて気温は26℃付近まで緩やかに低下する見込みです。雨雲の発生はなく今夜の天候は安定していますが、局所的な熱のこもりによって、実際の体感は予報の気温よりも下がりにくい状態が続く見通しです。\n\n夜間も熱が逃げにくいため、室内では無理をせずエアコンや除湿を活用して室温を整えてください。就寝前にも十分な水分補給を行い、熱中症予防を意識すると安心です。",
+  "generated_at": "2026-08-20T20:32:03.956796+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 29.4,
-    "weather_temp": 27.3,
-    "weather": "晴れ",
+    "outdoor_temp": 29.3,
+    "weather_temp": 26.6,
+    "weather": "薄曇り",
     "alerts_count": 0
   }
 }
