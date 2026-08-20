@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-20T22:37:53.327478+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-08-21T04:33:31.895895+09:00",
+  "advice": "早朝の時間帯ですが、手元の屋外センサーでは気温26.9℃、湿度82%と高い湿度を観測しています。風が穏やかなこともあり、推定される参考体感温度は32℃前後に達しており、日の出前から身体への蒸し暑い負担がかかりやすい状況です。\n\n雨雲の接近はなく、この先は日差しとともに速やかに気温が上がる見通しです。朝9時頃には27℃台後半まで上昇する見込みで、朝の涼しさを感じる間もなく日中の本格的な暑さへ移行していくとみられます。\n\n起床直後は水分が失われていますので、まずはコップ1杯の水分補給を行ってください。早朝からの散歩や屋外作業でも油断せず、室内でもエアコンを適切に活用して、朝のうちから体に熱をためない対策を整えましょう。",
   "model": "gemini-3.7-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 28.7,
-    "weather_temp": 26.1,
-    "weather": "薄曇り",
+    "outdoor_temp": 26.9,
+    "weather_temp": 25.2,
+    "weather": "晴れ",
     "alerts_count": 0
   }
 }
