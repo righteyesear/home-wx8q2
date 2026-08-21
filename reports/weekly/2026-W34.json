@@ -7,7 +7,7 @@
     "end_date": "2026-08-23",
     "label": "2026年 第34週（8/17 〜 8/23）"
   },
-  "generated_at": "2026-08-21T18:54:17.434658+09:00",
+  "generated_at": "2026-08-21T22:11:56.617072+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -72,7 +72,7 @@
         "weekday": "金",
         "high": 33.9,
         "low": 26.8,
-        "avg": 29.6,
+        "avg": 29.4,
         "range": 7.1
       }
     ],
@@ -342,7 +342,7 @@
         28.3,
         29.0,
         29.6,
-        29.6
+        29.4
       ]
     },
     "prev_year_comparison": {
@@ -358,7 +358,7 @@
         28.3,
         29.0,
         29.6,
-        29.6
+        29.4
       ],
       "last_year": [
         30.9,
@@ -415,7 +415,7 @@
         -2.2,
         -1.5,
         -0.9,
-        -0.9
+        -1.1
       ],
       "baseline_avg": 30.5
     }
@@ -424,18 +424,18 @@
     "context_version": "3.2",
     "daily_pattern": {
       "opening_avg": 26.6,
-      "closing_avg": 29.6,
-      "front_to_back_change": 3.0,
-      "linear_slope_per_day": 0.73,
-      "daily_avg_stdev": 1.12,
-      "mean_absolute_day_change": 0.75,
+      "closing_avg": 29.4,
+      "front_to_back_change": 2.8,
+      "linear_slope_per_day": 0.69,
+      "daily_avg_stdev": 1.09,
+      "mean_absolute_day_change": 0.8,
       "largest_rise": {
         "change": 1.6999999999999993,
         "from_date": "2026/08/17",
         "to_date": "2026/08/18"
       },
       "largest_drop": {
-        "change": 0.0,
+        "change": -0.20000000000000284,
         "from_date": "2026/08/20",
         "to_date": "2026/08/21"
       },
@@ -545,8 +545,8 @@
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-08-21T18:54:17.488783+09:00",
-    "data_fingerprint": "8380e12a258a49df660e",
+    "generated_at": "2026-08-21T22:11:56.688086+09:00",
+    "data_fingerprint": "e094b5f4a3d3b923f9ee",
     "period_closed": false,
     "coverage_complete": false,
     "observed_days": 5,
