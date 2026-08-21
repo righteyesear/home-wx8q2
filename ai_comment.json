@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-21T12:01:36.734634+09:00",
-  "advice": "身の回りの日陰に設置したセンサーでは気温33.3℃を観測しており、広域推定の29.1℃を4℃以上上回る厳しい蒸し暑さとなっています。建物周辺の熱気が影響しているとみられ、風速を加味した推定体感温度も39℃近くまで達しています。\n\n現在は日差しが届いていますが、気象庁からは雷注意報が発表されています。昼過ぎから夕方にかけては大気の状態が不安定となり、局地的な雷雨となる見通しです。午後は雲が厚くなるにつれて雨の可能性が高まり、気温は26℃台まで下がっていく見込みです。\n\n午後の外出には、急な強い雨に備えて雨具をお持ちください。まずは室内を涼しく保ちこまめな水分補給で熱中症を防ぎつつ、空が急に暗くなるような天候の変化にも注意が必要です。",
+  "generated_at": "2026-08-21T12:52:28.591370+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 33.3,
-    "weather_temp": 29.1,
+    "outdoor_temp": 33.7,
+    "weather_temp": 29.4,
     "weather": "晴れ",
     "alerts_count": 1
   }
