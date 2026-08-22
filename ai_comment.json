@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-22T21:25:40.234953+09:00",
-  "advice": "夜に入っても湿度が非常に高く、体に熱がこもりやすい蒸し暑さが続いています。手元のセンサーでは気温26.3℃に対し湿度が91％に達しており、風が弱いことも重なって参考体感温度は32℃前後を示しています。\n\n雨雲は葛飾区周辺から離れており直近の雨の心配はありませんが、深夜から明け方にかけても気温は24℃台までしか下がらない見通しです。高湿度の状態が一夜を通して続くため、夜間でも自然な発汗による体温調節が難しくなるとみられます。\n\n就寝中も体への負担が蓄積するため、無理をせずエアコンの除湿や冷房を活用して室内環境を整えてください。また、お休み前の水分補給を意識し、夜間の熱中症をしっかりと防ぎましょう。",
+  "generated_at": "2026-08-22T22:24:00.549377+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 26.3,
-    "weather_temp": 25.5,
-    "weather": "晴れ",
+    "outdoor_temp": 26.0,
+    "weather_temp": 25.2,
+    "weather": "薄曇り",
     "alerts_count": 1
   }
 }
