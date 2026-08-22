@@ -7,7 +7,7 @@
     "end_date": "2026-08-23",
     "label": "2026年 第34週（8/17 〜 8/23）"
   },
-  "generated_at": "2026-08-22T18:42:50.548844+09:00",
+  "generated_at": "2026-08-22T22:01:52.289874+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -29,7 +29,7 @@
       "avg_high": 33.3,
       "min_temp": 23.1,
       "min_temp_date": "2026/08/17",
-      "avg_low": 25.2,
+      "avg_low": 25.1,
       "avg_daily_range": 8.1,
       "prev_week_diff": 3.0,
       "prev_year_diff": -2.5
@@ -79,9 +79,9 @@
         "date": "2026/08/22",
         "weekday": "土",
         "high": 33.1,
-        "low": 26.3,
-        "avg": 29.0,
-        "range": 6.8
+        "low": 26.2,
+        "avg": 28.6,
+        "range": 6.9
       }
     ],
     "comparison": {
@@ -346,7 +346,7 @@
         25.0,
         25.7,
         26.8,
-        26.3
+        26.2
       ],
       "avgs": [
         26.6,
@@ -354,7 +354,7 @@
         29.0,
         29.6,
         29.3,
-        29.0
+        28.6
       ]
     },
     "prev_year_comparison": {
@@ -372,7 +372,7 @@
         29.0,
         29.6,
         29.3,
-        29.0
+        28.6
       ],
       "last_year": [
         30.9,
@@ -406,7 +406,7 @@
         25.0,
         25.7,
         26.8,
-        26.3
+        26.2
       ],
       "last_year_low": [
         27.4,
@@ -433,7 +433,7 @@
         -1.5,
         -0.9,
         -1.2,
-        -1.5
+        -1.9
       ],
       "baseline_avg": 30.5
     }
@@ -442,20 +442,20 @@
     "context_version": "3.2",
     "daily_pattern": {
       "opening_avg": 27.45,
-      "closing_avg": 29.15,
-      "front_to_back_change": 1.7,
-      "linear_slope_per_day": 0.446,
-      "daily_avg_stdev": 0.99,
-      "mean_absolute_day_change": 0.72,
+      "closing_avg": 28.95,
+      "front_to_back_change": 1.5,
+      "linear_slope_per_day": 0.389,
+      "daily_avg_stdev": 0.98,
+      "mean_absolute_day_change": 0.8,
       "largest_rise": {
         "change": 1.6999999999999993,
         "from_date": "2026/08/17",
         "to_date": "2026/08/18"
       },
       "largest_drop": {
-        "change": -0.3000000000000007,
-        "from_date": "2026/08/20",
-        "to_date": "2026/08/21"
+        "change": -0.6999999999999993,
+        "from_date": "2026/08/21",
+        "to_date": "2026/08/22"
       },
       "warmest_average_day": {
         "date": "2026/08/20",
@@ -563,8 +563,8 @@
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-08-22T18:42:50.628091+09:00",
-    "data_fingerprint": "489e66dba127b6dddc87",
+    "generated_at": "2026-08-22T22:01:52.360176+09:00",
+    "data_fingerprint": "2c0364babc09e70261ac",
     "period_closed": false,
     "coverage_complete": false,
     "observed_days": 6,
