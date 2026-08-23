@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-23T08:21:17.720921+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-08-23T10:10:34.028419+09:00",
+  "advice": "現在、屋外日陰の個人センサーでは29.8℃を観測しており、広域の格子推定値である27.1℃を2.7℃ほど上回っています。湿度も74%と高く風が穏やかなため、身の回りでは推定以上の蒸し暑さを感じる状況となっています。\n\n広域の予報でも午後は気温がさらに上昇する見込みで、周囲の実感としては猛暑並みの暑さとなる可能性があります。雨雲レーダーの実況では直近1時間の降水はありませんが、夕方以降は所により雷を伴った激しい雨の予報が出ており、空模様の急変にも注意が必要です。\n\n屋外での作業や外出時は、手元の温度感に合わせて早めの水分・塩分補給と涼しい場所での休憩を意識してください。午後の天候悪化に備え、お出かけの際は折りたたみ傘や雨具を準備しておくと安心です。",
   "model": "gemini-3.7-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 26.7,
-    "weather_temp": 25.1,
+    "outdoor_temp": 29.8,
+    "weather_temp": 27.1,
     "weather": "晴れ",
     "alerts_count": 1
   }
