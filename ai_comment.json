@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-24T04:23:53.514264+09:00",
-  "advice": "早朝の時間帯ですが、手元のセンサーでは気温25.9℃、湿度90%を観測しており、風の推定値を加味した参考体感温度は31℃を超えています。気温の数値以上に湿気が多く、朝の早い段階から身体に負担がかかりやすい蒸し暑さとなっています。\n\nこの先は日の出とともに気温が上がり、朝9時には28℃前後、日中には31℃まで上昇する見込みです。朝のうちだけでも約4℃の急な気温上昇が見込まれる上、高湿度が続くことで汗が蒸発しにくく、熱中症のリスクが時間とともに高まるとみられます。\n\n起床直後や朝の準備中から意識して水分を補給し、室内では無理をせずエアコンを活用して室温を下げてください。通勤や外出を予定されている場合も、通気性の良い服装を選び、朝のうちから身体に熱をためない対策を整えましょう。",
+  "generated_at": "2026-08-24T07:21:50.944547+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 25.9,
-    "weather_temp": 24.0,
-    "weather": "晴れ",
+    "outdoor_temp": 27.9,
+    "weather_temp": 26.3,
+    "weather": "快晴",
     "alerts_count": 0
   }
 }
