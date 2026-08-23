@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-23T12:01:27.794269+09:00",
-  "advice": "手元の屋外センサーでは気温が30.4℃に達し、本日これまでの最高を更新しています。湿度も約71%と高湿度が続いており、風が穏やかなため参考体感温度は36℃を超える厳しい蒸し暑さです。広域推定の28.5℃よりも局所的に熱が籠もりやすく、身体への熱負荷が急速に高まっています。\n\nこの後も午後にかけて29℃台から30℃前後の高止まりが続く見込みで、薄曇りながら紫外線も強い状態です。雨雲レーダーでは直近1時間の降水はないものの、夕方から夜のはじめ頃にかけては所により雷を伴う急な強い雨の可能性があるため、空の変化にも目配りが必要です。\n\n室内でも我慢をせずエアコンを適切に稼働させ、室温と湿度をしっかり下げてください。喉の渇きを感じる前にこまめな水分と適度な塩分を補給し、屋外での連続した活動は控えるなど、今すぐ熱中症対策を徹底しましょう。",
+  "generated_at": "2026-08-23T12:52:49.701250+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 30.4,
-    "weather_temp": 28.5,
-    "weather": "薄曇り",
+    "outdoor_temp": 30.5,
+    "weather_temp": 29.1,
+    "weather": "晴れ",
     "alerts_count": 1
   }
 }
