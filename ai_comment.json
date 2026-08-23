@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-23T15:18:52.937250+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-08-23T16:25:12.918729+09:00",
+  "advice": "手元のセンサーでは気温31.0℃、湿度69％を観測しており、多湿な空気の影響で推定される体感温度は36℃台後半に達しています。夕方の時間帯に入っても熱気が逃げにくく、身体への負担が大きい蒸し暑さが続いています。\n\nこのあと夜にかけて気温は26℃台まで約3.5℃下がる見通しですが、高湿度な状態が続くため体感の不快感は残りやすい見込みです。また、大気の状態が不安定で雷注意報が継続しており、急な雨や雷への備えも念頭に置く必要があります。\n\n室内では我慢せず冷房を稼働させて室温をコントロールし、こまめな水分・塩分補給を行ってください。夕暮れ時でも油断せず、涼しい環境を整えて熱中症を防ぎましょう。",
   "model": "gemini-3.7-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 31.3,
-    "weather_temp": 29.8,
+    "outdoor_temp": 31.0,
+    "weather_temp": 29.4,
     "weather": "晴れ",
     "alerts_count": 1
   }
