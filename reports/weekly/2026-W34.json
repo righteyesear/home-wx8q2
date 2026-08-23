@@ -7,22 +7,22 @@
     "end_date": "2026-08-23",
     "label": "2026年 第34週（8/17 〜 8/23）"
   },
-  "generated_at": "2026-08-23T22:02:22.572921+09:00",
+  "generated_at": "2026-08-24T06:29:46.593834+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "",
+      "ai_comment": "2026年 第34週（8/17 〜 8/23）は前週から平均気温が+2.8℃変化し、直近の流れが大きく動いた期間でした。期間平均は28.4℃、最高34.0℃（8/20）、最低23.1℃（8/17）です。日別には前半と後半の差は0.7℃でほぼ横ばいとなり、日ごとの差は小さめでした。位置づけは前週比+2.8℃、前年同期比-2.7℃、過去同時期平均との差-2.1℃。真夏日は7日、最長7日連続でした。総じて、直前期との変化と前年・同時期で見た位置づけが一致せず、比較基準によって見え方の変わる週でした。",
       "highlights": [
         "最高気温 34.0℃",
         "最低気温 23.1℃",
-        "前週比 +2.9℃",
-        "前年比 -2.6℃"
+        "前週比 +2.8℃",
+        "前年比 -2.7℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 7,
-      "avg_temp": 28.5,
+      "avg_temp": 28.4,
       "avg_temp_stdev": 1.0,
       "max_temp": 34.0,
       "max_temp_date": "2026/08/20",
@@ -31,8 +31,8 @@
       "min_temp_date": "2026/08/17",
       "avg_low": 25.0,
       "avg_daily_range": 8.1,
-      "prev_week_diff": 2.9,
-      "prev_year_diff": -2.6
+      "prev_week_diff": 2.8,
+      "prev_year_diff": -2.7
     },
     "daily_data": [
       {
@@ -88,7 +88,7 @@
         "weekday": "日",
         "high": 32.3,
         "low": 24.9,
-        "avg": 28.0,
+        "avg": 27.9,
         "range": 7.4
       }
     ],
@@ -108,16 +108,16 @@
         "avg_low": 27.5,
         "avg_daily_range": 8.5
       },
-      "avg_temp_diff": -2.6,
+      "avg_temp_diff": -2.7,
       "max_temp_diff": -3.4,
       "min_temp_diff": -3.7,
       "avg_daily_range_diff": -0.4,
-      "ai_comment": ""
+      "ai_comment": "同じ第34週を比べられる2024〜2026年の3期間では低温側1位です。比較できる他2期間の同時期平均30.6℃に対して-2.1℃です。比較対象全体の平均気温は28.4〜31.3℃の幅で、今回がその下限です。平均は前年同期より-2.7℃、最高値は-3.4℃、最低値は-3.7℃、平均日較差は-0.4℃。最高値と最低値が同程度に動いており、特定の時間帯だけでなく期間全体の水準差と読めます。さらに直前4週の平均28.5℃と比べると-0.1℃で、単一の前年だけでなく直近推移の中でも気温差が0.1℃でほぼ同水準状態です。"
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 30.5,
-      "current_deviation": -2.0,
+      "current_deviation": -2.1,
       "years_count": 2
     },
     "events": {
@@ -319,7 +319,7 @@
             "low": 20.4
           },
           "8": {
-            "avg": 27.7,
+            "avg": 27.6,
             "high": 37.7,
             "low": 22.1
           }
@@ -327,7 +327,7 @@
       }
     },
     "trend_analysis": {
-      "ai_comment": ""
+      "ai_comment": "平均気温の底は8/17の26.6℃、山は8/20の29.6℃でした。前半と後半の差は0.7℃でほぼ横ばいとなり、日ごとの差は小さめでした。最大上昇は8/17→8/18の+1.7℃、最大低下は8/21→8/22の-0.9℃です。日平均の標準偏差は0.9℃、前日からの平均変化幅は0.8℃で、期間内の変動性は安定的でした。温度基準で見ると真夏日は7日、最長7日連続でした。"
     }
   },
   "chart_data": {
@@ -366,7 +366,7 @@
         29.6,
         29.3,
         28.4,
-        28.0
+        27.9
       ]
     },
     "prev_year_comparison": {
@@ -386,7 +386,7 @@
         29.6,
         29.3,
         28.4,
-        28.0
+        27.9
       ],
       "last_year": [
         30.9,
@@ -451,7 +451,7 @@
         -0.9,
         -1.2,
         -2.1,
-        -2.5
+        -2.6
       ],
       "baseline_avg": 30.5
     }
@@ -460,11 +460,11 @@
     "context_version": "3.2",
     "daily_pattern": {
       "opening_avg": 27.45,
-      "closing_avg": 28.2,
-      "front_to_back_change": 0.75,
-      "linear_slope_per_day": 0.168,
+      "closing_avg": 28.15,
+      "front_to_back_change": 0.7,
+      "linear_slope_per_day": 0.157,
       "daily_avg_stdev": 0.93,
-      "mean_absolute_day_change": 0.77,
+      "mean_absolute_day_change": 0.78,
       "largest_rise": {
         "change": 1.6999999999999993,
         "from_date": "2026/08/17",
@@ -522,12 +522,12 @@
         2026
       ],
       "peer_average": 30.55,
-      "deviation_from_peer_average": -2.05,
+      "deviation_from_peer_average": -2.15,
       "rank_warmest": 3,
       "rank_coldest": 1,
-      "sample_min": 28.5,
+      "sample_min": 28.4,
       "sample_max": 31.3,
-      "sample_stdev": 1.14
+      "sample_stdev": 1.18
     },
     "recent_history": {
       "previous_periods": [
@@ -574,18 +574,19 @@
       ],
       "previous_period_count": 4,
       "previous_period_mean": 28.48,
-      "difference_from_previous_period_mean": 0.02
+      "difference_from_previous_period_mean": -0.08
     }
   },
   "analysis_meta": {
-    "source": "draft",
-    "analysis_available": false,
+    "source": "local",
+    "analysis_available": true,
     "protocol_version": "3.2",
-    "generated_at": "2026-08-23T22:02:22.632611+09:00",
-    "data_fingerprint": "1a2d16a6f062359780be",
-    "period_closed": false,
+    "generated_at": "2026-08-24T06:29:46.674557+09:00",
+    "data_fingerprint": "b347c436a2ee93f231c1",
+    "period_closed": true,
     "coverage_complete": true,
     "observed_days": 7,
-    "expected_days": 7
+    "expected_days": 7,
+    "fallback_reason": "ServerError"
   }
 }
