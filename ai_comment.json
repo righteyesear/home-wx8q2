@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-24T13:34:58.657684+09:00",
-  "advice": "手元の屋外センサーでは34.4℃を観測しており、広域の格子推定値である31.4℃を3.0℃上回る厳しい暑さとなっています。湿度も高いため、風の推定を加味した参考体感温度は40℃を超えており、身の回りでは熱気がこもりやすい状況です。\n\n雨雲レーダーの実況では直近1時間の降水は見込まれていませんが、気象庁の予報によると昼過ぎから夜のはじめ頃にかけて所により雷を伴う雨の可能性があります。夕方にかけて気温は28℃台まで徐々に低下していく見込みですが、午後は空模様の急な変化に注意が必要です。\n\n屋外では熱中症の危険が高いため、水分補給や適切な冷房使用を徹底してください。また、急なにわか雨や雷雨に備えて、外出の際は折りたたみ傘を用意しておくと安心です。",
+  "generated_at": "2026-08-24T14:37:32.978963+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -12,8 +12,8 @@
   },
   "data_summary": {
     "outdoor_temp": 34.4,
-    "weather_temp": 31.4,
-    "weather": "快晴",
+    "weather_temp": 31.0,
+    "weather": "薄曇り",
     "alerts_count": 0
   }
 }
