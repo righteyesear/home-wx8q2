@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-08-24T10:08:13.423334+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-08-24T11:14:16.120845+09:00",
+  "advice": "葛飾区周辺では気温が30℃を超え、湿度70%以上の湿った空気に強い日差しが加わり、参考体感温度は36℃前後まで上がっています。身体への熱の蓄積が起きやすい、厳しい蒸し暑さです。\n\nこの後も気温は31℃台まで上昇する見込みで、湿度が高い状態が続くため体感的な暑さは衰えません。紫外線も非常に強く、日中の外出や活動は急激に体力を奪われやすい状況が続くとみられます。\n\n屋内でも我慢せず冷房を稼働させ、除湿を併用して室内の環境を整えてください。外出の際は日傘や帽子で直射日光を避け、喉が渇く前から意識的に水分と塩分を補給して熱中症を防ぎましょう。",
   "model": "gemini-3.7-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
-    "spreadsheet_error": null,
+    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 32.1,
-    "weather_temp": 29.4,
+    "outdoor_temp": null,
+    "weather_temp": 30.4,
     "weather": "快晴",
     "alerts_count": 0
   }
