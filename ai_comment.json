@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-25T07:26:44.480391+09:00",
-  "advice": "朝から気温が高く、厳しい蒸し暑さとなっています。屋外の日陰に設置したセンサーでは29.7℃を観測しており、広域推定値の26.5℃を3℃以上上回っています。湿度も75％と高いため、風速等を加味した参考体感温度は35℃を超えており、身の回りでは広域の数字以上の暑さを感じる状況です。\n\nこの先も強い日差しとともに気温は上昇し、お昼頃には31℃台後半まで上がる見込みです。なお、午後は大気の状態が不安定になり、所により雷を伴った雨の可能性があるため雷注意報が発表されています。日中の強い日差しが続く一方で、空模様の急変にも目配りが必要です。\n\n朝の外出時から熱中症対策を万全にし、屋内でも適切に冷房を使用してこまめに水分を補給してください。日中は紫外線が非常に強くなるため日傘や帽子を活用し、午後の急な雨に備えて折りたたみ傘を持っておくと安心です。",
+  "generated_at": "2026-08-25T08:22:52.963404+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 29.7,
-    "weather_temp": 26.5,
+    "outdoor_temp": 31.2,
+    "weather_temp": 27.5,
     "weather": "快晴",
     "alerts_count": 1
   }
