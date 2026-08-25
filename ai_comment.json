@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-08-25T22:44:11.368932+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-08-26T04:33:43.525021+09:00",
+  "advice": "手元の屋外センサーでは早朝ながら27.8℃を観測しており、広域の格子推定値（24.8℃）を3.0℃上回る蒸し暑さとなっています。湿度も87%と高く、風が弱いため参考体感温度は34℃前後に達しています。\n\n周辺の広域予報では5時前後に24.5℃まで下がる見込みですが、日の出後は急激に気温が上がり、9時には30.0℃に達する見通しです。局所的に夜間の熱が冷めきらないまま強い日差しを受けるため、朝の早い段階から体感的な暑さが本格化するとみられます。\n\n屋外の熱気を引き込まないよう窓開けの判断には注意し、朝の涼しさを待たずにエアコンで室温を管理してください。早い時間帯の外出や活動でも、意識してこまめな水分補給を行いましょう。",
   "model": "gemini-3.7-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
-    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
+    "spreadsheet_error": null,
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": null,
-    "weather_temp": 27.1,
-    "weather": "晴れ",
-    "alerts_count": 1
+    "outdoor_temp": 27.8,
+    "weather_temp": 24.8,
+    "weather": "快晴",
+    "alerts_count": 0
   }
 }
