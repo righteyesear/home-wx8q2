@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-25T12:51:12.222455+09:00",
-  "advice": "南からの風がやや強めに通り抜け、瞬間的には10m/sを超える突風が発生しやすい状況です。屋外の日陰センサーでは34.7℃を観測しており、日差しに加えて熱気を帯びた風が吹きつける時間帯となっています。\n\nこの先夕方にかけても平均風速3m/s弱の南風が持続する見通しです。格子推定の気温31.7℃に対し、局所のセンサー実測値は3.0℃高く推移しており、風があっても体感的な暑さはほとんど和らぎません。\n\n駐輪中の自転車の転倒や、立て看板などの軽量物が倒れるリスクがあります。屋外では突風にあおられてバランスを崩さないよう注意し、周囲の飛来物にも目を配ってください。熱風による隠れ脱水を防ぐため、屋内への早めの退避と水分補給が効果的です。",
+  "generated_at": "2026-08-25T13:29:10.018296+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,7 +11,7 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 34.7,
+    "outdoor_temp": 34.4,
     "weather_temp": 31.7,
     "weather": "晴れ",
     "alerts_count": 1
