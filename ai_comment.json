@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-25T11:10:05.676976+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-08-25T11:57:18.208171+09:00",
+  "advice": "日差しが強く、屋外の日陰センサーでは35.3℃と厳しい暑さとなっています。現在は南寄りの風が入り、瞬間的には11m/s前後の突風が発生しやすい状態です。\n\nこの先夕方にかけても南寄りの風がやや強めに推移し、風速3m/s近く、突風では10m/sを超える可能性があります。雷注意報も発表されているため、午後は大気の不安定化に伴う突発的な強い風や天候の急変にも留意が必要です。\n\n屋外では日傘や帽子のあおり、ベランダの洗濯物や軽量物の飛散にご注意ください。急に冷たい風や突風が吹き抜けた際は、天気の急変の前触れとなる場合もあるため、すぐに建物内へ移動できるよう備えておくと安心です。",
   "model": "gemini-3.7-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 35.0,
-    "weather_temp": 31.4,
-    "weather": "快晴",
+    "outdoor_temp": 35.3,
+    "weather_temp": 31.7,
+    "weather": "晴れ",
     "alerts_count": 1
   }
 }
