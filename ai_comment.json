@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-08-26T08:25:23.161712+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-08-26T10:09:12.302277+09:00",
+  "advice": "午前10時現在、推定気温は31.8℃ですが、湿度が68％と高いため参考体感温度は38℃を超えています。湿気により汗が蒸発しにくく、身体に熱がこもりやすい大変危険な蒸し暑さです。\n\nこのあとも気温は33℃前後まで上昇する見通しで、日差しとともに身体への負担が一段と重くなります。また、午後は大気の状態が不安定になり、夕方以降は急な雷雨となる可能性もあるため空模様の変化にも注意が必要です。\n\n屋内にいる場合でも我慢せず冷房を適切に稼働させ、室温の上昇を防いでください。喉の渇きを感じる前に定期的な水分と適度な塩分の補給を行い、屋外での無理な活動は避けるなど、今すぐ熱中症対策を万全に整えてください。",
   "model": "gemini-3.7-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
-    "spreadsheet_error": null,
+    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 30.7,
-    "weather_temp": 28.5,
-    "weather": "快晴",
+    "outdoor_temp": null,
+    "weather_temp": 31.8,
+    "weather": "晴れ",
     "alerts_count": 1
   }
 }
