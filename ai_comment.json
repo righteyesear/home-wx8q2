@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-28T03:58:20.820394+09:00",
-  "advice": "屋外センサーの実測気温は24.9℃ですが、湿度が88％と高いため、推定される体感温度は約29.7℃と約5℃高く算出される蒸し暑い深夜となっています。周辺の広域推定気温（23.4℃）と比べても、手元では熱が残りやすい状態です。\n\n雨雲レーダーでは直近1時間の降水は見られないものの、朝にかけて気象庁の降水確率は50％と高めの予想です。夜明けにかけて気温は23℃台までわずかに下がる見通しですが、高湿度な状態が続くため、数値以上に蒸し蒸しとした体感が続くとみられます。\n\n就寝中や室内では、実際の気温以上に熱がこもりやすくなります。エアコンの除湿機能や扇風機を上手に使い、室内の湿度を下げて空気の流れを作ることが効果的です。通気性の良い寝具や服装を選び、寝苦しさを防いでお過ごしください。",
+  "generated_at": "2026-08-28T04:47:16.158798+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 24.9,
-    "weather_temp": 23.4,
-    "weather": "薄曇り",
+    "outdoor_temp": 24.6,
+    "weather_temp": 23.3,
+    "weather": "弱い霧雨",
     "alerts_count": 1
   }
 }
