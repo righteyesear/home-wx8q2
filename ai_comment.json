@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-29T05:48:17.721000+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-08-29T06:05:40.641564+09:00",
+  "advice": "現在は雨が小康状態となっていますが、次第に雨の降りやすい空模様へ変わる見通しです。手元の屋外センサーでは気温23.8℃を観測しており、広域の格子推定値である21.7℃より高めです。湿度が83％と高いため、肌感覚としては推定体感で27℃前後の蒸し暑さを感じやすい朝となっています。\n\n気象庁の予報では午前の降水確率が60％、日中にかけては70％と雨が予想されており、雨雲の通過に伴って断続的に雨脚が強まる可能性があります。気温は日中も22℃前後で推移し、日差しがないため大きな上昇は見られない見込みです。\n\n外出の際は傘などの雨具を必ずお持ちください。気温の数字以上に湿気による重苦しさを感じやすいため、室内では除湿運転を活用して快適な環境を整えるのがおすすめです。",
   "model": "gemini-3.7-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -12,7 +12,7 @@
   },
   "data_summary": {
     "outdoor_temp": 23.8,
-    "weather_temp": 21.8,
+    "weather_temp": 21.7,
     "weather": "薄曇り",
     "alerts_count": 0
   }
