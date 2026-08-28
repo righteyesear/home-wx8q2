@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-28T11:27:28.399979+09:00",
-  "advice": "日陰の屋外センサーでは気温32.1℃を観測しており、広域の格子推定値（29.5℃）を2.6℃上回っています。湿度も61%と高めで、推定される参考体感温度は37℃を超えるなど、身の回りの局所的な環境では厳しい蒸し暑さとなっています。\n\n直近1時間の降水は予想されていませんが、気象庁の予報では夕方から夜のはじめ頃にかけて所により雷を伴った激しい雨が降る見込みです。広域予報でも午後は31℃前後まで上がる見通しで、日中の気温上昇に伴い大気の状態が不安定になりやすい状況が続きます。\n\n日中は熱中症への警戒を強め、適切な冷房使用やこまめな水分補給を徹底してください。午後に外出される場合は、空模様の急な変化に備えて雨具を用意しておくと安心です。",
+  "generated_at": "2026-08-28T14:59:23.017495+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 32.1,
-    "weather_temp": 29.5,
+    "outdoor_temp": 33.4,
+    "weather_temp": 31.3,
     "weather": "薄曇り",
     "alerts_count": 1
   }
