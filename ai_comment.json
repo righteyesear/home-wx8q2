@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-29T13:03:06.322404+09:00",
-  "advice": "現在、葛飾区周辺では時間雨量0.1ミリ前後のごく弱い雨が観測されています。屋外センサーの気温は22.3℃と8月としては低めですが、湿度85％と大気中の水分が多く、しっとりとした空気に包まれています。\n\n直近の雨雲予測をみると、13時15分前後にかけて一時的に雨粒がやや目立つ程度（時間雨量1ミリ未満）に強まる可能性がありますが、13時半を回るといったん落ち着く見通しです。ただし気象庁の降水確率は午後を通して70％と高く、夕方にかけても断続的に雨雲が通りやすい天候が続くとみられます。\n\nこれから外出される際は、折りたたみ傘など雨具の携帯が欠かせません。強い降りにはならない見込みですが、路面の濡れや細かい雨粒に備え、撥水性のある羽織りものや滑りにくい靴を選んでおくと安心です。",
+  "generated_at": "2026-08-29T14:38:33.198817+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 22.3,
-    "weather_temp": 22.4,
-    "weather": "霧雨",
+    "outdoor_temp": 21.9,
+    "weather_temp": 22.1,
+    "weather": "弱い霧雨",
     "alerts_count": 0
   }
 }
