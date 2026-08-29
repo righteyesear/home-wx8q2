@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-29T18:51:58.624947+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-08-29T19:37:28.930025+09:00",
+  "advice": "雨雲の隙間に入り、雨レーダーの観測でも葛飾区周辺では直近1時間ほど雨の降らない状態が続く見込みです。手元のセンサーでは気温20.2℃、湿度93％を観測しており、8月下旬としてはかなり涼しく静かな夕暮れとなっています。\n\n気象庁の予報では夜遅くにかけて雨の可能性（降水確率50％）が残るものの、日付が変わる頃にはくもりへと移る見通しです。気温は今後6時間を通して20℃台半ばでほぼ横ばいに推移し、風も穏やかで急激な変化は少ないとみられます。\n\nこれからのお出かけには念のため折りたたみ傘をお持ちになると安心ですが、強雨や荒天の心配はありません。気温が低めで湿度が高いため、夜間は窓からの風で体が冷えすぎないよう、室内の通気や羽織るもので適度に調節してください。",
   "model": "gemini-3.7-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
