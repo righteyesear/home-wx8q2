@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-30T01:55:21.353033+09:00",
+  "generated_at": "2026-08-30T06:33:16.173865+09:00",
   "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
   "analysis_status": "error",
@@ -12,8 +12,8 @@
   },
   "data_summary": {
     "outdoor_temp": null,
-    "weather_temp": 20.0,
-    "weather": "曇り",
+    "weather_temp": 20.2,
+    "weather": "薄曇り",
     "alerts_count": 0
   }
 }
