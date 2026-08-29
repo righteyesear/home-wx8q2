@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-29T20:52:10.858541+09:00",
-  "advice": "葛飾区周辺は雨雲の隙間に入っており、雨レーダーの観測でも直近で強い雨が降る兆候はありません。屋外センサーの観測では気温20.3℃、湿度91％を示しており、風の要素を加味した参考体感温度は約23℃と、8月としては涼しい一方で空気の湿り気が目立っています。\n\n日付が変わる深夜から明朝にかけても天気が大きく崩れる可能性は低く、降水確率も30％へと落ち着く見通しです。気温は朝まで20℃台前半でほとんど横ばいに推移し、風も穏やかな状態が続くとみられます。\n\n外は涼しく感じられるものの湿度が高いため、通気目的で窓を開け放つと室内に湿気がこもる要因になります。今夜は窓を閉めてエアコンの除湿運転などを軽く活用し、寝具の湿気感を抑えつつ体を冷やしすぎないよう整えて休むのがおすすめです。",
+  "generated_at": "2026-08-29T21:55:04.061715+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -12,8 +12,8 @@
   },
   "data_summary": {
     "outdoor_temp": 20.3,
-    "weather_temp": 20.6,
-    "weather": "曇り",
+    "weather_temp": 20.5,
+    "weather": "霧雨",
     "alerts_count": 0
   }
 }
