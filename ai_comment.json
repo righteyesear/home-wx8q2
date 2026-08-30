@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-30T12:38:49.621656+09:00",
-  "advice": "屋外の日陰センサーでは気温25.3℃、湿度78%を観測しており、現在は雨の心配のない落ち着いた空模様です。雨雲の観測や気象庁の予報でも、この先数時間は降水確率が10%程度と低く、天気の大きな崩れはない見込みです。\n\n夕方にかけて気温は25℃台と大きな変化なく推移しますが、風が弱く湿った空気が滞留しています。露点温度が約21℃と空気中の水分量が多いため、汗が蒸発しにくく、参考体感温度は実気温を約4℃上回る29℃前後の蒸し暑さとなっています。\n\n外出時の傘は必要ありませんが、日差しが控えめでも室内には湿気がこもりやすくなります。窓を開けて風を通すか、エアコンの除湿運転を取り入れて、風通しを確保しながらお過ごしください。",
+  "generated_at": "2026-08-30T14:59:36.380490+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 25.3,
-    "weather_temp": 24.1,
+    "outdoor_temp": 26.1,
+    "weather_temp": 25.4,
     "weather": "薄曇り",
     "alerts_count": 0
   }
