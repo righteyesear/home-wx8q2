@@ -15,9 +15,9 @@
       "period": "2026-W35",
       "label": "08/24 〜 08/30",
       "file": "weekly/2026-W35.json",
-      "is_final": false,
-      "analysis_available": false,
-      "status": "draft",
+      "is_final": true,
+      "analysis_available": true,
+      "status": "final",
       "coverage_complete": true,
       "observed_days": 7,
       "expected_days": 7
@@ -1752,5 +1752,5 @@
       "expected_days": 31
     }
   ],
-  "updated_at": "2026-08-31T06:05:53.680975+09:00"
+  "updated_at": "2026-08-31T08:25:59.827438+09:00"
 }
