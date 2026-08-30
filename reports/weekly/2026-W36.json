@@ -7,13 +7,13 @@
     "end_date": "2026-09-06",
     "label": "2026年 第36週（8/31 〜 9/6）"
   },
-  "generated_at": "2026-08-31T01:42:00.704789+09:00",
+  "generated_at": "2026-08-31T06:05:53.587020+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
       "ai_comment": "",
       "highlights": [
-        "最高気温 23.9℃",
+        "最高気温 24.1℃",
         "最低気温 23.7℃",
         "前週比 -3.7℃",
         "前年比 -5.7℃"
@@ -24,13 +24,13 @@
       "days": 1,
       "avg_temp": 23.9,
       "avg_temp_stdev": 0,
-      "max_temp": 23.9,
+      "max_temp": 24.1,
       "max_temp_date": "2026/08/31",
-      "avg_high": 23.9,
+      "avg_high": 24.1,
       "min_temp": 23.7,
       "min_temp_date": "2026/08/31",
       "avg_low": 23.7,
-      "avg_daily_range": 0.2,
+      "avg_daily_range": 0.4,
       "prev_week_diff": -3.7,
       "prev_year_diff": -5.7
     },
@@ -38,10 +38,10 @@
       {
         "date": "2026/08/31",
         "weekday": "月",
-        "high": 23.9,
+        "high": 24.1,
         "low": 23.7,
         "avg": 23.9,
-        "range": 0.2
+        "range": 0.4
       }
     ],
     "comparison": {
@@ -61,9 +61,9 @@
         "avg_daily_range": 7.0
       },
       "avg_temp_diff": -5.7,
-      "max_temp_diff": -13.7,
+      "max_temp_diff": -13.5,
       "min_temp_diff": 0.6,
-      "avg_daily_range_diff": -6.8,
+      "avg_daily_range_diff": -6.6,
       "ai_comment": ""
     },
     "baseline": {
@@ -288,7 +288,7 @@
         "8/31(月)"
       ],
       "highs": [
-        23.9
+        24.1
       ],
       "lows": [
         23.7
@@ -314,7 +314,7 @@
         27.7
       ],
       "this_year_high": [
-        23.9
+        24.1
       ],
       "last_year_high": [
         37.6,
@@ -465,8 +465,8 @@
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-08-31T01:42:00.778504+09:00",
-    "data_fingerprint": "7abf921e6f50fa7d9758",
+    "generated_at": "2026-08-31T06:05:53.677205+09:00",
+    "data_fingerprint": "ab0942c2f8a45e705a87",
     "period_closed": false,
     "coverage_complete": false,
     "observed_days": 1,
