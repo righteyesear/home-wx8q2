@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-08-31T17:09:04.119219+09:00",
-  "advice": "夕方の葛飾区周辺は薄曇りの空が広がり、天候は落ち着いた状態が続いています。手元の屋外センサーでは気温26.4℃を観測していますが、湿度が75％と高めのため、風速推定を組み合わせた参考体感温度は30℃前後と蒸し暑さが残っています。\n\n雨雲レーダーに雨の反応はなく、直近の急な降雨の心配は小さい見込みです。今後の予報でも22時にかけて気温は24℃台へと約2℃緩やかに下がる見通しで、風も穏やかであり、夜間にかけて大きな変化なく安定して推移するとみられます。\n\nこれから夜にかけての外出は、雨の心配をせずに行動できそうです。日没後は気温が下がってきますが湿気がこもりやすいため、帰宅後の室内では適度に除湿を行うなど、蒸し暑さへの対策を整えておくと快適です。",
+  "generated_at": "2026-08-31T18:29:49.654552+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 26.4,
-    "weather_temp": 26.3,
+    "outdoor_temp": 25.4,
+    "weather_temp": 25.4,
     "weather": "薄曇り",
     "alerts_count": 0
   }
