@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-01T08:09:30.543161+09:00",
-  "advice": "現在、雨の心配はなく落ち着いた朝を迎えています。手元のセンサーでは気温24.9℃、湿度82%を観測しており、湿度の高さから推定される参考体感温度は28.8℃と、朝の早い時間帯からやや蒸し暑さを感じる空気感です。\n\n気象庁の予報によると、昼過ぎにかけて次第に晴れ間が広がる見込みです。気温はこれから正午過ぎにかけて28℃台後半まで上昇する推移となっており、強い日差しが加わることで湿度と相まって体感的な暑さが本格化するとみられます。\n\n午前中の外出や屋外の活動は天気の崩れを気にせず進められそうです。午後は気温の上昇に伴い熱気がこもりやすくなるため、通気性の良い服装を選び、こまめな水分補給を心がけてお過ごしください。",
+  "generated_at": "2026-09-01T10:01:59.609519+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 24.9,
-    "weather_temp": 23.9,
+    "outdoor_temp": 26.7,
+    "weather_temp": 26.4,
     "weather": "晴れ",
     "alerts_count": 0
   }
