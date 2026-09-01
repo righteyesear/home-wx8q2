@@ -7,7 +7,7 @@
     "end_date": "2026-09-06",
     "label": "2026年 第36週（8/31 〜 9/6）"
   },
-  "generated_at": "2026-09-01T17:38:44.065776+09:00",
+  "generated_at": "2026-09-01T23:10:53.444034+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -23,7 +23,7 @@
       "title": "週間統計",
       "days": 2,
       "avg_temp": 25.4,
-      "avg_temp_stdev": 0.4,
+      "avg_temp_stdev": 0.3,
       "max_temp": 28.9,
       "max_temp_date": "2026/08/31",
       "avg_high": 28.6,
@@ -48,7 +48,7 @@
         "weekday": "火",
         "high": 28.4,
         "low": 23.3,
-        "avg": 25.7,
+        "avg": 25.6,
         "range": 5.1
       }
     ],
@@ -284,7 +284,7 @@
             "low": 19.8
           },
           "9": {
-            "avg": 25.7,
+            "avg": 25.6,
             "high": 28.4,
             "low": 23.3
           }
@@ -311,7 +311,7 @@
       ],
       "avgs": [
         25.2,
-        25.7
+        25.6
       ]
     },
     "prev_year_comparison": {
@@ -321,7 +321,7 @@
       ],
       "this_year": [
         25.2,
-        25.7
+        25.6
       ],
       "last_year": [
         32.1,
@@ -366,7 +366,7 @@
       ],
       "deviations": [
         -3.4,
-        -2.9
+        -3.0
       ],
       "baseline_avg": 28.6
     }
@@ -375,24 +375,24 @@
     "context_version": "3.2",
     "daily_pattern": {
       "opening_avg": 25.2,
-      "closing_avg": 25.7,
-      "front_to_back_change": 0.5,
-      "linear_slope_per_day": 0.5,
-      "daily_avg_stdev": 0.25,
-      "mean_absolute_day_change": 0.5,
+      "closing_avg": 25.6,
+      "front_to_back_change": 0.4,
+      "linear_slope_per_day": 0.4,
+      "daily_avg_stdev": 0.2,
+      "mean_absolute_day_change": 0.4,
       "largest_rise": {
-        "change": 0.5,
+        "change": 0.40000000000000213,
         "from_date": "2026/08/31",
         "to_date": "2026/09/01"
       },
       "largest_drop": {
-        "change": 0.5,
+        "change": 0.40000000000000213,
         "from_date": "2026/08/31",
         "to_date": "2026/09/01"
       },
       "warmest_average_day": {
         "date": "2026/09/01",
-        "value": 25.7
+        "value": 25.6
       },
       "coolest_average_day": {
         "date": "2026/08/31",
@@ -496,8 +496,8 @@
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-09-01T17:38:44.145745+09:00",
-    "data_fingerprint": "75359abf948f1bee6233",
+    "generated_at": "2026-09-01T23:10:53.517584+09:00",
+    "data_fingerprint": "80bdcd586e864a2f468b",
     "period_closed": false,
     "coverage_complete": false,
     "observed_days": 2,
