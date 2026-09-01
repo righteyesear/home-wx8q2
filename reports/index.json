@@ -1433,6 +1433,17 @@
   ],
   "monthly": [
     {
+      "period": "2026-08",
+      "label": "2026年8月",
+      "file": "monthly/2026-08.json",
+      "is_final": true,
+      "analysis_available": true,
+      "status": "final",
+      "coverage_complete": true,
+      "observed_days": 31,
+      "expected_days": 31
+    },
+    {
       "period": "2026-07",
       "label": "2026年7月",
       "file": "monthly/2026-07.json",
@@ -1752,5 +1763,5 @@
       "expected_days": 31
     }
   ],
-  "updated_at": "2026-09-01T09:39:37.509614+09:00"
+  "updated_at": "2026-09-01T13:44:15.736115+09:00"
 }
