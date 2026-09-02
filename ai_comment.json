@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-09-03T01:58:26.395815+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-03T06:37:46.624111+09:00",
+  "advice": "朝から非常に湿度が高く、身体に熱がこもりやすい蒸し暑さとなっています。屋外センサーの実測気温は26.4℃ですが、湿度が90％に達しているため、風速推定を加味した参考体感温度は32℃を超えています。\n\nこの先昼前にかけて気温は28℃近くまで上昇する見込みで、高い湿度と相まって身体への負担はさらに増す見通しです。気象庁の予報では昼過ぎから雷を伴う強い雨の可能性がありますが、午前中いっぱいは天気の崩れはなく、蒸し暑さが先行する推移となります。\n\n朝の活動時でも油断せず、室内では除湿やエアコンを適切に稼働させて室温を整えてください。こまめな水分・塩分補給を意識するとともに、午後の急な天候悪化に備えて雨具を持ってお出かけください。",
   "model": "gemini-3.7-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
-    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
+    "spreadsheet_error": null,
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": null,
+    "outdoor_temp": 26.4,
     "weather_temp": 25.3,
-    "weather": "晴れ",
-    "alerts_count": 0
+    "weather": "薄曇り",
+    "alerts_count": 1
   }
 }
