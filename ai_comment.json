@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-09-03T00:06:05.876261+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.7-flash): Server disconnected without sending a response.",
+  "generated_at": "2026-09-03T00:50:48.550044+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.7-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.7-flash",
   "analysis_status": "error",
   "source_status": {
-    "spreadsheet_error": null,
+    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
-    "rain_nowcast_error": null
+    "rain_nowcast_error": "500 Server Error: Internal Server Error for url: https://yahoo-weather-proxy.miurayukimail.workers.dev/"
   },
   "data_summary": {
-    "outdoor_temp": 27.4,
-    "weather_temp": 25.6,
-    "weather": "薄曇り",
+    "outdoor_temp": null,
+    "weather_temp": 25.5,
+    "weather": "晴れ",
     "alerts_count": 0
   }
 }
