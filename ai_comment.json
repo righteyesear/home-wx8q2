@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-09-03T17:23:20.294873+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-03T18:29:24.238919+09:00",
+  "advice": "日没を迎えましたが、湿度90％を超える湿った空気が滞留し、推定体感温度は33℃台後半と体にこたえる蒸し暑さとなっています。気温の推定値自体は約27℃ですが、湿度が高く汗が蒸発しにくいため、体内に熱がこもりやすい状況です。\n\nこの先深夜にかけて気温は約2.5℃下がり25℃を下回る見通しですが、高湿度な状態が続くため蒸し暑さはあまり和らぎません。雨雲の観測では直近1時間の雨は見込まれないものの、雷注意報が発表されており、夜のはじめ頃までは急な強い雨や雷の発生にも目配りが必要です。\n\n夜間でも熱中症の危険があるため、エアコンの除湿や弱冷房をためらわずに使い、室内の熱と湿気を取り除いてください。入浴前後や就寝前にはコップ1杯の水分を意識して補給し、通気性の良い寝具を選ぶなど、体に負担をかけない環境を整えましょう。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
-    "spreadsheet_error": null,
-    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)",
+    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
+    "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 26.4,
-    "weather_temp": null,
-    "weather": "快晴",
+    "outdoor_temp": null,
+    "weather_temp": 27.1,
+    "weather": "弱い雨",
     "alerts_count": 1
   }
 }
