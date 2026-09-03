@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-09-03T16:53:52.113480+09:00",
+  "generated_at": "2026-09-03T17:23:20.294873+09:00",
   "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
   "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": null,
+    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)",
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 26.7,
-    "weather_temp": 26.2,
-    "weather": "曇り",
+    "outdoor_temp": 26.4,
+    "weather_temp": null,
+    "weather": "快晴",
     "alerts_count": 1
   }
 }
