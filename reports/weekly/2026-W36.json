@@ -7,7 +7,7 @@
     "end_date": "2026-09-06",
     "label": "2026年 第36週（8/31 〜 9/6）"
   },
-  "generated_at": "2026-09-04T06:03:43.926384+09:00",
+  "generated_at": "2026-09-04T08:17:52.938590+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -72,7 +72,7 @@
         "weekday": "金",
         "high": 25.8,
         "low": 24.0,
-        "avg": 24.5,
+        "avg": 24.4,
         "range": 1.8
       }
     ],
@@ -308,7 +308,7 @@
             "low": 19.8
           },
           "9": {
-            "avg": 26.5,
+            "avg": 26.4,
             "high": 32.3,
             "low": 23.3
           }
@@ -347,7 +347,7 @@
         25.6,
         28.0,
         27.8,
-        24.5
+        24.4
       ]
     },
     "prev_year_comparison": {
@@ -363,7 +363,7 @@
         25.6,
         28.0,
         27.8,
-        24.5
+        24.4
       ],
       "last_year": [
         32.1,
@@ -420,7 +420,7 @@
         -3.0,
         -0.6,
         -0.8,
-        -4.1
+        -4.2
       ],
       "baseline_avg": 28.6
     }
@@ -429,18 +429,18 @@
     "context_version": "3.2",
     "daily_pattern": {
       "opening_avg": 25.2,
-      "closing_avg": 24.5,
-      "front_to_back_change": -0.7,
-      "linear_slope_per_day": 0.08,
-      "daily_avg_stdev": 1.42,
-      "mean_absolute_day_change": 1.58,
+      "closing_avg": 24.4,
+      "front_to_back_change": -0.8,
+      "linear_slope_per_day": 0.06,
+      "daily_avg_stdev": 1.44,
+      "mean_absolute_day_change": 1.6,
       "largest_rise": {
         "change": 2.3999999999999986,
         "from_date": "2026/09/01",
         "to_date": "2026/09/02"
       },
       "largest_drop": {
-        "change": -3.3000000000000007,
+        "change": -3.400000000000002,
         "from_date": "2026/09/03",
         "to_date": "2026/09/04"
       },
@@ -450,7 +450,7 @@
       },
       "coolest_average_day": {
         "date": "2026/09/04",
-        "value": 24.5
+        "value": 24.4
       },
       "days_high_35_or_more": 0,
       "days_high_30_or_more": 2,
@@ -550,8 +550,8 @@
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-09-04T06:03:43.956484+09:00",
-    "data_fingerprint": "42e479414b5a34fedb82",
+    "generated_at": "2026-09-04T08:17:52.969030+09:00",
+    "data_fingerprint": "56b9a2b82a2b65c2d89d",
     "period_closed": false,
     "coverage_complete": false,
     "observed_days": 5,
