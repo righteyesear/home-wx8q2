@@ -47,7 +47,10 @@ from google import genai
 # =============================================================================
 SPREADSHEET_ID = os.environ.get('SPREADSHEET_ID', '1nbmJIIUzw8n2PcHp98NaiKnaAVciBx_Egpokjjx7uW8')
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
-GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.7-flash')
+GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.8-flash')
+GEMINI_THINKING_LEVEL = os.environ.get('GEMINI_THINKING_LEVEL', 'high').strip().lower()
+if GEMINI_THINKING_LEVEL not in {'low', 'medium', 'high'}:
+    GEMINI_THINKING_LEVEL = 'high'
 # 1レポートを1回で分析する。誤操作や将来のループでも無料枠を浪費しない。
 GEMINI_MAX_CALLS_PER_RUN = max(0, min(int(os.environ.get('GEMINI_MAX_CALLS_PER_RUN', '1')), 20))
 _gemini_calls = 0
@@ -672,7 +675,9 @@ def analyze_report_with_gemini(report: Dict[str, Any]) -> Dict[str, Any]:
             model=GEMINI_MODEL,
             contents=build_gemini_protocol_prompt(report),
             config={
-                'temperature': 0.2,
+                'thinking_config': {
+                    'thinking_level': GEMINI_THINKING_LEVEL,
+                },
                 'response_mime_type': 'application/json',
             },
         )

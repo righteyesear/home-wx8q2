@@ -22,7 +22,7 @@
 ### 📈 分析レポート（`report.html`）
 - **終了済みの週次・月次レポート**を自動生成（月次の未確定レポートは公開しない）
 - **進行中の今週**は文章分析を付けず、暫定統計とグラフを3時間ごとに更新
-- **根拠付き分析コメント** — 前期間・前年・複数年同時期・直近推移・日別変動を比較し、Gemini 3.7 Flashを1レポート1回だけ使用。失敗時はローカル分析へ自動切り替え
+- **根拠付き分析コメント** — 前期間・前年・複数年同時期・直近推移・日別変動を比較し、Gemini 3.8 Flash（思考レベル high）を1レポート1回だけ使用。失敗時はローカル分析へ自動切り替え
 - **前年比較チャート** — 平均/最高/最低気温の切り替え機能
 - **過去平均との比較バー** — 偏差をビジュアルで表示
 - **気温ヒートマップ**
@@ -158,7 +158,7 @@ python scripts/backfill_codex_analysis.py --all
 | フロントエンド | HTML5, CSS3, JavaScript (Vanilla) |
 | グラフ | Chart.js |
 | フォント | Noto Sans JP / Inter / システムフォント |
-| AI分析 | Google Gemini API (`gemini-3.7-flash`)、Codex設計のローカル根拠分析 |
+| AI分析 | Google Gemini API (`gemini-3.8-flash`, thinking level `high`)、Codex設計のローカル根拠分析 |
 | データソース | Google Sheets API (CSV公開) |
 | 気象警報 | 気象庁 XML API |
 | 降水判定 | Yahoo 天気 API + 独自スコアリング |

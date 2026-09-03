@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AI気象アドバイザー - Gemini 3.7 Flash による総合分析
+AI気象アドバイザー - Gemini 3.8 Flash による総合分析
 データ収集 → Gemini APIで分析 → ai_comment.json 出力
 """
 
@@ -27,7 +27,10 @@ from data_analysis import analyze_data_comprehensive
 # =============================================================================
 SPREADSHEET_ID = os.environ.get('SPREADSHEET_ID', '1nbmJIIUzw8n2PcHp98NaiKnaAVciBx_Egpokjjx7uW8')
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
-GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.7-flash')
+GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.8-flash')
+GEMINI_THINKING_LEVEL = os.environ.get('GEMINI_THINKING_LEVEL', 'high').strip().lower()
+if GEMINI_THINKING_LEVEL not in {'low', 'medium', 'high'}:
+    GEMINI_THINKING_LEVEL = 'high'
 
 # 東京都葛飾区東金町5丁目
 LATITUDE = 35.7727
@@ -1430,6 +1433,11 @@ def analyze_with_gemini(
         response = client.models.generate_content(
             model=GEMINI_MODEL,
             contents=prompt,
+            config={
+                'thinking_config': {
+                    'thinking_level': GEMINI_THINKING_LEVEL,
+                },
+            },
         )
         raw_advice = (response.text or '').strip()
         if not raw_advice:

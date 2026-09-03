@@ -47,9 +47,9 @@ class FakeModels:
         self.calls = []
         self.fail_primary = fail_primary
 
-    def generate_content(self, *, model, contents):
-        self.calls.append((model, contents))
-        if self.fail_primary and model == "gemini-3.7-flash":
+    def generate_content(self, *, model, contents, config=None):
+        self.calls.append((model, contents, config))
+        if self.fail_primary and model == "gemini-3.8-flash":
             raise RuntimeError("primary unavailable")
         return FakeResponse()
 
@@ -57,7 +57,8 @@ class FakeModels:
 def run_with(fake_models, alerts=None):
     module.genai.Client = lambda **_kwargs: types.SimpleNamespace(models=fake_models)
     module.GEMINI_API_KEY = "test-key"
-    module.GEMINI_MODEL = "gemini-3.7-flash"
+    module.GEMINI_MODEL = "gemini-3.8-flash"
+    module.GEMINI_THINKING_LEVEL = "high"
     module.load_moon_data = lambda: {"age": 1, "phase": "新月"}
 
     spreadsheet = {
@@ -90,7 +91,10 @@ def run_with(fake_models, alerts=None):
 
 primary = FakeModels()
 result = run_with(primary)
-assert primary.calls[0][0] == "gemini-3.7-flash"
+assert primary.calls[0][0] == "gemini-3.8-flash"
+assert primary.calls[0][2] == {
+    "thinking_config": {"thinking_level": "high"}
+}
 assert "気象データ:" in primary.calls[0][1]
 assert "直前と同じ書き出し" in primary.calls[0][1]
 assert "Steadman参考値" in primary.calls[0][1]
@@ -151,8 +155,8 @@ assert "雷注意報は判断材料に含め" in lightning_prompt
 
 failed = FakeModels(fail_primary=True)
 failed_result = run_with(failed)
-assert [call[0] for call in failed.calls] == ["gemini-3.7-flash"]
-assert failed_result.startswith("⚠️ 分析エラー (gemini-3.7-flash):")
+assert [call[0] for call in failed.calls] == ["gemini-3.8-flash"]
+assert failed_result.startswith("⚠️ 分析エラー (gemini-3.8-flash):")
 
 no_data_models = FakeModels()
 module.genai.Client = lambda **_kwargs: types.SimpleNamespace(models=no_data_models)

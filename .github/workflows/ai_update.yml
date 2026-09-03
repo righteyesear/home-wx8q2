@@ -75,7 +75,8 @@ jobs:
         env:
           # GitHub Secretsから安全にAPIキーを読み込み
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: gemini-3.7-flash
+          GEMINI_MODEL: gemini-3.8-flash
+          GEMINI_THINKING_LEVEL: high
           SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
         run: |
           python scripts/ai_advisor.py
