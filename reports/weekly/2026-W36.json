@@ -7,7 +7,7 @@
     "end_date": "2026-09-06",
     "label": "2026年 第36週（8/31 〜 9/6）"
   },
-  "generated_at": "2026-09-05T05:47:32.315222+09:00",
+  "generated_at": "2026-09-05T08:04:38.338158+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -80,7 +80,7 @@
         "weekday": "土",
         "high": 21.9,
         "low": 20.1,
-        "avg": 21.3,
+        "avg": 21.1,
         "range": 1.8
       }
     ],
@@ -359,7 +359,7 @@
         28.0,
         27.8,
         24.4,
-        21.3
+        21.1
       ]
     },
     "prev_year_comparison": {
@@ -377,7 +377,7 @@
         28.0,
         27.8,
         24.4,
-        21.3
+        21.1
       ],
       "last_year": [
         32.1,
@@ -438,7 +438,7 @@
         -0.6,
         -0.8,
         -4.2,
-        -7.3
+        -7.5
       ],
       "baseline_avg": 28.6
     }
@@ -447,11 +447,11 @@
     "context_version": "3.2",
     "daily_pattern": {
       "opening_avg": 25.4,
-      "closing_avg": 22.85,
-      "front_to_back_change": -2.55,
-      "linear_slope_per_day": -0.666,
-      "daily_avg_stdev": 2.25,
-      "mean_absolute_day_change": 1.9,
+      "closing_avg": 22.75,
+      "front_to_back_change": -2.65,
+      "linear_slope_per_day": -0.694,
+      "daily_avg_stdev": 2.31,
+      "mean_absolute_day_change": 1.94,
       "largest_rise": {
         "change": 2.3999999999999986,
         "from_date": "2026/09/01",
@@ -468,7 +468,7 @@
       },
       "coolest_average_day": {
         "date": "2026/09/05",
-        "value": 21.3
+        "value": 21.1
       },
       "days_high_35_or_more": 0,
       "days_high_30_or_more": 2,
@@ -568,8 +568,8 @@
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-09-05T05:47:32.344495+09:00",
-    "data_fingerprint": "57c07beaf89a01db0c1f",
+    "generated_at": "2026-09-05T08:04:38.368075+09:00",
+    "data_fingerprint": "57e67ab790a86f37af1e",
     "period_closed": false,
     "coverage_complete": false,
     "observed_days": 6,
