@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-09-05T06:18:21.683969+09:00",
-  "advice": "早朝に降っていた雨はひとまず止み、手元のセンサーでは気温20.3℃、湿度93％を観測しています。雨上がりで空気中の水分が多く、穏やかな風の条件下では推定体感温度が23℃ほどと、実測気温より少し高めに感じられる朝です。\n\n雨雲レーダーでは直近1時間の降水は予想されていないものの、気象庁の予報では昼前まで雨が残りやすい見通しです。正午に向けて気温は24℃前後まで上がるとみられます。湿度が高い環境では、皮膚からの汗の蒸発による気化熱が奪われにくくなるため、同じ気温でも身体には蒸し暑く感じられます。\n\n路面がまだ濡れているうえ、昼前までは再び雨粒が落ちてくる可能性があるため、外出時は折りたたみ傘をお持ちください。気温の上昇とともに蒸し暑さが増してきますので、通気性の良い服装で調整するのが快適です。",
+  "generated_at": "2026-09-05T08:46:54.273033+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": null,
+    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)",
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 20.3,
-    "weather_temp": 20.8,
-    "weather": "弱い霧雨",
+    "outdoor_temp": 20.9,
+    "weather_temp": null,
+    "weather": "快晴",
     "alerts_count": 0
   }
 }
