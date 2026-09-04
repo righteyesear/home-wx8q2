@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-04T08:49:18.058329+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-04T09:49:49.045527+09:00",
+  "advice": "屋外の日陰にある個人センサーでは現在25.1℃を観測しており、周辺の格子推定値である23.1℃より2.0℃高めです。湿度も83％と高く、風がほとんどないため、手元では広域の推計以上にじっとりとした蒸し暑さを感じやすい状況となっています。\n\n気象庁の予報では昼過ぎにかけて雨が降りやすい見込みですが、雨雲レーダーの動きをみると東金町周辺では10時過ぎから一時的に弱い雨が降るとみられます。広域の気温予報は日中も24℃前後と控えめながら、局所的にはすでに熱気がこもっており、予報の印象ほど涼しくは感じられない推移が続く見通しです。\n\nこの先のお出かけには念のため折りたたみ傘をお持ちください。外の予報気温だけを見ると過ごしやすく思えますが、身の回りの蒸し暑さに合わせ、室内では適切に除湿や通風を行うのが良さそうです。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 24.7,
-    "weather_temp": 22.9,
+    "outdoor_temp": 25.1,
+    "weather_temp": 23.1,
     "weather": "弱い霧雨",
     "alerts_count": 0
   }
