@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-04T11:55:25.652981+09:00",
-  "advice": "葛飾区東金町周辺では現在雨雲のすき間に入っていますが、正午前から再び雨が降り出す見込みです。屋外の日陰にあるセンサーでは気温24.6℃、湿度87％を観測しており、大気中の湿気が多くじっとりとした空気が続いています。\n\n雨雲レーダーの予測をみると、12時過ぎまでは時間雨量0.1ミリ程度の弱い雨にとどまるものの、12時半から40分頃には0.8ミリ前後と傘が必要な降り方へと強まる見通しです。気象庁の予報でも昼過ぎの降水確率は50％とされており、午後にかけて雨雲が断続的に通過するとみられます。\n\nこれから昼の外出をされる方は、折りたたみ傘ではなくしっかりとした雨傘をお持ちください。この先1時間で雨脚が一段階強まる変化が見込まれるため、屋外の片付けや移動は早めに済ませておくと安心です。",
+  "generated_at": "2026-09-04T14:10:56.568738+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 24.6,
-    "weather_temp": 24.3,
-    "weather": "弱い霧雨",
+    "outdoor_temp": 26.2,
+    "weather_temp": 23.8,
+    "weather": "霧雨",
     "alerts_count": 0
   }
 }
