@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-04T17:20:23.716802+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-04T18:21:26.187125+09:00",
+  "advice": "葛飾区周辺では現在、時間雨量0.1ミリ程度のごく弱い雨が降り始めていますが、これから19時前にかけて一時的に雨脚が強まる見込みです。日陰のセンサー実測では気温24.1度、湿度82％を観測しており、湿度の高いしっとりとした空気に包まれています。\n\n雨雲の予測をみると、今後30分ほどの間に雨脚が強まり、18時40分から50分頃には1.5ミリ前後のしっかりとした降りとなる見通しです。19時を回ると再び小康状態へと戻るものの、気象庁の予報でも今夜の降水確率は70％と高く、夜遅くまで断続的な雨が続くとみられます。\n\nこれから帰宅や外出をされる方は、傘を忘れずにお持ちください。特に18時台後半は短時間ながら濡れやすくなるため、移動のタイミングを少しずらすか、大きめの傘を選ぶのがおすすめです。雨で路面や視界が悪くなりますので、足元や運転には十分お気をつけください。☔",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 24.8,
-    "weather_temp": 23.7,
-    "weather": "強い霧雨",
+    "outdoor_temp": 24.1,
+    "weather_temp": 23.0,
+    "weather": "弱い雨",
     "alerts_count": 0
   }
 }
