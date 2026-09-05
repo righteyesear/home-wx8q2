@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-05T16:30:54.000321+09:00",
-  "advice": "夕方に入り雨の心配は当面ありませんが、屋外の日陰に設置したセンサーでは気温26.7度、湿度68％を観測しており、蒸し暑さが残っています。風が穏やかなことも重なり、湿度などを考慮した参考体感温度は30.0度と、手元の気温より高めです。\n\n空気中の湿度が高いと汗が蒸発しにくくなり、体から熱が逃げにくいため、実際の気温以上に暑く感じられます。ただ、日没を迎えるこれからの時間帯は気温がゆっくりと下がり、夜にかけて手元の観測値より約3度低い22度台半ばまで低下する見通しです。夜更けにかけては蒸し暑さも次第に落ち着いていくとみられます。\n\nいま外出される際は、水分補給など蒸し暑さへの対策を心がけてください。一方で、夜遅くになると空気がひんやりと感じられるため、帰宅時間が遅くなる方は薄手の上着を一枚持っておくと安心です。",
+  "generated_at": "2026-09-05T16:55:28.298716+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 26.7,
-    "weather_temp": 25.0,
+    "outdoor_temp": 26.2,
+    "weather_temp": 24.9,
     "weather": "曇り",
     "alerts_count": 0
   }
