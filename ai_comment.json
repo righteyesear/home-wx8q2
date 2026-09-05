@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-06T05:59:54.936775+09:00",
-  "advice": "葛飾区周辺では現在いったん雨が止んでいるものの、雨雲レーダーの予測では約50分後の6時45分頃から再び雨が降り出す見込みです。屋外センサーの実測気温は20.2℃、湿度は91%を示しており、大気は雨の降り出し直前の湿り気を帯びています。\n\n5時台前半に見られた一時的な降水に続き、7時前からは本格的な雨雲が近づく見通しです。気象庁の予報でも午前中の降水確率は50%、午後は90%へと上昇し、夕方以降は雷を伴って激しく降る荒天へと移る見込みです。時間の経過とともに雨脚が一段と強まる推移が読み取れます。\n\nこれからの外出には雨具の準備が欠かせません。朝のうちは弱い降りにとどまる見込みですが、帰宅が夕方以降になる場合は、濡れにくいしっかりとした長傘や足元の防水対策を選んでおくと安心です。雨が本格化する前の今のうちに、ベランダの洗濯物や窓の締まりを確認しておくことをおすすめします。",
+  "generated_at": "2026-09-06T08:35:51.269004+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 20.2,
-    "weather_temp": 20.8,
-    "weather": "曇り",
+    "outdoor_temp": 20.1,
+    "weather_temp": 21.2,
+    "weather": "霧雨",
     "alerts_count": 0
   }
 }
