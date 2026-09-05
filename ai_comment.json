@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-05T22:48:30.696747+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-05T23:23:44.561560+09:00",
+  "advice": "屋外センサーの気温は22.0℃で、雨雲レーダーでも降水は捉えられておらず穏やかな夜となっています。ただし湿度が87%と高めのため、風速推定を加味した参考体感温度は25℃前後と、気温の数値以上に少し蒸し暑さを感じやすい状態です。\n\nこの先明け方にかけても雨の心配はほとんどなく、気温は22℃前後と大きな変化がなく安定して推移する見込みです。明日の日中にかけては雨の可能性が高まる予報ですが、今後6時間程度は天候が急変する兆候はみられません。\n\n夜間は外気の冷え込みが鈍く室内に湿気がこもりやすいため、就寝時はエアコンの除湿運転や扇風機を活用して湿度を下げておくと快適に休めそうです。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 22.3,
-    "weather_temp": 22.3,
+    "outdoor_temp": 22.0,
+    "weather_temp": 22.2,
     "weather": "曇り",
     "alerts_count": 0
   }
