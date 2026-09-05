@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-09-05T18:32:25.347524+09:00",
+  "generated_at": "2026-09-05T20:03:08.878868+09:00",
   "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
   "analysis_status": "error",
   "source_status": {
-    "spreadsheet_error": null,
+    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 24.2,
-    "weather_temp": 23.7,
+    "outdoor_temp": null,
+    "weather_temp": 22.8,
     "weather": "曇り",
     "alerts_count": 0
   }
