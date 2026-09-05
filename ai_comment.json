@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-09-05T08:46:54.273033+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-05T09:39:57.607260+09:00",
+  "advice": "雨雲は葛飾区周辺から離れつつあり、現在は降雨が止んでいます。手元のセンサーでは気温21.0℃、湿度94％を観測しました。朝からの気温変化は2℃未満と小さく涼しい朝ですが、高い湿度の影響により推定の体感温度は24℃前後と、少し蒸し暑さを感じる空気感です。\n\n雨雲レーダーでは直近1時間の降水は予想されておらず、気象庁の予報でも昼前にかけて雨から曇りへと移る見込みです。降水確率は午前の50％から午後は20％へと低下します。この後も気温は22℃台でほぼ横ばいが続き、一日を通して気温の変動が極めて小さい天候となりそうです。\n\n午前中のお出かけには念のため折りたたみ傘があると安心ですが、午後は雨具を使わずに済む時間が増える見通しです。日差しがなく気温は控えめな一方で湿気がこもりやすいため、通気性がよく脱ぎ着しやすい服装を選ぶと快適に過ごせます。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)",
+    "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 20.9,
-    "weather_temp": null,
-    "weather": "快晴",
+    "outdoor_temp": 21.0,
+    "weather_temp": 21.9,
+    "weather": "曇り",
     "alerts_count": 0
   }
 }
