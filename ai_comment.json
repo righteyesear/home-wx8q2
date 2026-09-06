@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-07T06:08:28.532248+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-07T08:33:45.631913+09:00",
+  "advice": "8時過ぎまで降っていた強い雨は一旦止み、手元のセンサー周辺でも現在は雨雲の隙間に入っています。湿度は97パーセントと極めて高く、大気には依然として多量の湿気が残っている状態です。\n\n雨雲レーダーの推移をみますと、この小康状態は一時的で、午前9時20分頃からは再び雨雲が流れ込んでくる見込みです。気象庁の予報でも午前中の降水確率は90パーセントと高く、日中にかけても断続的な雨が続くとみられます。\n\n現在の止み間に油断せず、これから外出される方はしっかりとした傘をお持ちください。短時間の移動であれば9時過ぎまでの雨の途切れ目を活かし、濡れた路面で足元が滑りやすくなっている点にもご注意ください。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 23.3,
-    "weather_temp": 22.2,
-    "weather": "雨",
+    "outdoor_temp": 22.3,
+    "weather_temp": 22.4,
+    "weather": "強い雨",
     "alerts_count": 3
   }
 }
