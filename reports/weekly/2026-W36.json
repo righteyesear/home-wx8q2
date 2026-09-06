@@ -7,7 +7,7 @@
     "end_date": "2026-09-06",
     "label": "2026年 第36週（8/31 〜 9/6）"
   },
-  "generated_at": "2026-09-06T13:38:04.131272+09:00",
+  "generated_at": "2026-09-06T19:56:08.923479+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -586,7 +586,7 @@
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-09-06T13:38:04.162343+09:00",
+    "generated_at": "2026-09-06T19:56:08.954134+09:00",
     "data_fingerprint": "da2925ad3dc55deda319",
     "period_closed": false,
     "coverage_complete": true,
