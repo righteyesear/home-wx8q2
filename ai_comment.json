@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-07T18:58:20.973133+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-07T19:51:53.514876+09:00",
+  "advice": "葛飾区周辺では現在雨は降っていませんが、屋外センサーの湿度が95％と極めて高くなっています。実測気温は23.2℃にとどまるものの、風速などを加味した参考体感温度は27.7℃と、気温より4.5℃ほど高く蒸し暑い状態です。\n\n空気中の水分が多いと汗が蒸発しにくく熱が体にこもるため、実際の気温以上に暖かく感じられます。直近1時間の雨雲レーダーには雨の兆候がない一方、気象庁の予報では夜のはじめ頃にかけて雷を伴う雨が予想され、降水確率は60％と見込まれています。\n\n急な天気の変化に備え、これからの外出には折りたたみ傘をお持ちください。室内でも熱や湿気がこもりやすいため、エアコンの除湿機能を上手に使って快適な湿度を保つと安心です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 23.7,
-    "weather_temp": 24.2,
-    "weather": "薄曇り",
+    "outdoor_temp": 23.2,
+    "weather_temp": 24.1,
+    "weather": "霧雨",
     "alerts_count": 1
   }
 }
