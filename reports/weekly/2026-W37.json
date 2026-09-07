@@ -7,41 +7,41 @@
     "end_date": "2026-09-13",
     "label": "2026年 第37週（9/7 〜 9/13）"
   },
-  "generated_at": "2026-09-07T05:25:24.327979+09:00",
+  "generated_at": "2026-09-07T13:39:59.040416+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
       "ai_comment": "",
       "highlights": [
-        "最高気温 22.7℃",
+        "最高気温 25.3℃",
         "最低気温 22.0℃",
-        "前週比 -2.7℃",
-        "前年比 -6.0℃"
+        "前週比 -1.7℃",
+        "前年比 -5.0℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 1,
-      "avg_temp": 22.3,
+      "avg_temp": 23.3,
       "avg_temp_stdev": 0,
-      "max_temp": 22.7,
+      "max_temp": 25.3,
       "max_temp_date": "2026/09/07",
-      "avg_high": 22.7,
+      "avg_high": 25.3,
       "min_temp": 22.0,
       "min_temp_date": "2026/09/07",
       "avg_low": 22.0,
-      "avg_daily_range": 0.7,
-      "prev_week_diff": -2.7,
-      "prev_year_diff": -6.0
+      "avg_daily_range": 3.3,
+      "prev_week_diff": -1.7,
+      "prev_year_diff": -5.0
     },
     "daily_data": [
       {
         "date": "2026/09/07",
         "weekday": "月",
-        "high": 22.7,
+        "high": 25.3,
         "low": 22.0,
-        "avg": 22.3,
-        "range": 0.7
+        "avg": 23.3,
+        "range": 3.3
       }
     ],
     "comparison": {
@@ -60,16 +60,16 @@
         "avg_low": 25.3,
         "avg_daily_range": 7.2
       },
-      "avg_temp_diff": -6.0,
-      "max_temp_diff": -13.1,
+      "avg_temp_diff": -5.0,
+      "max_temp_diff": -10.5,
       "min_temp_diff": -1.3,
-      "avg_daily_range_diff": -6.5,
+      "avg_daily_range_diff": -3.9,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 29.1,
-      "current_deviation": -6.8,
+      "current_deviation": -5.8,
       "years_count": 2
     },
     "events": {
@@ -276,7 +276,7 @@
             "low": 19.8
           },
           "9": {
-            "avg": 24.6,
+            "avg": 24.7,
             "high": 32.3,
             "low": 20.0
           }
@@ -293,13 +293,13 @@
         "9/7(月)"
       ],
       "highs": [
-        22.7
+        25.3
       ],
       "lows": [
         22.0
       ],
       "avgs": [
-        22.3
+        23.3
       ]
     },
     "prev_year_comparison": {
@@ -307,7 +307,7 @@
         "月"
       ],
       "this_year": [
-        22.3
+        23.3
       ],
       "last_year": [
         28.8,
@@ -319,7 +319,7 @@
         26.9
       ],
       "this_year_high": [
-        22.7
+        25.3
       ],
       "last_year_high": [
         33.1,
@@ -348,7 +348,7 @@
         "9/7(月)"
       ],
       "deviations": [
-        -6.8
+        -5.8
       ],
       "baseline_avg": 29.1
     }
@@ -356,8 +356,8 @@
   "analysis_context": {
     "context_version": "3.2",
     "daily_pattern": {
-      "opening_avg": 22.3,
-      "closing_avg": 22.3,
+      "opening_avg": 23.3,
+      "closing_avg": 23.3,
       "front_to_back_change": 0.0,
       "linear_slope_per_day": 0.0,
       "daily_avg_stdev": 0.0,
@@ -366,11 +366,11 @@
       "largest_drop": null,
       "warmest_average_day": {
         "date": "2026/09/07",
-        "value": 22.3
+        "value": 23.3
       },
       "coolest_average_day": {
         "date": "2026/09/07",
-        "value": 22.3
+        "value": 23.3
       },
       "days_high_35_or_more": 0,
       "days_high_30_or_more": 0,
@@ -411,12 +411,12 @@
         2026
       ],
       "peer_average": 29.25,
-      "deviation_from_peer_average": -6.95,
+      "deviation_from_peer_average": -5.95,
       "rank_warmest": 3,
       "rank_coldest": 1,
-      "sample_min": 22.3,
+      "sample_min": 23.3,
       "sample_max": 30.2,
-      "sample_stdev": 3.37
+      "sample_stdev": 2.91
     },
     "recent_history": {
       "previous_periods": [
@@ -463,15 +463,15 @@
       ],
       "previous_period_count": 4,
       "previous_period_mean": 26.65,
-      "difference_from_previous_period_mean": -4.35
+      "difference_from_previous_period_mean": -3.35
     }
   },
   "analysis_meta": {
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-09-07T05:25:24.356470+09:00",
-    "data_fingerprint": "973fadd9fbef8ce0339d",
+    "generated_at": "2026-09-07T13:39:59.061700+09:00",
+    "data_fingerprint": "cf5898f46bac6af679cd",
     "period_closed": false,
     "coverage_complete": false,
     "observed_days": 1,
