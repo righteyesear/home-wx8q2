@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-08T02:59:45.232070+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-08T06:56:28.261328+09:00",
+  "advice": "朝の雨は一旦止んでいるものの、日中は次第に天気が崩れる見込みです。手元のセンサーでは気温23.2℃、湿度96％を観測しています。早朝の気温変化は0.7℃幅と小さく推移していますが、極めて高湿度なため、風速を考慮した参考体感温度は28℃前後と、実気温より蒸し暑い朝となっています。\n\n直近1時間の雨雲レーダーでは降雨が予想されていませんが、気象庁の予報では「くもり時々雨」で昼前からは雷を伴う見込みです。降水確率は朝の30％から昼以降は50％から60％へと高まる推移となっており、午後にかけて大気の状態が不安定になるとみられます。\n\n今日は一日を通して雨具が手放せません。昼前後からは急な強い雨や落雷のおそれがあるため、外出時は空模様の変化に気を配り、天候急変のサインが見られたら頑丈な建物へ移動できるようにしておくと安心です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 22.7,
-    "weather_temp": 22.7,
-    "weather": "弱い霧雨",
-    "alerts_count": 0
+    "outdoor_temp": 23.2,
+    "weather_temp": 22.9,
+    "weather": "晴れ",
+    "alerts_count": 1
   }
 }
