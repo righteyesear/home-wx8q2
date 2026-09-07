@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-09-08T00:31:33.923860+09:00",
-  "advice": "葛飾区周辺の雨雲レーダーに目立った降水は捉えられていませんが、湿度がおよそ98%と飽和状態に近く、推計気温22℃台の割に蒸し暑い深夜となっています。計算上の参考体感温度は約27℃と高めで、風もほとんど吹いておらず、空気がこもりやすい状態です。\n\n今後の見通しとして、気象庁の予報では朝6時までの降水確率が50%となっており、所により一時的に雨がパラつく可能性があります。気温は夜明けまで22℃前後とほぼ横ばいで推移し、朝にかけても高い湿度が持続する見込みです。\n\n外気が湿気を含んでいるうえに風が弱いため、窓を開けるよりもエアコンの除湿運転やサーキュレーターを活用し、室内の湿度を適度に下げて就寝環境を整えるのが賢明です。",
+  "generated_at": "2026-09-08T01:20:43.678877+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
-    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
+    "spreadsheet_error": null,
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": null,
+    "outdoor_temp": 22.9,
     "weather_temp": 22.3,
-    "weather": "弱い霧雨",
+    "weather": "弱い雨",
     "alerts_count": 0
   }
 }
