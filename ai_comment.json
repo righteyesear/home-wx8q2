@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-09T06:41:02.282570+09:00",
-  "advice": "葛飾区周辺では現在雨雲の流入は見られませんが、南寄りの突風への注意が必要です。日陰のセンサーでは気温27.0℃、湿度95%と高湿度を観測している一方、周辺の推定では瞬間的に13m/sを超える風が吹いています。\n\nこの後も南風が強まり、午前にかけて15m/s前後の突風が発生する見通しです。気象庁の予報では日中に雷を伴う強い雨の可能性が示されており、気温も6時間先には30℃を超えて湿った空気が送り込まれます。急な風向きの変化や風の強まりを感じた際は、雨雲の急激な発達を疑う必要があります。\n\n屋外では、突風にあおられて傘が壊れたり、自転車でバランスを崩したりする場面が想定されます。ベランダの物干し竿や飛ばされやすい軽量物は固定し、外出時は折りたたみ傘よりも骨組みのしっかりした長傘やレインウェアを選ぶと安心です。",
+  "generated_at": "2026-09-09T08:53:12.153852+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 27.0,
-    "weather_temp": 28.0,
+    "outdoor_temp": 30.3,
+    "weather_temp": 29.4,
     "weather": "晴れ",
-    "alerts_count": 2
+    "alerts_count": 1
   }
 }
