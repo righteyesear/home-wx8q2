@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-09-09T00:04:28.932201+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-09T00:50:05.716807+09:00",
+  "advice": "雨はいったん小康状態となっていますが、南寄りの風とともに秒速10メートル前後の突風が吹きやすい状態が続いています。屋外の日陰に設置したセンサーでは気温26.3度、湿度98％を観測しており、深夜になってもかなり蒸し暑い空気に包まれています。\n\n雨雲のピークは過ぎつつあるものの、大雨や雷の注意報が継続しており、局地的なにわか雨には引き続き注意が必要です。明け方にかけても風速3メートル台の南風が吹き抜ける見込みで、格子推定では突風への配慮が欠かせない状態が示されています。高湿度のため風が吹いても涼しさは乏しく、参考体感温度は32度前後と寝苦しさが残る見通しです。\n\n突風によるベランダの物干し竿の脱落や、軽量のゴミ箱・植木鉢の転倒といったトラブルに注意してください。屋外にある飛ばされやすいものは床に下ろすか室内に取り込み、急な突風で窓があおられないよう施錠を確認してお休みください。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
-    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
+    "spreadsheet_error": null,
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": null,
+    "outdoor_temp": 26.3,
     "weather_temp": 27.4,
-    "weather": "強い霧雨",
+    "weather": "弱い霧雨",
     "alerts_count": 3
   }
 }
