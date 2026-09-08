@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-08T14:23:43.769677+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-08T15:56:56.666592+09:00",
+  "advice": "現在、葛飾区周辺ではパラつく程度のごく弱い雨となっています。手元のセンサーでは気温26.9℃、湿度94％と非常に蒸し暑く、15時半前に降った一時的な強い雨が通り過ぎた後は落ち着いた状態です。\n\n雨雲予測によると、向こう1時間ほどは雨の止み間が広がる見込みです。ただし、気象庁の予報では夕方から夜にかけて再び雨雲が発達し、所により雷を伴って激しく降るおそれがあります。18時以降の降水確率も80％と高く、大気の不安定な状態が続く見通しです。\n\n直近の短い移動であれば雨を避けられる可能性がありますが、あくまで一時的な小康状態です。夕方以降に外出や帰宅を控えている方はしっかりした雨具を必ず持ち、急に空が暗くなるなど天候の急変を感じたら建物内へ避難できるよう備えて行動してください。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 28.9,
-    "weather_temp": 29.3,
-    "weather": "晴れ",
+    "outdoor_temp": 26.9,
+    "weather_temp": 28.8,
+    "weather": "曇り",
     "alerts_count": 1
   }
 }
