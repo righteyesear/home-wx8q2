@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-09-10T01:56:27.095564+09:00",
+  "generated_at": "2026-09-10T06:32:51.303405+09:00",
   "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
   "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
-    "jma_forecast_error": "404 Client Error: Not Found for url: https://www.jma.go.jp/bosai/forecast/data/forecast/130000.json",
-    "jma_error": "404 Client Error: Not Found for url: https://www.jma.go.jp/bosai/warning/data/r8/130000.json",
+    "jma_forecast_error": null,
+    "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 18.9,
-    "weather_temp": 20.4,
+    "outdoor_temp": 19.5,
+    "weather_temp": 19.4,
     "weather": "霧雨",
     "alerts_count": 0
   }
