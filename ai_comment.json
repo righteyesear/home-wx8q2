@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-09T19:14:01.175468+09:00",
-  "advice": "手元のセンサーでは気温22.4℃、湿度92％を示しており、現時点で雨は降っていません。ただ、周囲では雨雲が接近しており、間もなく雨が降り出す見込みです。\n\n雨雲の予測をみますと、19時20分頃から弱い雨がパラつき始め、20時を過ぎる頃には1時間あたり1.5ミリ前後のまとまった雨へと強まる推移となっています。気象庁の予報でも今夜の降水確率は70％に達しており、局地的に雷を伴って激しく降る恐れがあるとして雷注意報が継続中です。\n\nこれからの外出や帰宅には雨具が欠かせません。20時以降は雨脚が一段と強まる見通しですので、移動は可能な限り早めに済ませると安心です。夜遅くにかけては急な強雨や落雷による視界の悪化、足元の変化に十分注意してください。",
+  "generated_at": "2026-09-09T21:03:27.224317+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 22.4,
-    "weather_temp": 22.8,
-    "weather": "弱い霧雨",
+    "outdoor_temp": 21.4,
+    "weather_temp": 21.8,
+    "weather": "霧雨",
     "alerts_count": 1
   }
 }
