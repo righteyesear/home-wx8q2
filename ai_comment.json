@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-09-12T06:35:22.704905+09:00",
-  "advice": "朝のうちは一時的な雨の強まりに注意が必要です。手元のセンサーでは気温20.1℃、湿度99%と非常に高い湿度を観測しており、しっとりとした空気に包まれています。\n\n雨雲レーダーの予測では、午前6時40分頃にかけて一時的に8ミリ前後のまとまった雨が降る見込みです。ただし雨雲の通過は足早で、気象庁の予報でも昼前にはくもりに変わる見通しとなっています。気温は昼前にかけて22℃弱までわずかに上がる程度で推移し、午前中のうちに天候は落ち着く方向へ向かうとみられます。\n\nこれからの時間帯にお出かけの際は、しっかり雨をしのげる傘をご用意ください。昼前には雨が止んでくるため、出先での傘の置き忘れに注意が必要です。",
+  "generated_at": "2026-09-12T08:55:34.267229+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": null,
+    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)",
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 20.1,
-    "weather_temp": 20.1,
-    "weather": "曇り",
+    "outdoor_temp": 21.3,
+    "weather_temp": null,
+    "weather": "快晴",
     "alerts_count": 0
   }
 }
