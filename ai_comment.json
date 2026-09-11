@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-11T08:47:48.209018+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-11T09:51:16.799082+09:00",
+  "advice": "現在、周辺では1時間あたり0.1ミリ程度のごく弱い雨が降っています。手元のセンサーでは気温19.5℃、湿度95％を観測しており、しっとりとした肌寒い空気に包まれています。\n\n雨雲の予測では、今後1時間ほどは一時的に降水が止み小康状態となる見込みです。しかし、気象庁の予報では日中の降水確率が70〜80％と高く、止み間があっても再び弱い雨が降り出す可能性があります。気温は午後にかけても20℃前後で推移し、大きな変化はない見通しです。\n\n直近のお出かけであれば雨脚の落ち着いたタイミングを狙えますが、外出時は折りたたみ傘などの雨具が欠かせません。気温が上がらず湿気で肌寒さを感じやすいため、撥水性のある薄手の上着を羽織って出かけるのが安心です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 18.7,
-    "weather_temp": 19.2,
-    "weather": "強い雨",
+    "outdoor_temp": 19.5,
+    "weather_temp": 19.6,
+    "weather": "強い霧雨",
     "alerts_count": 0
   }
 }
