@@ -7,7 +7,7 @@
     "end_date": "2026-09-13",
     "label": "2026年 第37週（9/7 〜 9/13）"
   },
-  "generated_at": "2026-09-12T01:28:23.414788+09:00",
+  "generated_at": "2026-09-12T05:58:22.665227+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -15,24 +15,24 @@
       "highlights": [
         "最高気温 31.6℃",
         "最低気温 18.2℃",
-        "前週比 -2.3℃",
-        "前年比 -5.6℃"
+        "前週比 -2.4℃",
+        "前年比 -5.7℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 6,
-      "avg_temp": 22.7,
+      "avg_temp": 22.6,
       "avg_temp_stdev": 2.9,
       "max_temp": 31.6,
       "max_temp_date": "2026/09/09",
       "avg_high": 25.2,
       "min_temp": 18.2,
       "min_temp_date": "2026/09/11",
-      "avg_low": 20.3,
-      "avg_daily_range": 4.9,
-      "prev_week_diff": -2.3,
-      "prev_year_diff": -5.6
+      "avg_low": 20.2,
+      "avg_daily_range": 5.0,
+      "prev_week_diff": -2.4,
+      "prev_year_diff": -5.7
     },
     "daily_data": [
       {
@@ -79,9 +79,9 @@
         "date": "2026/09/12",
         "weekday": "土",
         "high": 20.3,
-        "low": 20.2,
-        "avg": 20.3,
-        "range": 0.1
+        "low": 19.9,
+        "avg": 20.1,
+        "range": 0.4
       }
     ],
     "comparison": {
@@ -100,16 +100,16 @@
         "avg_low": 25.3,
         "avg_daily_range": 7.2
       },
-      "avg_temp_diff": -5.6,
+      "avg_temp_diff": -5.7,
       "max_temp_diff": -4.2,
       "min_temp_diff": -5.1,
-      "avg_daily_range_diff": -2.3,
+      "avg_daily_range_diff": -2.2,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 29.1,
-      "current_deviation": -6.4,
+      "current_deviation": -6.5,
       "years_count": 2
     },
     "events": {
@@ -357,7 +357,7 @@
         20.1,
         18.6,
         18.2,
-        20.2
+        19.9
       ],
       "avgs": [
         23.4,
@@ -365,7 +365,7 @@
         26.2,
         20.5,
         19.9,
-        20.3
+        20.1
       ]
     },
     "prev_year_comparison": {
@@ -383,7 +383,7 @@
         26.2,
         20.5,
         19.9,
-        20.3
+        20.1
       ],
       "last_year": [
         28.8,
@@ -417,7 +417,7 @@
         20.1,
         18.6,
         18.2,
-        20.2
+        19.9
       ],
       "last_year_low": [
         26.0,
@@ -444,7 +444,7 @@
         -2.9,
         -8.6,
         -9.2,
-        -8.8
+        -9.0
       ],
       "baseline_avg": 29.1
     }
@@ -453,11 +453,11 @@
     "context_version": "3.2",
     "daily_pattern": {
       "opening_avg": 24.6,
-      "closing_avg": 20.1,
-      "front_to_back_change": -4.5,
-      "linear_slope_per_day": -1.111,
-      "daily_avg_stdev": 2.61,
-      "mean_absolute_day_change": 1.9,
+      "closing_avg": 20.0,
+      "front_to_back_change": -4.6,
+      "linear_slope_per_day": -1.14,
+      "daily_avg_stdev": 2.64,
+      "mean_absolute_day_change": 1.86,
       "largest_rise": {
         "change": 2.400000000000002,
         "from_date": "2026/09/07",
@@ -515,12 +515,12 @@
         2026
       ],
       "peer_average": 29.25,
-      "deviation_from_peer_average": -6.55,
+      "deviation_from_peer_average": -6.65,
       "rank_warmest": 3,
       "rank_coldest": 1,
-      "sample_min": 22.7,
+      "sample_min": 22.6,
       "sample_max": 30.2,
-      "sample_stdev": 3.18
+      "sample_stdev": 3.23
     },
     "recent_history": {
       "previous_periods": [
@@ -567,15 +567,15 @@
       ],
       "previous_period_count": 4,
       "previous_period_mean": 26.65,
-      "difference_from_previous_period_mean": -3.95
+      "difference_from_previous_period_mean": -4.05
     }
   },
   "analysis_meta": {
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-09-12T01:28:23.446409+09:00",
-    "data_fingerprint": "65702b78a3c60ebe4e2a",
+    "generated_at": "2026-09-12T05:58:22.695526+09:00",
+    "data_fingerprint": "ecc4bbbc976d68550f67",
     "period_closed": false,
     "coverage_complete": false,
     "observed_days": 6,
