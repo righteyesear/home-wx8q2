@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-12T21:02:16.004773+09:00",
-  "advice": "夜間に入っても雨雲の接近はなく、静かな空模様が続いています。屋外のセンサーでは気温21.4℃、湿度92%を観測しました。周辺の推計値より気温はわずかに低めですが、高湿度の影響により推定体感温度は25℃近くを示しており、肌寒さを感じないしっとりとした空気感です。\n\nこの先の数時間も雨雲レーダーに雨の兆候はなく、深夜から未明にかけて天気が崩れる心配はほとんどありません。向こう6時間の気温低下は1℃程度とごくわずかで、風速も1メートル前後の微風が続くため、急激な冷え込みのない安定した夜となる見通しです。\n\n気温は落ち着いた水準ですが、屋外の湿度が極めて高いため、涼しさを求めて窓を開けると室内に湿気が流れ込む要因になります。今夜は窓を閉めて外気を遮断し、除湿機やエアコンの除湿機能を活用して室内の湿度をコントロールするのが効果的です。",
+  "generated_at": "2026-09-12T21:47:29.013323+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 21.4,
-    "weather_temp": 22.8,
-    "weather": "薄曇り",
+    "outdoor_temp": 21.0,
+    "weather_temp": 22.3,
+    "weather": "曇り",
     "alerts_count": 0
   }
 }
