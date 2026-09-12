@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-12T22:21:14.460410+09:00",
-  "advice": "葛飾区周辺では雨雲の活動が落ち着いており、直近1時間の雨雲レーダーでも降水は見込まれません。手元のセンサーでは気温21.2℃、湿度89%を観測しており、しっとりと湿った空気が漂っています。\n\nこの先朝にかけての気温は21℃台後半で推移し、低下は0.6℃程度と非常に安定した見通しです。広域の格子推定値である22.2℃より手元の実測は1.0℃低いものの、湿度が高いため参考体感温度は24℃台となり、数字ほどの肌寒さは感じにくいとみられます。\n\n今夜は急な雨や強い冷え込みの心配はない一方、高い湿度により室内では蒸れを感じる可能性があります。お休みの際は厚着を控え、通気性の良い寝具を選んで就寝環境を整えるのがおすすめです。",
+  "generated_at": "2026-09-12T22:57:11.392908+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 21.2,
-    "weather_temp": 22.2,
-    "weather": "曇り",
+    "outdoor_temp": 21.3,
+    "weather_temp": 22.1,
+    "weather": "薄曇り",
     "alerts_count": 0
   }
 }
