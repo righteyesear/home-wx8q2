@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-09-13T06:17:59.070508+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-13T08:49:04.580792+09:00",
+  "advice": "手元の屋外センサーでは気温21.5℃に対し、湿度が95%と非常に高くなっています。風が穏やかなことも重なり、推定される参考体感温度は25.5℃と、実際の気温より4℃ほど高めで少し蒸し暑さを覚える状況です。雨雲レーダーの実況では周辺に雨雲はなく、現在雨は降っていません。\n\n気象庁の予報では「雨 昼前からくもり」とされ、昼前にかけて降水確率は50%ですが、午後は20%へと下がり天気が持ち直す見通しです。空気中の水分が多いと汗の蒸発による放熱が妨げられるため、気温の数値以上に肌寒さを感じにくく、少し動くとじっとりとした湿り気を感じやすくなります。\n\n午前中の外出には念のため折りたたみ傘を持っておくと安心ですが、次第に雨の心配は薄れていく見込みです。気温自体は20℃台前半と控えめなものの湿気で蒸れやすいため、通気性の良い服装を選び、室内では適度に通風を確保すると心地よく過ごせそうです。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": null,
+    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)",
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 20.1,
-    "weather_temp": 21.2,
-    "weather": "薄曇り",
+    "outdoor_temp": 21.5,
+    "weather_temp": null,
+    "weather": "快晴",
     "alerts_count": 0
   }
 }
