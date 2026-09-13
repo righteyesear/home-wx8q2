@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-13T22:45:24.402385+09:00",
-  "advice": "手元の気温の数値以上に、蒸し暑さが強く感じられる夜です。屋外センサーの実測気温は24.0℃ですが、湿度92%という高い湿度の影響により、風速を加味した参考体感温度は28.7℃と4℃以上高くなっています。\n\n雨の心配はありませんが、今後の予報では未明にかけて気温が下がるどころか、24℃台後半へとわずかに上がる見込みです。朝方にかけても高湿度が続くため、秋らしい自然な涼しさは得られにくい推移とみられます。\n\n室内でも湿気がこもって寝苦しくなりやすいため、エアコンの除湿運転や扇風機を上手に活用してください。服装や寝具は通気性と吸湿性に優れた軽めのものを選び、睡眠中の体温調節がしやすい環境を整えるのが効果的です。",
+  "generated_at": "2026-09-13T23:04:17.950046+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -12,7 +12,7 @@
   },
   "data_summary": {
     "outdoor_temp": 24.0,
-    "weather_temp": 23.5,
+    "weather_temp": 23.6,
     "weather": "晴れ",
     "alerts_count": 0
   }
