@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-14T06:16:24.000081+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-14T08:55:11.688344+09:00",
+  "advice": "朝から湿度が高く、気温以上に身体への負担がかかる厳しい蒸し暑さとなっています。手元の屋外センサーでは気温28.4℃、湿度83％を観測しており、風速から推定した参考体感温度は33.8℃まで上昇しています。\n\n日中は日差しとともにさらに気温が上がり、昼過ぎにかけて30℃前後に達する見通しです。露点温度が24℃台と空気中の水分量が非常に多いため、汗が蒸発しにくく体に熱がこもりやすい状態が続く見込みです。\n\n午前中から油断せず、屋内にいる場合も適切にエアコンを活用してください。屋外での移動や作業の際は日傘や帽子で直射日光を遮り、喉の渇きを感じる前に意識して水分と塩分を補給することが重要です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 24.1,
-    "weather_temp": 24.9,
+    "outdoor_temp": 28.4,
+    "weather_temp": 27.5,
     "weather": "快晴",
     "alerts_count": 0
   }
