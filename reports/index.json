@@ -15,9 +15,9 @@
       "period": "2026-W37",
       "label": "09/07 〜 09/13",
       "file": "weekly/2026-W37.json",
-      "is_final": false,
-      "analysis_available": false,
-      "status": "draft",
+      "is_final": true,
+      "analysis_available": true,
+      "status": "final",
       "coverage_complete": true,
       "observed_days": 7,
       "expected_days": 7
@@ -1785,5 +1785,5 @@
       "expected_days": 31
     }
   ],
-  "updated_at": "2026-09-14T05:49:22.961237+09:00"
+  "updated_at": "2026-09-14T08:05:33.291208+09:00"
 }
