@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-14T20:04:50.330047+09:00",
-  "advice": "屋外では急な突風への目配りが必要な状況です。手元のセンサーでは気温26.8℃と高い湿度で蒸し暑さが残る一方、周辺では瞬間的に10m/sを超えるような突風が推定されています。\n\n今夜はこの後も南寄りの風がやや強く、雨雲の通過に伴って風が急に強まる見込みです。葛飾区周辺には雷注意報が発表されており、日付が変わる頃にかけて降水確率が60％まで上昇する予想です。にわか雨の降り始めとともに、突発的な吹き溜まりや突風に注意が必要です。\n\n傘を差す際は風にあおられて視界が奪われないよう、両手でしっかり支えてください。駐輪中の自転車は倒れやすくなるため、あらかじめ壁際に寄せるなどの対策が有効です。また、ベランダのハンガーや軽いゴミ箱など飛ばされやすいものは、今のうちに室内に取り込んでおくと安心です。",
+  "generated_at": "2026-09-14T22:33:38.571695+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 26.8,
-    "weather_temp": 26.4,
+    "outdoor_temp": 26.7,
+    "weather_temp": 25.8,
     "weather": "薄曇り",
     "alerts_count": 1
   }
