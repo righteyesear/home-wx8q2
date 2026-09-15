@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-15T18:03:30.845971+09:00",
-  "advice": "現在は雨が降っていませんが、夜遅くからは雷を伴った激しい雨に注意が必要です。屋外の日陰に設置したセンサーでは気温24.3℃、湿度91％を観測しており、非常に湿った空気に包まれています。\n\n雨雲レーダーでは直近1時間の降水は予想されていないものの、気象庁の予報では夜間の降水確率が60％に達する見込みです。日付が変わる頃にかけて気温は23℃台へと約2℃下がる推移となっており、遅い時間ほど大気の状態が不安定になりやすいとみられます。\n\n帰宅が夜遅くになる方は、折りたたみ傘ではなくしっかりとした雨具をお持ちください。急な強い雨や雷に備え、外出前にベランダの洗濯物を取り込み、窓を確実に閉めておくことをおすすめします。",
+  "generated_at": "2026-09-15T18:48:11.666437+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 24.3,
-    "weather_temp": 25.5,
+    "outdoor_temp": 23.9,
+    "weather_temp": 25.1,
     "weather": "薄曇り",
     "alerts_count": 1
   }
