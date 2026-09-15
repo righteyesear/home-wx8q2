@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-15T10:13:49.323593+09:00",
-  "advice": "手元のセンサーでは気温24.9℃と落ち着いた数値ですが、湿度が94％と高く、風速などから推定した体感温度は約30℃に達しています。葛飾区周辺の雨はいったん止んだものの、肌にまとわりつくような強い蒸し暑さが感じられる状況です。\n\n雨雲の隙間に入ったため直近1時間ほどは降水の心配が少ない見込みですが、午後にかけて気温はさらに27℃近くまで上がるとみられます。高い湿度を保ったまま気温が上昇するため、午後にかけて不快感が一段と高まる可能性があります。\n\n室内では設定温度だけに頼らず、エアコンの除湿運転やサーキュレーターを活用して湿度を下げる工夫が効果的です。服装は通気性がよく肌離れの良い半袖などを選んでください。なお大気の状態は不安定で雷注意報が継続しているため、外出時は念のため雨への備えを持っておくと安心です。",
+  "generated_at": "2026-09-15T12:24:05.915320+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 24.9,
-    "weather_temp": 25.0,
-    "weather": "弱い霧雨",
+    "outdoor_temp": 27.3,
+    "weather_temp": 25.6,
+    "weather": "曇り",
     "alerts_count": 1
   }
 }
