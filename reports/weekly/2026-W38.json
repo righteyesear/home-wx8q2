@@ -7,7 +7,7 @@
     "end_date": "2026-09-20",
     "label": "2026年 第38週（9/14 〜 9/20）"
   },
-  "generated_at": "2026-09-17T01:55:58.926582+09:00",
+  "generated_at": "2026-09-17T06:19:22.310589+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -532,7 +532,7 @@
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-09-17T01:55:58.957338+09:00",
+    "generated_at": "2026-09-17T06:19:22.339928+09:00",
     "data_fingerprint": "0913fa486cdb4d84a4a2",
     "period_closed": false,
     "coverage_complete": false,
