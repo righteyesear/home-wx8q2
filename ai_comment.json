@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-16T09:00:25.310690+09:00",
-  "advice": "現在は雨足が時間あたり0.1ミリ程度まで弱まっており、手元のセンサーでは気温21.5℃、湿度96％を観測しています。先ほどまでのやや強い降り方から一時的に雨雲の隙間に入っており、このあと30分ほどは雨が止むか、ごく弱い状態が続く見込みです。\n\nただし、この小康状態は長くは続きません。雨雲の予測では9時40分頃から再び雨脚が強まり、1時間後には時間雨量2ミリを超えるしっかりとした降りに戻る見通しです。気象庁の予報でも日中の降水確率は80％と高く、昼過ぎから夕方にかけては雷を伴って激しく降る恐れもあります。\n\n屋外での短い用事や移動は、降り方が落ち着いている9時半頃までの時間帯を活用するのが賢明です。外出の際は大きめの傘や濡れにくい靴を選び、午後の急な強い雨や落雷への備えも整えて行動してください。",
+  "generated_at": "2026-09-16T10:09:23.205155+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 21.5,
-    "weather_temp": 21.8,
-    "weather": "雨",
+    "outdoor_temp": 21.4,
+    "weather_temp": 21.9,
+    "weather": "弱い雨",
     "alerts_count": 1
   }
 }
