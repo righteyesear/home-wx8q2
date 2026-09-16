@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-16T12:20:17.747686+09:00",
-  "advice": "現在、手元の観測で気温は21.5℃を示し、弱い雨が降り続いています。ただし、このあと1時間ほどの間に雨脚が強まってくる見込みです。\n\n雨雲の動きをみると、現在は時間雨量1ミリ程度ですが、12時台後半から13時頃には3ミリから5ミリ前後の本降りに強まる予測となっています。雷注意報も継続しており、昼過ぎから夕方にかけては急な降り方の変化や発雷にも注意が必要です。\n\nこれから外出される場合は、折りたたみ傘ではなく大きめの雨傘をお持ちください。雨脚が強まる時間帯は視界が悪くなり足元も濡れやすくなるため、移動の際は時間に余裕を持つのが安心です。☔",
+  "generated_at": "2026-09-16T14:23:47.652691+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 21.5,
-    "weather_temp": 21.9,
-    "weather": "弱い雨",
+    "outdoor_temp": 21.7,
+    "weather_temp": 21.7,
+    "weather": "強い霧雨",
     "alerts_count": 1
   }
 }
