@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-18T06:57:39.863767+09:00",
-  "advice": "現在は雲が広がり、雨の心配のない穏やかな朝を迎えています。手元のセンサーでは気温20.8℃を観測しており、風も弱く過ごしやすい体感です。\n\n昼前にかけての気温は22℃前後まで約2℃上がる程度にとどまり、朝からの変化が小さい落ち着いた推移が続く見込みです。雨雲の観測でも直近1時間に降水はなく、午前中のうちは崩れる心配がありません。ただし、夕方以降は所によって雨が降る予報となっており、空模様の変化に留意が必要です。\n\n洗濯物の外干しや屋外での活動は、天気が安定している午前中を活用するのが適しています。日差しが乏しく日中もあまり気温が上がらないため、薄手の上着があると快適に調整できるでしょう。帰宅が夕方以降になる場合は、念のため折りたたみ傘を携えてお出かけください。",
+  "generated_at": "2026-09-18T08:56:34.308828+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 20.8,
-    "weather_temp": 19.7,
-    "weather": "薄曇り",
+    "outdoor_temp": 23.0,
+    "weather_temp": 21.1,
+    "weather": "曇り",
     "alerts_count": 0
   }
 }
