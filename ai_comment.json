@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-18T14:20:39.878629+09:00",
-  "advice": "手元のセンサーでは気温25.3℃を観測しており、穏やかに感じられますが、広域の推定値では平均風速2.5メートルに対し、瞬間的に10メートル前後の突風が入りやすい状況です。雨雲レーダーに雨の反応はなく、現在は落ち着いた空模様となっています。\n\nこの先は夕方にかけて気温が20℃台前半へと約2℃緩やかに下がる見込みで、急激な冷え込みはありません。ただし気象庁の予報では夕方から所により雨とされており、天気の崩れに伴って局所的に風の吹き抜けが強まる可能性があります。\n\n屋外では、ベランダの洗濯物や軽量なゴミ箱などが風に煽られないよう、留め具の確認や屋内への退避を済ませてください。駐輪中の自転車も突風で倒れやすいため、スタンドをロックするなど事前の対策が有効です。夕方以降にお出かけの際は、念のため折りたたみ傘をお持ちください。",
+  "generated_at": "2026-09-18T16:06:18.556279+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 25.3,
-    "weather_temp": 22.5,
+    "outdoor_temp": 25.0,
+    "weather_temp": 22.2,
     "weather": "曇り",
     "alerts_count": 0
   }
