@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-19T00:42:44.164446+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): Server disconnected without sending a response.",
+  "generated_at": "2026-09-19T01:48:20.351206+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
   "analysis_status": "error",
   "source_status": {
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 21.5,
-    "weather_temp": 20.8,
-    "weather": "薄曇り",
+    "outdoor_temp": 21.3,
+    "weather_temp": 20.5,
+    "weather": "晴れ",
     "alerts_count": 0
   }
 }
