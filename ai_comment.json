@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-19T22:01:51.586926+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-19T22:41:42.999405+09:00",
+  "advice": "現在、雨は止んでいますが、屋外のセンサーでは気温22.3℃に対して湿度が94％と非常に高くなっています。雨雲の観測では直近1時間ほどの降水は見込まれていないものの、空気は水蒸気で満たされた状態です。\n\n気温は朝にかけて21℃台でほぼ横ばいで推移しますが、気象庁の降水確率は日付が変わると80％に上がり、未明から再び雨となる見込みです。気温が22℃程度でも湿度が高いと、皮膚からの汗が蒸発しにくくなり、体温を下げる働きが鈍くなります。風が穏やかなことも重なり、推定した参考体感温度は実測より3.7℃高い26℃前後と、実際の気温より蒸し暑く感じられるのが特徴です。\n\nこのあとの外出には、念のため折りたたみ傘などの雨具をお持ちください。また、夜間は室内に湿気がこもりやすいため、エアコンの除湿機能などを上手に活用して、湿度を下げてお休みになることをおすすめします。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -13,7 +13,7 @@
   "data_summary": {
     "outdoor_temp": 22.3,
     "weather_temp": 21.8,
-    "weather": "曇り",
+    "weather": "薄曇り",
     "alerts_count": 0
   }
 }
