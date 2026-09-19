@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-20T06:20:46.418077+09:00",
-  "advice": "葛飾区周辺では雨が降り出しており、この先1時間にかけて雨脚が一段と強まる見込みです。手元の屋外センサーでは気温22.7℃、湿度97%を観測しており、雨雲レーダーでも1時間あたり1ミリ超の降水が捉えられています。\n\n今後の予測では、30分後には2ミリ台、1時間先には4ミリ前後まで雨が強まる推移となっています。気象庁の予報でも日中の降水確率は90%と高く、雨雲が途切れずに流れ込みやすい状況が続く見通しです。\n\nこれから外出される場合は、小型の折りたたみ傘よりも雨を防ぎやすい長傘の携行をおすすめします。足元の濡れや水はねに配慮し、雨脚が強まる時間帯の移動は視界の悪化にも注意して、時間に余裕を持って行動してください。",
+  "generated_at": "2026-09-20T08:56:20.138233+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 22.7,
-    "weather_temp": 21.8,
+    "outdoor_temp": 22.6,
+    "weather_temp": 22.7,
     "weather": "雨",
     "alerts_count": 2
   }
