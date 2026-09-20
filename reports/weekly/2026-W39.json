@@ -7,14 +7,14 @@
     "end_date": "2026-09-27",
     "label": "2026年 第39週（9/21 〜 9/27）"
   },
-  "generated_at": "2026-09-21T01:05:57.294023+09:00",
+  "generated_at": "2026-09-21T05:49:59.348173+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
       "ai_comment": "",
       "highlights": [
-        "最高気温 21.3℃",
-        "最低気温 21.3℃",
+        "最高気温 21.5℃",
+        "最低気温 21.0℃",
         "前週比 -2.0℃",
         "前年比 -3.1℃"
       ]
@@ -24,13 +24,13 @@
       "days": 1,
       "avg_temp": 21.3,
       "avg_temp_stdev": 0,
-      "max_temp": 21.3,
+      "max_temp": 21.5,
       "max_temp_date": "2026/09/21",
-      "avg_high": 21.3,
-      "min_temp": 21.3,
+      "avg_high": 21.5,
+      "min_temp": 21.0,
       "min_temp_date": "2026/09/21",
-      "avg_low": 21.3,
-      "avg_daily_range": 0.0,
+      "avg_low": 21.0,
+      "avg_daily_range": 0.5,
       "prev_week_diff": -2.0,
       "prev_year_diff": -3.1
     },
@@ -38,10 +38,10 @@
       {
         "date": "2026/09/21",
         "weekday": "月",
-        "high": 21.3,
-        "low": 21.3,
+        "high": 21.5,
+        "low": 21.0,
         "avg": 21.3,
-        "range": 0.0
+        "range": 0.5
       }
     ],
     "comparison": {
@@ -61,9 +61,9 @@
         "avg_daily_range": 8.1
       },
       "avg_temp_diff": -3.1,
-      "max_temp_diff": -10.4,
-      "min_temp_diff": 3.3,
-      "avg_daily_range_diff": -8.1,
+      "max_temp_diff": -10.2,
+      "min_temp_diff": 3.0,
+      "avg_daily_range_diff": -7.6,
       "ai_comment": ""
     },
     "baseline": {
@@ -293,10 +293,10 @@
         "9/21(月)"
       ],
       "highs": [
-        21.3
+        21.5
       ],
       "lows": [
-        21.3
+        21.0
       ],
       "avgs": [
         21.3
@@ -319,7 +319,7 @@
         25.7
       ],
       "this_year_high": [
-        21.3
+        21.5
       ],
       "last_year_high": [
         31.6,
@@ -331,7 +331,7 @@
         29.4
       ],
       "this_year_low": [
-        21.3
+        21.0
       ],
       "last_year_low": [
         21.5,
@@ -470,8 +470,8 @@
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-09-21T01:05:57.324605+09:00",
-    "data_fingerprint": "d4d9f3e00f2884311829",
+    "generated_at": "2026-09-21T05:49:59.379591+09:00",
+    "data_fingerprint": "86a0086319a8af194618",
     "period_closed": false,
     "coverage_complete": false,
     "observed_days": 1,
