@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-20T23:37:44.235745+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-21T00:15:46.245711+09:00",
+  "advice": "雨は現在一時的に落ち着いていますが、1時間足らずで再び非常に激しい雨へと急変する見込みです。手元のセンサーでは気温21.3℃を観測しており、日付変更前後の激しい降りからは小康状態となっていますが、大雨注意報と雷注意報が継続しています。\n\n今後の雨雲の予測をみますと、0時30分前後は降り方が弱まるものの、0時50分頃から急速に雨脚が強まります。1時過ぎには時間雨量50ミリ前後の激しい雨が予想されており、わずか30分ほどの間で状況が一変する見通しです。\n\n深夜帯の急激な豪雨は視界を著しく奪い、道路冠水などを引き起こす危険があります。屋外への移動は極力避け、安全な建物内でお休みください。どうしても外に出る必要がある場合は、雨が小康状態にある直近30分以内のうちに済ませる判断が賢明です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -12,7 +12,7 @@
   },
   "data_summary": {
     "outdoor_temp": 21.3,
-    "weather_temp": 22.1,
+    "weather_temp": 22.0,
     "weather": "強い雨",
     "alerts_count": 2
   }
