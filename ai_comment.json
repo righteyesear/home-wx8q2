@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-09-21T12:19:53.258837+09:00",
-  "advice": "現在は1時間あたり約1.5ミリの雨が降っており比較的落ち着いた降り方ですが、このあと1時間以内に雨脚が強まる見込みです。屋外の日陰に設置したセンサーでは気温22.0度を観測しており、北東寄りの風とともに肌寒さを感じる状態となっています。\n\n雨雲の動向をみますと、向こう30分ほどは小康状態が続くものの、12時45分を過ぎると雨量が増加し、13時には1時間あたり約6ミリの本降りに発達する予測です。葛飾区周辺には大雨や雷注意報が発表されており、夕方にかけて降水確率100％と、局地的に雷を伴って激しく降る可能性があります。\n\nこれから外出される場合は、雨が強まる前の移動をおすすめします。大きめの傘や撥水性のある上着を用意し、雨脚の強まりによる視界の悪化や路面の水たまりに十分ご注意ください。☔",
+  "generated_at": "2026-09-21T14:35:09.834090+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
-    "spreadsheet_error": null,
+    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 22.0,
-    "weather_temp": 25.3,
+    "outdoor_temp": null,
+    "weather_temp": 25.6,
     "weather": "強い雨",
     "alerts_count": 4
   }
