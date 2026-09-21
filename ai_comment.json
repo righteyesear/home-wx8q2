@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-22T03:22:58.252624+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-22T07:30:29.591449+09:00",
+  "advice": "朝は日陰のセンサーで気温26.1℃を観測していますが、湿度77%と湿気が多く、風を加味した参考体感温度は29.6℃と蒸し暑い立ち上がりです。雨雲の兆候はなく、しっかりと日差しが届く穏やかな天候となっています。\n\nこの先正午にかけては晴天が続き、気温は現在より約4℃上がって30℃近くまで達する見通しです。今朝の最低気温22.3℃からの上昇ペースが速く、午前中のうちに初秋の空気から一転して汗ばむ暑さへと移り変わる推移が読み取れます。\n\nお出かけの際は、朝の感覚にとらわれず、日中の昇温を見越した風通しの良い服装を選ぶのが良さそうです。強い日差しとともに蒸し暑さが増していくため、早い時間からこまめな水分補給を心がけておくと安心です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 22.7,
-    "weather_temp": 25.5,
+    "outdoor_temp": 26.1,
+    "weather_temp": 26.1,
     "weather": "晴れ",
-    "alerts_count": 2
+    "alerts_count": 0
   }
 }
