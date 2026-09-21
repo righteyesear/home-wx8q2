@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-22T01:12:18.013136+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-22T01:56:04.914476+09:00",
+  "advice": "現在、葛飾区には土砂災害注意報と強風注意報が継続しています。手元の屋外センサーでは気温23.1℃を観測しており、雨はいったん止んでいるものの、瞬間的に10メートル前後の突風が発生しやすい状況です。\n\n雨雲の観測と直近の予測では、今後1時間も降水は検出されておらず、朝にかけて天気が急変する可能性は低い見込みです。ただし、格子推定の平均風速が2メートル台と穏やかに見えても、時折吹き抜ける突風との差が大きい推移となっており、油断はできません。\n\n未明の移動では、交差点や建物の隙間での自転車のふらつき、急にあおられる足元にご注意ください。また、ベランダの物干し竿の落下や、軽量の植木鉢、ごみ箱などが転倒・飛散する恐れがあるため、今のうちに床へ下ろすか室内へ取り込んでおくと安全です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 23.2,
-    "weather_temp": 25.6,
+    "outdoor_temp": 23.1,
+    "weather_temp": 25.7,
     "weather": "晴れ",
     "alerts_count": 2
   }
