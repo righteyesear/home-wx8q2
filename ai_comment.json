@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-23T10:17:45.359426+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-23T12:19:52.870758+09:00",
+  "advice": "現在、手元のセンサーでは気温21.1度を観測しており、外では時間雨量0.3ミリ前後のごく弱い雨が降り続いています。湿度も88％と高く、昼間ながら日差しがないため、肌寒さを感じる落ち着いた空気感となっています。\n\n雨雲の推移を見ますと、この先30分ほどは小雨のまま経過するものの、13時を過ぎると雨脚が一段強まり、1時間先には時間雨量1ミリ近くに達する見込みです。午後の降水確率も50％と雨が残りやすい状況が続くため、一時的に止み間があっても天気が持ち直す兆しは見られません。\n\nこれから外出される際は、小雨対応の折りたたみ傘ではなく、雨をしっかり防げる傘の携行をおすすめします。近場での用事であれば雨脚が強まる13時前までに済ませるのが賢明ですが、午後の移動時は足元が濡れやすくなるため、時間に余裕を持って行動してください。🌂",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 22.8,
-    "weather_temp": 22.6,
-    "weather": "曇り",
+    "outdoor_temp": 21.1,
+    "weather_temp": 21.6,
+    "weather": "霧雨",
     "alerts_count": 0
   }
 }
