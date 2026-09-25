@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-25T07:06:22.174453+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-25T09:18:57.462275+09:00",
+  "advice": "日中は晴れ間とともに気温が上がり、初秋としてはやや汗ばむ陽気になりそうです。手元の屋外センサーでは現在25.4℃、湿度72%を観測しており、風が穏やかなため計算上の参考体感温度は29℃近くまで上がっています。\n\n広域の格子推定値（23.6℃）と比べても手元の実測は1.8℃高く、昇温が順調に進んでいます。この後も午後にかけて27℃近くまで気温が上がる見通しです。直近1時間の雨雲レーダーに雨の兆候はありませんが、気象庁の予報では夜遅くの降水確率が50%と高くなっていく推移を見せています。\n\n日中の外出は半袖など通気性の良い服装が心地よく、こまめな水分補給が適しています。日差しを有効に使える一方で、帰宅が夜遅くなる予定の方は、念のため折りたたみ傘を持ってお出かけください。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 22.9,
-    "weather_temp": 21.8,
+    "outdoor_temp": 25.4,
+    "weather_temp": 23.6,
     "weather": "晴れ",
     "alerts_count": 0
   }
