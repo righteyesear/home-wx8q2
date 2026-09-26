@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-09-26T18:43:11.307498+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-26T19:24:24.406965+09:00",
+  "advice": "現在の葛飾区周辺は雨雲の隙間に入り雨はいったん止んでいますが、湿度が90％以上と高いため、推計気温18.8度に対して体感の目安は20度を超えています。秋らしい数字の割に冷え込みは弱く、湿り気を含んだ重たい空気が漂っています。\n\nこの先深夜にかけても気温は18度台のまま横ばいで推移し、大きな気温変化はない見込みです。雨雲ナウキャストでは直近1時間の降水は見込まれないものの、気象庁の予報では日付が変わる頃まで降水確率50％となっており、再び弱い雨がぱらつく可能性が残ります。高湿度な状態も夜通し維持されるとみられます。\n\nお出かけの際は、気温だけを見て厚着をすると湿気で蒸れて汗ばみやすいため、脱ぎ着しやすい薄手の上着が適しています。また、室内でも湿気がこもってじっとりとした不快感を覚えやすいため、エアコンの除湿運転や換気扇を上手に活用して湿度を下げると快適に保てます。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
-    "spreadsheet_error": null,
+    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 19.0,
+    "outdoor_temp": null,
     "weather_temp": 18.8,
     "weather": "薄曇り",
     "alerts_count": 0
