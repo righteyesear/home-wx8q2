@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-09-26T23:06:43.131114+09:00",
-  "advice": "葛飾区周辺では現在、時間雨量0.3ミリ前後の弱い雨が降っています。手元の観測センサーでも気温は18.3度まで低下し、湿度は94パーセントと高く、肌寒く湿った空気となっています。\n\n直近の雨雲予測によると、この先1時間ほどは断続的な降水が続き、特に23時半前後には一時的に時間雨量4ミリ前後のやや強まる時間帯がある見込みです。ただし日付が変わる午前0時頃には雨雲が抜け、気象庁の予報でも未明以降の降水確率は20パーセントへと下がるため、夜遅くには次第に止む方向へ向かうとみられます。\n\nこれから日付が変わる前後に外出や移動をされる場合は、雨足の急な強まりに備えて傘をお持ちください。ピーク時の強雨は一時的なため、移動のタイミングを少しずらすか、雨宿りでやり過ごすのも有効です。濡れた雨水と深夜の冷え込みで体を冷やさないよう上着で調整してください。",
+  "generated_at": "2026-09-26T23:56:15.653016+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
-    "spreadsheet_error": null,
+    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 18.3,
-    "weather_temp": 18.1,
-    "weather": "弱い霧雨",
+    "outdoor_temp": null,
+    "weather_temp": 18.0,
+    "weather": "曇り",
     "alerts_count": 0
   }
 }
