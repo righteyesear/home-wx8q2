@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-26T17:25:30.268327+09:00",
-  "advice": "現在は雨の止み間に入っていますが、今夜遅くにかけてはまだ傘の出番が残りそうです。屋外の日陰に設けたセンサーでは気温19.1℃を観測しており、日没を迎えた葛飾区内はしっとりとした肌寒さに包まれています。\n\n雨雲レーダーでは直近30分ほど降水が途切れているものの、18時前後にはごくわずかな雨雲がかすめる予想です。気象庁の予報でも18時以降の降水確率は50％とされており、夜遅くに曇りへと変わるまでは、一時的なぱらつきへの目配りが欠かせません。気温はこの先数時間も18℃台後半で推移し、大きな変化なく経過する見通しです。\n\n夕食の買い物や帰宅などでこれから出かける際は、路面が濡れていなくても念のため折りたたみ傘をお持ちください。急激な冷え込みの心配はありませんが、湿った空気で肌寒さを感じやすいため、薄手のアウターで適度に保温しておくと快適に過ごせます。",
+  "generated_at": "2026-09-26T17:55:24.520874+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -12,8 +12,8 @@
   },
   "data_summary": {
     "outdoor_temp": 19.1,
-    "weather_temp": 19.1,
-    "weather": "薄曇り",
+    "weather_temp": 18.9,
+    "weather": "曇り",
     "alerts_count": 0
   }
 }
