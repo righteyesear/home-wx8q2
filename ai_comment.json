@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-27T22:41:40.407519+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-27T23:39:14.830395+09:00",
+  "advice": "屋外のセンサーでは気温22.1℃と落ち着いていますが、湿度93％と非常に高く風も穏やかなため、推定の体感温度は約26℃と実気温を4℃近く上回っています。秋の深夜としては数字以上に蒸し暑く、直近の雨は一旦止んだものの空気は極めて湿っています。\n\n朝方にかけて気温は21℃前後でほぼ横ばいに推移する見込みです。気象庁の予報では未明以降の降水確率が50％と再び雨の降りやすい状態が続くため、湿度が下がる要素は見当たりません。気温の数字だけで判断すると、湿気による熱のこもりを見落としやすい推移です。\n\nお休みの際は、厚手の寝具や長袖では汗ばむ可能性があるため、通気性の良い寝具を選んでください。外気を入れると湿気を呼び込むため窓は閉め、エアコンの除湿や送風を弱めに使って室内の湿度をコントロールするのが効果的です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,7 +11,7 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 22.3,
+    "outdoor_temp": 22.1,
     "weather_temp": 21.3,
     "weather": "薄曇り",
     "alerts_count": 0
