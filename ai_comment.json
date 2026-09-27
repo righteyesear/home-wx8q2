@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-27T09:19:27.575684+09:00",
-  "advice": "葛飾区周辺は雨の心配のない穏やかな空模様が広がっています。手元のセンサーでは気温が20.2℃まで上がり、朝のひんやりした空気から一変して湿度91%のしっとりとした空気に包まれています。\n\nこの先午後にかけても天気の崩れはなく、気温は22℃台まで緩やかに上がる見込みです。現在のように空気が湿っているうえに風速が約1m/sと非常に弱い状況では、肌から熱が逃げにくくなるため、計算上の体感温度は実気温より高い23℃近くまで押し上げられます。数字以上に暖かく感じるのはこのためです。\n\n午後の早い時間まで傘を持たずに安心して行動できます。少し体を動かすと汗ばみやすい体感となりますので、通気性の良い衣服を選んだり、手軽に温度調節ができる装いが快適です。",
+  "generated_at": "2026-09-27T10:07:37.742934+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 20.2,
-    "weather_temp": 19.5,
+    "outdoor_temp": 21.4,
+    "weather_temp": 20.7,
     "weather": "薄曇り",
     "alerts_count": 0
   }
