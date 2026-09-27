@@ -7,23 +7,23 @@
     "end_date": "2026-09-27",
     "label": "2026年 第39週（9/21 〜 9/27）"
   },
-  "generated_at": "2026-09-27T21:01:14.063481+09:00",
+  "generated_at": "2026-09-28T08:46:50.924983+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "",
+      "ai_comment": "直近4週平均を1.9℃下回り、前年同期比でも1.6℃低い水準となった点が今期を最も強く特徴づけています。2026年第39週（9/21〜9/27）の期間平均気温は22.8℃を記録し、前週比-0.5℃、過去2年の第39週平均23.6℃との差でも-0.8℃と、参照したすべての時間軸の比較で一貫して低温側を示しました。期間中の最高気温は9/22の30.8℃で、日最高気温30℃以上の真夏日はこの1日のみでした。最低気温は9/26の18.3℃です。週の前半平均24.1℃から後半平均20.65℃へと3.45℃低下し、特に9/22から9/23にかけて日平均気温が前日比-5.0℃と急低下するなど、前半から後半にかけて大きく低下した週でした。",
       "highlights": [
         "最高気温 30.8℃",
         "最低気温 18.3℃",
-        "前週比 -0.6℃",
-        "前年比 -1.7℃"
+        "前週比 -0.5℃",
+        "前年比 -1.6℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 7,
-      "avg_temp": 22.7,
-      "avg_temp_stdev": 2.3,
+      "avg_temp": 22.8,
+      "avg_temp_stdev": 2.2,
       "max_temp": 30.8,
       "max_temp_date": "2026/09/22",
       "avg_high": 26.4,
@@ -31,8 +31,8 @@
       "min_temp_date": "2026/09/26",
       "avg_low": 20.0,
       "avg_daily_range": 6.3,
-      "prev_week_diff": -0.6,
-      "prev_year_diff": -1.7
+      "prev_week_diff": -0.5,
+      "prev_year_diff": -1.6
     },
     "daily_data": [
       {
@@ -88,7 +88,7 @@
         "weekday": "日",
         "high": 24.1,
         "low": 18.3,
-        "avg": 21.1,
+        "avg": 21.3,
         "range": 5.8
       }
     ],
@@ -108,16 +108,16 @@
         "avg_low": 20.6,
         "avg_daily_range": 8.1
       },
-      "avg_temp_diff": -1.7,
+      "avg_temp_diff": -1.6,
       "max_temp_diff": -0.9,
       "min_temp_diff": 0.3,
       "avg_daily_range_diff": -1.8,
-      "ai_comment": ""
+      "ai_comment": "期間平均気温の比較では、前週比-0.5℃、直近4週平均（24.7℃）比-1.9℃、過去同時期平均（23.6℃）比-0.8℃と、いずれの基準に対しても低温側という結論が一致しています。2024〜2026年の同一週3期間の中でも最低値（低温側1位）となり、変動幅22.8〜24.3℃の下限に位置しました。前年同期比（-1.6℃）との対比においても、最高気温は-0.9℃、平均日較差は-1.8℃縮小して低温・狭日較差の傾向が一致した一方、最低気温のみは前年（18.0℃）より0.3℃高く、この項目のみ逆の動きを示しました。"
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 24.1,
-      "current_deviation": -1.4,
+      "current_deviation": -1.3,
       "years_count": 2
     },
     "events": {
@@ -338,7 +338,7 @@
       }
     },
     "trend_analysis": {
-      "ai_comment": ""
+      "ai_comment": "日平均気温の山は9/22の26.3℃、底は9/26の20.0℃で、週の前半から後半にかけて明確な下降推移を示しました。前半平均24.1℃に対し後半平均は20.65℃と3.45℃低くなっています。日次変化では、9/21から9/22にかけて+4.4℃上昇した直後、9/22から9/23には-5.0℃と期間内最大の急激な低下を記録しました。日平均の標準偏差は2.07℃、前日比の平均絶対変化幅は3.1℃であり、前半に急激な変動を挟んでいます。温度基準では、最高気温30℃以上を記録したのは9/22の1日のみで、2日以上の継続はありませんでした。"
     }
   },
   "chart_data": {
@@ -377,7 +377,7 @@
         24.0,
         24.6,
         20.0,
-        21.1
+        21.3
       ]
     },
     "prev_year_comparison": {
@@ -397,7 +397,7 @@
         24.0,
         24.6,
         20.0,
-        21.1
+        21.3
       ],
       "last_year": [
         26.1,
@@ -462,7 +462,7 @@
         -0.1,
         0.5,
         -4.1,
-        -3.0
+        -2.8
       ],
       "baseline_avg": 24.1
     }
@@ -471,11 +471,11 @@
     "context_version": "3.2",
     "daily_pattern": {
       "opening_avg": 24.1,
-      "closing_avg": 20.55,
-      "front_to_back_change": -3.55,
-      "linear_slope_per_day": -0.418,
-      "daily_avg_stdev": 2.09,
-      "mean_absolute_day_change": 3.07,
+      "closing_avg": 20.65,
+      "front_to_back_change": -3.45,
+      "linear_slope_per_day": -0.396,
+      "daily_avg_stdev": 2.07,
+      "mean_absolute_day_change": 3.1,
       "largest_rise": {
         "change": 4.400000000000002,
         "from_date": "2026/09/21",
@@ -533,12 +533,12 @@
         2026
       ],
       "peer_average": 23.6,
-      "deviation_from_peer_average": -0.9,
+      "deviation_from_peer_average": -0.8,
       "rank_warmest": 3,
       "rank_coldest": 1,
-      "sample_min": 22.7,
+      "sample_min": 22.8,
       "sample_max": 24.3,
-      "sample_stdev": 0.71
+      "sample_stdev": 0.68
     },
     "recent_history": {
       "previous_periods": [
@@ -585,18 +585,20 @@
       ],
       "previous_period_count": 4,
       "previous_period_mean": 24.7,
-      "difference_from_previous_period_mean": -2.0
+      "difference_from_previous_period_mean": -1.9
     }
   },
   "analysis_meta": {
-    "source": "draft",
-    "analysis_available": false,
+    "source": "gemini",
+    "analysis_available": true,
     "protocol_version": "3.2",
-    "generated_at": "2026-09-27T21:01:14.086776+09:00",
-    "data_fingerprint": "af73363cb2a9afc669ec",
-    "period_closed": false,
+    "generated_at": "2026-09-28T08:46:50.954811+09:00",
+    "data_fingerprint": "850a307b0ae619be6964",
+    "period_closed": true,
     "coverage_complete": true,
     "observed_days": 7,
-    "expected_days": 7
+    "expected_days": 7,
+    "model": "gemini-3.8-flash",
+    "api_calls": 1
   }
 }
