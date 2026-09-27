@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-09-27T16:38:20.621072+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-09-27T18:03:31.941866+09:00",
+  "advice": "夕方に強まった雨は急速に弱まり、まもなく降り止む見通しです。手元の個人センサーでは気温23.0度を観測しており、雨上がりのしっとりとした空気が広がっています。\n\n雨雲レーダーの観測では、17時40分頃の時間あたり約2.4ミリをピークに雨雲は衰退しており、向こう1時間はまとまった雨のない状態が続く見込みです。ただし気象庁の予報では今夜の降水確率は30%とされており、所により一時的に弱い雨が戻る可能性は残っています。\n\n近所への買い物など短時間の外出であれば、雨具なしで移動できるタイミングに入りました。濡れた路面での足元の滑りに注意しつつ、夜遅くにかけてお出かけされる場合は、念のため折りたたみ傘を携えておくと安心です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)",
+    "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 23.5,
-    "weather_temp": null,
-    "weather": "快晴",
+    "outdoor_temp": 23.0,
+    "weather_temp": 21.8,
+    "weather": "弱い霧雨",
     "alerts_count": 0
   }
 }
