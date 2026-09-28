@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-28T10:27:18.750040+09:00",
-  "advice": "手元のセンサーでは気温22.3℃と高湿度を観測しており、雨雲レーダーでは時間雨量約2.9ミリのまとまった雨を捉えています。\n\nこの雨雲は足早で、雨脚は今後20分から30分ほどで急速に弱まり、11時前にはいったん止む見込みです。ただし、気象庁の予報では昼前後に雷を伴って激しく降る可能性が示されており、雷注意報も発表されています。午後も降水確率70％が続くため、雨雲が途切れても一時的な小康状態とみられます。\n\n直近の移動は雨が落ち着く11時前後まで待つのも賢い選択ですが、外出にはしっかりとした雨具が欠かせません。昼以降は急な強い雨や落雷による天気の急変に注意してください。☔",
+  "generated_at": "2026-09-28T12:39:15.234009+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 22.3,
-    "weather_temp": 23.7,
-    "weather": "霧雨",
+    "outdoor_temp": 22.7,
+    "weather_temp": 24.9,
+    "weather": "曇り",
     "alerts_count": 1
   }
 }
