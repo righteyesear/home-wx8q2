@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-01T00:49:33.200203+09:00",
+  "generated_at": "2026-10-01T01:14:58.680138+09:00",
   "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
   "analysis_status": "error",
@@ -8,7 +8,7 @@
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
-    "rain_nowcast_error": null
+    "rain_nowcast_error": "500 Server Error: Internal Server Error for url: https://yahoo-weather-proxy.miurayukimail.workers.dev/"
   },
   "data_summary": {
     "outdoor_temp": 17.5,
