@@ -1,22 +1,22 @@
 {
-  "updated": "2026-09-30 19:38:49",
+  "updated": "2026-10-01 01:40:32",
   "location": {
     "lat": 35.7785,
     "lon": 139.878
   },
-  "date": "2026-09-30",
+  "date": "2026-10-01",
   "error": null,
-  "moonrise": "19:19",
-  "moonset": "翌9:16",
-  "moon_age": 18.98,
+  "moonrise": "20:08",
+  "moonset": "翌10:28",
+  "moon_age": 19.98,
   "sunrise": "5:34",
-  "sunset": "17:26",
+  "sunset": "17:25",
   "moonset_is_tomorrow": true,
-  "moonset_date": "2026-10-01",
-  "moonrise_azimuth": 60.0,
+  "moonset_date": "2026-10-02",
+  "moonrise_azimuth": 56.3,
   "moonrise_direction": "東北東",
-  "moon_phase_deg": 228.49,
-  "illumination": 83.1,
-  "moonset_azimuth": 293.0,
+  "moon_phase_deg": 242.24,
+  "illumination": 73.3,
+  "moonset_azimuth": 295.8,
   "moonset_direction": "西北西"
 }
