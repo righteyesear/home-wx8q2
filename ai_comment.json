@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-01T20:55:44.848715+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-01T23:01:32.169885+09:00",
+  "advice": "深夜にかけて雨の心配はありませんが、秋としては異例の高湿度による蒸し暑さに注意が必要です。屋外の日陰に設置したセンサーでは気温23.4℃、湿度は93％を観測しています。風が弱いことも影響し、参考体感温度は実測値より4℃以上高い27.8℃と、熱がこもりやすい状態です。\n\n雨雲レーダーでは直近1時間の雨は予想されていませんが、気象庁の予報によると明朝にかけて次第に雲が厚くなり、朝6時以降の降水確率は50％に達する見通しです。明け方にかけて気温は約1.7℃下がって21℃前後に落ち着くものの、夜間を通して湿った空気が居座るとみられます。\n\n今夜の就寝時は窓を閉め切ると不快感が増すため、エアコンの除湿や送風を上手に活用してください。また、明日の朝は早い時間帯から雨が降り始める可能性があるため、折りたたみ傘を玄関先に準備しておくと安心です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 23.9,
-    "weather_temp": 23.7,
-    "weather": "晴れ",
+    "outdoor_temp": 23.4,
+    "weather_temp": 22.6,
+    "weather": "快晴",
     "alerts_count": 0
   }
 }
