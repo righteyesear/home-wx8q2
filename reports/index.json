@@ -8,7 +8,7 @@
       "analysis_available": false,
       "status": "draft",
       "coverage_complete": false,
-      "observed_days": 4,
+      "observed_days": 5,
       "expected_days": 7
     },
     {
@@ -1818,5 +1818,5 @@
       "expected_days": 31
     }
   ],
-  "updated_at": "2026-10-01T19:07:53.748017+09:00"
+  "updated_at": "2026-10-02T03:26:51.685878+09:00"
 }
