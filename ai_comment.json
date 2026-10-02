@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-10-02T13:04:00.203894+09:00",
-  "advice": "手元の屋外センサーでは気温19.8度と20度を下回っていますが、湿度が82パーセントと高いため、風速推定を加味した体感温度は22度前後と2度以上高くなっています。雨雲レーダーの観測でも現在雨は降っておらず、落ち着いた状態です。\n\n気象庁の予報では昼過ぎからくもりに変わる見込みで、夕方にかけて降水確率も下がっていく見通しです。日差しが乏しいため気温自体の急上昇は見込みにくいものの、湿った空気が居座るため、数字ほどの冷え込みはなく、少し動くとやや蒸し暑さを感じる可能性があります。\n\n外出時は厚手の上着を選ぶと汗ばむおそれがあるため、脱ぎ着しやすい長袖や薄手の羽織りものが適しています。室内でも湿気がこもって不快に感じやすいため、換気やエアコンの除湿機能を活用して湿度を調整すると快適です。",
+  "generated_at": "2026-10-02T15:21:37.335504+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)",
+    "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 19.8,
-    "weather_temp": null,
-    "weather": "快晴",
+    "outdoor_temp": 20.5,
+    "weather_temp": 21.9,
+    "weather": "晴れ",
     "alerts_count": 0
   }
 }
