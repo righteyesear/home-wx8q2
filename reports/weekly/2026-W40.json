@@ -7,7 +7,7 @@
     "end_date": "2026-10-04",
     "label": "2026年 第40週（9/28 〜 10/4）"
   },
-  "generated_at": "2026-10-03T02:52:48.634449+09:00",
+  "generated_at": "2026-10-03T07:13:09.868578+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -79,9 +79,9 @@
         "date": "2026/10/03",
         "weekday": "土",
         "high": 19.4,
-        "low": 19.0,
-        "avg": 19.1,
-        "range": 0.4
+        "low": 18.6,
+        "avg": 19.0,
+        "range": 0.8
       }
     ],
     "comparison": {
@@ -321,7 +321,7 @@
             "low": 17.3
           },
           "10": {
-            "avg": 21.0,
+            "avg": 20.9,
             "high": 28.8,
             "low": 17.4
           }
@@ -356,7 +356,7 @@
         17.3,
         17.4,
         19.4,
-        19.0
+        18.6
       ],
       "avgs": [
         22.4,
@@ -364,7 +364,7 @@
         18.9,
         23.0,
         20.8,
-        19.1
+        19.0
       ]
     },
     "prev_year_comparison": {
@@ -382,7 +382,7 @@
         18.9,
         23.0,
         20.8,
-        19.1
+        19.0
       ],
       "last_year": [
         25.4,
@@ -416,7 +416,7 @@
         17.3,
         17.4,
         19.4,
-        19.0
+        18.6
       ],
       "last_year_low": [
         21.4,
@@ -443,7 +443,7 @@
         -5.2,
         -1.1,
         -3.3,
-        -5.0
+        -5.1
       ],
       "baseline_avg": 24.1
     }
@@ -452,11 +452,11 @@
     "context_version": "3.2",
     "daily_pattern": {
       "opening_avg": 21.45,
-      "closing_avg": 19.95,
-      "front_to_back_change": -1.5,
-      "linear_slope_per_day": -0.329,
-      "daily_avg_stdev": 1.53,
-      "mean_absolute_day_change": 2.3,
+      "closing_avg": 19.9,
+      "front_to_back_change": -1.55,
+      "linear_slope_per_day": -0.343,
+      "daily_avg_stdev": 1.55,
+      "mean_absolute_day_change": 2.32,
       "largest_rise": {
         "change": 4.100000000000001,
         "from_date": "2026/09/30",
@@ -573,8 +573,8 @@
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-10-03T02:52:48.664270+09:00",
-    "data_fingerprint": "ba7d73fbb9f818efefc9",
+    "generated_at": "2026-10-03T07:13:09.890811+09:00",
+    "data_fingerprint": "b6a5afe6493670950327",
     "period_closed": false,
     "coverage_complete": false,
     "observed_days": 6,
