@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-02T10:20:28.805206+09:00",
-  "advice": "現在、雨雲レーダーでは降水が観測されておらず雨は止んでいますが、空は厚い雲に覆われています。屋外のセンサーでは気温20.7℃、湿度83％を示しており、しっとりとした空気に包まれています。\n\n気象庁の予報では昼前まで雨の可能性が残るものの、午後は降水確率が30％へと下がる見通しです。また、この先6時間の予想気温は19℃台でほぼ横ばいとなり、目立った変化は見られません。日差しが届かないため昼間も気温の上昇はなく、落ち着いた肌寒さが続く見込みです。\n\n昼前後の外出には、念のため折りたたみ傘を持っておくと安心です。午後にかけても気温が上がらないため、薄手の上着などを一枚羽織って体感を調節することをおすすめします。",
+  "generated_at": "2026-10-02T11:03:08.097527+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -12,7 +12,7 @@
   },
   "data_summary": {
     "outdoor_temp": 20.7,
-    "weather_temp": 19.6,
+    "weather_temp": 19.3,
     "weather": "弱い霧雨",
     "alerts_count": 0
   }
