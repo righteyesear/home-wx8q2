@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-03T21:08:51.185284+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-03T22:10:28.782863+09:00",
+  "advice": "屋外のセンサーでは気温18.5℃を観測しており、風が穏やかで湿度が75%ある影響から、推定体感温度は19.4℃と実気温よりやや高めになっています。降水はなく、風も弱いため周囲は非常に落ち着いた状態です。\n\n広域の推定値である17.3℃と比べると手元ではぬくもりが残る形ですが、今夜から未明にかけては約1.5℃気温が下がり、15℃台後半まで緩やかに冷え込む見通しです。\n\n室内では現在、薄手の長袖1枚で快適に過ごせますが、深夜以降は体感も一段下がってきます。就寝中に窓を開けたままだと冷え込みを感じやすいため、換気後はしっかり閉め、薄手の毛布や掛け布団を足して休むのがよさそうです。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 18.9,
-    "weather_temp": 17.8,
+    "outdoor_temp": 18.5,
+    "weather_temp": 17.3,
     "weather": "快晴",
     "alerts_count": 0
   }
