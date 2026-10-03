@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-03T09:58:28.491733+09:00",
-  "advice": "穏やかに晴れて過ごしやすい午前中ですが、屋外の日陰にあるセンサーの実測は23.3℃を示し、広域の格子推定値より2.5℃高くなっています。身の回りの環境では、推定値以上に初秋の暖かさを実感できる状況です。\n\n雨雲の発生はなく、気象庁の予報でも日中は安定した晴天が続く見通しです。この先の推移でも午後にかけて23℃台半ばまで気温が上がる見込みで、日差しの温もりも手伝い、穏やかな陽気が持続するとみられます。\n\n洗濯物の外干しやお出かけには絶好のタイミングとなります。直射日光の下では軽く汗ばむ場面もある一方、日陰では爽やかさも残るため、脱ぎ着しやすい薄手の上着を用意しておくと快適です。",
+  "generated_at": "2026-10-03T10:46:30.824475+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 23.3,
-    "weather_temp": 20.8,
+    "outdoor_temp": 22.6,
+    "weather_temp": 21.9,
     "weather": "晴れ",
     "alerts_count": 0
   }
