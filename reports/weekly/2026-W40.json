@@ -7,7 +7,7 @@
     "end_date": "2026-10-04",
     "label": "2026年 第40週（9/28 〜 10/4）"
   },
-  "generated_at": "2026-10-03T14:17:07.599592+09:00",
+  "generated_at": "2026-10-03T20:38:21.397951+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -15,14 +15,14 @@
       "highlights": [
         "最高気温 28.8℃",
         "最低気温 17.3℃",
-        "前週比 -1.8℃",
-        "前年比 -2.9℃"
+        "前週比 -1.7℃",
+        "前年比 -2.8℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 6,
-      "avg_temp": 21.0,
+      "avg_temp": 21.1,
       "avg_temp_stdev": 1.5,
       "max_temp": 28.8,
       "max_temp_date": "2026/10/01",
@@ -31,8 +31,8 @@
       "min_temp_date": "2026/09/30",
       "avg_low": 18.8,
       "avg_daily_range": 5.2,
-      "prev_week_diff": -1.8,
-      "prev_year_diff": -2.9
+      "prev_week_diff": -1.7,
+      "prev_year_diff": -2.8
     },
     "daily_data": [
       {
@@ -80,7 +80,7 @@
         "weekday": "土",
         "high": 23.6,
         "low": 18.6,
-        "avg": 20.5,
+        "avg": 20.7,
         "range": 5.0
       }
     ],
@@ -100,7 +100,7 @@
         "avg_low": 20.8,
         "avg_daily_range": 6.6
       },
-      "avg_temp_diff": -2.9,
+      "avg_temp_diff": -2.8,
       "max_temp_diff": -2.6,
       "min_temp_diff": -0.6,
       "avg_daily_range_diff": -1.4,
@@ -109,7 +109,7 @@
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 24.1,
-      "current_deviation": -3.1,
+      "current_deviation": -3.0,
       "years_count": 2
     },
     "events": {
@@ -321,7 +321,7 @@
             "low": 17.3
           },
           "10": {
-            "avg": 21.4,
+            "avg": 21.5,
             "high": 28.8,
             "low": 17.4
           }
@@ -364,7 +364,7 @@
         18.9,
         23.0,
         20.8,
-        20.5
+        20.7
       ]
     },
     "prev_year_comparison": {
@@ -382,7 +382,7 @@
         18.9,
         23.0,
         20.8,
-        20.5
+        20.7
       ],
       "last_year": [
         25.4,
@@ -443,7 +443,7 @@
         -5.2,
         -1.1,
         -3.3,
-        -3.6
+        -3.4
       ],
       "baseline_avg": 24.1
     }
@@ -452,11 +452,11 @@
     "context_version": "3.2",
     "daily_pattern": {
       "opening_avg": 21.45,
-      "closing_avg": 20.65,
-      "front_to_back_change": -0.8,
-      "linear_slope_per_day": -0.129,
-      "daily_avg_stdev": 1.35,
-      "mean_absolute_day_change": 2.02,
+      "closing_avg": 20.75,
+      "front_to_back_change": -0.7,
+      "linear_slope_per_day": -0.1,
+      "daily_avg_stdev": 1.34,
+      "mean_absolute_day_change": 1.98,
       "largest_rise": {
         "change": 4.100000000000001,
         "from_date": "2026/09/30",
@@ -514,12 +514,12 @@
         2026
       ],
       "peer_average": 23.8,
-      "deviation_from_peer_average": -2.8,
+      "deviation_from_peer_average": -2.7,
       "rank_warmest": 3,
       "rank_coldest": 1,
-      "sample_min": 21.0,
+      "sample_min": 21.1,
       "sample_max": 23.8,
-      "sample_stdev": 1.32
+      "sample_stdev": 1.27
     },
     "recent_history": {
       "previous_periods": [
@@ -566,15 +566,15 @@
       ],
       "previous_period_count": 4,
       "previous_period_mean": 23.5,
-      "difference_from_previous_period_mean": -2.5
+      "difference_from_previous_period_mean": -2.4
     }
   },
   "analysis_meta": {
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-10-03T14:17:07.619245+09:00",
-    "data_fingerprint": "1bd095e706ddafc95f2d",
+    "generated_at": "2026-10-03T20:38:21.431157+09:00",
+    "data_fingerprint": "a7b67a51bb4296eb51f0",
     "period_closed": false,
     "coverage_complete": false,
     "observed_days": 6,
