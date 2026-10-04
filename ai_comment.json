@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-05T01:18:01.488800+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-05T02:11:29.591654+09:00",
+  "advice": "深夜の葛飾区周辺は雨雲の発生もなく、大気の状態は落ち着いています。手元の屋外センサーでは気温18.0℃、湿度81%を観測しており、日付が変わってからの気温変動も0.4℃と、大きな変化のない穏やかな夜となっています。\n\nこの先朝にかけても急激な冷え込みはなく、気温は17℃前後でほぼ横ばいに推移する見込みです。雨雲の観測データからは直近の雨の心配はありませんが、朝方にかけて徐々に雲が厚くなり、気象庁の予報でも朝6時以降の降水確率は30%へと上昇する見通しです。\n\n極端な寒暖差はないものの、深夜から早朝にかけては肌寒さを感じやすい気温です。就寝時は薄手の布団などで体を冷やさないよう調節してください。また、朝のお出かけのタイミングでは天気がぐずつく可能性があるため、念のため折りたたみ傘を用意しておくと安心です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 18.1,
-    "weather_temp": 17.6,
+    "outdoor_temp": 18.0,
+    "weather_temp": 17.2,
     "weather": "晴れ",
     "alerts_count": 0
   }
