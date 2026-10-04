@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-04T19:17:50.875037+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-04T19:56:53.611577+09:00",
+  "advice": "手元のセンサーでは気温19.4℃を観測しており、風も穏やかな秋の夜となっています。雨雲の観測データでも周囲に降水はみられず、天気の崩れはありません。\n\n気象庁の予報でも今夜遅くまでの降水確率は10％と低く、雨の心配はない見込みです。この先の推移をみても、気温は日付が変わる頃にかけて18℃前後まで緩やかに下がる程度にとどまり、急激な変化はなく安定した状態が続く見通しです。\n\n過ごしやすい気温ですが、窓を開けたままにしていると深夜にかけて次第に空気が冷えてくるとみられます。就寝時は薄手の長袖を着用するか、冷え込みに備えて寝具を一枚整えておくと快適に過ごせます。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 19.6,
-    "weather_temp": 19.3,
+    "outdoor_temp": 19.4,
+    "weather_temp": 19.1,
     "weather": "薄曇り",
     "alerts_count": 0
   }
