@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-05T21:04:29.177969+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-05T21:49:35.873629+09:00",
+  "advice": "雨雲レーダーに降水は観測されておらず、雨の心配は落ち着いています。現在、屋外の日陰に設置したセンサーでは気温20.2℃、湿度92％を観測しており、しっとりとした穏やかな空気に包まれています。\n\nこの先朝方にかけても気温は19℃台半ばまでわずかに下がる程度で、大きな変化のない安定した推移が続く見込みです。このように湿度が高い気象条件では、肌からの水分蒸発に伴う熱の放出が抑えられるため、推定される参考体感温度は実気温より2.5℃高い22.7℃を示しています。\n\n夜間の冷え込みは控えめですが、外の高い湿気を室内に取り込むと蒸し暑さや寝苦しさにつながる可能性があります。今夜は窓を閉めて湿気の侵入を防ぎ、適度に除湿を行いながら、薄手の寝具を上手に活用して休むのがよさそうです。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 20.3,
-    "weather_temp": 19.9,
-    "weather": "薄曇り",
+    "outdoor_temp": 20.2,
+    "weather_temp": 19.7,
+    "weather": "弱い霧雨",
     "alerts_count": 0
   }
 }
