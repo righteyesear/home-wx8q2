@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-10-08T02:16:12.954616+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-08T02:45:33.984415+09:00",
+  "advice": "屋外の日陰に設置したセンサーでは気温17.0℃、湿度71％を観測しています。風が穏やかなため、推定される参考体感温度は17.5℃と実気温よりわずかに高い水準ですが、深夜らしくひんやりとした空気に包まれています。周辺に雨雲の兆候はなく、雨の心配はありません。\n\n日付が変わってからの気温は17.0℃から18.0℃と横ばいで推移しており、大気の状態は安定しています。気象庁の予報でも朝にかけて降水確率は0％で、穏やかな天候が続く見込みです。風による体感温度の急激な低下はないものの、深夜から明け方にかけて静かに冷え込みが進む時間帯とみられます。\n\n室内では知らず知らずのうちに冷気が入りやすいため、就寝時は長袖の寝具や薄手の毛布などで適切な保温を整えてください。早朝から行動される予定がある場合は、外出時に軽く羽織れる上着を準備しておくと安心です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": null,
+    "weather_error": "503 Server Error: Service Unavailable for url: https://api.open-meteo.com/v1/forecast?latitude=35.7727&longitude=139.868&current=weather_code,temperature_2m,relative_humidity_2m,dew_point_2m,apparent_temperature,precipitation,rain,showers,snowfall,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m,visibility,uv_index,is_day&hourly=weather_code,temperature_2m,relative_humidity_2m,dew_point_2m,apparent_temperature,precipitation_probability,precipitation,rain,showers,snowfall,cloud_cover,visibility,wind_speed_10m,wind_direction_10m,wind_gusts_10m,uv_index,temperature_850hPa,temperature_925hPa,wet_bulb_temperature_2m,freezing_level_height,cape,soil_temperature_0cm,direct_radiation,diffuse_radiation,et0_fao_evapotranspiration&daily=sunrise,sunset,sunshine_duration,uv_index_max,temperature_2m_max,temperature_2m_min,precipitation_sum,rain_sum,showers_sum,snowfall_sum,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max,wind_direction_10m_dominant,shortwave_radiation_sum&forecast_days=2&timezone=Asia/Tokyo&wind_speed_unit=ms",
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 17.3,
-    "weather_temp": 16.2,
-    "weather": "晴れ",
+    "outdoor_temp": 17.0,
+    "weather_temp": null,
+    "weather": "快晴",
     "alerts_count": 0
   }
 }
