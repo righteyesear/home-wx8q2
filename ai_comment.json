@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-08T08:29:59.766493+09:00",
-  "advice": "秋晴れの穏やかな朝を迎えています。屋外の日陰に設置したセンサーでは気温19.2℃を観測しており、風も穏やかで過ごしやすい体感です。雨の心配はなく、澄んだ青空が広がっています。\n\n本日は1025hPaを超える高気圧に覆われて雲が少ないため、日差しが地表を効率よく温める見込みです。この日射加熱により、昼過ぎにかけて気温は23℃台後半まで上がり、朝ここまでの最低気温15.2℃から8℃以上上昇するとみられます。\n\n昼前からは上着が不要な暖かさになりますが、朝晩との寒暖差が大きくなります。日中は脱ぎ着しやすい服装で調節し、屋外で活動する際は日差し対策や適度な水分補給を心がけると快適です。",
+  "generated_at": "2026-10-08T11:35:03.049805+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 19.2,
-    "weather_temp": 18.0,
+    "outdoor_temp": 23.2,
+    "weather_temp": 22.5,
     "weather": "快晴",
     "alerts_count": 0
   }
