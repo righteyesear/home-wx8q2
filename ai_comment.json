@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-09T13:34:46.890485+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-09T15:52:10.973238+09:00",
+  "advice": "手元の屋外センサーでは現在気温25.0℃、湿度55%を観測しており、日中はここまでの最高気温が25.4℃と爽やかな秋晴れとなりました。ただ、この心地よい暖かさは日暮れまでで、夕方以降は気温が急速に下がる見通しです。\n\n17時13分の日没を境に冷え込みが進み、予報では20時にかけて約5.7℃低下し、19時頃には20℃を下回るとみられます。気象庁の降水確率は0%で雨の心配はないものの、昼間の陽気から一転して夜間にかけて寒暖差が際立つ変化となる見込みです。\n\nこれから外出される方や帰宅が夜になる方は、日中の感覚のまま薄着で出かけると体を冷やす注意が必要です。上着やストールなど羽織るものを1枚お持ちください。また、窓を開けて換気されている場合は、夕暮れに合わせて早めに閉めておくと室温を保ちやすくなります。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -12,7 +12,7 @@
   },
   "data_summary": {
     "outdoor_temp": 25.0,
-    "weather_temp": 24.6,
+    "weather_temp": 24.7,
     "weather": "快晴",
     "alerts_count": 0
   }
