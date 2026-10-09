@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-10-09T10:46:36.494662+09:00",
-  "advice": "葛飾区周辺は穏やかな秋晴れに包まれ、雨の心配のない安定した天候となっています。午前11時前の推定気温は22℃前後、風も非常に穏やかで、日差しの下では心地よい温かさです。\n\n高気圧の圏内でこの後も崩れる兆候はなく、気温は午後14時から15時頃にかけて25℃近くまで、午前から約4℃上昇する見込みです。風が弱いぶん日射の影響を受けやすく、紫外線指数も中程度まで上がるため、日向では少し汗ばむくらいの体感へと移り変わるとみられます。\n\n洗濯物の外干しやお出かけには絶好の空模様となります。日差しを遮る雲が少ないため、長時間の外出では帽子などの紫外線対策があると安心です。午後の昇温に合わせて脱ぎ着できるよう、調節しやすい服装をおすすめします。",
+  "generated_at": "2026-10-09T11:50:03.690480+09:00",
+  "advice": "正午前を迎え、屋外の日陰に設置したセンサーでは気温24.0℃を観測しています。風がほとんどなく湿度が約60%ある影響で、推定される体感温度は25.8℃と、実気温を2℃近く上回る水準です。\n\n気象庁の予報でも午後は降水確率0%の晴天が続く見込みで、日差しの温もりを遮る要因は見当たりません。この後も穏やかな空気の流れが続くため、体感的には日陰でも暖かく、日向では少し汗ばむ陽気が継続するとみられます。\n\n日中の屋外活動は、薄手のシャツなど風通しの良い服装が心地よく感じられます。また、日当たりの良い室内では直射日光によって熱がこもりやすくなるため、窓を開けて外気を取り入れるなど、室温の上がりすぎを防ぐ工夫を取り入れるのがおすすめです。",
   "model": "gemini-3.8-flash",
   "analysis_status": "ok",
   "source_status": {
-    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
-    "weather_error": null,
+    "spreadsheet_error": null,
+    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)",
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": null,
-    "weather_temp": 22.2,
+    "outdoor_temp": 24.0,
+    "weather_temp": null,
     "weather": "快晴",
     "alerts_count": 0
   }
