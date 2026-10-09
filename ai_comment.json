@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-09T20:01:06.354277+09:00",
-  "advice": "雨の心配はなく、静かで穏やかな秋の夜を迎えています。手元のセンサーでは気温20.7℃を観測しており、広域の格子推定値（19.3℃）と比べると敷地周辺にやや温かさが残っているものの、風も弱く落ち着いた状態です。\n\nここまでの日中の最高気温は25.4℃まで上がりましたが、快晴が続く今夜は地表の熱が逃げやすく、深夜にかけて17℃台まで約2℃緩やかに下がる見通しです。気象庁の予報でも降水確率は0％で推移しており、天候が急変する心配はありません。\n\n昼間の暖かさに比べると夜間の冷え込みが際立ち、寒暖差が大きくなっています。就寝時に窓を開けたままにしていると肌寒さを感じるため、寝室の保温や少し厚手の寝具の準備を整えておくと安心です。",
+  "generated_at": "2026-10-09T20:42:22.180518+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 20.7,
-    "weather_temp": 19.3,
+    "outdoor_temp": 20.3,
+    "weather_temp": 19.0,
     "weather": "快晴",
     "alerts_count": 0
   }
