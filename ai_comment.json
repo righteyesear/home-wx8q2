@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-10-09T11:50:03.690480+09:00",
-  "advice": "正午前を迎え、屋外の日陰に設置したセンサーでは気温24.0℃を観測しています。風がほとんどなく湿度が約60%ある影響で、推定される体感温度は25.8℃と、実気温を2℃近く上回る水準です。\n\n気象庁の予報でも午後は降水確率0%の晴天が続く見込みで、日差しの温もりを遮る要因は見当たりません。この後も穏やかな空気の流れが続くため、体感的には日陰でも暖かく、日向では少し汗ばむ陽気が継続するとみられます。\n\n日中の屋外活動は、薄手のシャツなど風通しの良い服装が心地よく感じられます。また、日当たりの良い室内では直射日光によって熱がこもりやすくなるため、窓を開けて外気を取り入れるなど、室温の上がりすぎを防ぐ工夫を取り入れるのがおすすめです。",
+  "generated_at": "2026-10-09T13:34:46.890485+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)",
+    "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 24.0,
-    "weather_temp": null,
+    "outdoor_temp": 25.0,
+    "weather_temp": 24.6,
     "weather": "快晴",
     "alerts_count": 0
   }
