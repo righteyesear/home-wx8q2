@@ -7,7 +7,7 @@
     "end_date": "2026-10-11",
     "label": "2026年 第41週（10/5 〜 10/11）"
   },
-  "generated_at": "2026-10-10T03:23:45.858252+09:00",
+  "generated_at": "2026-10-10T09:51:34.984127+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -26,11 +26,11 @@
       "avg_temp_stdev": 1.7,
       "max_temp": 27.1,
       "max_temp_date": "2026/10/06",
-      "avg_high": 23.8,
+      "avg_high": 24.4,
       "min_temp": 15.2,
       "min_temp_date": "2026/10/08",
-      "avg_low": 17.4,
-      "avg_daily_range": 6.4,
+      "avg_low": 17.3,
+      "avg_daily_range": 7.2,
       "prev_week_diff": -0.3,
       "prev_year_diff": -1.7
     },
@@ -78,10 +78,10 @@
       {
         "date": "2026/10/10",
         "weekday": "土",
-        "high": 18.7,
-        "low": 16.9,
+        "high": 22.7,
+        "low": 16.2,
         "avg": 17.8,
-        "range": 1.8
+        "range": 6.5
       }
     ],
     "comparison": {
@@ -103,7 +103,7 @@
       "avg_temp_diff": -1.7,
       "max_temp_diff": -2.1,
       "min_temp_diff": -1.1,
-      "avg_daily_range_diff": -0.2,
+      "avg_daily_range_diff": 0.6,
       "ai_comment": ""
     },
     "baseline": {
@@ -348,7 +348,7 @@
         25.8,
         24.5,
         25.4,
-        18.7
+        22.7
       ],
       "lows": [
         18.0,
@@ -356,7 +356,7 @@
         18.0,
         15.2,
         16.8,
-        16.9
+        16.2
       ],
       "avgs": [
         19.6,
@@ -399,7 +399,7 @@
         25.8,
         24.5,
         25.4,
-        18.7
+        22.7
       ],
       "last_year_high": [
         29.2,
@@ -416,7 +416,7 @@
         18.0,
         15.2,
         16.8,
-        16.9
+        16.2
       ],
       "last_year_low": [
         20.3,
@@ -573,8 +573,8 @@
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-10-10T03:23:45.880185+09:00",
-    "data_fingerprint": "8d4f200b0410b6fd330a",
+    "generated_at": "2026-10-10T09:51:35.016010+09:00",
+    "data_fingerprint": "70c1c7b012e786f67741",
     "period_closed": false,
     "coverage_complete": false,
     "observed_days": 6,
