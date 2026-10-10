@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-10T08:05:42.057068+09:00",
-  "advice": "青空が広がる葛飾区周辺では、朝の日差しとともに気温が順調に上昇し始めています。屋外の個人センサーでは18.7度を観測しており、風も穏やかです。周辺の広域推定値である17.3度と比べても、局所的に日だまりの暖まりが進んでいる様子がうかがえます。\n\nこの先も崩れる兆候はなく、昼過ぎにかけて気温が大きく上がる見通しです。予報によると、午後1時にかけて約7度上昇して24度台に達する計算となっています。日差しを遮る雲がほとんどないため、午前中のうちから体感的な暖かさが急速に増していくとみられます。\n\n朝の涼しさに合わせて着込んでいると、昼前には暑さを感じる可能性が高くなります。日中に外出される際は、前開きのシャツやカーディガンなど、脱ぎ着してこまめに体温調節ができる服装を選んでおくと快適です。",
+  "generated_at": "2026-10-10T10:33:41.378831+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 18.7,
-    "weather_temp": 17.3,
+    "outdoor_temp": 23.6,
+    "weather_temp": 22.3,
     "weather": "快晴",
     "alerts_count": 0
   }
