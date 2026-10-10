@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-10-10T18:36:07.651811+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-10T19:14:47.153033+09:00",
+  "advice": "手元の屋外センサーでは気温21.4℃を観測しており、風も穏やかで落ち着いた秋の夜となっています。日中は25.5℃まで気温が上がって朝との気温差が9℃以上開くなど、この時期としては昼間の暖かさが際立った一日でした。\n\nこの後も雨の心配はなく、安定した晴天が続く見通しです。日付が変わる頃にかけては気温が17℃台まで緩やかに下がる見込みで、日中の余韻が引いた後は着実に涼しさが増していくとみられます。\n\n一日の寒暖差が大きくなっています。夜間に窓を開けたままにしたり薄着で休んだりすると冷えやすいため、長袖の寝具を選んだり羽織るものを手元に用意したりして温度調節を行うと良さそうです。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
-    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
+    "spreadsheet_error": null,
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": null,
-    "weather_temp": 20.8,
+    "outdoor_temp": 21.4,
+    "weather_temp": 20.4,
     "weather": "快晴",
     "alerts_count": 0
   }
