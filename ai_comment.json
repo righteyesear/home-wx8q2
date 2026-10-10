@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-10T13:20:20.641987+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-10T15:31:14.407733+09:00",
+  "advice": "現在は快晴で日差しに恵まれ、風も穏やかに推移しています。推定される体感温度は25.7℃と、推定気温の24.7℃を1℃ほど上回っており、少し動くと汗ばむような暖かさです。\n\nただし、17時過ぎの日没を境に気温は下がり始め、夜20時には19.5℃まで5℃以上低下する見込みです。日中は日差しと適度な湿度によって気温以上に暖かく感じられますが、日が落ちるとその効果が薄れ、体感温度も急速に下がるとみられます。\n\n日中の感覚のまま薄着で外出されると、夕方以降に体を冷やす心配があります。これからお出かけの際は、長袖の羽織るものを1枚お持ちください。室内でも日暮れに合わせて早めに窓を閉め、外の冷気を遮断して暖かさを保つ工夫が有効です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
     "weather_error": null,
