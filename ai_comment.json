@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-10-10T19:59:52.565549+09:00",
-  "advice": "屋外センサーの気温は20.8℃を示し、日没後も順調に熱が引いています。日中の実測最高気温は25.5℃を記録し、この地域の過去の平均最高気温である約23.0℃を上回る季節外れの暖かさとなったのが今日の特徴でした。\n\n雨雲レーダーに雨の反応はなく、気象庁の予報でも降水確率0％の安定した天気が続く見通しです。日付が変わる頃にかけては17℃台までさらに2℃以上下がる見込みで、風が極めて弱いことも重なり、夜間は地表の熱が上空へ逃げて着実に冷え込みが進むとみられます。\n\n昼間の陽気に合わせた薄着のままでいると、深夜にかけて急に肌寒さを感じやすくなります。就寝前に窓を閉めて冷気を遮り、掛け布団をあらかじめ用意しておくなど、夜間の気温低下に合わせた調整が有効です。",
+  "generated_at": "2026-10-10T20:28:08.756054+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
-    "spreadsheet_error": null,
+    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 20.8,
-    "weather_temp": 19.8,
+    "outdoor_temp": null,
+    "weather_temp": 19.3,
     "weather": "快晴",
     "alerts_count": 0
   }
