@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-10-12T02:51:00.238355+09:00",
-  "advice": "雨の心配はなく、風も穏やかで非常に落ち着いた秋の夜となっています。手元のセンサーでは現在気温18.0℃、湿度85％を観測しており、広域の格子推定値と比べても大きな差はなく、周囲の気象条件は極めて安定しています。\n\nこの先明け方にかけても崩れる要素はなく、気温は16℃台前半までゆっくりと下がる見込みです。直近の雨雲レーダーでも降水は確認されず、日の出を迎える時間帯まで風の弱い快晴が続くとみられます。\n\n厳しい冷え込みではないものの、睡眠中に体温を奪われないよう、厚みのある掛け物で保温を整えてお休みください。朝早くから活動される場合は、1枚羽織れる上着を手元に用意しておくと快適に過ごせます。",
+  "generated_at": "2026-10-12T07:43:31.573120+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": null,
+    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)",
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 18.0,
-    "weather_temp": 17.1,
+    "outdoor_temp": 19.1,
+    "weather_temp": null,
     "weather": "快晴",
     "alerts_count": 0
   }
