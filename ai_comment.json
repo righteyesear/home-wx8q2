@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-11T20:41:30.817927+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-11T22:38:58.434651+09:00",
+  "advice": "葛飾区周辺は雨の心配がなく、穏やかな秋の夜となっています。屋外の日陰に設置したセンサーでは気温19.8℃を観測しており、風も弱く落ち着いた空気感です。\n\nこの先未明にかけても澄んだ空が広がり、気温は現在の19℃台から3時頃には17℃台前半へと約1.5℃緩やかに低下する見通しです。急激な崩れはないものの、風が穏やかで晴れているぶん、放射冷却によって朝にかけて着実に冷え込んでいくとみられます。\n\n夜間の冷えで体調を崩さないよう、就寝前の室温調節がポイントです。窓を開けたままにせずしっかり閉め、明け方の肌寒さに備えて薄手の毛布や掛け布団を手元に準備してお休みください。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 20.3,
-    "weather_temp": 19.5,
+    "outdoor_temp": 19.8,
+    "weather_temp": 18.7,
     "weather": "快晴",
     "alerts_count": 0
   }
