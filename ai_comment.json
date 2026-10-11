@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-11T20:18:20.661077+09:00",
-  "advice": "穏やかに晴れた秋の夜が続き、屋外の気象状態は極めて安定しています。20時15分現在、手元の屋外センサーは気温20.4℃、湿度80%を示しており、風も弱いため、肌寒さを感じにくい落ち着いた空気に包まれています。\n\n気象庁の予報でも未明まで晴天が続き、気温は深夜1時にかけて17.8℃まで緩やかに下がる見通しです。現在、水蒸気が水滴に変わる目安となる露点温度は約16℃となっており、冷え込みに伴って気温がこの値へ近づくほど、空気中の水分が飽和して凝結しやすくなります。風が穏やかなことも重なり、深夜にかけて屋外の金属面やガラスには夜露が降りやすい気象条件が整っていきます。\n\nベランダに夜干しをしている洗濯物がある場合は、湿気を吸ってしまう前に早めに取り込んでおくのが賢明です。また、明日の朝早くから自転車や車を使う予定があるなら、サドルや窓ガラスの露拭き用タオルを玄関先に用意しておくと役立ちます。",
+  "generated_at": "2026-10-11T20:41:30.817927+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 20.4,
-    "weather_temp": 19.6,
+    "outdoor_temp": 20.3,
+    "weather_temp": 19.5,
     "weather": "快晴",
     "alerts_count": 0
   }
