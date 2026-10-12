@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-13T02:34:45.071875+09:00",
-  "advice": "現在の葛飾区周辺は風が穏やかで、冷え込みの進み方は非常に緩やかです。屋外の日陰に設置したセンサーの実測気温は18.4℃ですが、湿度が80%と高く風も弱いため、推定される体感温度は約19.2℃と、実際の気温よりわずかに温もりを感じる水準になっています。\n\n広域の格子予測では朝にかけて17℃を下回る見込みですが、日付が変わってからの実測の変動幅は0.5℃と極めて安定しています。風も毎秒2メートル未満の静穏な状態が続くため、夜明け前にかけて屋外の体感が急激に冷え込む可能性は低いとみられます。\n\n室内でも隙間風が入らなければ寒さはそれほど気になりませんが、湿度が高いため熱や湿気がこもると寝苦しさを感じる場合があります。厚手の防寒具は避け、通気性のよい長袖の部屋着に薄手の掛け布団を合わせるなど、適度に放熱できる寝支度がおすすめです。",
+  "generated_at": "2026-10-13T03:52:19.417466+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 18.4,
-    "weather_temp": 16.9,
+    "outdoor_temp": 18.2,
+    "weather_temp": 16.8,
     "weather": "晴れ",
     "alerts_count": 0
   }
