@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-10-14T02:24:40.648208+09:00",
-  "advice": "深夜2時過ぎの屋外センサーは19.6℃を示しており、この時期の夜間としては冷え込みのない状態です。湿度が90%と高く風も弱いため、推定風速を考慮した体感温度の参考値でも21.9℃あり、肌寒さはほとんど感じられません。\n\n通常は地面の熱が逃げる放射冷却によって明け方に最も気温が下がりますが、今夜は上空に暖気が入るため推移が異なります。上空約1500メートルの気温が15℃から16℃台へと上がる予想で、地上の気温も下がるどころか、朝7時頃にかけて21℃台まで緩やかに上昇していく見通しです。\n\n明け方にかけて冷え込む心配はないため、過度な防寒対策は不要とみられます。湿度が高く室内でも少し蒸し暑さを感じる可能性があるため、寝具は薄手のものを選び、適度に通気性を保てるよう調整しておくと良さそうです。",
+  "generated_at": "2026-10-14T03:04:15.570898+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
-    "rain_nowcast_error": "500 Server Error: Internal Server Error for url: https://yahoo-weather-proxy.miurayukimail.workers.dev/"
+    "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 19.6,
-    "weather_temp": 18.4,
+    "outdoor_temp": 19.4,
+    "weather_temp": 19.0,
     "weather": "薄曇り",
     "alerts_count": 0
   }
