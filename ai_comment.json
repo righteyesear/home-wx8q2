@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-13T22:04:21.683309+09:00",
-  "advice": "屋外のセンサーでは気温20.8℃を観測していますが、湿度83%と高めで風も弱いため、推定体感温度は23.1℃と実気温より高くなっています。秋の夜間としては肌寒さがなく、ややしっとりとした暖かさを感じる状況です。\n\n周辺の予報を見ても、朝方にかけて18℃台と気温の低下は緩やかで、急な冷え込みや雨の心配はありません。風も穏やかな状態が続く見込みで、夜間の大気は大きく崩れず安定して推移するとみられます。\n\n室内には湿気や熱がこもりやすいため、就寝前に窓を開けて空気を入れ替えるのが効果的です。明け方にかけても冷え込みは進まない見通しのため、厚着は避け、調節しやすい服装や寝具を選ぶのが適しています。",
+  "generated_at": "2026-10-13T23:41:43.818953+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 20.8,
-    "weather_temp": 19.0,
+    "outdoor_temp": 20.2,
+    "weather_temp": 18.5,
     "weather": "快晴",
     "alerts_count": 0
   }
