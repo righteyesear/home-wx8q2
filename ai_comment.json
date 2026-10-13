@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-10-13T11:52:32.627155+09:00",
-  "advice": "正午前を迎えた葛飾区周辺の推計気温は21.3℃で、北寄りの風も1m/s前後と非常に穏やかです。空には薄雲が広がっているものの、大気の乱れはなく落ち着いた昼時となっています。\n\n今後の推移をみますと、気象庁の降水確率は夕方まで10％と低く、雨雲レーダーでも雨の兆候はありません。気温はこれから15時頃にかけて23℃台半ばまで緩やかに上昇する見通しです。午後も風速は終始1m/s台前半にとどまるため、冷え込みや急な突風の心配もなく、安定した空模様が維持される見込みです。\n\n風が弱いため熱が奪われにくく、推定体感温度も23℃前後と屋外での活動に適した状態が続きます。午後の外出や移動も、天候変化を気にせず安心して計画どおり進められそうです。",
+  "generated_at": "2026-10-13T12:24:11.556810+09:00",
+  "advice": "屋外の日陰に設置された個人センサーでは24.5℃を示しており、広域を推計した格子データの21.7℃と比べて2.8℃高くなっています。局所的な環境では熱がこもりやすく、周囲の広域データの実感よりも温かさを感じやすい状況です。\n\n気象庁の予報によると夕方までの降水確率は10％で安定しており、広域の気温も15時頃にかけて23℃台半ばまで上がる見通しです。風も1m/s前後と穏やかに推移するため、身の回りでは推計値以上に暖かさが持続しやすい傾向が読み取れます。\n\n参考体感温度は27℃台に達しており、日差しを受ける場所では少し汗ばむ陽気となりそうです。午後の活動では、脱ぎ着しやすい上着などでこまめに調節することをおすすめします。",
   "model": "gemini-3.8-flash",
   "analysis_status": "ok",
   "source_status": {
-    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
+    "spreadsheet_error": null,
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
-    "rain_nowcast_error": null
+    "rain_nowcast_error": "500 Server Error: Internal Server Error for url: https://yahoo-weather-proxy.miurayukimail.workers.dev/"
   },
   "data_summary": {
-    "outdoor_temp": null,
-    "weather_temp": 21.3,
+    "outdoor_temp": 24.5,
+    "weather_temp": 21.7,
     "weather": "薄曇り",
     "alerts_count": 0
   }
