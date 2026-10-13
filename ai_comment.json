@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-13T14:29:31.743901+09:00",
-  "advice": "手元のセンサー気温は24.4℃と前回の観測からほぼ横ばいで推移し、暖かさが安定して続いています。広域の推定気温が23.0℃まで上昇したことで局所との差は1.4℃まで縮小しており、周辺一帯で日中のピークに達した状況です。\n\n雨雲の兆候はなく穏やかな空模様が続く見込みですが、15時を回ると気温は緩やかな下降へ転じます。夕暮れから19時頃にかけては約2℃下がり、20℃台まで冷え込む予測です。日差しが弱まるにつれ、現在のようなぬくもりも次第に落ち着いていくとみられます。\n\n屋外で過ごしやすい暖かさは今が山場となります。夕方以降も外出される予定がある場合は、日没後の空気の冷たさに備えて羽織るものを一枚手元に用意しておくと安心です。",
+  "generated_at": "2026-10-13T16:14:55.734202+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): Server disconnected without sending a response.",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 24.4,
-    "weather_temp": 23.0,
-    "weather": "晴れ",
+    "outdoor_temp": 24.1,
+    "weather_temp": 23.1,
+    "weather": "薄曇り",
     "alerts_count": 0
   }
 }
