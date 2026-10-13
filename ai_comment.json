@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-10-13T06:28:30.677877+09:00",
-  "advice": "朝は17℃前後と空気がひんやりしていますが、雨の心配はなく穏やかな秋の朝となっています。葛飾区周辺の推定値では17℃台前半で薄雲が広がっており、風も北寄りに約2メートル未満と弱く、落ち着いた空模様です。\n\n気象庁の予報では「くもり 朝晩 晴れ」とされ、正午までの降水確率は0％と安定した推移が続く見込みです。気温は朝の17℃前後から昼前にかけて約4℃上昇し、21℃台まで届く見通しとなっています。急な荒天や突風の兆候はなく、日中にかけて穏やかな陽気が続くものとみられます。\n\n朝のお出かけ時は肌寒さを覚えやすいため、薄手の上着が1枚あると重宝します。昼前には気温が上がって過ごしやすくなりますので、脱ぎ着して体感温度を調節できる服装が適しています。傘を持つ必要はなく、身軽に行動できる午前中となりそうです。",
+  "generated_at": "2026-10-13T10:09:08.687579+09:00",
+  "advice": "午前10時を回り、屋外の日陰に設置したセンサーでは21.6℃まで気温が上がっています。葛飾区周辺の広域推定値（19.6℃）と比べると2.0℃高く、日陰の風通しのよい場所でも局所的な暖まりが先行している様子がうかがえます。\n\n広域の気象データでは午後にかけてさらに気温が上がり、15時頃には23℃台半ばに届く見込みです。気象庁の降水確率も日中は10％と低く、雨の心配はありません。周辺全体の空気も次第に暖まるため、午後にかけて地域一帯で過ごしやすい穏やかな陽気が広がる見通しです。\n\n日差しの当たる場所や建物周りでは実際の気温以上に温もりを感じやすくなります。これからの時間帯のお出かけは、薄手の長袖1枚で身軽に行動できそうです。安定した空模様が続きますので、昼休みの外出や洗濯物の外干しも安心です。",
   "model": "gemini-3.8-flash",
   "analysis_status": "ok",
   "source_status": {
-    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
+    "spreadsheet_error": null,
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": "500 Server Error: Internal Server Error for url: https://yahoo-weather-proxy.miurayukimail.workers.dev/"
   },
   "data_summary": {
-    "outdoor_temp": null,
-    "weather_temp": 17.1,
-    "weather": "薄曇り",
+    "outdoor_temp": 21.6,
+    "weather_temp": 19.6,
+    "weather": "晴れ",
     "alerts_count": 0
   }
 }
