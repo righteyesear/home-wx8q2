@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-14T10:40:02.818759+09:00",
-  "advice": "手元のセンサーでは気温24.7℃、湿度73％を観測しています。風が穏やかなため推定体感温度は27℃台後半とやや蒸し暑く、広域の格子推定値である23.1℃に比べても手元では高めの体感です。直近の雨雲は見られませんが、午後は天気の崩れに注目が必要です。\n\n気象庁の予報では昼過ぎの降水確率が50％まで上昇し、雷注意報も発表されています。今後は正午前後から雨が降りやすくなり、日中にもかかわらず気温が21℃台へと約1.6℃低下する見通しです。日中のピークを過ぎて午後にかけて気温が下がっていく推移が、今日の天気の大きな特徴といえます。\n\n現在雨は降っていませんが、お昼以降の外出には傘を携帯してください。空が急に暗くなったり冷たい風が吹き始めたりした場合は、雷を伴う急な雨の前兆となるため、速やかに屋内へ移動できるよう意識しておくと安心です。",
+  "generated_at": "2026-10-14T12:32:13.230177+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 24.7,
-    "weather_temp": 23.1,
-    "weather": "弱い霧雨",
+    "outdoor_temp": 23.2,
+    "weather_temp": 21.6,
+    "weather": "霧雨",
     "alerts_count": 1
   }
 }
