@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-14T18:56:44.035080+09:00",
-  "advice": "19時前を迎え、屋外センサーの実測気温は23.2℃と、夕暮れ時から緩やかに低下して落ち着いた推移となっています。周辺の広域推計値である21.8℃との差も1.4℃まで縮まっており、急激な冷え込みや強風などの目立った崩れはなく、足元の気象は安定しています。\n\n雨雲レーダーでも葛飾区周辺に雨雲は見当たらず、直近1時間を含めて降水の心配はありません。この先は深夜にかけて気温が緩やかに下がり、23時頃には18.5℃前後まで低下する見込みです。気象庁の予報では夜遅くに所により雨の可能性が残るものの、現時点で急変の兆候はみられません。\n\n雨への過度な心配はいらない状況ですが、夜が更けるとともにじわじわと秋の冷たさが増してきます。夜遅い時間の外出や帰宅の際は、寒暖差で体を冷やさないよう、羽織るものなどで上手に温度調節を行ってください。",
+  "generated_at": "2026-10-14T19:43:45.863620+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 23.2,
-    "weather_temp": 21.8,
-    "weather": "晴れ",
+    "outdoor_temp": 22.8,
+    "weather_temp": 20.5,
+    "weather": "薄曇り",
     "alerts_count": 0
   }
 }
