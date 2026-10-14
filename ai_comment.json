@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-14T19:43:45.863620+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-14T21:35:07.628207+09:00",
+  "advice": "屋外日陰の個人センサーでは22.2℃を観測しており、広域の格子推計値18.8℃よりも3.4℃高い状態です。建物の蓄熱などにより身近な場所では温もりが残っていますが、地域一帯の空気そのものは秋らしく冷え込んできています。\n\n直前にごく弱い雨を観測したものの雨雲はすでに抜け、向こう1時間は降水がない見通しです。未明にかけて広域の気温は17℃台まで緩やかに下がる予想で、局所的な暖かさも夜の深まりとともに次第に落ち着いていくとみられます。\n\n手元の暖かさだけで判断すると、未明にかけて肌寒さを覚える可能性があります。就寝時は窓の開け放しを避け、薄手の寝具や羽織るものを手元に用意して調節できるようにしておくのが安心です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 22.8,
-    "weather_temp": 20.5,
-    "weather": "薄曇り",
+    "outdoor_temp": 22.2,
+    "weather_temp": 18.8,
+    "weather": "曇り",
     "alerts_count": 0
   }
 }
