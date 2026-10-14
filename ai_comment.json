@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-14T08:13:06.895940+09:00",
-  "advice": "朝のうちは雨の心配がなく落ち着いていますが、昼前以降の急な天気の崩れに目配りが必要です。手元の個人センサーでは気温21.5℃、湿度83%を観測しており、雨雲レーダーでも向こう1時間程度は雨が降る様子はありません。\n\n気象庁の予報では昼前から夕方にかけて雷を伴う一時雨が想定されており、雷注意報も発表されています。正午からの降水確率は50％へ高まり、昼過ぎには雨を境に気温が20℃台前半へ下がる見込みです。午前中に24℃近くまで上がったあと、午後は空気が一変するとみられます。\n\n洗濯物の外干しや午前中の外出は問題ありませんが、午後にかけて出かける際は雨具をお持ちください。空が急に暗くなったり雷の音が聞こえたりした場合は、頑丈な建物へ早めに入るなど落ち着いて対応してください。",
+  "generated_at": "2026-10-14T09:55:26.331839+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 21.5,
-    "weather_temp": 22.5,
-    "weather": "晴れ",
+    "outdoor_temp": 23.9,
+    "weather_temp": 23.4,
+    "weather": "薄曇り",
     "alerts_count": 1
   }
 }
