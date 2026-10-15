@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-10-15T22:11:49.329939+09:00",
-  "advice": "屋外のセンサー実測値は19.5℃を示している一方、葛飾区周辺の格子推計値は17.3℃と約2℃の開きが出ています。建物周辺の熱が残りやすい設置環境では温もりが保たれているものの、少し開けた場所では空気の冷え込みが進んでいる状況です。微風のためセンサー周辺の推定体感温度は20.8℃と、足元では穏やかに感じられます。\n\n雨雲レーダーに雨の反応はなく、気象庁の予報でも未明にかけて天気の崩れはない見込みです。広域予測では朝方にかけて16.0℃まで緩やかに下がる推移を示しており、深夜にかけて局所的な温もりも次第に冷やされていくとみられます。\n\n自宅周りの体感より実際の外気は冷えているため、夜遅くに外出される際は薄手の上着を忘れずにお持ちください。就寝時も明け方の冷え込みを見越し、窓の開け放しを控えて寝具を整えておくと体を冷やさずに済みます。",
+  "generated_at": "2026-10-15T23:04:36.717281+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
-    "rain_nowcast_error": null
+    "rain_nowcast_error": "500 Server Error: Internal Server Error for url: https://yahoo-weather-proxy.miurayukimail.workers.dev/"
   },
   "data_summary": {
-    "outdoor_temp": 19.5,
-    "weather_temp": 17.3,
+    "outdoor_temp": 18.8,
+    "weather_temp": 17.2,
     "weather": "薄曇り",
     "alerts_count": 0
   }
