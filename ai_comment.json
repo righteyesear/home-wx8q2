@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-10-15T14:21:43.482420+09:00",
-  "advice": "現在14時を回った葛飾区周辺は、推計気温が22.0℃と本日の最高気温前後に達しています。湿度は54%とさらりとしており、風も南東から1m/s程度と穏やかなため、推定体感温度も22℃台前半で非常に過ごしやすい秋の陽気です。\n\n雨雲の観測や予報はなく、この先も天気の崩れはありません。ただ、17時05分の日没以降は気温の下降が目立ち始め、19時にかけて約2.8℃下がって19℃台前半まで冷え込む見通しです。昼間の心地よい暖かさは日暮れとともに落ち着き、秋の涼しさが戻ってくるとみられます。\n\n外干しの洗濯物を取り込んだり窓を開けて換気をしたりするなら、暖かさが残る16時台までに済ませるのが最適です。これから夕方にかけて外出される方や日没後に帰宅される場合は、日中の暖かさに惑わされず、薄手の上着を一枚持って出かけると快適に過ごせます。",
+  "generated_at": "2026-10-15T15:59:49.686309+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
-    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
+    "spreadsheet_error": null,
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": null,
-    "weather_temp": 22.0,
+    "outdoor_temp": 22.1,
+    "weather_temp": 21.7,
     "weather": "晴れ",
     "alerts_count": 0
   }
