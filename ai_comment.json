@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-17T06:57:22.101182+09:00",
-  "advice": "現在、周辺は青空が広がり、雨の心配のない穏やかな朝を迎えています。手元のセンサーでは気温18.9℃を観測しており、風も弱く、秋らしい過ごしやすい空気感です。\n\nこの先も安定した晴天が続き、昼前にかけて日差しとともに気温が順調に上昇する見込みです。今後の推移をみると、午前11時頃には21℃を超え、朝の段階から4℃以上暖かくなるとみられます。日中にかけて日差しがたっぷり届き、風も穏やかに経過する予想です。\n\n朝のうちは空気がひんやりと感じられますが、日中は上着がいらない暖かさへと変わっていきます。午前中から活動される場合は、簡単に脱ぎ着できる薄手の上着を選んでおくと、これからの気温上昇にもうまく対応できそうです。",
+  "generated_at": "2026-10-17T09:10:38.986129+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 18.9,
-    "weather_temp": 17.0,
-    "weather": "晴れ",
+    "outdoor_temp": 21.4,
+    "weather_temp": 19.1,
+    "weather": "快晴",
     "alerts_count": 0
   }
 }
