@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-10-18T14:13:39.261309+09:00",
-  "advice": "午後2時を過ぎ、屋外の日陰センサーでは気温が24.3℃まで上昇し、今日これまでの最高を観測しました。周辺の格子推定値23.2℃と比べても局所的な暖まりが進んでおり、南寄りの風も弱く、日中の暖かさは今がピークとみられます。\n\nこの先は15時頃から下降へ転じ、17時の日没前後に向けて気温は着実に下がっていく見通しです。上空まで澄んだ晴天で湿度も47%まで低下しているため、日没後は熱が逃げやすく、19時頃には20℃を下回ると予測されています。\n\n洗濯物の取り込みや室内の換気は、暖かさと乾いた空気が残る15時台までに済ませておくのが効果的です。日没以降は体感が一変しますので、夕方から外出される方や帰宅が夜になる方は、上着を1枚携えて寒暖差に備えてください。",
+  "generated_at": "2026-10-18T15:59:07.172350+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
-    "spreadsheet_error": null,
+    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 24.3,
-    "weather_temp": 23.2,
+    "outdoor_temp": null,
+    "weather_temp": 22.5,
     "weather": "快晴",
     "alerts_count": 0
   }
