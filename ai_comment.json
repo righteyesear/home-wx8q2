@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-19T12:15:32.419924+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-19T14:25:27.929039+09:00",
+  "advice": "南寄りの風が強まり、屋外では突風への配慮が必要な状況です。手元のセンサーでは気温26.4℃と少し高めの値を示していますが、広域の推定データでは瞬間的に13メートル前後の突風が計算されており、開けた通りや建物周辺では急なあおりを感じる可能性があります。\n\n雨雲レーダーに雨の反応はなく日中の天気の崩れはありませんが、この南風は夕方にかけて次第に収まる見込みです。風の落ち着きと日没に伴い、気温は現在の暖かさから19時頃には22℃台まで緩やかに下がっていくとみられます。\n\nベランダでは洗濯物が飛ばされないよう留め具を使い、倒れやすい植木鉢や自転車の転倒にご注意ください。夕方以降は風がおさまる一方で肌寒さが増してきますので、これから外出される際は軽く羽織れる上着を準備しておくと安心です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 26.3,
-    "weather_temp": 25.1,
-    "weather": "晴れ",
+    "outdoor_temp": 26.4,
+    "weather_temp": 24.7,
+    "weather": "薄曇り",
     "alerts_count": 0
   }
 }
