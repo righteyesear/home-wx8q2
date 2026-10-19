@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-19T17:37:43.219846+09:00",
-  "advice": "南寄りの強風は次第に落ち着いてきましたが、葛飾区周辺では18時台半ばにかけて一時的な通り雨に注意が必要です。手元の屋外センサーでは気温24.1℃、湿度76パーセントを観測しており、日没を過ぎても10月中旬としては暖かく湿った空気が居座っています。\n\n雨雲レーダーの予測では18時25分前後に一時的な降水が計算されており、気象庁の予報でも夜の降水確率は30パーセントとなっています。今夜は広がる雲が地表の熱を逃がさない蓋の役割を果たすため、夜更けにかけての気温低下は1℃前後に留まり、冷え込みが非常に鈍い状態が続く見込みです。\n\nこれからの時間帯にお出かけや帰宅をされる方は、念のため折りたたみ傘をお持ちになると安心です。また、夜間も外気温が下がりにくく湿気がこもりやすいため、適度に風を通して室内の熱を逃がすよう意識してください。",
+  "generated_at": "2026-10-19T18:24:53.805433+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 24.1,
-    "weather_temp": 23.2,
+    "outdoor_temp": 24.0,
+    "weather_temp": 23.0,
     "weather": "薄曇り",
     "alerts_count": 0
   }
