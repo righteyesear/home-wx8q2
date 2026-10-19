@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-19T09:53:52.865031+09:00",
-  "advice": "手元のセンサーでは気温24.0℃と過ごしやすい暖かさですが、風の変化に目を向ける必要があります。平均風速は秒速3メートル前後と穏やかながら、突風としては秒速14メートル前後が推計されており、時折急な風が吹き抜ける状況です。\n\n正午前後にかけて気温は25℃前後まで上がり、雨の心配は夕方までほぼない見込みです。ただし、日中は南寄りの風が通りやすく、最大で秒速15メートル前後の突風を伴う推計となっています。周囲が穏やかに見えても、突発的に風が強まる時間帯が続く点に留意してください。\n\n屋外の洗濯物は飛ばされないようピンチでしっかり固定し、ベランダの軽い荷物は屋内へ取り込むか壁際に寄せておくと安心です。自転車を利用する際は、路地から広い通りへ出る際や橋の上などで横風にハンドルを取られやすいため、スピードを落として慎重な運転を心がけてください。",
+  "generated_at": "2026-10-19T12:15:32.419924+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 24.0,
-    "weather_temp": 23.8,
-    "weather": "快晴",
+    "outdoor_temp": 26.3,
+    "weather_temp": 25.1,
+    "weather": "晴れ",
     "alerts_count": 0
   }
 }
