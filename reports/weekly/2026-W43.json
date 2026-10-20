@@ -7,7 +7,7 @@
     "end_date": "2026-10-25",
     "label": "2026年 第43週（10/19 〜 10/25）"
   },
-  "generated_at": "2026-10-20T17:32:38.902411+09:00",
+  "generated_at": "2026-10-20T23:20:30.249290+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -492,7 +492,7 @@
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-10-20T17:32:38.926385+09:00",
+    "generated_at": "2026-10-20T23:20:30.282215+09:00",
     "data_fingerprint": "10f86b8ccb459a762f93",
     "period_closed": false,
     "coverage_complete": false,
