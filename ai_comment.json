@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-10-20T17:20:51.095206+09:00",
-  "advice": "日没を迎えた葛飾区周辺ですが、手元のセンサーでは気温23.5℃、湿度78%を観測しており、前回から大きな変化はなく落ち着いた状態が保たれています。風がほとんど吹いていないこともあり、推定される体感温度は26℃台後半と、季節の割に肌寒さを感じないやや蒸っとした空気が残る状況です。\n\n雨雲レーダーでは直前にごくわずかな雨の検知がありましたが、現時点で雨雲の広がりはなく、この先1時間もまとまった降水は見込まれていません。気象庁の夕方の予報では夜間に所により雨の可能性（降水確率20%）が示されているものの、天気の大きな崩れはない見通しです。気温はこれから夜遅くにかけて20℃前後まで約2℃下がる推移となります。\n\n夜間の外出は基本的に雨具なしで問題ありませんが、心配な方は薄手の折りたたみ傘があると安心です。屋外は冷え込みが鈍く湿気がこもりやすいため、帰宅後は窓を開けて室内の空気を動かすと、夜間の快適さを保ちやすくなります。",
+  "generated_at": "2026-10-20T17:59:45.510902+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
-    "spreadsheet_error": null,
+    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 23.5,
-    "weather_temp": 22.0,
+    "outdoor_temp": null,
+    "weather_temp": 21.7,
     "weather": "晴れ",
     "alerts_count": 0
   }
