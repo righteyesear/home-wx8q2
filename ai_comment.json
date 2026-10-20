@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-10-21T02:37:19.943234+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-21T07:11:09.568424+09:00",
+  "advice": "手元のセンサーでは気温20.6℃を観測しており、朝は高めの湿度も手伝って落ち着いた体感です。雨雲レーダーに雨の兆候はなく、当面は雨の心配のない穏やかな滑り出しとなっています。\n\nしかし、この後は正午にかけて気温が27℃台まで一気に上がる見込みです。今後6時間で約5℃の急激な気温上昇が予想され、昼間は季節外れの暑さになります。あわせて南寄りの風も次第に強まる見通しで、発表されている強風注意報への留意が必要です。\n\n朝の体感に合わせて出かけると日中に汗ばむため、脱ぎ着しやすい薄手の上着で調整することをおすすめします。また、昼前からは風が勢いを増してきますので、ベランダの飛ばされやすい小物は今のうちに室内へ取り込んでおくと安心です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
-    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
+    "spreadsheet_error": null,
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": null,
-    "weather_temp": 19.2,
-    "weather": "晴れ",
-    "alerts_count": 0
+    "outdoor_temp": 20.6,
+    "weather_temp": 22.5,
+    "weather": "薄曇り",
+    "alerts_count": 1
   }
 }
