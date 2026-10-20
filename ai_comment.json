@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-10-20T23:41:36.968085+09:00",
-  "advice": "葛飾区周辺は現在まとまった雨雲はなく、穏やかな空模様です。格子推定による気温は約20℃ですが、湿度が90%以上と高いため、風速などを加味した参考体感温度は23℃前後と、秋の深夜としてはやや蒸し暑さが感じられます。\n\n今後数時間の推移をみると、朝にかけての気温低下は0.6℃程度にとどまり、19℃台でほぼ横ばいの安定した状態が続く見込みです。気象庁の降水確率も朝6時まで20%と低く、雨雲の予想からも未明にかけて天気が大きく崩れる可能性は低いとみられます。\n\n朝にかけて急激に冷え込む心配はありませんが、湿度が高く室内に熱や湿気がこもりやすいため、今夜は厚手の寝具を控え、就寝前に室内の通気を促すなど快適な湿度管理を心がけてお休みください。",
+  "generated_at": "2026-10-21T00:37:03.228456+09:00",
+  "advice": "葛飾区周辺では、未明に入りごくわずかな雨が降り始めています。屋外の日陰に設置したセンサーでは気温21.5℃、湿度89%を観測しており、しっとりとした空気のなかで傘をさすか迷うほどの弱い雨粒を検知しました。\n\n今後の雨雲の動きをみると、深夜0時40分頃に一時的に1ミリ前後の雨が予想されるものの、雲の隙間が多く30分後には止む見込みです。気象庁の朝6時までの降水確率も20%と低いため、雨が本格的に強まったり長く降り続いたりする可能性は低いとみられます。\n\nこの深夜帯に外を移動される場合は念のため折りたたみ傘があると心強いですが、雨はごく一時的な通過にとどまる見通しです。ベランダに干したままの物があれば念のため室内へ取り込み、開けている窓は吹き込みを防ぐために閉めておくと安心です。",
   "model": "gemini-3.8-flash",
   "analysis_status": "ok",
   "source_status": {
-    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
-    "weather_error": null,
+    "spreadsheet_error": null,
+    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)",
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": null,
-    "weather_temp": 19.9,
-    "weather": "曇り",
+    "outdoor_temp": 21.5,
+    "weather_temp": null,
+    "weather": "快晴",
     "alerts_count": 0
   }
 }
