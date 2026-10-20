@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-10-20T10:37:33.436298+09:00",
-  "advice": "葛飾区周辺では雲が広がり雨は観測されていませんが、突風への目配りが必要です。平均風速は2m/s台と穏やかなものの、気象モデルの推定では瞬間的に10m/sを超える風の吹き抜けが想定されています。推計気温は24℃前後ですが、湿度が88％と高いため、推定体感温度は28℃近くとなり少し蒸し暑く感じられます。\n\n昼過ぎにかけても平均風速は2〜3m/s程度で推移する見込みですが、局地的な突風が断続的に発生しやすい状態です。雨雲レーダーでは直近1時間の降水はないものの、気象庁の予報では夕方にかけて所により雨とされており、にわか雨に伴う風の急変にも注意が欠かせません。\n\n屋外では、ベランダの洗濯物を留め具でしっかり固定し、飛びやすい小物は屋内や壁際へ寄せておくと安心です。また、自転車に乗る際は建物のすき間などからの急な横風にあおられやすいため、スピードを控えめにして走行してください。",
+  "generated_at": "2026-10-20T12:24:13.507973+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 500 INTERNAL. {'error': {'code': 500, 'message': 'Internal error encountered.', 'status': 'INTERNAL'}}",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
-    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
+    "spreadsheet_error": null,
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": null,
-    "weather_temp": 24.1,
-    "weather": "薄曇り",
+    "outdoor_temp": 23.9,
+    "weather_temp": 24.9,
+    "weather": "弱い霧雨",
     "alerts_count": 0
   }
 }
