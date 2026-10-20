@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-20T21:26:29.975701+09:00",
-  "advice": "雨雲レーダーに雨の反応はなく、この時間帯も天気の崩れはない見通しです。日陰のセンサーでは気温21.7℃、湿度87%を観測しており、秋の夜としては冷え込みを感じにくいしっとりとした空気に包まれています。\n\n気象庁の降水確率は日付をまたぐ時間帯まで20%前後で推移し、気温も朝方にかけて約1℃下がるのみで安定する見込みです。今夜のように湿度が高く風が1m/s未満と弱い状況では、体表からの汗の蒸散による放熱が抑えられます。そのため、推定風速を反映した参考体感温度は24.8℃と、実際の気温を3℃ほど上回る計算結果となっています。\n\n就寝時の冷え込み対策よりも、室内の蒸れや寝苦しさへの配慮が有効です。厚手の衣類は避け、吸湿性や通気性の良い寝具を選ぶことで、朝まで快適に睡眠をとることができます。",
+  "generated_at": "2026-10-20T22:26:25.397941+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 21.7,
-    "weather_temp": 20.5,
-    "weather": "晴れ",
+    "outdoor_temp": 21.6,
+    "weather_temp": 20.2,
+    "weather": "薄曇り",
     "alerts_count": 0
   }
 }
