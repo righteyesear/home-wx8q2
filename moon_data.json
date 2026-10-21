@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-22 02:31:39",
+  "updated": "2026-10-22 06:18:28",
   "location": {
     "lat": 35.7785,
     "lon": 139.878
   },
   "date": "2026-10-22",
-  "error": "HTTP Error 503: Service Unavailable",
+  "error": "HTTP Error 502: Bad Gateway",
   "moonrise": "--:--",
   "moonset": "--:--"
 }
