@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-10-21T21:35:35.807516+09:00",
-  "advice": "強風注意報が継続中の葛飾区周辺では、依然として瞬間的に15m/s前後の突風が吹き抜ける可能性があります。手元の屋外センサーでは気温25.1℃、湿度81％と湿った空気が残るなか、南寄りの風がやや強く吹いており、油断ができない状況です。\n\nこの風は22時台にかけて平均風速2〜3m/s程度で推移し、深夜23時を過ぎると1m/s台へと次第に落ち着く見通しです。また、明け方にかけて気温は22℃前後まで下がり、雨雲の発生も直近1時間ではみられません。深夜に向けて風のピークは越えていくものの、もうしばらくは突風への警戒が必要です。\n\n夜間の移動では、建物の間や見通しのよい通りで急な横風にあおられ、歩行や自転車のハンドル操作が乱れる恐れがあります。ベランダでは物干し竿のズレやサンダルなどの飛散がないか見直し、飛ばされやすい軽い荷物は屋内へ引き入れておくのが賢明です。",
+  "generated_at": "2026-10-21T22:35:35.913595+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": null,
+    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)",
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 25.1,
-    "weather_temp": 24.6,
-    "weather": "晴れ",
+    "outdoor_temp": 25.4,
+    "weather_temp": null,
+    "weather": "快晴",
     "alerts_count": 1
   }
 }
