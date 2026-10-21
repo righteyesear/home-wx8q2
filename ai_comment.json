@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-21T12:19:50.224337+09:00",
-  "advice": "強風注意報が継続している葛飾区周辺では、依然として南南西からの強い風が吹き抜けています。屋外の日陰に設置したセンサーでは気温27.3℃、湿度77％を観測しており、風の勢いに加えて季節外れの蒸し暑さも感じられる状況です。\n\n夕方にかけても風の勢いが衰える兆しはなく、平均で秒速4メートル台、瞬間的には17メートル前後の突風が入りやすい状態が続く見通しです。雨の心配は夕方までありませんが、気温は本日のピークである27℃台後半に差し掛かっており、この強風が午後の屋外活動における最大の留意点となります。\n\n自転車に乗る際は、交差点や建物の隙間などで受ける不意の横風にあおられて転倒する恐れがあるため、速度を十分に落として慎重に走行してください。駐輪中の自転車もドミノ倒しになりやすいため、あらかじめ屋内に寄せるなどの対策が有効です。また、外干しの洗濯物は突風で飛ばされるリスクが高いため、室内に取り込んでおくのが賢明です。",
+  "generated_at": "2026-10-21T14:26:17.459558+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 27.3,
-    "weather_temp": 27.0,
-    "weather": "薄曇り",
+    "outdoor_temp": 28.5,
+    "weather_temp": 27.4,
+    "weather": "快晴",
     "alerts_count": 1
   }
 }
