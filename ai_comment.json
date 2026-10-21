@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-10-21T17:58:41.991118+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-21T18:53:39.325989+09:00",
+  "advice": "現在、葛飾区周辺には強風注意報が発表されています。南寄りの風がやや強まっており、推定値で風速4m/s前後の風が吹くなか、瞬間的には17m/sを超える突風のおそれがあります。\n\nこの風は夜21時頃まで同程度で続く見込みですが、深夜にかけて次第に収まる推移となっています。当面は降水の心配はないものの、気象庁の予報では夜遅くに所により雨とされており、空模様の変化にも留意が必要です。\n\n屋外では自転車走行時の急な横風や、ベランダの洗濯物、植木鉢など軽量な物の飛散に注意が必要です。突風による玄関ドアのあおりにも気を配り、外に置いている飛ばされやすいものは早めに屋内へ退避させてください。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
-    "spreadsheet_error": null,
+    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 25.7,
-    "weather_temp": 25.2,
-    "weather": "晴れ",
+    "outdoor_temp": null,
+    "weather_temp": 24.9,
+    "weather": "快晴",
     "alerts_count": 1
   }
 }
