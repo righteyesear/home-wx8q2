@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-10-22T02:46:10.198406+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-22T07:12:49.352911+09:00",
+  "advice": "朝の葛飾区は雨の心配がなく、穏やかな空模様となっています。手元の風通しの良い日陰にあるセンサーでは22.1℃を観測しており、広域の格子推定値である19.2℃より約3℃高めです。建物の周辺など身近な環境では、朝の冷え込みを感じにくい落ち着いた暖かさとなっています。\n\n気象庁の予報でも日中は「晴れ時々くもり」で降水確率は0％と、天気の崩れはありません。周辺の推定気温も正午にかけて約2.4℃上がり21℃台後半へ向かう見通しで、日差しの広がりとともに、広域的にも過ごしやすい陽気が続く見込みです。\n\n洗濯物の外干しやお出かけには絶好の条件です。手元ではすでに心地よい気温ですが、川沿いや日陰など開けた場所では広域推定のような少しひんやりとした空気を感じることもあります。脱ぎ着しやすい薄手の上着を持っておくと快適に調節できます。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
-    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
+    "spreadsheet_error": null,
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": null,
-    "weather_temp": 20.9,
-    "weather": "晴れ",
+    "outdoor_temp": 22.1,
+    "weather_temp": 19.2,
+    "weather": "薄曇り",
     "alerts_count": 0
   }
 }
