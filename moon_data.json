@@ -1,22 +1,11 @@
 {
-  "updated": "2026-10-21 15:20:33",
+  "updated": "2026-10-21 21:10:32",
   "location": {
     "lat": 35.7785,
     "lon": 139.878
   },
   "date": "2026-10-21",
-  "error": null,
-  "moonrise": "14:16",
-  "moonset": "翌0:21",
-  "moon_age": 10.47,
-  "sunrise": "5:51",
-  "sunset": "16:58",
-  "moonset_is_tomorrow": true,
-  "moonset_date": "2026-10-22",
-  "moonrise_azimuth": 106.3,
-  "moonrise_direction": "東南東",
-  "moon_phase_deg": 118.35,
-  "illumination": 73.7,
-  "moonset_azimuth": 247.5,
-  "moonset_direction": "西南西"
+  "error": "HTTP Error 503: Service Unavailable",
+  "moonrise": "--:--",
+  "moonset": "--:--"
 }
