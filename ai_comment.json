@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-22T10:18:18.462137+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-22T12:18:22.269160+09:00",
+  "advice": "日差しが届く昼時となり、雨の心配もなく穏やかに推移しています。屋外日陰に設置したセンサーの実測では24.4℃と過ごしやすい暖かさですが、周辺エリアの広域推定値は21.7℃を示しており、設置環境の条件差などにより手元の計測が2.7℃ほど高くなっています。\n\nこの先は夕方にかけて次第に雲が広がる見込みです。広域の予測では日中は22℃前後を保つものの、日没を迎える17時頃には19.8℃まで下がる推移をみせています。手元で感じる日中の温もりに比べ、夕暮れ以降は速やかに気温が低下していく見通しです。\n\n現在の体感であれば身軽な服装で快適に過ごせますが、日暮れを境に空気が冷えてきます。夕方以降も屋外で過ごされる場合は、脱ぎ着しやすい上着を準備して体感の変化に対応してください。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 24.1,
-    "weather_temp": 20.3,
+    "outdoor_temp": 24.4,
+    "weather_temp": 21.7,
     "weather": "晴れ",
     "alerts_count": 0
   }
