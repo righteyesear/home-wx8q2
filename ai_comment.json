@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-22T18:51:36.072752+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-22T19:47:54.614003+09:00",
+  "advice": "手元のセンサーでは現在18.3℃を観測しており、雨の心配もなく穏やかな夜を迎えています。日中ここまでの最高気温は24.9℃まで上がりましたが、日没後は緩やかに気温が下がってきています。\n\n風が1m/s前後と弱く高気圧に覆われているため、夜間に地表の熱が上空へ逃げて冷える「放射冷却」が進みやすい状況です。予報でも深夜にかけて気温はさらに3℃ほど下がり、日付が変わる頃には15℃近くまで低下する見込みです。\n\nこれから外出される方は、風を通しにくい上着を1枚羽織ると安心です。夜間は室内の温度も下がりやすくなりますので、就寝時は暖かめの寝具を用意するなど、冷え込みへの対策をおすすめします。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 20.0,
-    "weather_temp": 18.5,
-    "weather": "薄曇り",
+    "outdoor_temp": 18.3,
+    "weather_temp": 17.9,
+    "weather": "晴れ",
     "alerts_count": 0
   }
 }
