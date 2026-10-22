@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-22T17:24:53.960885+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-22T18:01:04.321585+09:00",
+  "advice": "手元の屋外センサーでは現在20.8℃を観測しており、風が穏やかなため推定体感温度もほぼ同等で、過ごしやすさが保たれています。ただ、広域の気象データではすでに18.9℃まで下がっており、風を受ける開けた場所では体感が17℃台まで冷え込んでいるとみられます。\n\n雨の心配はなく今夜は安定した空模様が続く見込みですが、これから夜遅くにかけて気温は15℃台まで約3℃下がる推移を示しています。日が暮れて地表の熱が逃げやすくなるため、時間とともに屋外の肌寒さが一段と増す見通しです。\n\n手元の暖かさだけで油断せず、これからの時間に出かける方は薄手の上着を一枚持っておくと安心です。室内でも窓を開けたままだと冷たい空気が入りやすいため、換気を終えたら早めに閉め、足元を冷やさないよう調整してください。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 21.6,
-    "weather_temp": 19.6,
+    "outdoor_temp": 20.8,
+    "weather_temp": 18.9,
     "weather": "薄曇り",
     "alerts_count": 0
   }
