@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-24T02:36:10.616519+09:00",
-  "advice": "未明の葛飾区周辺は雨雲もなく静かに経過しています。屋外の日陰に設置したセンサーの実測気温は17.7℃ですが、広域の格子推定値は15.5℃を示しており、局所の観測環境では広域推計よりも2℃以上高めで推移しています。\n\n明け方にかけての気温は大きく下がらず15℃台で安定する見込みです。一方で天気は下り坂へ向かっており、気象庁の予報では朝6時以降の降水確率が60%へと上昇し、日中にかけて次第に雨雲が広がる見通しです。\n\n深夜から早朝のうちは雨の心配がなく落ち着いて過ごせますが、朝以降にお出かけの際は雨具の準備が欠かせません。日中は本降りの雨となる可能性があるため、洗濯物は部屋干しにしておくことをおすすめします。",
+  "generated_at": "2026-10-24T06:55:34.675385+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 17.7,
-    "weather_temp": 15.5,
+    "outdoor_temp": 16.7,
+    "weather_temp": 15.1,
     "weather": "薄曇り",
     "alerts_count": 0
   }
