@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-23T09:25:19.762646+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-23T10:20:09.200328+09:00",
+  "advice": "日中は雨の心配がなく、昼過ぎにかけて穏やかに気温が上がる見通しです。屋外の日陰に設置したセンサーでは現在18.3℃を観測しており、広域の格子推定値である16.7℃を上回って手元の空気は順調に温まっています。\n\n気象庁の予報でも昼過ぎまで時々晴れ間が広がる見込みで、直近の雨雲の兆候はありません。この先午後にかけて気温はさらに3℃ほど上がり、19℃台後半まで上昇するとみられます。風も1m/s前後と非常に弱く、大気の安定した状態が続く推移です。\n\n洗濯物の外干しや室内の換気を行うなら、日差しと温もりが届く昼前後の時間帯が適しています。日中は軽装で快適に動けますが、日が傾くと次第に気温が下がってくるため、夕方以降も外出される場合は羽織るものを一枚用意しておくと安心です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 17.3,
-    "weather_temp": 15.1,
+    "outdoor_temp": 18.3,
+    "weather_temp": 16.7,
     "weather": "晴れ",
     "alerts_count": 0
   }
