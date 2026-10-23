@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-10-23T23:10:24.927154+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-23T23:42:16.435128+09:00",
+  "advice": "現在、雨の心配はなく静かな深夜となっています。屋外の日陰に設置したセンサーの実測気温は18.3℃を示している一方、周辺一帯の格子推定値は16.0℃となっており、局所的には推定より2℃あまり高めです。広域のデータと比べ、生活空間のすぐそばでは温もりが残っている状態といえます。\n\n今後の見通しとして、朝方にかけて気温は15℃台までゆっくりと低下する推移となっています。未明までは降水の兆候もなく安定していますが、気象庁の予報では朝6時以降の降水確率が60％まで上昇し、天気が下り坂に向かう見込みです。\n\n今夜はこのまま急激な冷え込みもなく、穏やかに眠りにつけそうです。ただし、明日は朝の通勤や外出の時間帯から傘が必要になる可能性がありますので、就寝前に雨具の用意を済ませておくことをおすすめします。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
-    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
+    "spreadsheet_error": null,
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": null,
-    "weather_temp": 16.1,
-    "weather": "晴れ",
+    "outdoor_temp": 18.3,
+    "weather_temp": 16.0,
+    "weather": "薄曇り",
     "alerts_count": 0
   }
 }
