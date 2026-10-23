@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-23T18:49:34.902376+09:00",
-  "advice": "今夜は雨の心配がなく、穏やかで落ち着いた天気が続く見込みです。屋外の日陰に設置したセンサーの気温は18.5℃を示しており、風も1メートル未満と静かな状態を保っています。\n\n気圧が約1028ヘクトパスカルと高く大気が安定している今夜は、地面の熱が上空へ逃げていく「放射冷却」が働きやすい条件が揃っています。この影響で、23時にかけて気温は16.7℃まで緩やかに下がる見通しです。風による冷たさは目立ちませんが、夜が更けるにつれてじわじわと気温そのものが低下していきます。\n\n夜間の外出は軽めの上着があれば十分しのげますが、就寝時は明け方の冷えに備えて掛け布団を調整しておくと安心です。また、気象庁の予報では明日朝から降水確率が上がる見込みですので、干したままの洗濯物は今夜のうちに取り込んでおくのが賢明です。",
+  "generated_at": "2026-10-23T19:36:28.341455+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -12,7 +12,7 @@
   },
   "data_summary": {
     "outdoor_temp": 18.5,
-    "weather_temp": 18.1,
+    "weather_temp": 17.7,
     "weather": "晴れ",
     "alerts_count": 0
   }
