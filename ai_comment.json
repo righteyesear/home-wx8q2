@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-24T18:56:24.460980+09:00",
-  "advice": "日中にまとまった雨をもたらした雲は峠を越え、葛飾区周辺では止み間に入っています。屋外の日陰に設置したセンサーでは気温17.3℃、湿度95％を観測しており、雨上がりの湿った空気に包まれています。\n\n雨雲レーダーの実況でも直近で強い降水はなく、気象庁の予報でも夜遅くにはくもりへと移る見込みです。この先数時間は16℃前後と気温の変化が小さく、冷え込みも穏やかに推移するとみられます。広域の格子推定値（15.9℃）より手元の実測は1℃ほど高めですが、大きな崩れはなく安定した推移を示しています。\n\n深夜にかけて再び本降りとなる心配は少ないものの、路面の濡れ残りやごく弱い雨粒が落ちる可能性は残ります。これから外出される際は、念のため折りたたみ傘があると安心です。風は静かで極端な寒さもありませんので、薄手の羽織るものが1枚あれば快適に行動できます。",
+  "generated_at": "2026-10-24T20:43:20.439571+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 17.3,
-    "weather_temp": 15.9,
+    "outdoor_temp": 17.4,
+    "weather_temp": 16.4,
     "weather": "雨",
     "alerts_count": 0
   }
