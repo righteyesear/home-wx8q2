@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-24T23:23:19.961254+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-25T00:16:37.040036+09:00",
+  "advice": "屋外の個人センサーでは気温17.3℃を観測していますが、湿度が約96%と高いため、推定体感温度は18.9℃と実気温を上回っています。深夜帯としては冷え込みが緩く、屋外はしっとりとしたぬくもりを感じる状態です。\n\n広域の推定気温である16℃前後と比べても手元はやや高めで推移しており、朝にかけての気温低下もわずかな見通しです。風も穏やかな状態が続くため、明け方にかけて急激に冷え込む心配はなく、大きな変化のない安定した夜になるとみられます。\n\n体感温度が高めなぶん、厚手の冬物パジャマや掛け布団を重ねると就寝中に熱がこもり、汗冷えにつながる可能性があります。通気性の良い薄手の長袖寝具を選び、室内の湿度が高く感じる場合はエアコンの除湿などを活用して睡眠環境を整えるのが有効です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,7 +11,7 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 17.4,
+    "outdoor_temp": 17.3,
     "weather_temp": 16.2,
     "weather": "薄曇り",
     "alerts_count": 0
