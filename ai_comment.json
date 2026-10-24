@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-24T22:51:55.136532+09:00",
-  "advice": "雨雲は葛飾区周辺から抜けており、日付をまたぐ時間帯にかけて降水の心配はない見込みです。屋外の日陰に設置したセンサーでは気温17.4度、湿度95％を観測しており、雨上がりの湿った空気が残っています。周辺の格子推定値（16.2度）と比べると手元の実測値はやや高めですが、風も穏やかで落ち着いた夜となっています。\n\nこの先朝にかけても、気温は16度前後とほとんど下がらず横ばいで推移する見通しです。湿度が高く空に雲が広がっている夜は、地表の熱が上空へ逃げていく「放射冷却」が抑えられます。熱が地表付近に留まりやすいため、秋の夜としては急な冷え込みが進まない見込みです。\n\n強い冷え込みへの対策は不要ですが、湿気がこもりやすい状況です。使った雨具や上着は室内にそのまま持ち込まず、しっかり水気を払ってから風通しの良い場所で陰干ししておくと安心です。",
+  "generated_at": "2026-10-24T23:23:19.961254+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
