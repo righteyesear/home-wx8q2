@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-24T15:54:53.475788+09:00",
-  "advice": "東金町周辺では現在も雨の止み間が続いています。屋外の個人センサーでは気温17.3℃、湿度91％を示しており、日没を前に急激な冷え込みはないものの、しっとりとした空気に包まれています。\n\nしかし、雨雲レーダーの予測では16時頃から再び弱い雨が降り出し、16時40分前後には時間雨量4〜6ミリのまとまった雨になる見込みです。気象庁の予報でも18時までの降水確率は80％と高水準が維持されており、夕方は一時的に雨脚が強まる見通しです。\n\n近場での買い出しや屋外の用事は、本降りになる前の16時半頃までに済ませるのが得策です。これからの外出にはしっかり雨を防げる傘を携え、濡れた際の冷えを防げるよう撥水性のある服装を選ぶと安心です。",
+  "generated_at": "2026-10-24T16:57:52.000392+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 17.3,
+    "outdoor_temp": 17.2,
     "weather_temp": 15.7,
-    "weather": "曇り",
+    "weather": "弱い霧雨",
     "alerts_count": 0
   }
 }
