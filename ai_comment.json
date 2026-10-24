@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-10-24T16:57:52.000392+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-24T17:31:58.521995+09:00",
+  "advice": "日没を過ぎた東金町周辺は、手元のセンサーで気温17.0℃、湿度93％を観測しており、しっとりとした空気に包まれています。気象庁の予報では、夜遅くにかけて雨が降りやすい状況が続く見通しです。\n\nこの先6時間の予想気温は16℃前後でほぼ横ばいで推移し、夜間の顕著な冷え込みは見られない見込みです。これは空を覆う厚い雲と湿った空気が、地表の熱が上空へ逃げるのを防ぐ保温効果をもたらしているためです。日付が変わる頃には降水確率が10％まで低下する見込みですが、それまでは雨の残りやすい時間が続きます。\n\n今夜は冷え込みこそ穏やかなものの、雨に濡れると肌寒さを感じやすくなります。夜間のお出かけには雨具を携え、水滴を弾きやすい上着を選んでおくと安心です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
-    "rain_nowcast_error": null
+    "rain_nowcast_error": "HTTPSConnectionPool(host='yahoo-weather-proxy.miurayukimail.workers.dev', port=443): Read timed out. (read timeout=10)"
   },
   "data_summary": {
-    "outdoor_temp": 17.2,
+    "outdoor_temp": 17.0,
     "weather_temp": 15.7,
-    "weather": "弱い霧雨",
+    "weather": "霧雨",
     "alerts_count": 0
   }
 }
