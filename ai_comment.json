@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-25T09:02:30.930884+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-25T09:53:50.539650+09:00",
+  "advice": "日陰にある屋外センサーの実測値は20.6℃と、朝の涼しさが残っています。周辺エリアの推計値である約25℃とは4℃以上の開きがあり、日当たりのない場所と開けた場所とで体感が大きく異なります。雨雲レーダーの観測では直近1時間の降水は予想されていません。\n\n日中は広域で25℃前後まで気温が上がる見込みですが、午後は大気の状態が不安定になります。気象庁の予報では昼過ぎから雨に変わり、所により雷を伴う見通しで、雷注意報も発表されています。午後の降水確率は60%まで上昇します。\n\n午前中の外出や短時間の洗濯物の外干しは問題ありません。ただし、昼過ぎからは天気の急変が予想されるため、お出かけの際は雨具を忘れずにお持ちください。空が急に暗くなるなどの前兆があれば、早めに屋内に避難できるよう備えておくと安心です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 19.6,
-    "weather_temp": 24.4,
-    "weather": "快晴",
+    "outdoor_temp": 20.6,
+    "weather_temp": 24.9,
+    "weather": "薄曇り",
     "alerts_count": 1
   }
 }
