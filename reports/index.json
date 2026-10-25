@@ -15,9 +15,9 @@
       "period": "2026-W43",
       "label": "10/19 〜 10/25",
       "file": "weekly/2026-W43.json",
-      "is_final": false,
-      "analysis_available": false,
-      "status": "draft",
+      "is_final": true,
+      "analysis_available": true,
+      "status": "final",
       "coverage_complete": true,
       "observed_days": 7,
       "expected_days": 7
@@ -1862,5 +1862,5 @@
       "expected_days": 31
     }
   ],
-  "updated_at": "2026-10-26T05:51:47.441014+09:00"
+  "updated_at": "2026-10-26T08:12:47.947406+09:00"
 }
