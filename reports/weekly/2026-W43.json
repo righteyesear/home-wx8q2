@@ -7,7 +7,7 @@
     "end_date": "2026-10-25",
     "label": "2026年 第43週（10/19 〜 10/25）"
   },
-  "generated_at": "2026-10-25T13:40:37.011001+09:00",
+  "generated_at": "2026-10-25T20:26:32.821218+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -88,7 +88,7 @@
         "weekday": "日",
         "high": 25.6,
         "low": 17.3,
-        "avg": 19.7,
+        "avg": 20.1,
         "range": 8.3
       }
     ],
@@ -376,7 +376,7 @@
         21.7,
         17.7,
         17.4,
-        19.7
+        20.1
       ]
     },
     "prev_year_comparison": {
@@ -396,7 +396,7 @@
         21.7,
         17.7,
         17.4,
-        19.7
+        20.1
       ],
       "last_year": [
         13.5,
@@ -452,7 +452,7 @@
         3.6,
         -0.4,
         -0.7,
-        1.6
+        2.0
       ],
       "baseline_avg": 18.1
     }
@@ -461,13 +461,13 @@
     "context_version": "3.2",
     "daily_pattern": {
       "opening_avg": 22.35,
-      "closing_avg": 18.55,
-      "front_to_back_change": -3.8,
-      "linear_slope_per_day": -0.882,
-      "daily_avg_stdev": 2.4,
-      "mean_absolute_day_change": 1.98,
+      "closing_avg": 18.75,
+      "front_to_back_change": -3.6,
+      "linear_slope_per_day": -0.839,
+      "daily_avg_stdev": 2.38,
+      "mean_absolute_day_change": 2.05,
       "largest_rise": {
-        "change": 2.3000000000000007,
+        "change": 2.700000000000003,
         "from_date": "2026/10/24",
         "to_date": "2026/10/25"
       },
@@ -582,8 +582,8 @@
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-10-25T13:40:37.034070+09:00",
-    "data_fingerprint": "a6c5152e3f60427478fb",
+    "generated_at": "2026-10-25T20:26:32.856354+09:00",
+    "data_fingerprint": "7a9b8968453a8ac95553",
     "period_closed": false,
     "coverage_complete": true,
     "observed_days": 7,
