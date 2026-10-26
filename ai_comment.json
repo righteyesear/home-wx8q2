@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-26T12:15:05.841986+09:00",
-  "advice": "現在は時間雨量1ミリ未満の落ち着いた降り方となっていますが、まもなく雨脚が強まる見込みです。屋外の日陰に設置した個人センサーでは気温18.6度、湿度93パーセントを示しており、すでに1時間以上にわたって雨が降り続いています。\n\n直近の雨雲予測をみますと、12時15分から30分頃にかけて一時的に時間雨量3ミリ台まで降りが強まる推移となっています。13時前には再び小雨程度まで落ち着く見通しですが、気象庁の予報でも夕方までの降水確率は90パーセントと高く、雨雲が途切れる気配はありません。\n\nこれから12時台後半にかけての移動は、一時的な強まりと重なる可能性があります。お昼の外出にはしっかり雨を防げる傘を選び、可能であれば出発を13時過ぎまで少し見合わせるのも有効です。路面の水たまりが増えているため、歩行時は泥はねや車の跳ね上げにも気を配ってください。",
+  "generated_at": "2026-10-26T14:29:47.809379+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 18.6,
-    "weather_temp": 19.1,
-    "weather": "強い霧雨",
+    "outdoor_temp": 17.5,
+    "weather_temp": 17.5,
+    "weather": "雨",
     "alerts_count": 0
   }
 }
