@@ -7,41 +7,41 @@
     "end_date": "2026-11-01",
     "label": "2026年 第44週（10/26 〜 11/1）"
   },
-  "generated_at": "2026-10-26T08:17:52.297194+09:00",
+  "generated_at": "2026-10-26T13:47:01.240816+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
       "ai_comment": "",
       "highlights": [
         "最高気温 20.3℃",
-        "最低気温 19.4℃",
-        "前週比 -1.0℃",
-        "前年比 +4.0℃"
+        "最低気温 17.9℃",
+        "前週比 -1.4℃",
+        "前年比 +3.6℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 1,
-      "avg_temp": 19.8,
+      "avg_temp": 19.4,
       "avg_temp_stdev": 0,
       "max_temp": 20.3,
       "max_temp_date": "2026/10/26",
       "avg_high": 20.3,
-      "min_temp": 19.4,
+      "min_temp": 17.9,
       "min_temp_date": "2026/10/26",
-      "avg_low": 19.4,
-      "avg_daily_range": 0.9,
-      "prev_week_diff": -1.0,
-      "prev_year_diff": 4.0
+      "avg_low": 17.9,
+      "avg_daily_range": 2.4,
+      "prev_week_diff": -1.4,
+      "prev_year_diff": 3.6
     },
     "daily_data": [
       {
         "date": "2026/10/26",
         "weekday": "月",
         "high": 20.3,
-        "low": 19.4,
-        "avg": 19.8,
-        "range": 0.9
+        "low": 17.9,
+        "avg": 19.4,
+        "range": 2.4
       }
     ],
     "comparison": {
@@ -60,16 +60,16 @@
         "avg_low": 12.7,
         "avg_daily_range": 6.5
       },
-      "avg_temp_diff": 4.0,
+      "avg_temp_diff": 3.6,
       "max_temp_diff": -2.9,
-      "min_temp_diff": 9.5,
-      "avg_daily_range_diff": -5.6,
+      "min_temp_diff": 8.0,
+      "avg_daily_range_diff": -4.1,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 16.8,
-      "current_deviation": 3.0,
+      "current_deviation": 2.6,
       "years_count": 2
     },
     "events": {
@@ -301,10 +301,10 @@
         20.3
       ],
       "lows": [
-        19.4
+        17.9
       ],
       "avgs": [
-        19.8
+        19.4
       ]
     },
     "prev_year_comparison": {
@@ -312,7 +312,7 @@
         "月"
       ],
       "this_year": [
-        19.8
+        19.4
       ],
       "last_year": [
         15.2,
@@ -336,7 +336,7 @@
         21.0
       ],
       "this_year_low": [
-        19.4
+        17.9
       ],
       "last_year_low": [
         13.6,
@@ -353,7 +353,7 @@
         "10/26(月)"
       ],
       "deviations": [
-        3.0
+        2.6
       ],
       "baseline_avg": 16.8
     }
@@ -361,8 +361,8 @@
   "analysis_context": {
     "context_version": "3.2",
     "daily_pattern": {
-      "opening_avg": 19.8,
-      "closing_avg": 19.8,
+      "opening_avg": 19.4,
+      "closing_avg": 19.4,
       "front_to_back_change": 0.0,
       "linear_slope_per_day": 0.0,
       "daily_avg_stdev": 0.0,
@@ -371,11 +371,11 @@
       "largest_drop": null,
       "warmest_average_day": {
         "date": "2026/10/26",
-        "value": 19.8
+        "value": 19.4
       },
       "coolest_average_day": {
         "date": "2026/10/26",
-        "value": 19.8
+        "value": 19.4
       },
       "days_high_35_or_more": 0,
       "days_high_30_or_more": 0,
@@ -416,12 +416,12 @@
         2026
       ],
       "peer_average": 16.45,
-      "deviation_from_peer_average": 3.35,
+      "deviation_from_peer_average": 2.95,
       "rank_warmest": 1,
       "rank_coldest": 3,
       "sample_min": 15.8,
-      "sample_max": 19.8,
-      "sample_stdev": 1.67
+      "sample_max": 19.4,
+      "sample_stdev": 1.49
     },
     "recent_history": {
       "previous_periods": [
@@ -468,15 +468,15 @@
       ],
       "previous_period_count": 4,
       "previous_period_mean": 20.88,
-      "difference_from_previous_period_mean": -1.07
+      "difference_from_previous_period_mean": -1.48
     }
   },
   "analysis_meta": {
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-10-26T08:17:52.329194+09:00",
-    "data_fingerprint": "9711d88bf117993a860d",
+    "generated_at": "2026-10-26T13:47:01.262942+09:00",
+    "data_fingerprint": "52ebf48b955d1d77dd07",
     "period_closed": false,
     "coverage_complete": false,
     "observed_days": 1,
