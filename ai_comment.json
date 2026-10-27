@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-27T20:12:08.411624+09:00",
-  "advice": "周辺の気象状況は変化が小さく、落ち着いた状態が続いています。手元のセンサーでは気温19.5℃、湿度91%と前回からほぼ横ばいで推移しており、広域の推定値（17.9℃）と比べても局所的に暖かさが残っています。風も依然として穏やかです。\n\n雨雲レーダーに雨の兆候はなく、今夜いっぱいは降水の心配がありません。天候の崩れはない見込みですが、23時前後からは風速が3m/s台へと強まり、日付が変わる頃から深夜1時にかけて気温が16℃台へと下がる見通しです。風の強まりに伴い、空気の冷たさが一段と増してくるとみられます。\n\n遅い時間帯にお戻りの方は、急な冷え込みに備えて羽織るものをあらかじめ身につけておくのが賢明です。また就寝中に体が冷えないよう、窓の施錠を確認し、暖かめの寝具を準備しておくと安心です。",
+  "generated_at": "2026-10-27T23:11:50.883848+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 19.5,
-    "weather_temp": 17.9,
+    "outdoor_temp": 18.7,
+    "weather_temp": 17.7,
     "weather": "晴れ",
     "alerts_count": 0
   }
