@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-27T10:51:09.572643+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-27T12:45:28.278083+09:00",
+  "advice": "身の回りの日陰にあるセンサーでは気温が21.5℃まで上昇しており、広域の格子推定値である18.9℃を2.6℃上回っています。湿度も82%と高めのため、風速から推定した体感温度は24℃前後となり、実際の肌感覚としては少し暖かく感じられます。\n\n一方、周辺一帯の予報でもこれから午後にかけて気温が上がり、15時頃には20℃前後に達する見通しです。雨雲の接近はなく、気象庁の降水確率も10%と低めで推移しており、広い範囲で崩れのない穏やかな空模様が続くとみられます。\n\n昼の外出や室内の空気の入れ替えには過ごしやすい時間帯です。日中は身軽な服装で快適に過ごせますが、日没を迎える夕方以降は空気が冷えてきますので、帰宅が遅くなる場合は羽織るものを一枚用意しておくと安心です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 19.5,
-    "weather_temp": 17.0,
-    "weather": "曇り",
+    "outdoor_temp": 21.5,
+    "weather_temp": 18.9,
+    "weather": "晴れ",
     "alerts_count": 0
   }
 }
