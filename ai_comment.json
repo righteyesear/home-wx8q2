@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-27T08:07:52.156549+09:00",
-  "advice": "屋外のセンサーでは気温16.7℃を観測していますが、湿度が97%と高いため、推定される体感温度は18.0℃と実気温よりやや高めです。雨雲の発生はなく、落ち着いた曇り空が広がっています。\n\nこの先は昼過ぎにかけて雲の切れ間から日差しが届く見込みです。気温は午後にかけて19℃台半ばまで約3℃上昇するとみられ、日中の昇温とともに朝のしっとりとした湿っぽさは次第に解消へ向かう傾向です。\n\n朝の外出には長袖に薄手の上着を重ねる程度が適していますが、日中は室内・屋外ともに気温が上がり、上着を脱いで調節できる服装が重宝します。湿気が室内にこもりやすい朝ですので、天気が回復する昼前後に窓を開けて空気を入れ替えるのがおすすめです。",
+  "generated_at": "2026-10-27T10:13:50.817127+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 16.7,
-    "weather_temp": 16.2,
-    "weather": "薄曇り",
+    "outdoor_temp": 18.8,
+    "weather_temp": 16.7,
+    "weather": "曇り",
     "alerts_count": 0
   }
 }
