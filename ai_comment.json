@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-27T23:11:50.883848+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-28T00:47:48.647145+09:00",
+  "advice": "屋外では北寄りの風がやや強く吹き抜けており、夜間の突風への目配りが必要です。現在、手元のセンサーでは気温17.7℃を観測していますが、周辺の推計では秒速10メートル前後の突風が想定されており、風を受けると数字以上に肌寒さを感じます。\n\n雨の心配はなく天気は安定しているものの、明け方にかけて気温は15℃近くまで約2℃下がる見込みです。未明までは平均して秒速3メートル前後の北風が残るため、風の通り道では熱が奪われやすく、冷え込みが進むとみられます。\n\nベランダの軽量なゴミ箱や洗濯ハンガー、飛びやすい植木鉢などは、風で倒れたり飛ばされたりしないよう床に下ろすなどの対策が有効です。深夜に自転車を利用される場合は横風によるふらつきに注意し、風を通しにくい上着を羽織って備えてください。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 18.7,
-    "weather_temp": 17.7,
-    "weather": "晴れ",
+    "outdoor_temp": 17.7,
+    "weather_temp": 16.7,
+    "weather": "快晴",
     "alerts_count": 0
   }
 }
