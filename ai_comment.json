@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-10-28T16:59:01.337454+09:00",
-  "advice": "日没を迎え、屋外日陰のセンサーは16.1℃を示している一方、周辺エリアの広域推定値は14.1℃となっています。局所的な実測値と広域推定に差が見られますが、風速を加味した参考体感温度は13.4℃まで下がっており、屋外では数字以上にひんやりと感じられます。\n\n気象庁の予報ではこの先も雨の心配はなく、広域の予測では21時にかけて11℃台まで気温が低下する見通しです。手元の観測値も夜が進むにつれて広域の推移に追従して下がっていくとみられ、一段と冷え込みが強まりそうです。\n\n手元の温度計の数値だけで判断せず、広域の冷え込みを意識した防寒対策が欠かせません。これから帰宅される方や夜間に外出される場合は、裏地のあるアウターを羽織るなど、体を冷やさない工夫を整えておくと安心です。",
+  "generated_at": "2026-10-28T18:26:19.736089+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
-    "spreadsheet_error": null,
+    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 16.1,
-    "weather_temp": 14.1,
+    "outdoor_temp": null,
+    "weather_temp": 12.8,
     "weather": "快晴",
     "alerts_count": 0
   }
