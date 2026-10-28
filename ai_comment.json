@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-28T12:59:06.771077+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-28T15:24:57.512411+09:00",
+  "advice": "日陰にあるセンサーの気温は17.8℃と日中は穏やかですが、風の影響もあり参考体感温度は15℃前後と、日陰ではすでに少しひんやりと感じられます。\n\n16時49分の日没を迎えると、この先は冷え込みが本格化する見込みです。今後の予報では20時にかけて気温が約4℃下がり、12℃台前半まで低下するとみられます。雨の心配はありませんが、北寄りの風が続くため、夜間は数字以上に肌寒さが増す推移となりそうです。\n\nこれからお出かけになる方や帰宅が日没後になる場合は、日中の感覚のまま出かけると体が冷えてしまいます。風を通しにくい上着を1枚持参するなど、夜の冷え込みに合わせた服装を選んでください。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 18.5,
-    "weather_temp": 17.4,
+    "outdoor_temp": 17.8,
+    "weather_temp": 16.3,
     "weather": "快晴",
     "alerts_count": 0
   }
