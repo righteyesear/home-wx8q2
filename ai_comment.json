@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-30T19:37:32.909411+09:00",
-  "advice": "屋外の日陰に設置したセンサーでは現在16.1℃を観測しており、雨の心配のない穏やかな夜を迎えています。雨雲レーダーにも雨の兆候はなく、このあとも安定した天気が続く見込みです。\n\n広域の格子推定値（17.8℃）に比べて手元の実測値は1.7℃低く、局所的に秋の冷気が溜まり始めている様子がうかがえます。日付が変わる深夜にかけてはさらに3℃ほど気温が下がり、15℃前後まで緩やかに冷え込む見通しです。\n\n風は1m/s前後と弱いため風による急激な体感の低下はありませんが、静かに冷え込みが進みます。夜間の外出には羽織るものを一枚用意し、就寝前には窓を閉めて室温を保つのが安心です。",
+  "generated_at": "2026-10-30T20:11:40.425392+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 16.1,
+    "outdoor_temp": 15.7,
     "weather_temp": 17.8,
-    "weather": "快晴",
+    "weather": "晴れ",
     "alerts_count": 0
   }
 }
