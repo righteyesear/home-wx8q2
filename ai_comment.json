@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-30T17:07:48.271602+09:00",
-  "advice": "現在の葛飾区周辺は天気が安定しており、手元のセンサーでは気温17.1℃を観測しています。周辺の風も穏やかで、日没を過ぎて落ち着いた夕暮れを迎えています。\n\n雨雲レーダーでは夕方に一時ごく微弱な反応があるものの、気象庁の降水確率も今夜を通して10%と低く、傘が必要な崩れにはならない見込みです。ここからの数時間で気温は約3℃低下し、夜遅くには16℃前後まで緩やかに冷え込んでいくとみられます。\n\n雨の心配はほとんどありませんが、夜が更けるにつれて次第に空気がひんやりと感じられそうです。これからお出かけになる方や帰宅が遅くなる場合は、薄手の上着を一枚羽織っておくと安心です。",
+  "generated_at": "2026-10-30T18:44:46.075521+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 17.1,
-    "weather_temp": 18.8,
-    "weather": "薄曇り",
+    "outdoor_temp": 16.4,
+    "weather_temp": 18.9,
+    "weather": "晴れ",
     "alerts_count": 0
   }
 }
