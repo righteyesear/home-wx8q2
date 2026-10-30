@@ -7,7 +7,7 @@
     "end_date": "2026-11-01",
     "label": "2026年 第44週（10/26 〜 11/1）"
   },
-  "generated_at": "2026-10-31T03:02:22.375032+09:00",
+  "generated_at": "2026-10-31T07:18:30.379576+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -29,8 +29,8 @@
       "avg_high": 18.6,
       "min_temp": 11.0,
       "min_temp_date": "2026/10/29",
-      "avg_low": 13.8,
-      "avg_daily_range": 4.8,
+      "avg_low": 13.6,
+      "avg_daily_range": 5.0,
       "prev_week_diff": -4.7,
       "prev_year_diff": 0.3
     },
@@ -79,9 +79,9 @@
         "date": "2026/10/31",
         "weekday": "土",
         "high": 15.2,
-        "low": 14.5,
-        "avg": 14.7,
-        "range": 0.7
+        "low": 13.4,
+        "avg": 14.3,
+        "range": 1.8
       }
     ],
     "comparison": {
@@ -103,7 +103,7 @@
       "avg_temp_diff": 0.3,
       "max_temp_diff": -1.7,
       "min_temp_diff": 1.1,
-      "avg_daily_range_diff": -1.7,
+      "avg_daily_range_diff": -1.5,
       "ai_comment": ""
     },
     "baseline": {
@@ -356,7 +356,7 @@
         13.2,
         11.0,
         13.1,
-        14.5
+        13.4
       ],
       "avgs": [
         18.3,
@@ -364,7 +364,7 @@
         16.2,
         13.9,
         15.4,
-        14.7
+        14.3
       ]
     },
     "prev_year_comparison": {
@@ -382,7 +382,7 @@
         16.2,
         13.9,
         15.4,
-        14.7
+        14.3
       ],
       "last_year": [
         15.2,
@@ -416,7 +416,7 @@
         13.2,
         11.0,
         13.1,
-        14.5
+        13.4
       ],
       "last_year_low": [
         13.6,
@@ -443,7 +443,7 @@
         -0.6,
         -2.9,
         -1.4,
-        -2.1
+        -2.5
       ],
       "baseline_avg": 16.8
     }
@@ -452,11 +452,11 @@
     "context_version": "3.2",
     "daily_pattern": {
       "opening_avg": 18.35,
-      "closing_avg": 15.05,
-      "front_to_back_change": -3.3,
-      "linear_slope_per_day": -0.837,
-      "daily_avg_stdev": 1.7,
-      "mean_absolute_day_change": 1.36,
+      "closing_avg": 14.85,
+      "front_to_back_change": -3.5,
+      "linear_slope_per_day": -0.894,
+      "daily_avg_stdev": 1.77,
+      "mean_absolute_day_change": 1.44,
       "largest_rise": {
         "change": 1.5,
         "from_date": "2026/10/29",
@@ -573,8 +573,8 @@
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-10-31T03:02:22.408287+09:00",
-    "data_fingerprint": "00e21c1be5846c7a7e0b",
+    "generated_at": "2026-10-31T07:18:30.403745+09:00",
+    "data_fingerprint": "89c19811fe579e4bdfc6",
     "period_closed": false,
     "coverage_complete": false,
     "observed_days": 6,
