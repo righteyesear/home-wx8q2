@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-10-30T20:11:40.425392+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-10-30T20:47:01.644099+09:00",
+  "advice": "現在は湿度が82％と高く風も穏やかなため、気温17.1度の推計に対して体感温度は18度前後と、数字ほどの冷え込みは感じにくい状態です。雨の心配は当面なく、落ち着いた夜となっています。\n\nただ、この先は深夜にかけて気温が下がり続け、未明には14度台半ばまで約3度低下する見込みです。湿った空気のなかで冷えが進むため、夜遅くなるにつれて肌寒さが強まり、体感の変化を急に感じやすくなるとみられます。\n\n室内に余分な湿気を入れないよう夜間の換気は短時間にとどめ、室内着には羽織るものを1枚用意しておくと安心です。就寝中に一段と冷え込みが深まりますので、あらかじめ掛け布団を厚手にしておくなど、保温を意識した環境づくりをおすすめします。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
-    "spreadsheet_error": null,
+    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 15.7,
-    "weather_temp": 17.8,
+    "outdoor_temp": null,
+    "weather_temp": 17.1,
     "weather": "晴れ",
     "alerts_count": 0
   }
