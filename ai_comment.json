@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-01T00:16:07.816725+09:00",
-  "advice": "雨の心配はなく、風も穏やかで大気の安定した深夜となっています。屋外のセンサーでは気温15.1℃を観測しており、激しい変化はないものの、秋らしい冷涼な空気に包まれています。\n\nこの先も雲の広がりはなく、朝方にかけて快晴が続く見込みです。風が弱く落ち着いた天候が保たれるため、夜間の放射冷却によって気温は緩やかに低下し、夜明け前の5時頃には13℃前後まで約2℃下がる見通しです。\n\n明け方にかけて室温も徐々に下がってきますので、就寝中は厚手の寝具を使って体を冷やさないよう調節してください。早朝からお出かけになる場合は、風を通しにくい上着を1枚用意しておくと安心です。",
+  "generated_at": "2026-11-01T00:36:14.713498+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 15.1,
-    "weather_temp": 15.1,
+    "outdoor_temp": 14.7,
+    "weather_temp": 14.6,
     "weather": "快晴",
     "alerts_count": 0
   }
