@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-31T13:05:20.649367+09:00",
-  "advice": "葛飾区の屋外センサーでは気温22.4℃、湿度54%を観測しており、穏やかな秋晴れとなっています。今朝の最低気温13.4℃からここまで9.0℃上昇し、昼間は日差しの温もりを感じられる心地よい陽気です。\n\n雨雲レーダーに雨の兆候はなく、夕方にかけても安定した天気が続く見込みです。ただし、16時46分頃の日没を境に気温は下がり始め、18時には20℃を下回るなど、日暮れにかけて3℃以上の低下が予想されます。\n\n日中は長袖1枚でも快適に過ごせますが、日没以降は急速に空気が冷えてきます。夕方から夜にかけて外出される方は、ジャケットやカーディガンなど羽織るものを一枚用意しておくと安心です。",
+  "generated_at": "2026-10-31T15:23:11.549108+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 22.4,
-    "weather_temp": 22.8,
-    "weather": "快晴",
+    "outdoor_temp": 23.2,
+    "weather_temp": 22.3,
+    "weather": "晴れ",
     "alerts_count": 0
   }
 }
