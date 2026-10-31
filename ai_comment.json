@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-01T02:26:12.317886+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-11-01T07:20:41.615693+09:00",
+  "advice": "朝は空気がひんやりとしていますが、雨の心配はなく穏やかな天候で一日が始まっています。日陰に設置したセンサーでは気温13.3℃を観測しており、風の推定値を考慮した体感温度は12.8℃と、秋の朝らしい肌寒さです。\n\n気象庁の予報では昼過ぎまで時々晴れ間が出る見込みで、直近の雨雲も見られません。今後の予報では正午にかけて気温が18℃台後半まで約6℃上昇していく見通しです。風も終日穏やかに推移するため、日差しとともに寒さは順調に和らいでいくとみられます。\n\n朝のうちは上着が欠かせませんが、昼間は一枚脱いで身軽に過ごせる陽気になります。脱ぎ着で調節しやすい服装を選び、洗濯物の外干しや屋外の活動に日差しを有効に活用するのがおすすめです。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 14.5,
-    "weather_temp": 12.7,
+    "outdoor_temp": 13.3,
+    "weather_temp": 12.9,
     "weather": "快晴",
     "alerts_count": 0
   }
