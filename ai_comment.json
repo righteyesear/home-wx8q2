@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-01T13:26:36.706381+09:00",
-  "advice": "屋外のセンサーでは20.6℃を観測しており、風が穏やかなため推定の体感温度も20.2℃と、気温とほぼ変わらない暖かさとなっています。風による熱の奪われが小さく、日陰でも肌寒さを感じにくい穏やかな状態です。\n\nこの落ち着いた暖かさは14時台まで続く見込みですが、夕方17時にかけては17℃台へと2℃以上低下する推移が予想されています。雨の心配はないものの、16時を過ぎて日差しが弱まると、体感的な温もりは徐々に薄れていく見通しです。\n\n日中の室内は外気を取り込む換気に適しており、薄手の長袖などで快適に過ごせます。ただ、日が傾くと室温も下がりやすくなるため早めの温度管理が有効です。夕暮れ以降にお出かけの際は、手軽に脱ぎ着できる上着を1枚用意しておくと安心です。",
+  "generated_at": "2026-11-01T15:56:18.497431+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 20.6,
-    "weather_temp": 20.0,
-    "weather": "薄曇り",
+    "outdoor_temp": 20.4,
+    "weather_temp": 19.7,
+    "weather": "晴れ",
     "alerts_count": 0
   }
 }
