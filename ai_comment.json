@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-02T01:34:47.643751+09:00",
-  "advice": "深夜の屋外センサーは15.8℃を観測しており、地域一帯を対象とした格子推定値の13.8℃より2.0℃高い状態です。建物の蓄熱など局所的な影響によって身近な空間には温もりが残っていますが、周囲の広い大気ではすでに冷え込みが進んでいます。\n\n広域予報の推移をみると、風は微弱なまま推移するものの、明け方6時頃には12.6℃まで約1.7℃下がる見込みです。身近な設置環境でもこの広域の冷え込みに沿って徐々に熱が逃げ、夜明け前には一段と気温が下がっていくとみられます。\n\n現在の落ち着いた体感を基準にしてしまうと、起床時には予想以上の冷気に触れて体を冷やしかねません。朝の目覚めに備え、枕元にさっと羽織れる上着を1枚用意してから休むと快適に朝を迎えられます。",
+  "generated_at": "2026-11-02T02:03:15.464663+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -12,8 +12,8 @@
   },
   "data_summary": {
     "outdoor_temp": 15.8,
-    "weather_temp": 13.8,
-    "weather": "晴れ",
+    "weather_temp": 13.4,
+    "weather": "快晴",
     "alerts_count": 0
   }
 }
