@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-02T19:43:45.265965+09:00",
-  "advice": "夕方まで降っていた雨は完全にやみ、葛飾区周辺の天気は落ち着きを取り戻しています。屋外のセンサーでは気温14.3℃、湿度90％を観測しており、雨上がりの湿り気が残るものの、雨雲レーダーの実況でも周囲に雨雲は見当たりません。\n\n前回の見通し通り雨雲は東へ抜け、この先も未明にかけて雨の心配はない見込みです。気象庁の予報でも夜間の降水確率は20％以下となっており、空は次第に晴れていくとみられます。風速は1〜2メートル程度と穏やかですが、気温は深夜にかけて13℃前後まで約1.5℃緩やかに低下する見通しです。\n\nこれからのお帰りは傘を差す必要がなく、足元の心配も小さくなります。ただし、雨上がりで湿度が高く、気温が13℃台まで下がると体感的に冷え込みやすくなります。夜遅くに帰宅や外出をされる場合は、風を通しにくい上着を羽織るなど、体を冷やさない服装を意識すると安心です。",
+  "generated_at": "2026-11-02T20:49:15.019902+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 14.3,
-    "weather_temp": 14.5,
-    "weather": "晴れ",
+    "outdoor_temp": 13.8,
+    "weather_temp": 13.2,
+    "weather": "快晴",
     "alerts_count": 0
   }
 }
