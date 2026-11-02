@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-02T10:18:44.578931+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-11-02T11:10:25.776825+09:00",
+  "advice": "昼過ぎから雨が降り出す見通しで、午後は傘が必要な天気に変わります。屋外日陰のセンサーでは18.2℃と比較的過ごしやすさを保っていますが、周辺の広域推計では15.7℃と低く、街全体にはすでに冷たい空気が流れ込みつつあります。\n\n雨雲レーダーでは正午頃まで降水がありませんが、気象庁の予報では昼過ぎから夕方の降水確率が80％まで高まります。14時前後からは雨が降り始め、雨脚とともに気温も低下していく見込みです。手元の穏やかな温もりは一時的で、午後は急速に冷え込むとみられます。\n\n外干しの洗濯物は早めに取り込み、これからの外出には傘をご用意ください。午後は冷たい雨で体感が一気に下がりますので、風を通しにくい上着を選んでおくと安心です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 18.3,
-    "weather_temp": 14.9,
+    "outdoor_temp": 18.2,
+    "weather_temp": 15.7,
     "weather": "薄曇り",
     "alerts_count": 0
   }
