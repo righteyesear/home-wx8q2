@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-05T12:17:32.360837+09:00",
-  "advice": "手元の屋外センサーでは気温14.8℃を観測しており、雨雲レーダー上でも現在雨はいったん止んでいます。周辺の広域推定と比べても手元は1℃ほど低めの推移となっており、しっとりとした冷たい空気に包まれています。\n\n今後の見通しとして、気象庁の予報では夕方までの降水確率が40％となっており、昼過ぎにかけては再び所により雨がぱらつく可能性があります。気温もこの先16℃前後までしか上がらない見込みで、日差しがないため日中の目立った気温上昇は期待できません。\n\nこれから外出される場合は、念のため折りたたみ傘をお持ちになると安心です。日中を通して空気が冷たく感じられますので、風を通しにくい上着を羽織って寒さ対策を行ってください。",
+  "generated_at": "2026-11-05T14:08:11.609820+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 14.8,
-    "weather_temp": 15.9,
-    "weather": "薄曇り",
+    "outdoor_temp": 15.4,
+    "weather_temp": 16.0,
+    "weather": "曇り",
     "alerts_count": 0
   }
 }
