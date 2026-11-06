@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-06T11:00:19.840980+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-11-06T12:15:51.922677+09:00",
+  "advice": "日中は心地よい日差しに恵まれ、11月としては過ごしやすい暖かさとなっています。屋外の日陰に設置したセンサーでは気温23.9℃を観測しており、今朝の最低気温14.7℃からここまでに9℃以上の昇温となりました。\n\nこの暖かさは午後2時頃まで続きますが、午後3時を過ぎると空気は冷え始めます。特に日の入りを迎える午後4時40分前後は下がり幅が大きく、夕方5時台には21℃近くまで下がる見込みです。雨の心配はなく、日暮れまで穏やかな天気が維持されるとみられます。\n\n昼の時間帯は洗濯物の外干しや室内の換気などに有効に活用できそうです。一方で、夕方以降にお出かけやご帰宅の予定がある場合は、昼の暖かさに油断せず、羽織るものを一枚用意しておくと安心です。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 22.5,
-    "weather_temp": 22.2,
+    "outdoor_temp": 23.9,
+    "weather_temp": 23.5,
     "weather": "快晴",
     "alerts_count": 0
   }
