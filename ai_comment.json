@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-11-06T05:23:26.255336+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-11-06T09:01:19.093396+09:00",
+  "advice": "屋外のセンサーでは気温18.1℃を観測していますが、風が穏やかで湿度が高いため、推定される体感温度は19.2℃と実際の気温より高めになっています。朝の空気には冷え込みが少なく、数字以上にしっとりとした暖かさを感じる状況です。\n\nこの先は日差しが届いて急速に昇温し、昼過ぎには23℃台後半まで上がる見通しです。朝の時点から約9℃もの大幅な気温上昇となるため、午前中のうちから体感の変化がはっきりと進んでいくとみられます。\n\n朝の感覚のまま厚着をして外出すると日中に汗ばみやすくなるため、脱ぎ着して調節しやすい服装が適しています。また、室内も日差しによって温度が上がりやすくなりますので、午前中から適度に風を通して熱を逃がすなど、室温管理を意識してお過ごしください。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
-    "spreadsheet_error": "HTTPSConnectionPool(host='docs.google.com', port=443): Read timed out. (read timeout=10)",
+    "spreadsheet_error": null,
     "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": null,
-    "weather_temp": 15.5,
-    "weather": "晴れ",
+    "outdoor_temp": 18.1,
+    "weather_temp": 16.7,
+    "weather": "快晴",
     "alerts_count": 0
   }
 }
