@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-07T10:42:58.605904+09:00",
-  "advice": "日差しが順調に届き、気温は日中のピークに近づいています。日陰の個人センサー実測では18.2度まで上がっており、周辺の格子推定値である16.9度と比べても暖まりが順調に進んでいる状況です。\n\n今後の見通しとして、気温は13時頃の19度弱を頂点に、14時を過ぎると下がり始める見込みです。気象庁の予報でも午後を通して降水確率は0パーセントと崩れはありませんが、湿度が40パーセント台と低いため、日差しが傾く15時以降は熱が逃げて冷え足が早まります。上空10メートル推定で3メートル前後の北寄りの風が吹くため、日陰では体感温度が実気温より低く感じられそうです。\n\n日中の暖かさを生かすなら、14時前後を行動の目安にするのが効果的です。外干しの洗濯物は冷たい空気が流れ込む前のこの時間帯までに取り込むと、温もりを保ったまま乾かせます。夕方以降にお出かけの予定がある方は、昼間の暖かさに油断せず、風を通しにくい上着を準備してお出かけください。",
+  "generated_at": "2026-11-07T11:37:21.105952+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 18.2,
-    "weather_temp": 16.9,
+    "outdoor_temp": 19.3,
+    "weather_temp": 17.9,
     "weather": "快晴",
     "alerts_count": 0
   }
