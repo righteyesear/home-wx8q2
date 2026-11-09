@@ -27,10 +27,12 @@ function updateDataAnalysis() {
         }
     }
 
-    // Weekly average from weeklyData
+    // Weekly average from weeklyData (ISO week: Monday start, matching report.html)
     if (weeklyData.length > 0) {
         const thisWeekStart = new Date(now);
-        thisWeekStart.setDate(thisWeekStart.getDate() - thisWeekStart.getDay());
+        const dayOfWeek = thisWeekStart.getDay();
+        const diffToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+        thisWeekStart.setDate(thisWeekStart.getDate() - diffToMonday);
         thisWeekStart.setHours(0, 0, 0, 0);
 
         const lastWeekStart = new Date(thisWeekStart);
@@ -374,29 +376,58 @@ function updateTempTheme(temp) {
     document.documentElement.style.setProperty('--temp-hue', Math.round(hue));
 }
 
+function calculateDewPointC(temp, humidity) {
+    const t = Number(temp);
+    const rh = Math.max(1, Math.min(100, Number(humidity) || 0));
+    if (!Number.isFinite(t)) return null;
+    const a = 17.625;
+    const b = 243.04;
+    const gamma = Math.log(rh / 100) + (a * t) / (b + t);
+    return (b * gamma) / (a - gamma);
+}
+
 function updateUI() {
-    if (!summaryData.currentTemp) return;
+    if (summaryData.currentTemp === undefined || summaryData.currentTemp === null || Number.isNaN(summaryData.currentTemp)) return;
 
     const temp = summaryData.currentTemp;
+    const hum = summaryData.currentHumidity ?? 0;
 
     if (window.animateNumber) {
         window.animateNumber('currentTemp', temp.toFixed(1));
-        window.animateNumber('currentHumidity', Math.round(summaryData.currentHumidity));
-        window.animateNumber('todayHigh', summaryData.todayHigh.toFixed(1));
-        window.animateNumber('todayLow', summaryData.todayLow.toFixed(1));
+        window.animateNumber('currentHumidity', Math.round(hum));
+        if (summaryData.todayHigh != null && !Number.isNaN(summaryData.todayHigh)) window.animateNumber('todayHigh', summaryData.todayHigh.toFixed(1));
+        if (summaryData.todayLow != null && !Number.isNaN(summaryData.todayLow)) window.animateNumber('todayLow', summaryData.todayLow.toFixed(1));
         // 年間データはPhase 2で読み込まれるのでnullチェック
         if (summaryData.yearHigh != null) window.animateNumber('yearHigh', summaryData.yearHigh.toFixed(1));
         if (summaryData.yearLow != null) window.animateNumber('yearLow', summaryData.yearLow.toFixed(1));
     } else {
         document.getElementById('currentTemp').textContent = temp.toFixed(1);
-        document.getElementById('currentHumidity').textContent = Math.round(summaryData.currentHumidity);
-        document.getElementById('todayHigh').textContent = summaryData.todayHigh.toFixed(1);
-        document.getElementById('todayLow').textContent = summaryData.todayLow.toFixed(1);
+        document.getElementById('currentHumidity').textContent = Math.round(hum);
+        if (summaryData.todayHigh != null && !Number.isNaN(summaryData.todayHigh)) document.getElementById('todayHigh').textContent = summaryData.todayHigh.toFixed(1);
+        if (summaryData.todayLow != null && !Number.isNaN(summaryData.todayLow)) document.getElementById('todayLow').textContent = summaryData.todayLow.toFixed(1);
         // 年間データはPhase 2で読み込まれるのでnullチェック
         if (summaryData.yearHigh != null) document.getElementById('yearHigh').textContent = summaryData.yearHigh.toFixed(1);
         if (summaryData.yearLow != null) document.getElementById('yearLow').textContent = summaryData.yearLow.toFixed(1);
     }
     if (summaryData.dataCount) document.getElementById('dataCount').textContent = summaryData.dataCount.toLocaleString() + ' 件';
+
+    // Update Dew Point badge if present
+    const dewPointEl = document.getElementById('dewPointBadge');
+    if (dewPointEl) {
+        const dp = calculateDewPointC(temp, hum);
+        if (dp !== null) {
+            dewPointEl.textContent = `露点 ${dp.toFixed(1)}°C`;
+        }
+    }
+
+    // Update sunrise/sunset, daylight progress, and pressure every cycle
+    if (typeof updateSunAndPressureUI === 'function' && weatherData) {
+        updateSunAndPressureUI(
+            weatherData.sunrise,
+            weatherData.sunset,
+            weatherData.surfacePressure ?? weatherData.pressureMsl
+        );
+    }
 
     // Update feels-like temperature
     const feelsLikeEl = document.getElementById('feelsLike');

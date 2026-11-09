@@ -13,9 +13,10 @@ function createElement() {
         textContent: '',
         dataset: {},
         style: { setProperty() {} },
-        classList: { add() {}, remove() {} },
+        classList: { add() {}, remove() {}, toggle() {} },
         offsetWidth: 1,
-        parentElement: { style: {} }
+        parentElement: { style: {} },
+        closest() { return createElement(); }
     };
 }
 
@@ -37,7 +38,8 @@ const context = {
             if (!elements.has(id)) elements.set(id, createElement());
             return elements.get(id);
         },
-        querySelector() { return createElement(); }
+        querySelector() { return createElement(); },
+        querySelectorAll() { return []; }
     },
     getCurrentWeatherOverride() { return null; },
     getPrecipIntensityLabel(rainfall, type) {
@@ -194,5 +196,18 @@ const emojiText = 'あ'.repeat(149) + '🌧️' + 'い'.repeat(20);
 const truncated = context.truncateJapaneseText(emojiText, 150);
 assert.strictEqual(Array.from(truncated.text).length, 150);
 assert(!truncated.text.endsWith('\uD83C'));
+
+// 0.0°C falsy regression test for updateUI()
+elements.clear();
+context.summaryData = {
+    currentTemp: 0.0,
+    currentHumidity: 60,
+    todayHigh: 5.2,
+    todayLow: 0.0
+};
+context.updateUI();
+assert.strictEqual(elements.get('currentTemp').textContent, '0.0');
+assert.strictEqual(elements.get('todayLow').textContent, '0.0');
+assert.match(elements.get('dewPointBadge').textContent, /露点 -/);
 
 console.log('critical weather tests: ok');

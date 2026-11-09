@@ -16,11 +16,12 @@ enough; the bindings, secrets, and Cron Trigger below must also exist.
    `js/notifications.js`.
 5. Add the Yahoo weather proxy as a Service Binding named `YAHOO_PROXY`.
    Direct fetch is used as a fallback, but the binding is recommended.
-6. Configure a Cron Trigger for every minute:
+6. Configure a Cron Trigger (`* * * * *` for 1-minute resolution, or `*/5 * * * *` for 5-minute resolution):
 
    ```text
    * * * * *
    ```
+   *(Note: Heartbeat writes to KV `cron_last_run` are throttled to once per hour (`minute === 0`) and JMA/Rain/Subscription states are only written when changed, keeping daily KV write/delete operations around ~100–250/day — well below the Cloudflare Workers Free tier limit of 1,000 writes/day.)*
 
 7. `ALLOWED_ORIGINS` is optional. When omitted, subscription writes are
    accepted from `https://righteyesear.github.io` and local development only.

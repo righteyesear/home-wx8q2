@@ -451,11 +451,13 @@ window.animateNumber = function (elementId, newValue, suffix = '') {
     requestAnimationFrame(update);
 }
 
-// Spotlight Effect Setup
+// Spotlight Effect Setup (guarded against duplicate event listener registration)
 function setupSpotlight() {
     const cards = document.querySelectorAll('.stat-card, .chart-card, .weather-hero, .comment-card, .precipitation-card, .ai-advisor-section');
 
     cards.forEach(card => {
+        if (card.dataset.spotlightBound === 'true') return;
+        card.dataset.spotlightBound = 'true';
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
@@ -463,7 +465,7 @@ function setupSpotlight() {
 
             card.style.setProperty('--spotlight-x', `${x}px`);
             card.style.setProperty('--spotlight-y', `${y}px`);
-        });
+        }, { passive: true });
     });
 }
 
@@ -471,7 +473,6 @@ function setupSpotlight() {
 document.addEventListener('DOMContentLoaded', () => {
     setupSpotlight();
     initChartReordering();
-    setInterval(setupSpotlight, 5000);
 
     // 時間範囲切り替えボタンの初期化
     const selector = document.getElementById('chartRangeSelector');

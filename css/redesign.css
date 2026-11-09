@@ -243,6 +243,7 @@ header {
 
 .status-item,
 html.light-mode .status-item,
+.header-report-link,
 .theme-toggle,
 .font-size-toggle {
     min-height: 37px;
@@ -254,6 +255,15 @@ html.light-mode .status-item,
     box-shadow: none;
     font-size: 0.72rem;
     white-space: nowrap;
+}
+
+.header-report-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
 }
 
 .status-item strong {
@@ -269,16 +279,19 @@ html.light-mode .status-item,
 }
 
 .status-item .icon,
+.header-report-link .icon,
 .theme-toggle .icon {
     width: 14px;
     height: 14px;
 }
 
+.header-report-link,
 .theme-toggle,
 .font-size-toggle {
     cursor: pointer;
 }
 
+.header-report-link:hover,
 .theme-toggle:hover,
 .font-size-toggle:hover {
     color: var(--ui-text);
@@ -332,7 +345,29 @@ html.light-mode .weather-hero {
     top: 28px;
     right: 30px;
     display: flex;
-    gap: 16px;
+    align-items: center;
+    gap: 12px;
+}
+
+.daylight-progress {
+    width: 46px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--ui-border);
+    overflow: hidden;
+    position: relative;
+}
+
+.daylight-progress-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #f59e0b, #fb923c);
+    transition: width 0.5s ease;
+}
+
+.daylight-progress-fill.is-night {
+    background: rgba(148, 163, 184, 0.35);
 }
 
 .sun-time-item {
@@ -527,11 +562,25 @@ html.light-mode .stat-card:hover {
 }
 
 .comfort-badge,
-.uv-badge {
-    max-width: 74px;
+.uv-badge,
+.dew-point-badge {
+    max-width: 86px;
     padding: 4px 7px;
     border-radius: 999px;
     font-size: 0.57rem;
+}
+
+.dew-point-badge {
+    color: var(--ui-text-subtle);
+    border: 1px solid var(--ui-border);
+    background: var(--ui-surface-soft);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.dew-point-badge:empty {
+    display: none;
 }
 
 .comment-card,

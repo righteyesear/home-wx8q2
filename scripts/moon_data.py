@@ -11,9 +11,9 @@ import urllib.request
 import math
 from datetime import datetime, timezone, timedelta
 
-# 東京都葛飾区東金町5丁目の座標
-LAT = 35.7785
-LON = 139.878
+# 東京都葛飾区東金町5丁目の座標（プロジェクト共通設定）
+LAT = 35.7727
+LON = 139.8680
 
 # 日本標準時 (JST = UTC+9)
 JST = timezone(timedelta(hours=9))

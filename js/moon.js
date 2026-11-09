@@ -17,11 +17,11 @@ let moonPositionInterval = null;
 
 async function loadMoonData() {
     const now = new Date(); // Real-time mode
-    const LAT = 35.7785;
-    const LON = 139.878;
+    const LAT = typeof LOCATION_LAT !== 'undefined' ? LOCATION_LAT : 35.7727;
+    const LON = typeof LOCATION_LON !== 'undefined' ? LOCATION_LON : 139.8680;
 
     // Calculate local values (fallback - only used when API fails)
-    const moonData = calculateMoonPhase(now);
+    let moonData = calculateMoonPhase(now);
     const moonPos = calculateMoonPosition(now, LAT, LON);
     let moonTimes = calculateMoonTimes(now, LAT, LON);
 
@@ -49,6 +49,7 @@ async function loadMoonData() {
                 dataSource = 'api';
                 displayAge = apiData.moon_age;
                 displayIllumination = apiData.illumination;
+                moonData = calculateMoonPhase(now, displayAge, displayIllumination / 100);
 
                 // Override times with API values
                 if (apiData.moonrise && apiData.moonrise !== '--:--') {
@@ -190,16 +191,6 @@ async function loadMoonData() {
         setDirEl.textContent = (moonTimes.set === '--:--') ? '--' : (moonTimes.setDirJp || '西');
     }
 
-    // Display current position info in SVG (only when above horizon)
-    const currentInfoEl = document.getElementById('moonCurrentInfoSvg');
-    if (currentInfoEl) {
-        if (moonPos.altitude > 0) {
-            currentInfoEl.textContent = `${getJapaneseCompassDirection(moonPos.azimuth)} ${Math.round(moonPos.altitude)}°`;
-        } else {
-            currentInfoEl.textContent = '';
-        }
-    }
-
     // Calculate next full moon (バッジが未設定の場合のみ)
     const synodic = 29.53058867;
     const daysToFull = (14.77 - moonData.age + synodic) % synodic;
@@ -229,8 +220,8 @@ function startMoonPositionTimer() {
         clearInterval(moonPositionInterval);
     }
 
-    const LAT = 35.7785;
-    const LON = 139.878;
+    const LAT = typeof LOCATION_LAT !== 'undefined' ? LOCATION_LAT : 35.7727;
+    const LON = typeof LOCATION_LON !== 'undefined' ? LOCATION_LON : 139.8680;
 
     // Update every 60 seconds
     moonPositionInterval = setInterval(() => {
@@ -239,18 +230,8 @@ function startMoonPositionTimer() {
         const now = new Date();
         const moonPos = calculateMoonPosition(now, LAT, LON);
 
-        // Update arc position
+        // Update arc position and label together (prevents empty floating rect when below horizon)
         updateMoonArcPosition(moonPos, cachedMoonTimes, now);
-
-        // Update current position text
-        const currentInfoEl = document.getElementById('moonCurrentInfoSvg');
-        if (currentInfoEl) {
-            if (moonPos.altitude > 0) {
-                currentInfoEl.textContent = `${getJapaneseCompassDirection(moonPos.azimuth)} ${Math.round(moonPos.altitude)}°`;
-            } else {
-                currentInfoEl.textContent = '';
-            }
-        }
 
         console.log('[Moon] Position updated:',
             'Alt:', moonPos.altitude.toFixed(1) + '°',
@@ -283,14 +264,16 @@ const FULL_MOON_NAMES = {
     12: { name: 'コールドムーン', nameEn: 'Cold Moon', color: '#b0c4de' }
 };
 
-function calculateMoonPhase(date) {
+function calculateMoonPhase(date, overrideAge = null, overrideIllumination = null) {
     // Reference new moon: Jan 6, 2000 18:14 UTC
     const refNewMoon = new Date(Date.UTC(2000, 0, 6, 18, 14, 0));
     const synodic = 29.53058867; // Synodic month in days
 
     const daysSinceRef = (date - refNewMoon) / (1000 * 60 * 60 * 24);
     const age = daysSinceRef % synodic;
-    const normalizedAge = age < 0 ? age + synodic : age;
+    const normalizedAge = (overrideAge !== null && Number.isFinite(Number(overrideAge)))
+        ? Number(overrideAge)
+        : (age < 0 ? age + synodic : age);
 
     // Phase (0-1)
     const phase = normalizedAge / synodic;
@@ -309,7 +292,9 @@ function calculateMoonPhase(date) {
 
     // Illumination based on elongation (same formula as API uses)
     // illumination = (1 - cos(elongation)) / 2
-    const illumination = (1 - Math.cos(elongationDeg * Math.PI / 180)) / 2;
+    const illumination = (overrideIllumination !== null && Number.isFinite(Number(overrideIllumination)))
+        ? Number(overrideIllumination)
+        : (1 - Math.cos(elongationDeg * Math.PI / 180)) / 2;
 
     // Phase name and emoji
     let phaseName, emoji, fullMoonName = null, fullMoonColor = null;

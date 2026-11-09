@@ -299,6 +299,18 @@ function createKv() {
         /All push deliveries failed/
     );
 
+    // Sensor 0.0°C / 0.0% anomaly guard test
+    assert.equal(
+        worker.parseValidSummaryTemp('"項目","値"\n"現在の気温","0.0"\n"現在の湿度","0.0"'),
+        null,
+        '0.0°C / 0.0% sensor glitch must be ignored'
+    );
+    assert.equal(
+        worker.parseValidSummaryTemp('"項目","値"\n"現在の気温","0.0"\n"現在の湿度","55.0"'),
+        0,
+        'real 0.0°C with valid humidity must be accepted'
+    );
+
     console.log('Push notification tests passed');
 })().catch(error => {
     console.error(error);

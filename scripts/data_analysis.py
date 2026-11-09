@@ -288,22 +288,22 @@ def analyze_data_comprehensive(all_records: List[Dict]) -> Dict[str, Any]:
     ]
     
     # ========================================
-    # 7. 日別サマリー
+    # 7. 日別サマリー（年末年始を跨いでも正しく時系列ソートされるようdateオブジェクトをキーにする）
     # ========================================
     daily_summary = {}
     for r in valid_records:
         if r['parsed_dt']:
-            date_key = r['parsed_dt'].strftime('%m/%d')
-            if date_key not in daily_summary:
-                daily_summary[date_key] = {'temps': [], 'humids': []}
-            daily_summary[date_key]['temps'].append(r['temperature'])
-            daily_summary[date_key]['humids'].append(r['humidity'])
+            date_obj = r['parsed_dt'].date()
+            if date_obj not in daily_summary:
+                daily_summary[date_obj] = {'temps': [], 'humids': []}
+            daily_summary[date_obj]['temps'].append(r['temperature'])
+            daily_summary[date_obj]['humids'].append(r['humidity'])
     
     result['daily_summary'] = []
-    for date, data in sorted(daily_summary.items())[-7:]:  # 直近7日
+    for date_obj, data in sorted(daily_summary.items())[-7:]:  # 直近7日
         temps = data['temps']
         result['daily_summary'].append({
-            'date': date,
+            'date': date_obj.strftime('%m/%d'),
             'high': round(max(temps), 1),
             'low': round(min(temps), 1),
             'avg': round(sum(temps) / len(temps), 1),

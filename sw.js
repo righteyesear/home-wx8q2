@@ -1,6 +1,6 @@
 // Service Worker for 外気温モニター PWA
 // Version 4 - Push Notification Support
-const CACHE_NAME = 'temp-monitor-v16';
+const CACHE_NAME = 'temp-monitor-v17';
 const urlsToCache = [
     './',
     './index.html'
@@ -27,16 +27,22 @@ self.addEventListener('activate', event => {
     );
 });
 
-// Fetch: network first, fallback to cache
+// Fetch: network first, fallback to cache (only for GET http/https requests)
 self.addEventListener('fetch', event => {
+    const { request } = event;
+    if (request.method !== 'GET' || !request.url.startsWith('http')) {
+        return;
+    }
     event.respondWith(
-        fetch(event.request)
+        fetch(request)
             .then(response => {
-                const clone = response.clone();
-                caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+                if (response && response.ok && response.status === 200 && !request.url.includes('/api/')) {
+                    const clone = response.clone();
+                    caches.open(CACHE_NAME).then(cache => cache.put(request, clone)).catch(() => {});
+                }
                 return response;
             })
-            .catch(() => caches.match(event.request))
+            .catch(() => caches.match(request))
     );
 });
 

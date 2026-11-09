@@ -22,9 +22,11 @@ async function fetchAll() {
             summaryData.currentHumidity = lightData.currentHumidity;
             summaryData.todayHigh = lightData.todayHigh;
             summaryData.todayLow = lightData.todayLow;
-            updateUI();
-            // 軽量データが読み込めたらすぐにAIアドバイザーと警報を表示
-            loadAIComment();
+            const isAnomaly = (lightData.currentTemp === 0.0 && lightData.currentHumidity === 0.0);
+            if (!isAnomaly) {
+                updateUI();
+                loadAIComment();
+            }
             fetchAlerts();
             console.log('Phase 1A: Light Summary loaded');
         }).catch(e => console.log('Light Summary error:', e)),
@@ -84,10 +86,10 @@ async function fetchAll() {
                 windDirection: data.current?.wind_direction_10m ?? null,
                 windGusts: data.current?.wind_gusts_10m ?? null,
                 pressureMsl: data.current?.pressure_msl ?? null,
+                surfacePressure: data.current?.surface_pressure ?? data.current?.pressure_msl ?? null,
                 cape: data.hourly?.cape?.[hour] ?? null
             };
             applyTheme();
-            updateUI();
             loadPrecipitation();
             console.log('Phase 1B: Weather API loaded');
         }).catch(e => { console.log('Weather API error:', e); weatherData = null; })
@@ -160,11 +162,14 @@ async function fetchAll() {
         }
     }
 
-    // 補正後の値で UI を再更新
+    // 補正後の値で UI を再更新（異常値から復帰した場合はAIコメントも再評価）
     if (typeof applyJmaForecastToWeatherData === 'function') {
         applyJmaForecastToWeatherData();
     }
     updateUI();
+    if (isCurrentTempBug) {
+        loadAIComment();
+    }
 
     // 更新時刻を表示
     document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
@@ -195,10 +200,25 @@ async function fetchAll() {
                 console.log('Phase 2: Archive Summary loaded');
             }).catch(e => console.log('Archive Summary error:', e));
 
-            // 既存シートからDaily/Weekly
+            // 既存シートからDaily/Weekly（15分キャッシュを活用して毎分の重複大容量通信を抑制）
+            const fetchCachedText = async (type, url, allowNull = false) => {
+                if (typeof getFromCache === 'function') {
+                    const cached = getFromCache(type);
+                    if (cached) return cached;
+                }
+                try {
+                    const text = await fetch(url).then(r => r.text());
+                    if (text && typeof setToCache === 'function') setToCache(type, text);
+                    return text;
+                } catch (err) {
+                    if (allowNull) return null;
+                    throw err;
+                }
+            };
+
             const [dailyCsv, weeklyCsv] = await Promise.all([
-                fetch(DAILY_URL).then(r => r.text()),
-                fetch(WEEKLY_URL).then(r => r.text()).catch(() => null)
+                fetchCachedText('dailyArchive', DAILY_URL, false),
+                fetchCachedText('weeklyArchive', WEEKLY_URL, true)
             ]);
 
             dailyData = parseDailyCSV(dailyCsv);
@@ -375,30 +395,60 @@ function toggleAiAdvisor() {
     }
 }
 
-// Load sunrise/sunset times and pressure from Open-Meteo
+// Update sunrise/sunset times, daylight progress bar, and pressure from weatherData (or fallback fetch)
+function updateSunAndPressureUI(sunriseIso, sunsetIso, pressureVal) {
+    const formatTime = (d) => d.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+    const sunriseEl = document.getElementById('sunriseTime');
+    const sunsetEl = document.getElementById('sunsetTime');
+    const progressEl = document.getElementById('daylightProgressFill');
+    const pressureEl = document.getElementById('heroPressure');
+
+    if (sunriseIso && sunsetIso) {
+        const sunrise = new Date(sunriseIso);
+        const sunset = new Date(sunsetIso);
+        if (!Number.isNaN(sunrise.getTime()) && !Number.isNaN(sunset.getTime())) {
+            if (sunriseEl) sunriseEl.textContent = formatTime(sunrise);
+            if (sunsetEl) sunsetEl.textContent = formatTime(sunset);
+            if (progressEl) {
+                const nowMs = Date.now();
+                const startMs = sunrise.getTime();
+                const endMs = sunset.getTime();
+                const ratio = endMs > startMs
+                    ? Math.max(0, Math.min(1, (nowMs - startMs) / (endMs - startMs)))
+                    : 0;
+                progressEl.style.width = `${(ratio * 100).toFixed(1)}%`;
+                progressEl.classList.toggle('is-night', nowMs < startMs || nowMs > endMs);
+            }
+        }
+    }
+
+    if (pressureEl && pressureVal != null && Number.isFinite(Number(pressureVal))) {
+        pressureEl.textContent = Math.round(Number(pressureVal));
+    }
+}
+
 async function loadSunTimes() {
     try {
-        const LAT = 35.77877;
-        const LON = 139.87817;
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&daily=sunrise,sunset&current=surface_pressure&timezone=Asia/Tokyo&forecast_days=1`;
+        if (typeof weatherData !== 'undefined' && weatherData && (weatherData.sunrise || weatherData.surfacePressure != null || weatherData.pressureMsl != null)) {
+            updateSunAndPressureUI(
+                weatherData.sunrise,
+                weatherData.sunset,
+                weatherData.surfacePressure ?? weatherData.pressureMsl
+            );
+            return;
+        }
+        const lat = typeof LOCATION_LAT !== 'undefined' ? LOCATION_LAT : 35.7727;
+        const lon = typeof LOCATION_LON !== 'undefined' ? LOCATION_LON : 139.8680;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=sunrise,sunset&current=surface_pressure&timezone=Asia/Tokyo&forecast_days=1`;
         const resp = await fetch(url);
         if (!resp.ok) return;
 
         const data = await resp.json();
-        if (data.daily && data.daily.sunrise && data.daily.sunset) {
-            const sunrise = new Date(data.daily.sunrise[0]);
-            const sunset = new Date(data.daily.sunset[0]);
-
-            const formatTime = (d) => d.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
-
-            document.getElementById('sunriseTime').textContent = formatTime(sunrise);
-            document.getElementById('sunsetTime').textContent = formatTime(sunset);
-        }
-
-        // Display pressure
-        if (data.current && data.current.surface_pressure) {
-            document.getElementById('heroPressure').textContent = Math.round(data.current.surface_pressure);
-        }
+        updateSunAndPressureUI(
+            data.daily?.sunrise?.[0],
+            data.daily?.sunset?.[0],
+            data.current?.surface_pressure
+        );
     } catch (e) {
         console.log('Sun times not available:', e.message);
     }

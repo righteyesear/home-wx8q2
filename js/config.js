@@ -22,8 +22,12 @@ const ARCHIVE_SUMMARY_URL = `${ARCHIVE_BASE_URL}&sheet=Summary`;
 const DAILY_URL = `${ARCHIVE_BASE_URL}&sheet=Daily`;
 const WEEKLY_URL = `${ARCHIVE_BASE_URL}&sheet=Weekly`;
 
+// 観測地点座標（東京都葛飾区東金町5丁目）
+const LOCATION_LAT = 35.7727;
+const LOCATION_LON = 139.8680;
+
 // 全パラメータ取得: 気圧、風向、日射量、蒸発散量など全て含む
-const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast?latitude=35.7727&longitude=139.8680' +
+const WEATHER_URL = `https://api.open-meteo.com/v1/forecast?latitude=${LOCATION_LAT}&longitude=${LOCATION_LON}` +
     '&current=weather_code,temperature_2m,relative_humidity_2m,dew_point_2m,apparent_temperature,' +
     'precipitation,rain,showers,snowfall,cloud_cover,pressure_msl,surface_pressure,' +
     'wind_speed_10m,wind_direction_10m,wind_gusts_10m,visibility,uv_index,is_day' +
@@ -62,6 +66,8 @@ const TEMP_ALERT_THRESHOLD = 35; // Notify when temp >= this
 const CACHE_CONFIG = {
     weather: { key: 'cache_weather', ttl: 5 * 60 * 1000 },      // 5 minutes
     spreadsheet: { key: 'cache_spreadsheet', ttl: 10 * 60 * 1000 }, // 10 minutes
+    dailyArchive: { key: 'cache_daily_archive', ttl: 15 * 60 * 1000 },   // 15 minutes
+    weeklyArchive: { key: 'cache_weekly_archive', ttl: 15 * 60 * 1000 }, // 15 minutes
     precipitation: { key: 'cache_precip', ttl: 5 * 60 * 1000 }, // 5 minutes
     alerts: { key: 'cache_alerts', ttl: 30 * 60 * 1000 },       // 30 minutes
     forecast: { key: 'cache_forecast', ttl: 10 * 60 * 1000 }    // 10 minutes

@@ -21,10 +21,16 @@ globalThis.__precipTest = {
     state: actualPrecipState,
     updateActualPrecipState,
     getWeatherOverride,
-    getCurrentWeatherOverride
+    getCurrentWeatherOverride,
+    resolvePrecipHourIndex
 };`, context);
 
 const api = context.__precipTest;
+
+// Past-hour observation should map to current day's hour, not tomorrow (+24)
+assert.strictEqual(api.resolvePrecipHourIndex({ type: 'observation', time: '13:50' }, 14), 13);
+assert.strictEqual(api.resolvePrecipHourIndex({ type: 'observation', time: '23:50' }, 0), 0);
+assert.strictEqual(api.resolvePrecipHourIndex({ type: 'forecast', time: '00:10' }, 23), 24);
 
 // Yahoo取得前はOpen-Meteoを抑制しない。
 assert.strictEqual(api.getWeatherOverride(), null);

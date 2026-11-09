@@ -1,4 +1,8 @@
 // push-notifications Worker - Web Push暗号化対応版
+const LOCATION_LAT = 35.7727;
+const LOCATION_LON = 139.8680;
+const SPREADSHEET_ID = '1nbmJIIUzw8n2PcHp98NaiKnaAVciBx_Egpokjjx7uW8';
+
 export default {
     async fetch(request, env) {
         const url = new URL(request.url);
@@ -152,8 +156,26 @@ export default {
                 });
             }
             const key = this.hashEndpoint(subscription.endpoint);
-            await env.KV.put(key, JSON.stringify({ subscription, createdAt: new Date().toISOString() }));
-            return new Response(JSON.stringify({ success: true, id: key }), {
+            const existingRaw = await env.KV.get(key);
+            let shouldWrite = true;
+            if (existingRaw) {
+                try {
+                    const existing = JSON.parse(existingRaw)?.subscription;
+                    if (
+                        existing?.endpoint === subscription.endpoint &&
+                        existing?.keys?.p256dh === subscription.keys.p256dh &&
+                        existing?.keys?.auth === subscription.keys.auth
+                    ) {
+                        shouldWrite = false;
+                    }
+                } catch {
+                    shouldWrite = true;
+                }
+            }
+            if (shouldWrite) {
+                await env.KV.put(key, JSON.stringify({ subscription, createdAt: new Date().toISOString() }));
+            }
+            return new Response(JSON.stringify({ success: true, id: key, unchanged: !shouldWrite }), {
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' }
             });
         } catch (error) {
@@ -620,11 +642,14 @@ export default {
                 }
             }
 
-            await env.KV.put(stateKey, JSON.stringify({
+            const nextStateJson = JSON.stringify({
                 areaCode: normalized.areaCode,
                 lastControlDatetime: normalized.latestControlDatetime,
                 active: normalized.active
-            }));
+            });
+            if (nextStateJson !== storedState) {
+                await env.KV.put(stateKey, nextStateJson);
+            }
 
             const specialWarnings = normalized.active
                 .filter(alert => alert.level >= 5)
@@ -802,32 +827,45 @@ export default {
         return ((jd - 2451550.1) % 29.53058867 + 29.53058867) % 29.53058867;
     },
 
+    // SummaryシートのCSVからセンサー異常（0.0°C / 0.0%）を除外して現在気温を抽出
+    parseValidSummaryTemp(csv) {
+        if (!csv) return null;
+        const rows = csv.split('\n').filter(r => r.trim());
+        if (rows.length < 2) return null;
+
+        const tempRow = rows.find(r => r.includes('現在の気温'));
+        if (!tempRow) return null;
+        const tempCols = tempRow.match(/(".*?"|[^,]+)/g) || [];
+        const parsedTemp = parseFloat(tempCols[1]?.trim().replace(/"/g, ''));
+        if (isNaN(parsedTemp) || parsedTemp < -60 || parsedTemp > 80) return null;
+
+        const humRow = rows.find(r => r.includes('現在の湿度'));
+        if (humRow) {
+            const humCols = humRow.match(/(".*?"|[^,]+)/g) || [];
+            const parsedHum = parseFloat(humCols[1]?.trim().replace(/"/g, ''));
+            // 気温0.0°Cかつ湿度0.0%はセンサー通信異常のため除外
+            if (parsedTemp === 0 && parsedHum === 0) {
+                console.warn('[Temp] Ignored 0.0°C / 0.0% sensor anomaly');
+                return null;
+            }
+        }
+        return parsedTemp;
+    },
+
     // 極端な気温通知（家の外気温計から取得）- 2段階KV管理
     async checkExtremeTemperature(env) {
         try {
             // Google Spreadsheetsから最新の気温データ取得
-            const SPREADSHEET_ID = '1nbmJIIUzw8n2PcHp98NaiKnaAVciBx_Egpokjjx7uW8';
             const response = await fetch(
                 `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=Summary`
             );
             if (!response.ok) return null;
 
             const csv = await response.text();
-            const rows = csv.split('\n').filter(r => r.trim());
-            if (rows.length < 2) return null;
-
-            // CSVは「キー,値」形式なので「現在の気温」の行をキー名で検索する
-            const tempRow = rows.find(r => r.includes('現在の気温'));
-            if (!tempRow) return null;
-            const cols = tempRow.match(/(".*?"|[^,]+)/g) || [];
-            const parsedTemp = parseFloat(cols[1]?.trim().replace(/"/g, ''));
-
-            // 現実的な気温範囲チェック（念のため）
-            const currentTemp = (!isNaN(parsedTemp) && parsedTemp >= -60 && parsedTemp <= 80)
-                ? parsedTemp : null;
+            const currentTemp = this.parseValidSummaryTemp(csv);
 
             if (currentTemp === null) {
-                console.warn('[Temp] Invalid temperature value:', parsedTemp);
+                console.warn('[Temp] Invalid or anomalous temperature value');
                 return null;
             }
 
@@ -931,8 +969,6 @@ export default {
     // 今の気温 vs 昨日の最高/最低チェック（リアルタイム）
     async checkTemperatureChange(env) {
         try {
-            const SPREADSHEET_ID = '1nbmJIIUzw8n2PcHp98NaiKnaAVciBx_Egpokjjx7uW8';
-
             // 1. 現在の気温を取得（Summaryシート）
             const summaryResp = await fetch(
                 `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=Summary`
@@ -940,19 +976,10 @@ export default {
             if (!summaryResp.ok) return null;
 
             const summaryCSV = await summaryResp.text();
-            const summaryRows = summaryCSV.split('\n').filter(r => r.trim());
-            if (summaryRows.length < 2) return null;
-
-            // キー名「現在の気温」の行を検索して取得
-            const tempRow = summaryRows.find(r => r.includes('現在の気温'));
-            if (!tempRow) return null;
-            const summaryCols = tempRow.match(/(".*?"|[^,]+)/g) || [];
-            const parsedCurrentTemp = parseFloat(summaryCols[1]?.trim().replace(/"/g, ''));
-            const currentTemp = (!isNaN(parsedCurrentTemp) && parsedCurrentTemp >= -60 && parsedCurrentTemp <= 80)
-                ? parsedCurrentTemp : null;
+            const currentTemp = this.parseValidSummaryTemp(summaryCSV);
 
             if (currentTemp === null) {
-                console.warn('[TempChange] Invalid temperature value:', parsedCurrentTemp);
+                console.warn('[TempChange] Invalid or anomalous temperature value');
                 return null;
             }
 
@@ -1311,21 +1338,25 @@ export default {
         return 'sub_' + Math.abs(hash).toString(36);
     },
 
-    // Cron Trigger: 定期実行（1分ごと）
+    // Cron Trigger: 定期実行（1分間隔・5分間隔の双方に対応、KV書き込みを最小化）
     async scheduled(event, env, ctx) {
         const now = new Date();
-        try {
-            await env.KV.put(
-                'cron_last_run',
-                now.toISOString(),
-                { expirationTtl: 86400 }
-            );
-        } catch (error) {
-            console.error('[Cron] Failed to save heartbeat:', error.message);
-        }
         const jstNow = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
         const hour = jstNow.getHours();
         const minute = jstNow.getMinutes();
+
+        // ハートビートは毎時0分または初回未記録時のみ書き込み（1日1,440回→24回に削減）
+        try {
+            if (minute === 0 || !(await env.KV.get('cron_last_run'))) {
+                await env.KV.put(
+                    'cron_last_run',
+                    now.toISOString(),
+                    { expirationTtl: 86400 }
+                );
+            }
+        } catch (error) {
+            console.error('[Cron] Failed to save heartbeat:', error.message);
+        }
         console.log(`[Cron] Running scheduled check... JST ${hour}:${String(minute).padStart(2, '0')}`);
 
         const isNightSilent = hour >= 0 && hour < 6; // 夜間サイレント時間帯
@@ -1444,9 +1475,9 @@ export default {
             const notified = await env.KV.get('frost_alert_' + today);
             if (notified) return { skipped: 'already_sent' };
 
-            // 1. OpenMeteo で翌日の最低気温予報を取得（東京）
+            // 1. OpenMeteo で翌日の最低気温予報を取得（観測地点）
             const meteoResp = await fetch(
-                'https://api.open-meteo.com/v1/forecast?latitude=35.6895&longitude=139.6917&daily=temperature_2m_min&timezone=Asia%2FTokyo&forecast_days=2'
+                `https://api.open-meteo.com/v1/forecast?latitude=${LOCATION_LAT}&longitude=${LOCATION_LON}&daily=temperature_2m_min&timezone=Asia%2FTokyo&forecast_days=2`
             );
             if (!meteoResp.ok) return null;
 
@@ -1455,22 +1486,13 @@ export default {
             if (tomorrowMinTemp === undefined || tomorrowMinTemp === null) return null;
 
             // 2. 現在の実測気温を取得（Google Spreadsheets）
-            const SPREADSHEET_ID = '1nbmJIIUzw8n2PcHp98NaiKnaAVciBx_Egpokjjx7uW8';
             const summaryResp = await fetch(
                 `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=Summary`
             );
             let currentTemp = null;
             if (summaryResp.ok) {
                 const csv = await summaryResp.text();
-                const rows = csv.split('\n').filter(r => r.trim());
-                const tempRow = rows.find(r => r.includes('現在の気温'));
-                if (tempRow) {
-                    const cols = tempRow.match(/(".*?"|[^,]+)/g) || [];
-                    const parsed = parseFloat(cols[1]?.trim().replace(/"/g, ''));
-                    if (!isNaN(parsed) && parsed >= -60 && parsed <= 80) {
-                        currentTemp = parsed;
-                    }
-                }
+                currentTemp = this.parseValidSummaryTemp(csv);
             }
 
             // 3. 判定ロジック
@@ -1538,7 +1560,7 @@ export default {
             // 2. 現在の気温と今日の予報気温
             try {
                 const meteoResp = await fetch(
-                    'https://api.open-meteo.com/v1/forecast?latitude=35.6895&longitude=139.6917&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max&wind_speed_unit=ms&timezone=Asia%2FTokyo&forecast_days=1'
+                    `https://api.open-meteo.com/v1/forecast?latitude=${LOCATION_LAT}&longitude=${LOCATION_LON}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max&wind_speed_unit=ms&timezone=Asia%2FTokyo&forecast_days=1`
                 );
                 if (meteoResp.ok) {
                     const meteo = await meteoResp.json();
@@ -1575,20 +1597,14 @@ export default {
 
             // 3. 現在の実測気温
             try {
-                const SPREADSHEET_ID = '1nbmJIIUzw8n2PcHp98NaiKnaAVciBx_Egpokjjx7uW8';
                 const summaryResp = await fetch(
                     `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=Summary`
                 );
                 if (summaryResp.ok) {
                     const csv = await summaryResp.text();
-                    const rows = csv.split('\n').filter(r => r.trim());
-                    const tempRow = rows.find(r => r.includes('現在の気温'));
-                    if (tempRow) {
-                        const cols = tempRow.match(/(\".*?\"|[^,]+)/g) || [];
-                        const currentTemp = parseFloat(cols[1]?.trim().replace(/"/g, ''));
-                        if (!isNaN(currentTemp) && currentTemp >= -60 && currentTemp <= 80) {
-                            summaryParts.push(`📍 現在の外気温: ${currentTemp.toFixed(1)}°C`);
-                        }
+                    const currentTemp = this.parseValidSummaryTemp(csv);
+                    if (currentTemp !== null) {
+                        summaryParts.push(`📍 現在の外気温: ${currentTemp.toFixed(1)}°C`);
                     }
                 }
             } catch (e) {
@@ -1667,11 +1683,16 @@ export default {
             const significantRain = totalRainfall >= 1 || hasHeavySlot;
 
             if (isRaining) {
-                // 降水中: まとまった雨ならフラグON、候補タイマーは常にリセット
+                // 降水中: まとまった雨ならフラグON（未設定時または30分ごとのみ書き込み）、候補タイマーは存在時のみ削除
                 if (significantRain) {
-                    await env.KV.put('rain_was_raining', 'true', { expirationTtl: 10800 });
+                    const alreadyFlagged = await env.KV.get('rain_was_raining');
+                    if (!alreadyFlagged || jstNow.getMinutes() % 30 === 0) {
+                        await env.KV.put('rain_was_raining', 'true', { expirationTtl: 10800 });
+                    }
                 }
-                await env.KV.delete('rain_stop_candidate');
+                if (await env.KV.get('rain_stop_candidate')) {
+                    await env.KV.delete('rain_stop_candidate');
+                }
                 return { isRaining, rainfall: currentObs.rainfall, totalRainfall, significantRain };
             }
 
@@ -1684,8 +1705,10 @@ export default {
                 forecasts.every(f => (f.rainfall ?? 0) === 0);
 
             if (!allForecastsClear) {
-                // 予報に雨あり → 候補タイマーをリセット
-                await env.KV.delete('rain_stop_candidate');
+                // 予報に雨あり → 候補タイマーが存在する場合のみリセット
+                if (await env.KV.get('rain_stop_candidate')) {
+                    await env.KV.delete('rain_stop_candidate');
+                }
                 return { isRaining, allForecastsClear, status: 'forecast_has_rain' };
             }
 
@@ -1736,19 +1759,14 @@ export default {
     // ③ 急な気温変化通知（15分で±5℃以上）
     async checkRapidTempChange(env) {
         try {
-            const SPREADSHEET_ID = '1nbmJIIUzw8n2PcHp98NaiKnaAVciBx_Egpokjjx7uW8';
             const resp = await fetch(
                 `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=Summary`
             );
             if (!resp.ok) return null;
 
             const csv = await resp.text();
-            const rows = csv.split('\n').filter(r => r.trim());
-            const tempRow = rows.find(r => r.includes('現在の気温'));
-            if (!tempRow) return null;
-            const cols = tempRow.match(/(\".*?\"|[^,]+)/g) || [];
-            const currentTemp = parseFloat(cols[1]?.trim().replace(/"/g, ''));
-            if (isNaN(currentTemp) || currentTemp < -60 || currentTemp > 80) return null;
+            const currentTemp = this.parseValidSummaryTemp(csv);
+            if (currentTemp === null) return null;
 
             // 前回値をKVから取得（TTL 20分）
             const prevStr = await env.KV.get('rapid_temp_prev');
@@ -1791,7 +1809,7 @@ export default {
 
             // OpenMeteo から日没時刻を取得（本家ページと同じデータソース）
             const resp = await fetch(
-                'https://api.open-meteo.com/v1/forecast?latitude=35.77877&longitude=139.87817&daily=sunset&timezone=Asia%2FTokyo&forecast_days=1'
+                `https://api.open-meteo.com/v1/forecast?latitude=${LOCATION_LAT}&longitude=${LOCATION_LON}&daily=sunset&timezone=Asia%2FTokyo&forecast_days=1`
             );
             if (!resp.ok) return null;
 

@@ -1,14 +1,10 @@
 # 降水量データ更新ワークフロー（Yahoo Weather API）
-# 5分ごとに更新
+# ※現在フロントエンド・AIアドバイザー・Push WorkerすべてがCloudflareプロキシを直接参照するため手動実行のみ有効化
 
 name: Precipitation Update
 
 on:
-  schedule:
-    # 毎時 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55分に実行（UTC）
-    - cron: '*/5 * * * *'
-  
-  # 手動実行も可能
+  # 手動実行のみ（不要な5分毎の自動コミットを停止）
   workflow_dispatch:
 
 concurrency:

@@ -86,9 +86,40 @@ const baseOptions = {
 
 const crosshairPlugin = {
     id: 'crosshair',
+    beforeDatasetsDraw: (chart) => {
+        if (chart.canvas?.id !== 'chart24h') return;
+        const yScale = chart.scales?.y;
+        const area = chart.chartArea;
+        if (!yScale || !area) return;
+
+        const ctx = chart.ctx;
+        ctx.save();
+
+        // 快適温度帯 (18°C〜25°C) の淡い背景バンド
+        const topY = Math.max(area.top, Math.min(area.bottom, yScale.getPixelForValue(25)));
+        const bottomY = Math.max(area.top, Math.min(area.bottom, yScale.getPixelForValue(18)));
+        if (bottomY > topY) {
+            ctx.fillStyle = 'rgba(74, 222, 128, 0.045)';
+            ctx.fillRect(area.left, topY, area.right - area.left, bottomY - topY);
+        }
+
+        // 氷点下ライン (0°C) が表示範囲内にある場合は破線を表示
+        if (yScale.min <= 0 && yScale.max >= 0) {
+            const zeroY = yScale.getPixelForValue(0);
+            ctx.beginPath();
+            ctx.moveTo(area.left, zeroY);
+            ctx.lineTo(area.right, zeroY);
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+            ctx.setLineDash([4, 4]);
+            ctx.stroke();
+        }
+
+        ctx.restore();
+    },
     afterDraw: (chart) => {
+        const ctx = chart.ctx;
         if (chart.tooltip?._active?.length) {
-            const ctx = chart.ctx;
             const x = chart.tooltip._active[0].element.x;
             ctx.save();
             ctx.beginPath();
@@ -99,6 +130,28 @@ const crosshairPlugin = {
             ctx.setLineDash([4, 4]);
             ctx.stroke();
             ctx.restore();
+        }
+
+        // 24時間グラフの最新データ点に現在値グロードットを描画
+        if (chart.canvas?.id === 'chart24h') {
+            const meta = chart.getDatasetMeta(0);
+            const lastPoint = meta?.data?.[meta.data.length - 1];
+            if (lastPoint && Number.isFinite(lastPoint.x) && Number.isFinite(lastPoint.y)) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(lastPoint.x, lastPoint.y, 8, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(251, 146, 60, 0.22)';
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(lastPoint.x, lastPoint.y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = '#fb923c';
+                ctx.fill();
+                ctx.lineWidth = 1.8;
+                ctx.strokeStyle = '#ffffff';
+                ctx.stroke();
+                ctx.restore();
+            }
         }
     }
 };

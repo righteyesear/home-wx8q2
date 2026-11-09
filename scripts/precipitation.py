@@ -16,10 +16,10 @@ try:
 except ImportError:
     pass  # dotenv not installed (GitHub Actions doesn't need it)
 
-# 設定
+# 設定（プロジェクト共通座標）
 YAHOO_CLIENT_ID = os.environ.get('YAHOO_CLIENT_ID', '')
-LATITUDE = 35.77877   # 東京都葛飾区東金町5丁目
-LONGITUDE = 139.87817
+LATITUDE = 35.7727   # 東京都葛飾区東金町5丁目
+LONGITUDE = 139.8680
 
 def fetch_precipitation():
     """Yahoo Weather APIから降水量データを取得"""

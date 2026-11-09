@@ -133,7 +133,8 @@ for report_path in report_paths:
             assert len(comment) >= 75, f"shallow {key}: {report_path.name}"
             assert "対象期間は終了しており" not in comment, f"legacy template: {report_path.name}"
 
-assert not (PROJECT_ROOT / "reports" / "monthly" / "2026-08.json").exists()
+current_open_month = report_generator.datetime.now(report_generator.JST).strftime("%Y-%m")
+assert not (PROJECT_ROOT / "reports" / "monthly" / f"{current_open_month}.json").exists()
 assert report_generator.is_period_closed("monthly", "2026-07", date(2026, 8, 1))
 assert not report_generator.is_period_closed("monthly", "2026-08", date(2026, 8, 1))
 assert report_generator.is_period_closed("weekly", "2026-W30", date(2026, 8, 3))

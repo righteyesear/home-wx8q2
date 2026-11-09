@@ -206,8 +206,7 @@ function updateActualPrecipState(precipData) {
         const currentHour = new Date().getHours();
         const firstPrecipForecast = next1HourForecasts.find(d => d.rainfall > 0);
         if (firstPrecipForecast) {
-            const [hh] = firstPrecipForecast.time.split(':').map(Number);
-            const hourIndex = hh >= currentHour ? hh : hh + 24;
+            const hourIndex = resolvePrecipHourIndex(firstPrecipForecast, currentHour);
             actualPrecipState.forecastPrecipType = getPrecipitationType(hourIndex);
         }
     } else {
@@ -223,6 +222,18 @@ function updateActualPrecipState(precipData) {
  * 3. No precipitation → Open-Meteo weather
  * Returns null if no override needed, otherwise {icon, condition}
  */
+function resolvePrecipHourIndex(d, currentHour) {
+    if (!d || typeof d.time !== 'string') return currentHour;
+    const [hh] = d.time.split(':').map(Number);
+    if (!Number.isFinite(hh)) return currentHour;
+    if (d.type === 'observation') {
+        // 深夜0時台に前日23時台の実測値が含まれる場合は当日0時インデックス(0)を参照
+        if (currentHour === 0 && hh === 23) return 0;
+        return hh;
+    }
+    return hh >= currentHour ? hh : hh + 24;
+}
+
 function getWeatherOverride() {
     const now = Date.now();
     const wc = weatherData?.weatherCode ?? 0;
@@ -438,12 +449,10 @@ async function loadPrecipitation() {
             }
         };
 
-        // 各時間の降水タイプを判定
+        // 各時間の降水タイプを判定（実測と予報を区別してインデックス計算）
         const currentHour = new Date().getHours();
-        const precipTypes = precipData.map((d, i) => {
-            // 時刻から何時間後かを計算してhourIndexを求める
-            const [hh, mm] = d.time.split(':').map(Number);
-            const hourIndex = hh >= currentHour ? hh : hh + 24;
+        const precipTypes = precipData.map(d => {
+            const hourIndex = resolvePrecipHourIndex(d, currentHour);
             return getPrecipitationType(hourIndex);
         });
 
