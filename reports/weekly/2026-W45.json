@@ -7,22 +7,22 @@
     "end_date": "2026-11-08",
     "label": "2026年 第45週（11/2 〜 11/8）"
   },
-  "generated_at": "2026-11-08T19:17:58.157330+09:00",
+  "generated_at": "2026-11-09T09:43:07.580859+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
-      "ai_comment": "",
+      "ai_comment": "直近4週平均から4.15℃低い水準へ急降下している一方で、過去同時期に対しては1位の高温を記録したという対照的な位置づけが、2026年第45週（11/2〜11/8）の最も際立つ特徴です。週平均気温は15.7℃で、前週比では-1.0℃と低下が継続したものの、前年同期比では+1.6℃、過去2年の同時期平均（14.05℃）に対しても+1.65℃高い水準でした。週内の最高気温は11月6日に24.6℃まで達し、最低気温は11月3日の10.9℃にとどまりました。日別の平均気温は前半から後半にかけて0.45℃低下のほぼ横ばい推移でしたが、11月6日には前日から日平均が4.7℃急上昇するなど局所的な振れ幅を伴いました。直近推移における低下傾向と、暦年の同時期基準における高温傾向が交錯する期間でした。",
       "highlights": [
         "最高気温 24.6℃",
         "最低気温 10.9℃",
-        "前週比 -1.1℃",
-        "前年比 +1.5℃"
+        "前週比 -1.0℃",
+        "前年比 +1.6℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 7,
-      "avg_temp": 15.6,
+      "avg_temp": 15.7,
       "avg_temp_stdev": 1.7,
       "max_temp": 24.6,
       "max_temp_date": "2026/11/06",
@@ -31,8 +31,8 @@
       "min_temp_date": "2026/11/03",
       "avg_low": 12.2,
       "avg_daily_range": 7.1,
-      "prev_week_diff": -1.1,
-      "prev_year_diff": 1.5
+      "prev_week_diff": -1.0,
+      "prev_year_diff": 1.6
     },
     "daily_data": [
       {
@@ -88,7 +88,7 @@
         "weekday": "日",
         "high": 17.8,
         "low": 10.9,
-        "avg": 14.0,
+        "avg": 14.1,
         "range": 6.9
       }
     ],
@@ -108,16 +108,16 @@
         "avg_low": 10.2,
         "avg_daily_range": 7.9
       },
-      "avg_temp_diff": 1.5,
+      "avg_temp_diff": 1.6,
       "max_temp_diff": 3.9,
       "min_temp_diff": 3.2,
       "avg_daily_range_diff": -0.8,
-      "ai_comment": ""
+      "ai_comment": "直近推移と暦年の同時期比較において結論が正反対に分かれる点が最大の差異です。直前4週間の平均気温（19.85℃）と比較すると-4.15℃、前週比でも-1.0℃と低下が続いています。一方、暦年の同時期比較では様相が一変し、2024年（14.3℃）および2025年（13.8℃）と合わせた3年間の第45週の中で本年は1位の高温となりました。過去2年の同時期平均14.05℃に対して+1.65℃高く、前年同期比でも平均気温が+1.6℃、最高気温が+3.9℃、最低気温が+3.2℃上回っています。このように、直近の流れでは低温側へ向かっているのに対し、同時期の履歴基準では顕著な高温水準という不一致を示しています。"
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 14.8,
-      "current_deviation": 0.8,
+      "current_deviation": 0.9,
       "years_count": 2
     },
     "events": {
@@ -334,15 +334,15 @@
             "low": 11.0
           },
           "11": {
-            "avg": 15.8,
+            "avg": 15.3,
             "high": 24.6,
-            "low": 10.9
+            "low": 9.1
           }
         }
       }
     },
     "trend_analysis": {
-      "ai_comment": ""
+      "ai_comment": "期間中最も際立つ変化は、11月5日から6日にかけて記録された日平均4.7℃の急上昇です。日平均気温は前半の15.65℃から後半の15.20℃へと0.45℃低下し、全体としては緩やかな推移ですが、中盤に顕著な山を形成しました。日平均の山は11月6日の19.1℃（最高気温24.6℃）、底は11月8日の14.1℃（最低気温10.9℃）でした。11月6日の急騰後は、翌7日にかけて-2.8℃と期間内最大の下降を見せています。日平均の標準偏差は1.6℃、前日からの平均変動幅は1.95℃で中程度の振れ幅でした。なお、日較差10℃以上や30℃以上の極端な日数は0日でした。"
     }
   },
   "chart_data": {
@@ -381,7 +381,7 @@
         14.4,
         19.1,
         16.3,
-        14.0
+        14.1
       ]
     },
     "prev_year_comparison": {
@@ -401,7 +401,7 @@
         14.4,
         19.1,
         16.3,
-        14.0
+        14.1
       ],
       "last_year": [
         15.1,
@@ -466,7 +466,7 @@
         -0.4,
         4.3,
         1.5,
-        -0.8
+        -0.7
       ],
       "baseline_avg": 14.8
     }
@@ -475,11 +475,11 @@
     "context_version": "3.2",
     "daily_pattern": {
       "opening_avg": 15.65,
-      "closing_avg": 15.15,
-      "front_to_back_change": -0.5,
-      "linear_slope_per_day": 0.046,
-      "daily_avg_stdev": 1.62,
-      "mean_absolute_day_change": 1.97,
+      "closing_avg": 15.2,
+      "front_to_back_change": -0.45,
+      "linear_slope_per_day": 0.057,
+      "daily_avg_stdev": 1.6,
+      "mean_absolute_day_change": 1.95,
       "largest_rise": {
         "change": 4.700000000000001,
         "from_date": "2026/11/05",
@@ -496,7 +496,7 @@
       },
       "coolest_average_day": {
         "date": "2026/11/08",
-        "value": 14.0
+        "value": 14.1
       },
       "days_high_35_or_more": 0,
       "days_high_30_or_more": 0,
@@ -537,12 +537,12 @@
         2026
       ],
       "peer_average": 14.05,
-      "deviation_from_peer_average": 1.55,
+      "deviation_from_peer_average": 1.65,
       "rank_warmest": 1,
       "rank_coldest": 3,
       "sample_min": 13.8,
-      "sample_max": 15.6,
-      "sample_stdev": 0.76
+      "sample_max": 15.7,
+      "sample_stdev": 0.8
     },
     "recent_history": {
       "previous_periods": [
@@ -589,18 +589,20 @@
       ],
       "previous_period_count": 4,
       "previous_period_mean": 19.85,
-      "difference_from_previous_period_mean": -4.25
+      "difference_from_previous_period_mean": -4.15
     }
   },
   "analysis_meta": {
-    "source": "draft",
-    "analysis_available": false,
+    "source": "gemini",
+    "analysis_available": true,
     "protocol_version": "3.2",
-    "generated_at": "2026-11-08T19:17:58.181369+09:00",
-    "data_fingerprint": "88d6ec1c209673ed1b39",
-    "period_closed": false,
+    "generated_at": "2026-11-09T09:43:07.612663+09:00",
+    "data_fingerprint": "e3fbd1081ffe6e2877f2",
+    "period_closed": true,
     "coverage_complete": true,
     "observed_days": 7,
-    "expected_days": 7
+    "expected_days": 7,
+    "model": "gemini-3.8-flash",
+    "api_calls": 1
   }
 }
