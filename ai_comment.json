@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-09T13:40:31.980457+09:00",
-  "advice": "現在、周辺では1時間以上にわたり弱い雨が降り続いており、屋外の個人センサーでも気温9.8℃、湿度92％と冷え込みを伴う雨模様となっています。傘が必要な降り方ではあるものの、雨足自体は時間雨量1ミリ未満と比較的落ち着いて推移しています。\n\n今後の雨雲の動きをみると、この雨はあと30分ほど続くものの、14時15分頃から急速に弱まり、約1時間後にはいったん止む見通しです。ただし気象庁の予報では夕方以降の降水確率が70％と再び上昇するため、今回の止み間は一時的なものにとどまるとみられます。\n\nこれから14時台前半にかけての移動には雨具が欠かせませんが、近場での所用なら雨雲が抜ける14時半過ぎを見計らうのも有効です。夜にかけて再び雨が降りやすくなり、気温も10℃前後で横ばいが続くため、濡れて体を冷やさないよう暖かい服装でお出かけください。",
+  "generated_at": "2026-11-09T16:17:50.617262+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 9.8,
-    "weather_temp": 10.4,
-    "weather": "曇り",
+    "outdoor_temp": 9.7,
+    "weather_temp": 9.6,
+    "weather": "薄曇り",
     "alerts_count": 0
   }
 }
