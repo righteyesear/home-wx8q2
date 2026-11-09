@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-09T18:14:22.667039+09:00",
-  "advice": "現在、葛飾区周辺では雨雲の隙間に入り降水が止んでいますが、屋外の日陰に設置したセンサーでは気温9.5℃と10℃を下回り、冷え込みが進んでいます。\n\n雨雲レーダーの推移からは直近1時間ほど降らない見込みですが、気象庁の予報による今夜の降水確率は70％と高く、夜遅くにかけて再び雨が降り出す可能性が高い状況です。気温は日付が変わる頃まで9℃台前半でほぼ横ばいの推移となり、大きな変化はないものの冷たい空気が居座る見通しです。\n\nこれから外出や帰宅をされる際は、いま雨が降っていなくても雨具を忘れずにお持ちください。湿気を含んだ冷気が続いて体感温度も下がりやすいため、首元を温めるなど防寒を万全にして行動することをおすすめします。",
+  "generated_at": "2026-11-09T20:05:41.290715+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 9.5,
-    "weather_temp": 9.5,
-    "weather": "薄曇り",
+    "outdoor_temp": 9.7,
+    "weather_temp": 9.0,
+    "weather": "曇り",
     "alerts_count": 0
   }
 }
