@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-10T06:53:14.922978+09:00",
-  "advice": "葛飾区周辺では6時半過ぎから再び雨雲がかかり始め、手元の屋外センサーの気温は9.9度と10度を下回る肌寒さとなっています。雨雲レーダーの実況でも現在、時間雨量0.8ミリ前後の降水を検知しており、路面が本格的に濡れ始めています。\n\nこの雨雲は7時15分前後に一時強まり、時間雨量2ミリを超える見込みですが、8時前には急速に抜けていったん止む推移を示す見通しです。ただし気象庁の予報では昼前にかけて降水確率50％が続いており、一時的な小康状態に入った後も、昼頃までは急な小雨への注意が欠かせません。\n\n7時台前半の移動はちょうど雨足が強まる時間帯と重なるため、濡れを防ぎやすい長傘の携行をおすすめします。足元の水はねに配慮するとともに、北寄りの風で体感も冷えやすくなっていますので、風を通しにくい防水性のある上着を羽織ってお出かけください。",
+  "generated_at": "2026-11-10T07:47:26.894658+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 9.9,
-    "weather_temp": 8.5,
-    "weather": "霧雨",
+    "outdoor_temp": 10.0,
+    "weather_temp": 8.7,
+    "weather": "薄曇り",
     "alerts_count": 0
   }
 }
