@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-10T04:41:50.446279+09:00",
-  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-11-10T05:27:58.994315+09:00",
+  "advice": "現在、雨はいったん止んでいますが、これは一時的な小康状態です。手元の屋外センサーでは気温9.4度を観測しており、北寄りの風の影響を受けた参考の体感温度は8.4度と、肌寒い朝を迎えています。\n\n雨雲の推移をみますと、午前5時台はこのまま降らない見込みですが、6時を回る頃から再び弱い雨が降り出す予想です。気象庁の予報でも昼前にかけての降水確率は50％となっており、朝の通勤や通学の時間帯には再び雨雲がかかりやすい状況へ戻るとみられます。\n\n出かけるタイミングで雨が降っていなくても、雨具を忘れずにお持ちください。雨は昼過ぎには止んで天気は回復へ向かう見通しですので、帰りの荷物を減らすなら折りたたみ傘の利用が便利です。冷たい雨に濡れて体を冷やさないよう調節してお過ごしください。",
   "model": "gemini-3.8-flash",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 9.5,
-    "weather_temp": 8.9,
-    "weather": "強い霧雨",
+    "outdoor_temp": 9.4,
+    "weather_temp": 8.8,
+    "weather": "弱い雨",
     "alerts_count": 0
   }
 }
