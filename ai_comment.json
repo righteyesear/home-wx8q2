@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-11T19:31:03.809266+09:00",
-  "advice": "手元の屋外センサーでは気温11.4℃を観測しており、雨の心配のない穏やかな夜を迎えています。風速から推定された参考の体感温度も10.9℃とほぼ等しく、風は静穏ですが肌寒さが感じられる状況です。\n\nこの先は日付が変わる頃にかけて、さらに約2℃気温が下がり10℃ほどまで冷え込む見通しです。今夜は高気圧に覆われて上空の雲が少なく風も弱いため、地表の熱が夜空へと逃げていく「放射冷却」が働き、順調に冷え込みが進みやすい気象条件となっています。\n\nこれからの時間帯にお出かけや帰宅をされる場合は、風を通しにくい上着やストールなどでしっかり防寒してください。また、夜間は室内の温度も下がりやすくなりますので、就寝前に温かい寝具を整えておくことをおすすめします。",
+  "generated_at": "2026-11-11T21:30:59.801183+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 11.4,
-    "weather_temp": 12.3,
+    "outdoor_temp": 10.0,
+    "weather_temp": 11.0,
     "weather": "晴れ",
     "alerts_count": 0
   }
