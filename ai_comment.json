@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-11T13:43:33.620738+09:00",
-  "advice": "日陰に設置したセンサーの実測気温は14.4℃と、今日ここまでの最高を観測して日中のピーク水準に達しています。ただし、推定風速を考慮した参考体感温度は12.7℃にとどまっており、直射日光が当たらない場所では数字ほどの暖かさは感じられない状況です。\n\nこの14℃前後の気温は15時台まで続く見込みですが、16時以降は日没に向けて低下し、17時には13℃台前半まで下がる推移とみられます。天気の崩れはないものの、陽射しが弱まると日陰での体感温度の低さが一層際立ってきます。\n\n日差しの入らない室内では足元などから肌寒さを感じやすいため、ひざ掛けや羽織るもので早めの保温を心がけてください。夕方以降も外出される場合は、日中の暖かさに油断せず、風を遮る上着を持参しておくと安心です。",
+  "generated_at": "2026-11-11T17:53:08.708590+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 14.4,
-    "weather_temp": 14.1,
-    "weather": "快晴",
+    "outdoor_temp": 12.5,
+    "weather_temp": 13.0,
+    "weather": "晴れ",
     "alerts_count": 0
   }
 }
