@@ -47,6 +47,12 @@
     --ui-extreme: #e9d5ff;
     --ui-extreme-bg: rgba(168, 85, 247, 0.22);
     --ui-extreme-border: rgba(192, 132, 252, 0.42);
+    --ui-tab-active-bg: #1b2840;
+    --ui-tab-active-text: #f3f6fb;
+    --ui-tab-active-shadow: 0 2px 8px rgba(2, 6, 23, 0.22);
+    --ui-hero-glow-l: 58%;
+    --ui-hero-glow-alpha: 0.14;
+    --ui-bg-glow-alpha: 0.10;
     --ui-shadow: 0 18px 36px -18px rgba(2, 6, 23, 0.72), inset 0 1px 0 var(--ui-border-highlight);
     --ui-shadow-soft: 0 8px 22px -12px rgba(2, 6, 23, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.04);
     --ui-scrollbar-thumb: rgba(148, 163, 184, 0.42);
@@ -112,6 +118,12 @@ html.light-mode,
     --ui-extreme: #6b21a8;
     --ui-extreme-bg: rgba(243, 232, 255, 0.94);
     --ui-extreme-border: rgba(107, 33, 168, 0.32);
+    --ui-tab-active-bg: #ffffff;
+    --ui-tab-active-text: #1d4ed8;
+    --ui-tab-active-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    --ui-hero-glow-l: 52%;
+    --ui-hero-glow-alpha: 0.10;
+    --ui-bg-glow-alpha: 0.08;
     --ui-shadow: 0 14px 30px -18px rgba(15, 23, 42, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.92);
     --ui-shadow-soft: 0 6px 16px -10px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.86);
     --ui-scrollbar-thumb: rgba(51, 65, 85, 0.36);
@@ -159,6 +171,8 @@ html.light-mode,
         --ui-extreme: light-dark(#6b21a8, #e9d5ff);
         --ui-extreme-bg: light-dark(rgba(243, 232, 255, 0.94), rgba(168, 85, 247, 0.22));
         --ui-extreme-border: light-dark(rgba(107, 33, 168, 0.32), rgba(192, 132, 252, 0.42));
+        --ui-tab-active-bg: light-dark(#ffffff, #1b2840);
+        --ui-tab-active-text: light-dark(#1d4ed8, #f3f6fb);
         --ui-scrollbar-thumb: light-dark(rgba(51, 65, 85, 0.36), rgba(148, 163, 184, 0.42));
         --ui-scrollbar-track: light-dark(rgba(226, 232, 240, 0.72), rgba(15, 23, 42, 0.35));
     }
@@ -235,18 +249,10 @@ body {
 /* Background layers restrained for legibility */
 .background-effects {
     background:
-        radial-gradient(circle at 18% 12%, hsla(var(--temp-hue, 205), 76%, 56%, 0.10), transparent 44%),
+        radial-gradient(circle at 18% 12%, hsla(var(--temp-hue, 205), 74%, var(--ui-hero-glow-l), var(--ui-bg-glow-alpha)), transparent 45%),
         radial-gradient(circle at 84% 20%, rgba(16, 185, 129, 0.06), transparent 40%),
         linear-gradient(180deg, var(--ui-bg-top) 0%, var(--ui-bg) 100%);
     opacity: 1;
-}
-
-html.light-mode .background-effects,
-:root:has(> head > meta[name="color-scheme"][content="light"]) .background-effects {
-    background:
-        radial-gradient(circle at 18% 10%, hsla(var(--temp-hue, 205), 72%, 56%, 0.08), transparent 46%),
-        radial-gradient(circle at 86% 18%, rgba(14, 165, 233, 0.06), transparent 42%),
-        linear-gradient(180deg, var(--ui-bg-top) 0%, var(--ui-bg) 100%);
 }
 
 .bg-orb,
@@ -492,7 +498,6 @@ header {
 }
 
 .status-item,
-html.light-mode .status-item,
 .header-report-link,
 .theme-toggle,
 .font-size-toggle {
@@ -507,6 +512,13 @@ html.light-mode .status-item,
     font-size: 0.8125rem;
     font-weight: 600;
     white-space: nowrap;
+}
+
+html.light-mode .status-item {
+    color: var(--ui-text-subtle);
+    border-color: var(--ui-border);
+    background: var(--ui-surface);
+    box-shadow: var(--ui-shadow-soft);
 }
 
 .header-report-link {
@@ -579,17 +591,10 @@ html.light-mode .weather-hero {
     border: 1px solid var(--ui-border);
     border-radius: var(--ui-radius-lg);
     background:
-        radial-gradient(circle at 86% 18%, hsla(var(--temp-hue, 205), 76%, 58%, 0.14), transparent 54%),
+        radial-gradient(circle at 86% 18%, hsla(var(--temp-hue, 205), 74%, var(--ui-hero-glow-l), var(--ui-hero-glow-alpha)), transparent 54%),
         linear-gradient(160deg, var(--ui-surface) 0%, var(--ui-surface-2) 100%);
     box-shadow: var(--ui-shadow);
     overflow: hidden;
-}
-
-html.light-mode .weather-hero,
-:root:has(> head > meta[name="color-scheme"][content="light"]) .weather-hero {
-    background:
-        radial-gradient(circle at 86% 18%, hsla(var(--temp-hue, 205), 74%, 52%, 0.10), transparent 56%),
-        linear-gradient(160deg, var(--ui-surface) 0%, var(--ui-surface-2) 100%);
 }
 
 @supports (container-type: inline-size) {
@@ -1241,18 +1246,10 @@ html.light-mode .ai-advisor-section {
 }
 
 .chart-view-btn.active {
-    color: var(--ui-text);
-    background: var(--ui-surface-3);
+    color: var(--ui-tab-active-text);
+    background: var(--ui-tab-active-bg);
     border-color: var(--ui-accent-border);
-    box-shadow: 0 2px 8px rgba(2, 6, 23, 0.22), inset 0 -2px 0 var(--ui-accent);
-}
-
-html.light-mode .chart-view-btn.active,
-:root:has(> head > meta[name="color-scheme"][content="light"]) .chart-view-btn.active {
-    color: var(--ui-accent);
-    background: var(--ui-surface);
-    border-color: var(--ui-accent-border);
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08), inset 0 -2px 0 var(--ui-accent);
+    box-shadow: var(--ui-tab-active-shadow), inset 0 -2px 0 var(--ui-accent);
 }
 
 /* Charts Grid & Cards */
@@ -1361,18 +1358,11 @@ html.light-mode .chart-range-selector {
 }
 
 .range-btn.active,
-html.light-mode .range-btn.active,
-:root:has(> head > meta[name="color-scheme"][content="light"]) .range-btn.active {
-    color: var(--ui-text);
-    background: var(--ui-surface-3);
+html.light-mode .range-btn.active {
+    color: var(--ui-tab-active-text);
+    background: var(--ui-tab-active-bg);
     border-color: var(--ui-accent-border);
-    box-shadow: 0 2px 6px rgba(2, 6, 23, 0.18), inset 0 -2px 0 var(--ui-accent);
-}
-
-html.light-mode .range-btn.active,
-:root:has(> head > meta[name="color-scheme"][content="light"]) .range-btn.active {
-    color: var(--ui-accent);
-    background: var(--ui-surface);
+    box-shadow: var(--ui-tab-active-shadow), inset 0 -2px 0 var(--ui-accent);
 }
 
 /* Moon Card Legibility & Contrast in Dark & Light Mode */
@@ -1480,9 +1470,7 @@ html.light-mode .footer-stats {
 }
 
 .footer-notification-btn,
-.footer-mode-btn,
-html.light-mode .footer-notification-btn,
-html.light-mode .footer-mode-btn {
+.footer-mode-btn {
     min-block-size: 40px;
     min-inline-size: 40px;
     padding: 9px 16px;
@@ -1495,8 +1483,22 @@ html.light-mode .footer-mode-btn {
     font-weight: 600;
 }
 
+.footer-notification-text {
+    font-size: 0.78rem;
+}
+
+html.light-mode .footer-notification-btn,
+html.light-mode .footer-mode-btn {
+    color: var(--ui-text-subtle);
+    border-color: var(--ui-border);
+    background: var(--ui-surface);
+    box-shadow: none;
+}
+
 .footer-notification-btn:hover,
-.footer-mode-btn:hover {
+.footer-mode-btn:hover,
+html.light-mode .footer-notification-btn:hover,
+html.light-mode .footer-mode-btn:hover {
     color: var(--ui-text);
     border-color: var(--ui-accent-border);
     background: var(--ui-surface-2);
@@ -1850,7 +1852,6 @@ body.simple-mode .chart-card[data-chart-id="chart24h"] {
     }
 
     .status-item,
-    html.light-mode .status-item,
     .header-report-link,
     .theme-toggle,
     .font-size-toggle {
@@ -1883,8 +1884,7 @@ body.simple-mode .chart-card[data-chart-id="chart24h"] {
         padding: 13px;
     }
 
-    .weather-hero,
-    html.light-mode .weather-hero {
+    .weather-hero {
         min-block-size: 380px;
         padding: 20px 18px 18px;
         border-radius: 24px;
@@ -1908,8 +1908,7 @@ body.simple-mode .chart-card[data-chart-id="chart24h"] {
         gap: 8px;
     }
 
-    .weather-hero-icon,
-    html.light-mode .weather-hero-icon {
+    .weather-hero-icon {
         inline-size: 68px;
         block-size: 68px;
         border-radius: 20px;
@@ -1920,8 +1919,7 @@ body.simple-mode .chart-card[data-chart-id="chart24h"] {
         justify-content: center;
     }
 
-    .hero-temp-value,
-    html.light-mode .hero-temp-value {
+    .hero-temp-value {
         font-size: clamp(4.1rem, 21vw, 5.5rem);
     }
 
@@ -1934,8 +1932,7 @@ body.simple-mode .chart-card[data-chart-id="chart24h"] {
         font-size: 0.9375rem;
     }
 
-    .weather-hero-info,
-    html.light-mode .weather-hero-info {
+    .weather-hero-info {
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 8px;
     }
@@ -1955,8 +1952,7 @@ body.simple-mode .chart-card[data-chart-id="chart24h"] {
         font-size: 0.75rem;
     }
 
-    .comment-card,
-    html.light-mode .comment-card {
+    .comment-card {
         padding: 15px 16px;
         grid-template-columns: 1fr;
         gap: 6px;
@@ -1977,8 +1973,7 @@ body.simple-mode .chart-card[data-chart-id="chart24h"] {
         gap: 9px;
     }
 
-    .stat-card,
-    html.light-mode .stat-card {
+    .stat-card {
         padding: 12px 10px;
         border-radius: 16px;
     }
@@ -2009,9 +2004,7 @@ body.simple-mode .chart-card[data-chart-id="chart24h"] {
     }
 
     .ai-advisor-section,
-    html.light-mode .ai-advisor-section,
-    .precipitation-card,
-    html.light-mode .precipitation-card {
+    .precipitation-card {
         padding: 18px 16px;
         border-radius: 20px;
     }
@@ -2048,9 +2041,7 @@ body.simple-mode .chart-card[data-chart-id="chart24h"] {
     }
 
     .chart-card,
-    html.light-mode .chart-card,
-    .chart-card.moon-card,
-    html.light-mode .chart-card.moon-card {
+    .chart-card.moon-card {
         border-radius: 20px;
     }
 
@@ -2079,8 +2070,7 @@ body.simple-mode .chart-card[data-chart-id="chart24h"] {
         padding: 14px 10px 6px;
     }
 
-    .footer-stats,
-    html.light-mode .footer-stats {
+    .footer-stats {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         border-radius: 18px;
     }
@@ -2101,8 +2091,7 @@ body.simple-mode .chart-card[data-chart-id="chart24h"] {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .weather-hero-info,
-    html.light-mode .weather-hero-info {
+    .weather-hero-info {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
@@ -2154,16 +2143,14 @@ body.simple-mode .chart-card[data-chart-id="chart24h"] {
     }
 
     @container page (inline-size < 480px) {
-        .comment-card,
-        html.light-mode .comment-card {
+        .comment-card {
             grid-template-columns: 1fr;
             gap: 6px;
         }
     }
 
     @container stats (inline-size < 340px) {
-        .stat-card,
-        html.light-mode .stat-card {
+        .stat-card {
             padding: 12px 10px;
         }
     }
@@ -2214,14 +2201,16 @@ body.simple-mode .chart-card[data-chart-id="chart24h"] {
 
 /* Coarse Pointer Touch Targets >= 44px */
 @media (pointer: coarse) {
-    .header-report-link,
-    .theme-toggle,
-    .font-size-toggle,
-    .chart-view-btn,
-    .range-btn,
-    .footer-notification-btn,
-    .footer-mode-btn,
-    .alert-banner {
+    :is(html, html.light-mode) :is(
+        .header-report-link,
+        .theme-toggle,
+        .font-size-toggle,
+        .chart-view-btn,
+        .range-btn,
+        .footer-notification-btn,
+        .footer-mode-btn,
+        .alert-banner
+    ) {
         min-block-size: 44px;
         min-inline-size: 44px;
     }
@@ -2229,49 +2218,83 @@ body.simple-mode .chart-card[data-chart-id="chart24h"] {
 
 /* Windows High Contrast / Forced Colors Mode */
 @media (forced-colors: active) {
-    .weather-hero,
-    .stat-card,
-    .comment-card,
-    .alert-banner,
-    .precipitation-card,
-    .ai-advisor-section,
-    .forecast-brief,
-    .forecast-panel,
-    .chart-card,
-    .chart-card.moon-card,
-    .report-link-card,
-    .footer-stats,
-    .status-item,
-    .header-report-link,
-    .theme-toggle,
-    .font-size-toggle,
-    .footer-notification-btn,
-    .footer-mode-btn,
-    .chart-view-switcher,
-    .chart-range-selector,
-    .comfort-badge,
-    .uv-badge,
-    .dew-point-badge,
-    .freshness-badge,
-    .source-badge,
-    .moon-badge,
-    .skip-link,
-    .weather-hero-info-item {
+    :is(html, html.light-mode) :is(
+        .weather-hero,
+        .stat-card,
+        .comment-card,
+        .alert-banner,
+        .precipitation-card,
+        .ai-advisor-section,
+        .forecast-brief,
+        .forecast-panel,
+        .chart-card,
+        .chart-card.moon-card,
+        .report-link-card,
+        .footer-stats,
+        .status-item,
+        .header-report-link,
+        .theme-toggle,
+        .font-size-toggle,
+        .footer-notification-btn,
+        .footer-mode-btn,
+        .chart-view-switcher,
+        .chart-range-selector,
+        .comfort-badge,
+        .uv-badge,
+        .dew-point-badge,
+        .freshness-badge,
+        .source-badge,
+        .skip-link,
+        .weather-hero-info-item
+    ) {
         border: 1px solid CanvasText;
         box-shadow: none;
         background-image: none;
     }
 
-    .chart-view-btn,
-    .range-btn {
+    :is(html, html.light-mode) :is(
+        .weather-hero,
+        .stat-card,
+        .comment-card,
+        .precipitation-card,
+        .ai-advisor-section,
+        .chart-card,
+        .report-link-card,
+        .footer-stats,
+        .header-report-link,
+        .theme-toggle,
+        .font-size-toggle,
+        .footer-notification-btn,
+        .footer-mode-btn
+    ):hover {
+        border-color: Highlight;
+        box-shadow: none;
+    }
+
+    :is(html, html.light-mode) .chart-card.moon-card .moon-badge {
+        background: Canvas !important;
+        color: CanvasText !important;
+        border: 1px solid CanvasText !important;
+        box-shadow: none !important;
+    }
+
+    :is(html, html.light-mode, :root:has(> head > meta[name="color-scheme"][content="light"])) :is(
+        .stat-value,
+        .footer-stat-value,
+        .hero-temp-value
+    ) {
+        color: CanvasText !important;
+    }
+
+    :is(html, html.light-mode) :is(.chart-view-btn, .range-btn) {
         border: 1px solid ButtonBorder;
     }
 
-    .chart-view-btn.active,
-    .range-btn.active {
+    :is(html, html.light-mode) :is(.chart-view-btn.active, .range-btn.active) {
         background: Highlight;
         color: HighlightText;
         border: 2px solid Highlight;
+        box-shadow: none;
         forced-color-adjust: none;
     }
 
