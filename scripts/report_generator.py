@@ -34,6 +34,7 @@ from report_analysis import (
     parse_gemini_analysis,
     report_completeness,
 )
+from retry_utils import call_gemini_with_retry, http_get_with_retry
 
 # .env ファイルから環境変数を読み込み
 from dotenv import load_dotenv
@@ -54,6 +55,8 @@ if GEMINI_THINKING_LEVEL not in {'low', 'medium', 'high'}:
 # 1レポートを1回で分析する。誤操作や将来のループでも無料枠を浪費しない。
 GEMINI_MAX_CALLS_PER_RUN = max(0, min(int(os.environ.get('GEMINI_MAX_CALLS_PER_RUN', '1')), 20))
 _gemini_calls = 0
+RAW_FETCH_TIMEOUT = 60
+DAILY_FETCH_TIMEOUT = 30
 
 # 東京都葛飾区東金町5丁目
 LATITUDE = 35.7727
@@ -93,8 +96,16 @@ def fetch_raw_for_date(date_str: str) -> Optional[Dict]:
     params = {'tqx': 'out:csv', 'sheet': 'Raw', 'tq': query}
 
     try:
-        resp = requests.get(base_url, params=params, timeout=60)
-        resp.raise_for_status()
+        resp = http_get_with_retry(
+            base_url,
+            params=params,
+            timeout=RAW_FETCH_TIMEOUT,
+            source_name=f'Rawシート({date_str})',
+            max_attempts=2,
+            max_retry_elapsed=RAW_FETCH_TIMEOUT * 1.2,
+            request_fn=requests.get,
+            requests_module=requests,
+        )
     except Exception as e:
         print(f"    ⚠ Raw データ取得失敗 ({date_str}): {e}")
         return None
@@ -136,8 +147,13 @@ def fetch_daily_data() -> List[Dict]:
     daily_url = f"{base_url}&sheet=Daily"
 
     print("  → Daily シートからデータ取得中...")
-    resp = requests.get(daily_url, timeout=30)
-    resp.raise_for_status()
+    resp = http_get_with_retry(
+        daily_url,
+        timeout=DAILY_FETCH_TIMEOUT,
+        source_name='Dailyシート',
+        request_fn=requests.get,
+        requests_module=requests,
+    )
 
     lines = resp.text.strip().split('\n')[1:]  # ヘッダースキップ
     records = []
@@ -671,15 +687,19 @@ def analyze_report_with_gemini(report: Dict[str, Any]) -> Dict[str, Any]:
     try:
         client = genai.Client(api_key=GEMINI_API_KEY)
         _gemini_calls += 1
-        response = client.models.generate_content(
-            model=GEMINI_MODEL,
-            contents=build_gemini_protocol_prompt(report),
-            config={
-                'thinking_config': {
-                    'thinking_level': GEMINI_THINKING_LEVEL,
+        prompt = build_gemini_protocol_prompt(report)
+        response = call_gemini_with_retry(
+            lambda: client.models.generate_content(
+                model=GEMINI_MODEL,
+                contents=prompt,
+                config={
+                    'thinking_config': {
+                        'thinking_level': GEMINI_THINKING_LEVEL,
+                    },
+                    'response_mime_type': 'application/json',
                 },
-                'response_mime_type': 'application/json',
-            },
+            ),
+            source_name=f'Geminiレポート ({GEMINI_MODEL})',
         )
         comments = parse_gemini_analysis(response.text)
         fallback['comments'] = comments

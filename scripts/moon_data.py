@@ -11,18 +11,25 @@ import urllib.request
 import math
 from datetime import datetime, timezone, timedelta
 
+from retry_utils import fetch_json_urllib_with_retry
+
 # 東京都葛飾区東金町5丁目の座標（プロジェクト共通設定）
 LAT = 35.7727
 LON = 139.8680
 
 # 日本標準時 (JST = UTC+9)
 JST = timezone(timedelta(hours=9))
+MOON_API_TIMEOUT = 18
 
 
 def fetch_json(url):
-    """URLからJSONを取得"""
-    with urllib.request.urlopen(url, timeout=10) as resp:
-        return json.loads(resp.read().decode('utf-8'))
+    """URLからJSONを取得（タイムアウト・一時的HTTPエラー時リトライ付き）"""
+    return fetch_json_urllib_with_retry(
+        url,
+        timeout=MOON_API_TIMEOUT,
+        source_name="Ohakonbanchi API",
+        urlopen_fn=urllib.request.urlopen,
+    )
 
 
 def get_compass_direction(azimuth):

@@ -25,6 +25,15 @@ load_dotenv(env_path)
 
 from google import genai
 from data_analysis import analyze_data_comprehensive
+from retry_utils import (
+    HTTP_MAX_ATTEMPTS,
+    HTTP_RETRYABLE_STATUS_CODES,
+    HTTP_RETRY_BACKOFF_BASE,
+    HTTP_RETRY_BACKOFF_MAX,
+    call_gemini_with_retry,
+    finite_number as _finite_number,
+    http_get_with_retry as _shared_http_get_with_retry,
+)
 
 # =============================================================================
 # 設定
@@ -49,10 +58,6 @@ SPREADSHEET_SUMMARY_TIMEOUT = 25
 SPREADSHEET_RECENT_TIMEOUT = 30
 SPREADSHEET_DAILY_TIMEOUT = 25
 EXTERNAL_API_TIMEOUT = 18
-HTTP_MAX_ATTEMPTS = 3
-HTTP_RETRY_BACKOFF_BASE = 1.0
-HTTP_RETRY_BACKOFF_MAX = 4.0
-HTTP_RETRYABLE_STATUS_CODES = frozenset({429, 500, 502, 503, 504})
 SPREADSHEET_PHASE_BUDGET_SECONDS = 90.0
 
 # 2026-05-29以降の気象警報・注意報コード。
@@ -288,91 +293,8 @@ def calculate_feels_like(temp: float, humidity: float, wind_speed_10m: float) ->
 
 
 # =============================================================================
-# 共通数値・HTTPリトライ・CSVパースユーティリティ
+# 共通HTTPリトライ・CSVパースユーティリティ
 # =============================================================================
-
-def _finite_number(value: Any) -> Optional[float]:
-    """boolを除く有限の数値だけを比較用に返す。"""
-    if isinstance(value, bool) or value is None:
-        return None
-    try:
-        number = float(value)
-    except (TypeError, ValueError):
-        return None
-    return number if math.isfinite(number) else None
-
-
-def _parse_retry_after(headers: Any) -> Optional[float]:
-    """Retry-After ヘッダの数値秒を上限付きで返す。"""
-    if not headers or not hasattr(headers, 'get'):
-        return None
-    raw_value = headers.get('Retry-After')
-    if raw_value is None:
-        return None
-    seconds = _finite_number(raw_value)
-    if seconds is None or seconds <= 0:
-        return None
-    return min(seconds, HTTP_RETRY_BACKOFF_MAX)
-
-
-def _extract_status_code(obj: Any) -> Optional[int]:
-    """レスポンスまたは例外から HTTP ステータスコードを安全に取得する。"""
-    status_code = getattr(obj, 'status_code', None)
-    if isinstance(status_code, int) and not isinstance(status_code, bool):
-        return status_code
-    return None
-
-
-def _is_retryable_status(status_code: Optional[int]) -> bool:
-    """一時的な HTTP エラー (429 / 5xx) か判定する。"""
-    if status_code is None:
-        return False
-    return status_code in HTTP_RETRYABLE_STATUS_CODES or 500 <= status_code < 600
-
-
-def _is_retryable_exception(exc: Exception) -> bool:
-    """タイムアウト・接続エラー・一時的 HTTP エラーなら True を返す。"""
-    if isinstance(exc, (TimeoutError, ConnectionError)):
-        return True
-
-    requests_exc = getattr(requests, 'exceptions', None)
-    if requests_exc is not None:
-        retryable_types = tuple(
-            cls for cls in (
-                getattr(requests_exc, 'Timeout', None),
-                getattr(requests_exc, 'ConnectionError', None),
-                getattr(requests_exc, 'ChunkedEncodingError', None),
-            )
-            if isinstance(cls, type)
-        )
-        if retryable_types and isinstance(exc, retryable_types):
-            return True
-
-        http_error_cls = getattr(requests_exc, 'HTTPError', None)
-        if isinstance(http_error_cls, type) and isinstance(exc, http_error_cls):
-            resp = getattr(exc, 'response', None)
-            status = _extract_status_code(resp) or _extract_status_code(exc)
-            return _is_retryable_status(status)
-
-    resp = getattr(exc, 'response', None)
-    status = _extract_status_code(resp) or _extract_status_code(exc)
-    if status is not None:
-        return _is_retryable_status(status)
-
-    return False
-
-
-def _compute_retry_delay(attempt_index: int, response: Any = None) -> float:
-    """指数バックオフ待機時間（秒）を計算する。"""
-    backoff = min(
-        HTTP_RETRY_BACKOFF_MAX,
-        HTTP_RETRY_BACKOFF_BASE * (2 ** attempt_index),
-    )
-    retry_after = _parse_retry_after(getattr(response, 'headers', None))
-    if retry_after is not None:
-        return max(backoff, retry_after)
-    return backoff
-
 
 def _http_get_with_retry(
     url: str,
@@ -383,81 +305,18 @@ def _http_get_with_retry(
     max_attempts: int = HTTP_MAX_ATTEMPTS,
     max_retry_elapsed: Optional[float] = None,
 ) -> Any:
-    """
-    requests.get をラップした有界リトライ付き HTTP GET ヘルパー。
-    タイムアウト・接続エラー・一時的 429/5xx のみを指数バックオフ付きで再試行する。
-    """
-    attempts = max(1, int(max_attempts))
-    retry_elapsed_limit = (
-        timeout * 1.2 if max_retry_elapsed is None else max_retry_elapsed
+    """共有リトライヘルパーへ委譲し、requests.get / time.sleep パッチ互換性を維持する。"""
+    return _shared_http_get_with_retry(
+        url,
+        timeout=timeout,
+        headers=headers,
+        source_name=source_name,
+        max_attempts=max_attempts,
+        max_retry_elapsed=max_retry_elapsed,
+        request_fn=requests.get,
+        requests_module=requests,
+        sleep_fn=time.sleep,
     )
-    started_at = time.monotonic()
-    request_kwargs: Dict[str, Any] = {'timeout': timeout}
-    if headers is not None:
-        request_kwargs['headers'] = headers
-
-    for attempt in range(attempts):
-        try:
-            resp = requests.get(url, **request_kwargs)
-        except Exception as exc:
-            elapsed = time.monotonic() - started_at
-            can_retry = (
-                attempt + 1 < attempts
-                and _is_retryable_exception(exc)
-                and elapsed < retry_elapsed_limit
-            )
-            if not can_retry:
-                raise
-            delay = _compute_retry_delay(attempt)
-            print(
-                f"  [WARN] {source_name} 取得リトライ "
-                f"({attempt + 1}/{attempts - 1}): {exc}"
-            )
-            time.sleep(delay)
-            continue
-
-        status_code = _extract_status_code(resp)
-        if _is_retryable_status(status_code):
-            elapsed = time.monotonic() - started_at
-            if attempt + 1 < attempts and elapsed < retry_elapsed_limit:
-                delay = _compute_retry_delay(attempt, resp)
-                close_fn = getattr(resp, 'close', None)
-                if callable(close_fn):
-                    close_fn()
-                print(
-                    f"  [WARN] {source_name} HTTP {status_code} リトライ "
-                    f"({attempt + 1}/{attempts - 1})"
-                )
-                time.sleep(delay)
-                continue
-            resp.raise_for_status()
-            raise RuntimeError(f"{source_name} returned HTTP {status_code}")
-
-        try:
-            resp.raise_for_status()
-        except Exception as exc:
-            elapsed = time.monotonic() - started_at
-            can_retry = (
-                attempt + 1 < attempts
-                and _is_retryable_exception(exc)
-                and elapsed < retry_elapsed_limit
-            )
-            if not can_retry:
-                raise
-            delay = _compute_retry_delay(attempt, getattr(exc, 'response', resp))
-            close_fn = getattr(resp, 'close', None)
-            if callable(close_fn):
-                close_fn()
-            print(
-                f"  [WARN] {source_name} 応答エラーリトライ "
-                f"({attempt + 1}/{attempts - 1}): {exc}"
-            )
-            time.sleep(delay)
-            continue
-
-        return resp
-
-    raise RuntimeError(f"{source_name} fetch failed after {attempts} attempts")
 
 
 def _iter_csv_rows(csv_text: str) -> List[List[str]]:
@@ -2016,14 +1875,18 @@ def analyze_with_gemini(
     try:
         print(f'  → Geminiモデル: {GEMINI_MODEL}')
         client = genai.Client(api_key=GEMINI_API_KEY)
-        response = client.models.generate_content(
-            model=GEMINI_MODEL,
-            contents=prompt,
-            config={
-                'thinking_config': {
-                    'thinking_level': GEMINI_THINKING_LEVEL,
+        response = call_gemini_with_retry(
+            lambda: client.models.generate_content(
+                model=GEMINI_MODEL,
+                contents=prompt,
+                config={
+                    'thinking_config': {
+                        'thinking_level': GEMINI_THINKING_LEVEL,
+                    },
                 },
-            },
+            ),
+            source_name=f'Gemini ({GEMINI_MODEL})',
+            sleep_fn=time.sleep,
         )
         raw_advice = (response.text or '').strip()
         if not raw_advice:

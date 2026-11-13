@@ -9,6 +9,8 @@ import os
 import requests
 from datetime import datetime
 
+from retry_utils import http_get_with_retry
+
 # Load .env file for local testing
 try:
     from dotenv import load_dotenv
@@ -20,6 +22,7 @@ except ImportError:
 YAHOO_CLIENT_ID = os.environ.get('YAHOO_CLIENT_ID', '')
 LATITUDE = 35.7727   # 東京都葛飾区東金町5丁目
 LONGITUDE = 139.8680
+YAHOO_PRECIP_TIMEOUT = 18
 
 def fetch_precipitation():
     """Yahoo Weather APIから降水量データを取得"""
@@ -40,8 +43,14 @@ def fetch_precipitation():
     }
     
     try:
-        response = requests.get(url, params=params, timeout=10)
-        response.raise_for_status()
+        response = http_get_with_retry(
+            url,
+            params=params,
+            timeout=YAHOO_PRECIP_TIMEOUT,
+            source_name='Yahoo降水API',
+            request_fn=requests.get,
+            requests_module=requests,
+        )
         data = response.json()
         
         # データを整形
