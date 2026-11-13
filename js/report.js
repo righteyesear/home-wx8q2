@@ -38,6 +38,9 @@ function loadChartLibrary() {
 
 async function initializeReport() {
     syncThemeIcon();
+    setupThemeSync();
+    setupReportTablistKeyboard();
+    setupHistoryDropdownDismiss();
     await loadReportIndex();
     loadLatestReport();
     loadChartLibrary();
@@ -64,22 +67,112 @@ window.addEventListener('chartjs-ready', () => {
 
 
 // =============================================================================
-// Theme
+// Theme & Accessible Controls
 // =============================================================================
 
+function isLightThemeActive() {
+    return Boolean(typeof document !== 'undefined' && document.documentElement?.classList?.contains('light-mode'));
+}
+
+function syncThemeMetadata(isLight) {
+    if (typeof document === 'undefined' || typeof document.querySelector !== 'function') return;
+    const schemeMeta = document.querySelector('meta[name="color-scheme"]');
+    if (schemeMeta) schemeMeta.setAttribute('content', isLight ? 'light' : 'dark');
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+    if (themeMeta) themeMeta.setAttribute('content', isLight ? '#edf1f5' : '#08111f');
+}
+
 function syncThemeIcon() {
-    const use = document.getElementById('themeIconUse');
-    if (!use) return;
-    const isLight = document.documentElement.classList.contains('light-mode');
-    use.setAttribute('href', isLight ? '#icon-moon' : '#icon-sun');
+    const isLight = isLightThemeActive();
+    syncThemeMetadata(isLight);
+    if (typeof document === 'undefined') return;
+    const use = document.getElementById?.('themeIconUse');
+    if (use) use.setAttribute('href', isLight ? '#icon-moon' : '#icon-sun');
+    const toggleBtn = document.querySelector?.('.report-theme-toggle');
+    if (toggleBtn) {
+        const label = isLight ? 'ダークモードに切り替え' : 'ライトモードに切り替え';
+        toggleBtn.setAttribute('aria-label', label);
+        toggleBtn.setAttribute('title', label);
+    }
 }
 
 function toggleReportTheme() {
-    document.documentElement.classList.toggle('light-mode');
-    const isLight = document.documentElement.classList.contains('light-mode');
-    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    const root = typeof document !== 'undefined' ? document.documentElement : null;
+    if (!root?.classList) return;
+    root.classList.toggle('light-mode');
+    const isLight = root.classList.contains('light-mode');
+    try {
+        if (typeof localStorage !== 'undefined') {
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        }
+    } catch { /* ignore storage access restrictions */ }
     syncThemeIcon();
     updateChartColors();
+}
+
+function setupThemeSync() {
+    if (typeof window === 'undefined' || typeof window.addEventListener !== 'function') return;
+    window.addEventListener('storage', event => {
+        if (event?.key !== 'theme') return;
+        const isLight = event.newValue === 'light';
+        document.documentElement?.classList?.toggle('light-mode', isLight);
+        syncThemeIcon();
+        updateChartColors();
+    });
+}
+
+function syncReportTabAttributes(activeType) {
+    if (typeof document === 'undefined' || typeof document.querySelectorAll !== 'function') return;
+    document.querySelectorAll('.report-tab').forEach(tab => {
+        const active = tab.dataset?.type === activeType;
+        tab.classList.toggle('active', active);
+        tab.setAttribute('aria-selected', String(active));
+        tab.setAttribute('tabindex', active ? '0' : '-1');
+    });
+}
+
+function setupReportTablistKeyboard() {
+    if (typeof document === 'undefined' || typeof document.querySelector !== 'function') return;
+    const tablist = document.querySelector('.report-tabs[role="tablist"]');
+    if (!tablist || typeof tablist.addEventListener !== 'function') return;
+    syncReportTabAttributes(state.reportType);
+    tablist.addEventListener('keydown', event => {
+        const tabs = Array.from(tablist.querySelectorAll?.('.report-tab') || []);
+        const current = event.target?.closest?.('.report-tab');
+        const index = tabs.indexOf(current);
+        if (index < 0 || !tabs.length) return;
+        const nextByKey = {
+            ArrowRight: (index + 1) % tabs.length,
+            ArrowLeft: (index - 1 + tabs.length) % tabs.length,
+            Home: 0,
+            End: tabs.length - 1,
+        };
+        if (!(event.key in nextByKey)) return;
+        event.preventDefault();
+        const nextTab = tabs[nextByKey[event.key]];
+        nextTab?.focus?.();
+        const nextType = nextTab?.dataset?.type;
+        if (nextType && nextType !== state.reportType) {
+            switchReportType(nextType);
+        }
+    });
+}
+
+function setupHistoryDropdownDismiss() {
+    if (typeof document === 'undefined' || typeof document.addEventListener !== 'function') return;
+    document.addEventListener('click', event => {
+        if (!state.listOpen) return;
+        const dropdown = document.getElementById?.('reportListDropdown');
+        const button = document.getElementById?.('historyBtn');
+        const target = event.target;
+        if (dropdown?.contains?.(target) || button?.contains?.(target)) return;
+        closeReportList({ restoreFocus: false });
+    });
+    document.addEventListener('keydown', event => {
+        if (!state.listOpen || event.key !== 'Escape') return;
+        event.preventDefault();
+        closeReportList({ restoreFocus: true });
+    });
 }
 
 
@@ -193,11 +286,7 @@ function showContent() {
 function switchReportType(type) {
     if (!['weekly', 'monthly'].includes(type)) return;
     state.reportType = type;
-    document.querySelectorAll('.report-tab').forEach(tab => {
-        const active = tab.dataset.type === type;
-        tab.classList.toggle('active', active);
-        tab.setAttribute('aria-selected', String(active));
-    });
+    syncReportTabAttributes(type);
     closeReportList();
     loadLatestReport();
 }
@@ -225,17 +314,25 @@ function updateNavButtons() {
 
 function toggleReportList() {
     state.listOpen = !state.listOpen;
-    const dropdown = document.getElementById('reportListDropdown');
-    const button = document.getElementById('historyBtn');
-    dropdown.hidden = !state.listOpen;
-    button.setAttribute('aria-expanded', String(state.listOpen));
-    if (state.listOpen) renderReportList();
+    const dropdown = document.getElementById?.('reportListDropdown');
+    const button = document.getElementById?.('historyBtn');
+    if (dropdown) dropdown.hidden = !state.listOpen;
+    if (button) button.setAttribute('aria-expanded', String(state.listOpen));
+    if (state.listOpen) {
+        renderReportList();
+        const focusTarget = dropdown?.querySelector?.('.report-list-item.active, .report-list-item');
+        focusTarget?.focus?.();
+    }
 }
 
-function closeReportList() {
+function closeReportList({ restoreFocus = false } = {}) {
+    const wasOpen = state.listOpen;
     state.listOpen = false;
-    document.getElementById('reportListDropdown').hidden = true;
-    document.getElementById('historyBtn').setAttribute('aria-expanded', 'false');
+    const dropdown = document.getElementById?.('reportListDropdown');
+    const button = document.getElementById?.('historyBtn');
+    if (dropdown) dropdown.hidden = true;
+    if (button) button.setAttribute('aria-expanded', 'false');
+    if (wasOpen && restoreFocus) button?.focus?.();
 }
 
 function renderReportList() {
@@ -255,7 +352,7 @@ function renderReportList() {
         button.type = 'button';
         button.className = `report-list-item${entry.period === state.currentPeriod ? ' active' : ''}`;
         button.addEventListener('click', () => {
-            closeReportList();
+            closeReportList({ restoreFocus: true });
             loadReport(entry.period);
         });
         const label = document.createElement('span');
@@ -305,6 +402,7 @@ function analysisSourceLabel(meta = {}) {
 function makeIcon(iconId) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('class', 'icon');
+    svg.setAttribute('aria-hidden', 'true');
     const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
     use.setAttribute('href', `#${iconId}`);
     svg.appendChild(use);
@@ -589,28 +687,41 @@ function renderHeatmap(data) {
 
 function switchHeatmapMode(mode) {
     state.heatmapMode = ['avg', 'high', 'low'].includes(mode) ? mode : 'avg';
-    document.querySelectorAll('#heatmapToggle .toggle-btn').forEach(button => {
-        button.classList.toggle('active', button.dataset.mode === state.heatmapMode);
+    document.querySelectorAll?.('#heatmapToggle .toggle-btn')?.forEach(button => {
+        const active = button.dataset.mode === state.heatmapMode;
+        button.classList.toggle('active', active);
+        button.setAttribute('aria-pressed', String(active));
     });
     _buildHeatmap(state.heatmapData, state.heatmapMode);
 }
 
-function interpolateColor(start, end, ratio) {
-    const values = start.map((value, index) => Math.round(value + (end[index] - value) * ratio));
-    return `rgb(${values.join(',')})`;
+function interpolateRgb(start, end, ratio) {
+    return start.map((value, index) => Math.round(value + (end[index] - value) * ratio));
+}
+
+function tempToRgb(temperature) {
+    const value = Math.max(-5, Math.min(38, Number(temperature)));
+    const cool = [54, 110, 190];
+    const neutral = [82, 96, 118];
+    const warm = [230, 107, 61];
+    if (value <= 17) return interpolateRgb(cool, neutral, (value + 5) / 22);
+    return interpolateRgb(neutral, warm, (value - 17) / 21);
+}
+
+function relativeLuminance(rgb) {
+    const [r, g, b] = rgb.map(channel => {
+        const srgb = channel / 255;
+        return srgb <= 0.03928 ? srgb / 12.92 : ((srgb + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
 function tempToColor(temperature) {
-    const value = Math.max(-5, Math.min(38, Number(temperature)));
-    const cool = [58, 117, 197];
-    const neutral = [82, 96, 118];
-    const warm = [230, 107, 61];
-    if (value <= 17) return interpolateColor(cool, neutral, (value + 5) / 22);
-    return interpolateColor(neutral, warm, (value - 17) / 21);
+    return `rgb(${tempToRgb(temperature).join(',')})`;
 }
 
 function heatmapTextColor(temperature) {
-    return Number(temperature) > 28 ? '#231710' : '#f8fafc';
+    return relativeLuminance(tempToRgb(temperature)) > 0.185 ? '#050a14' : '#ffffff';
 }
 
 function _buildHeatmap(data, mode) {
@@ -679,14 +790,36 @@ function _buildHeatmap(data, mode) {
 // Chart.js
 // =============================================================================
 
+function getChartColors() {
+    const isLight = isLightThemeActive();
+    return {
+        isLight,
+        text: isLight ? '#4b5a72' : '#c0cad9',
+        grid: isLight ? 'rgba(15, 23, 42, 0.10)' : 'rgba(203, 213, 225, 0.12)',
+        zeroLine: isLight ? '#334155' : '#94a3b8',
+        tooltipBg: isLight ? 'rgba(255, 255, 255, 0.97)' : 'rgba(7, 15, 29, 0.95)',
+        tooltipTitle: isLight ? '#0f172a' : '#f5f7fb',
+        tooltipBody: isLight ? '#334155' : '#dce5f2',
+        tooltipBorder: isLight ? 'rgba(15, 23, 42, 0.14)' : 'rgba(203, 213, 225, 0.18)',
+        high: isLight ? '#c84b1e' : '#ff8c66',
+        highFill: isLight ? 'rgba(200, 75, 30, 0.10)' : 'rgba(255, 140, 102, 0.12)',
+        low: isLight ? '#2563eb' : '#6aa9ff',
+        lowFill: isLight ? 'rgba(37, 99, 235, 0.08)' : 'rgba(106, 169, 255, 0.09)',
+        avg: isLight ? '#64748b' : '#9aa8bd',
+        prevYear: isLight ? '#1d4ed8' : '#7cb8ff',
+        devPosBg: isLight ? 'rgba(200, 75, 30, 0.78)' : 'rgba(255, 134, 92, 0.78)',
+        devPosBorder: isLight ? '#b8421e' : '#ff9873',
+        devNegBg: isLight ? 'rgba(37, 99, 235, 0.74)' : 'rgba(94, 158, 255, 0.76)',
+        devNegBorder: isLight ? '#1d4ed8' : '#7ab6ff',
+    };
+}
+
 function getChartTextColor() {
-    return document.documentElement.classList.contains('light-mode') ? '#506078' : '#a9b4c6';
+    return getChartColors().text;
 }
 
 function getChartGridColor() {
-    return document.documentElement.classList.contains('light-mode')
-        ? 'rgba(30, 41, 59, 0.08)'
-        : 'rgba(203, 213, 225, 0.08)';
+    return getChartColors().grid;
 }
 
 function destroyChart(name) {
@@ -696,24 +829,51 @@ function destroyChart(name) {
     }
 }
 
+function applyChartThemeToDatasets(chartName, chart, colors) {
+    const datasets = chart?.data?.datasets || [];
+    if (chartName === 'dailyTemp' && datasets.length >= 3) {
+        datasets[0].borderColor = colors.high;
+        datasets[0].backgroundColor = colors.highFill;
+        datasets[1].borderColor = colors.low;
+        datasets[1].backgroundColor = colors.lowFill;
+        datasets[2].borderColor = colors.avg;
+    } else if (chartName === 'comparison' && datasets.length >= 2) {
+        datasets[0].borderColor = colors.high;
+        datasets[0].backgroundColor = colors.highFill;
+        datasets[1].borderColor = colors.prevYear;
+    } else if (chartName === 'deviation' && datasets.length >= 1) {
+        const values = datasets[0].data || [];
+        datasets[0].backgroundColor = values.map(value =>
+            value == null ? 'transparent' : value >= 0 ? colors.devPosBg : colors.devNegBg);
+        datasets[0].borderColor = values.map(value =>
+            value == null ? 'transparent' : value >= 0 ? colors.devPosBorder : colors.devNegBorder);
+    }
+}
+
 function updateChartColors() {
-    Object.values(state.charts).forEach(chart => {
+    const colors = getChartColors();
+    Object.entries(state.charts).forEach(([chartName, chart]) => {
         if (!chart) return;
-        const textColor = getChartTextColor();
-        const gridColor = getChartGridColor();
         Object.values(chart.options.scales || {}).forEach(scale => {
-            if (scale.ticks) scale.ticks.color = textColor;
-            if (scale.grid) scale.grid.color = gridColor;
-            if (scale.border) scale.border.color = gridColor;
+            if (scale.ticks) scale.ticks.color = colors.text;
+            if (scale.grid && typeof scale.grid.color !== 'function') scale.grid.color = colors.grid;
+            if (scale.border) scale.border.color = colors.grid;
         });
-        if (chart.options.plugins?.legend?.labels) chart.options.plugins.legend.labels.color = textColor;
+        if (chart.options.plugins?.legend?.labels) chart.options.plugins.legend.labels.color = colors.text;
+        if (chart.options.plugins?.tooltip) {
+            const tooltip = chart.options.plugins.tooltip;
+            tooltip.backgroundColor = colors.tooltipBg;
+            tooltip.titleColor = colors.tooltipTitle;
+            tooltip.bodyColor = colors.tooltipBody;
+            tooltip.borderColor = colors.tooltipBorder;
+        }
+        applyChartThemeToDatasets(chartName, chart, colors);
         chart.update('none');
     });
 }
 
 function sharedChartOptions() {
-    const textColor = getChartTextColor();
-    const gridColor = getChartGridColor();
+    const colors = getChartColors();
     return {
         responsive: true,
         maintainAspectRatio: false,
@@ -722,27 +882,27 @@ function sharedChartOptions() {
             legend: {
                 position: 'top',
                 align: 'end',
-                labels: { color: textColor, usePointStyle: true, boxWidth: 7, padding: 15, font: { size: 11 } },
+                labels: { color: colors.text, usePointStyle: true, boxWidth: 8, padding: 15, font: { size: 12 } },
             },
             tooltip: {
-                backgroundColor: 'rgba(5, 11, 20, 0.94)',
-                titleColor: '#f5f7fb',
-                bodyColor: '#dbe3ee',
-                borderColor: 'rgba(203, 213, 225, 0.14)',
+                backgroundColor: colors.tooltipBg,
+                titleColor: colors.tooltipTitle,
+                bodyColor: colors.tooltipBody,
+                borderColor: colors.tooltipBorder,
                 borderWidth: 1,
                 padding: 11,
             },
         },
         scales: {
             x: {
-                ticks: { color: textColor, maxRotation: 0, autoSkip: true, maxTicksLimit: 12, font: { size: 10 } },
+                ticks: { color: colors.text, maxRotation: 0, autoSkip: true, maxTicksLimit: 12, font: { size: 11 } },
                 grid: { display: false },
-                border: { color: gridColor },
+                border: { color: colors.grid },
             },
             y: {
                 grace: '8%',
-                ticks: { color: textColor, callback: value => `${value}℃`, font: { size: 10 } },
-                grid: { color: gridColor },
+                ticks: { color: colors.text, callback: value => `${value}℃`, font: { size: 11 } },
+                grid: { color: colors.grid },
                 border: { display: false },
             },
         },
@@ -752,6 +912,7 @@ function sharedChartOptions() {
 function renderDailyChart(chartData) {
     destroyChart('dailyTemp');
     if (!chartData || typeof Chart === 'undefined') return;
+    const colors = getChartColors();
     const labels = chartData.labels || [];
     const pointRadius = labels.length > 14 ? 2 : 3.5;
     const options = sharedChartOptions();
@@ -766,8 +927,8 @@ function renderDailyChart(chartData) {
                 {
                     label: '最高',
                     data: chartData.highs,
-                    borderColor: '#e66b3d',
-                    backgroundColor: 'rgba(230, 107, 61, 0.08)',
+                    borderColor: colors.high,
+                    backgroundColor: colors.highFill,
                     fill: '+1',
                     tension: 0.32,
                     pointRadius,
@@ -777,8 +938,8 @@ function renderDailyChart(chartData) {
                 {
                     label: '最低',
                     data: chartData.lows,
-                    borderColor: '#3a75c5',
-                    backgroundColor: 'rgba(58, 117, 197, 0.07)',
+                    borderColor: colors.low,
+                    backgroundColor: colors.lowFill,
                     fill: false,
                     tension: 0.32,
                     pointRadius,
@@ -788,7 +949,7 @@ function renderDailyChart(chartData) {
                 {
                     label: '平均',
                     data: chartData.avgs,
-                    borderColor: '#8391a7',
+                    borderColor: colors.avg,
                     backgroundColor: 'transparent',
                     borderDash: [5, 5],
                     fill: false,
@@ -812,6 +973,7 @@ function renderComparisonChart(chartData) {
 function _buildComparisonChart(chartData, mode) {
     destroyChart('comparison');
     if (typeof Chart === 'undefined') return;
+    const colors = getChartColors();
     const configs = {
         avg: { current: 'this_year', previous: 'last_year', label: '平均気温' },
         high: { current: 'this_year_high', previous: 'last_year_high', label: '最高気温' },
@@ -832,8 +994,8 @@ function _buildComparisonChart(chartData, mode) {
                 {
                     label: `今年 ${config.label}`,
                     data: chartData[config.current] || chartData.this_year,
-                    borderColor: '#e66b3d',
-                    backgroundColor: 'rgba(230, 107, 61, 0.08)',
+                    borderColor: colors.high,
+                    backgroundColor: colors.highFill,
                     fill: false,
                     tension: 0.3,
                     pointRadius,
@@ -843,7 +1005,7 @@ function _buildComparisonChart(chartData, mode) {
                 {
                     label: `前年 ${config.label}`,
                     data: chartData[config.previous] || chartData.last_year,
-                    borderColor: '#6aa9ff',
+                    borderColor: colors.prevYear,
                     backgroundColor: 'transparent',
                     fill: false,
                     tension: 0.3,
@@ -863,8 +1025,10 @@ function switchComparisonMode(mode) {
     state.comparisonMode = mode;
     const titles = { avg: '平均気温', high: '最高気温', low: '最低気温', deviation: '過去平均との差' };
     document.getElementById('comparisonTitle').textContent = `過去比較 — ${titles[mode] || ''}`;
-    document.querySelectorAll('#comparisonToggle .toggle-btn').forEach(button => {
-        button.classList.toggle('active', button.dataset.mode === mode);
+    document.querySelectorAll?.('#comparisonToggle .toggle-btn')?.forEach(button => {
+        const active = button.dataset.mode === mode;
+        button.classList.toggle('active', active);
+        button.setAttribute('aria-pressed', String(active));
     });
     const comparison = document.getElementById('comparisonChartWrapper');
     const deviation = document.getElementById('deviationChartWrapper');
@@ -882,13 +1046,17 @@ function switchComparisonMode(mode) {
 function _buildDeviationChart(data) {
     destroyChart('deviation');
     if (!data?.deviations || typeof Chart === 'undefined') return;
+    const colors = getChartColors();
     const options = sharedChartOptions();
     options.plugins.tooltip.callbacks = {
         label: context => `偏差: ${context.parsed.y >= 0 ? '+' : ''}${context.parsed.y.toFixed(1)}℃`,
     };
     options.scales.y.ticks.callback = value => `${value >= 0 ? '+' : ''}${value}℃`;
     options.scales.y.grid = {
-        color: context => context.tick.value === 0 ? getChartTextColor() : getChartGridColor(),
+        color: context => {
+            const current = getChartColors();
+            return context.tick.value === 0 ? current.zeroLine : current.grid;
+        },
         lineWidth: context => context.tick.value === 0 ? 1.5 : 1,
     };
     state.charts.deviation = new Chart(document.getElementById('deviationChart'), {
@@ -898,8 +1066,8 @@ function _buildDeviationChart(data) {
             datasets: [{
                 label: `過去平均 ${data.baseline_avg}℃からの偏差`,
                 data: data.deviations,
-                backgroundColor: data.deviations.map(value => value == null ? 'transparent' : value >= 0 ? 'rgba(230, 107, 61, 0.72)' : 'rgba(58, 117, 197, 0.72)'),
-                borderColor: data.deviations.map(value => value == null ? 'transparent' : value >= 0 ? '#e66b3d' : '#3a75c5'),
+                backgroundColor: data.deviations.map(value => value == null ? 'transparent' : value >= 0 ? colors.devPosBg : colors.devNegBg),
+                borderColor: data.deviations.map(value => value == null ? 'transparent' : value >= 0 ? colors.devPosBorder : colors.devNegBorder),
                 borderWidth: 1,
                 borderRadius: 4,
             }],

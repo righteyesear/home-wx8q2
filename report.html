@@ -3,25 +3,35 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>分析レポート | 外気温モニター</title>
     <meta name="description" content="外気温の週次・月次分析レポート">
     <meta name="robots" content="noindex, nofollow">
+    <meta name="color-scheme" content="light dark">
     <meta name="theme-color" content="#08111f">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
 
     <script>
         (function () {
-            const saved = localStorage.getItem('theme');
-            if (saved === 'light') document.documentElement.classList.add('light-mode');
+            var isLight = false;
+            try {
+                isLight = localStorage.getItem('theme') === 'light';
+            } catch (e) {}
+            document.documentElement.classList.toggle('light-mode', isLight);
+            var schemeMeta = document.querySelector('meta[name="color-scheme"]');
+            if (schemeMeta) schemeMeta.setAttribute('content', isLight ? 'light' : 'dark');
+            var themeMeta = document.querySelector('meta[name="theme-color"]');
+            if (themeMeta) themeMeta.setAttribute('content', isLight ? '#edf1f5' : '#08111f');
             document.documentElement.classList.add('no-transition');
-            requestAnimationFrame(() => requestAnimationFrame(() => {
-                document.documentElement.classList.remove('no-transition');
-            }));
+            requestAnimationFrame(function () {
+                requestAnimationFrame(function () {
+                    document.documentElement.classList.remove('no-transition');
+                });
+            });
         })();
     </script>
-    <link rel="stylesheet" href="css/report.css?v=20260812h" media="print"
-        onload="this.media='all';this.onload=null">
-    <script async src="js/report.js?v=20260812h"></script>
+    <link rel="stylesheet" href="css/report.css?v=20261114a">
+    <script async src="js/report.js?v=20261114a"></script>
 </head>
 
 <body>
@@ -107,15 +117,17 @@
 
     <div class="background-effects" aria-hidden="true"></div>
 
-    <main class="report-shell">
+    <div class="report-shell">
+        <a href="#reportMain" class="skip-link">レポート本文へ移動</a>
+
         <header class="report-header">
             <a href="index.html" class="back-link">
-                <svg class="icon"><use href="#icon-arrow-left"></use></svg>
+                <svg class="icon" aria-hidden="true"><use href="#icon-arrow-left"></use></svg>
                 <span>ダッシュボード</span>
             </a>
 
             <div class="report-brand">
-                <span class="report-brand-mark"><svg class="icon"><use href="#icon-chart"></use></svg></span>
+                <span class="report-brand-mark"><svg class="icon" aria-hidden="true"><use href="#icon-chart"></use></svg></span>
                 <span class="report-brand-copy">
                     <span class="brand-kicker">CLIMATE ARCHIVE</span>
                     <span class="report-title">分析レポート</span>
@@ -124,226 +136,228 @@
 
             <button class="theme-toggle report-theme-toggle" type="button" onclick="toggleReportTheme()" id="themeToggle"
                 aria-label="ライト・ダークテーマを切り替える">
-                <svg class="icon"><use id="themeIconUse" href="#icon-sun"></use></svg>
+                <svg class="icon" aria-hidden="true"><use id="themeIconUse" href="#icon-sun"></use></svg>
             </button>
         </header>
 
-        <section class="report-hero" aria-labelledby="heroPeriod">
-            <div class="report-hero-copy">
-                <span class="section-kicker">REPORT OVERVIEW</span>
-                <h1 id="heroPeriod">観測レポートを読み込み中</h1>
-                <p id="heroDescription">期間内の気温変化を、観測値・過去比較・データ分析の順に確認できます。</p>
-                <div class="report-meta" id="reportMeta" aria-live="polite"></div>
-            </div>
-            <div class="hero-visual" aria-hidden="true">
-                <svg viewBox="0 0 320 170" preserveAspectRatio="none">
-                    <defs>
-                        <linearGradient id="heroLine" x1="0" y1="0" x2="1" y2="0">
-                            <stop offset="0" stop-color="#6aa9ff" />
-                            <stop offset="1" stop-color="#ff7849" />
-                        </linearGradient>
-                        <linearGradient id="heroArea" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0" stop-color="#ff7849" stop-opacity=".22" />
-                            <stop offset="1" stop-color="#ff7849" stop-opacity="0" />
-                        </linearGradient>
-                    </defs>
-                    <path class="hero-grid-line" d="M0 35h320M0 85h320M0 135h320" />
-                    <path class="hero-area" d="M0 132C35 127 40 94 73 101s43 24 72 1 39-68 72-47 39 51 103 18V170H0z" />
-                    <path class="hero-line" d="M0 132C35 127 40 94 73 101s43 24 72 1 39-68 72-47 39 51 103 18" />
-                </svg>
-            </div>
-        </section>
+        <main id="reportMain" tabindex="-1">
+            <section class="report-hero" aria-labelledby="heroPeriod">
+                <div class="report-hero-copy">
+                    <span class="section-kicker">REPORT OVERVIEW</span>
+                    <h1 id="heroPeriod">観測レポートを読み込み中</h1>
+                    <p id="heroDescription">期間内の気温変化を、観測値・過去比較・データ分析の順に確認できます。</p>
+                    <div class="report-meta" id="reportMeta" aria-live="polite"></div>
+                </div>
+                <div class="hero-visual" aria-hidden="true">
+                    <svg viewBox="0 0 320 170" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="heroLine" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0" stop-color="#6aa9ff" />
+                                <stop offset="1" stop-color="#ff7849" />
+                            </linearGradient>
+                            <linearGradient id="heroArea" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0" stop-color="#ff7849" stop-opacity=".22" />
+                                <stop offset="1" stop-color="#ff7849" stop-opacity="0" />
+                            </linearGradient>
+                        </defs>
+                        <path class="hero-grid-line" d="M0 35h320M0 85h320M0 135h320" />
+                        <path class="hero-area" d="M0 132C35 127 40 94 73 101s43 24 72 1 39-68 72-47 39 51 103 18V170H0z" />
+                        <path class="hero-line" d="M0 132C35 127 40 94 73 101s43 24 72 1 39-68 72-47 39 51 103 18" />
+                    </svg>
+                </div>
+            </section>
 
-        <section class="report-controls" aria-label="レポートの種類と期間">
-            <div class="report-tabs" role="tablist" aria-label="レポートの種類">
-                <button class="report-tab active" type="button" role="tab" aria-selected="true" data-type="weekly"
-                    onclick="switchReportType('weekly')">
-                    <svg class="icon"><use href="#icon-calendar"></use></svg>
-                    週次
-                </button>
-                <button class="report-tab" type="button" role="tab" aria-selected="false" data-type="monthly"
-                    onclick="switchReportType('monthly')">
-                    <svg class="icon"><use href="#icon-layers"></use></svg>
-                    月次
-                </button>
-            </div>
-
-            <div class="period-nav">
-                <button class="nav-btn" type="button" id="prevBtn" onclick="navigateReport(-1)" aria-label="古い期間へ">
-                    <svg class="icon"><use href="#icon-arrow-left"></use></svg>
-                </button>
-                <div class="period-selector">
-                    <span class="period-label" id="periodLabel">読み込み中</span>
-                    <button class="history-btn" type="button" onclick="toggleReportList()" id="historyBtn"
-                        aria-expanded="false" aria-controls="reportListDropdown">
-                        過去のレポート
-                        <svg class="icon"><use href="#icon-chevron-down"></use></svg>
+            <section class="report-controls" aria-label="レポートの種類と期間">
+                <div class="report-tabs" role="tablist" aria-label="レポートの種類">
+                    <button class="report-tab active" type="button" role="tab" aria-selected="true" data-type="weekly"
+                        onclick="switchReportType('weekly')">
+                        <svg class="icon" aria-hidden="true"><use href="#icon-calendar"></use></svg>
+                        週次
+                    </button>
+                    <button class="report-tab" type="button" role="tab" aria-selected="false" data-type="monthly"
+                        onclick="switchReportType('monthly')">
+                        <svg class="icon" aria-hidden="true"><use href="#icon-layers"></use></svg>
+                        月次
                     </button>
                 </div>
-                <button class="nav-btn" type="button" id="nextBtn" onclick="navigateReport(1)" aria-label="新しい期間へ">
-                    <svg class="icon"><use href="#icon-arrow-right"></use></svg>
-                </button>
+
+                <div class="period-nav">
+                    <button class="nav-btn" type="button" id="prevBtn" onclick="navigateReport(-1)" aria-label="古い期間へ">
+                        <svg class="icon" aria-hidden="true"><use href="#icon-arrow-left"></use></svg>
+                    </button>
+                    <div class="period-selector">
+                        <span class="period-label" id="periodLabel">読み込み中</span>
+                        <button class="history-btn" type="button" onclick="toggleReportList()" id="historyBtn"
+                            aria-expanded="false" aria-controls="reportListDropdown">
+                            過去のレポート
+                            <svg class="icon" aria-hidden="true"><use href="#icon-chevron-down"></use></svg>
+                        </button>
+                    </div>
+                    <button class="nav-btn" type="button" id="nextBtn" onclick="navigateReport(1)" aria-label="新しい期間へ">
+                        <svg class="icon" aria-hidden="true"><use href="#icon-arrow-right"></use></svg>
+                    </button>
+                </div>
+            </section>
+
+            <div class="report-list-dropdown" id="reportListDropdown" hidden>
+                <div class="report-list-content" id="reportListContent"></div>
             </div>
-        </section>
 
-        <div class="report-list-dropdown" id="reportListDropdown" hidden>
-            <div class="report-list-content" id="reportListContent"></div>
-        </div>
+            <div class="report-loading" id="reportLoading" role="status">
+                <div class="loading-spinner" aria-hidden="true"></div>
+                <p>観測データを読み込んでいます</p>
+            </div>
 
-        <div class="report-loading" id="reportLoading" role="status">
-            <div class="loading-spinner" aria-hidden="true"></div>
-            <p>観測データを読み込んでいます</p>
-        </div>
+            <div class="report-error" id="reportError" hidden role="alert">
+                <span class="error-icon"><svg class="icon" aria-hidden="true"><use href="#icon-warning"></use></svg></span>
+                <h2>レポートを表示できません</h2>
+                <p id="errorMessage">この期間のレポートはまだ生成されていません。</p>
+            </div>
 
-        <div class="report-error" id="reportError" hidden>
-            <span class="error-icon"><svg class="icon"><use href="#icon-warning"></use></svg></span>
-            <h2>レポートを表示できません</h2>
-            <p id="errorMessage">この期間のレポートはまだ生成されていません。</p>
-        </div>
-
-        <div class="report-content" id="reportContent" hidden>
-            <section class="report-section summary-section section-wide">
-                <div class="section-heading">
-                    <span class="section-icon section-icon-warm"><svg class="icon"><use href="#icon-summary"></use></svg></span>
-                    <div>
-                        <span class="section-kicker">KEY READOUT</span>
-                        <h2 id="summaryTitle">サマリー</h2>
-                    </div>
-                </div>
-                <div class="summary-highlights" id="summaryHighlights"></div>
-                <div class="analysis-card" id="summaryComment">
-                    <div class="analysis-card-header">
-                        <span class="analysis-mark"><svg class="icon"><use href="#icon-analysis"></use></svg></span>
-                        <span class="analysis-badge" data-analysis-badge>データ分析</span>
-                    </div>
-                    <p id="summaryAiText"></p>
-                </div>
-            </section>
-
-            <section class="report-section section-wide">
-                <div class="section-heading">
-                    <span class="section-icon"><svg class="icon"><use href="#icon-thermometer"></use></svg></span>
-                    <div>
-                        <span class="section-kicker">OBSERVED VALUES</span>
-                        <h2>統計データ</h2>
-                    </div>
-                </div>
-                <div class="stats-grid" id="statsGrid"></div>
-            </section>
-
-            <section class="report-section section-wide">
-                <div class="section-heading section-heading-split">
-                    <div class="section-heading-main">
-                        <span class="section-icon"><svg class="icon"><use href="#icon-trend"></use></svg></span>
+            <div class="report-content" id="reportContent" hidden>
+                <section class="report-section summary-section section-wide">
+                    <div class="section-heading">
+                        <span class="section-icon section-icon-warm"><svg class="icon" aria-hidden="true"><use href="#icon-summary"></use></svg></span>
                         <div>
-                            <span class="section-kicker">DAILY RANGE</span>
-                            <h2>気温推移</h2>
+                            <span class="section-kicker">KEY READOUT</span>
+                            <h2 id="summaryTitle">サマリー</h2>
                         </div>
                     </div>
-                    <p class="section-note">日別の最高・平均・最低気温</p>
-                </div>
-                <div class="chart-wrapper chart-wrapper-large">
-                    <canvas id="dailyTempChart"></canvas>
-                </div>
-                <div class="analysis-card" id="trendComment">
-                    <div class="analysis-card-header">
-                        <span class="analysis-mark"><svg class="icon"><use href="#icon-analysis"></use></svg></span>
-                        <span class="analysis-badge" data-analysis-badge>データ分析</span>
+                    <div class="summary-highlights" id="summaryHighlights"></div>
+                    <div class="analysis-card" id="summaryComment">
+                        <div class="analysis-card-header">
+                            <span class="analysis-mark"><svg class="icon" aria-hidden="true"><use href="#icon-analysis"></use></svg></span>
+                            <span class="analysis-badge" data-analysis-badge>データ分析</span>
+                        </div>
+                        <p id="summaryAiText"></p>
                     </div>
-                    <p id="trendAiText"></p>
-                </div>
-            </section>
+                </section>
 
-            <section class="report-section section-wide" id="comparisonSection">
-                <div class="section-heading section-heading-split">
-                    <div class="section-heading-main">
-                        <span class="section-icon"><svg class="icon"><use href="#icon-compare"></use></svg></span>
+                <section class="report-section section-wide">
+                    <div class="section-heading">
+                        <span class="section-icon"><svg class="icon" aria-hidden="true"><use href="#icon-thermometer"></use></svg></span>
                         <div>
-                            <span class="section-kicker">HISTORICAL CONTEXT</span>
-                            <h2 id="comparisonTitle">過去比較 — 平均気温</h2>
+                            <span class="section-kicker">OBSERVED VALUES</span>
+                            <h2>統計データ</h2>
                         </div>
                     </div>
-                    <div class="comparison-toggle" id="comparisonToggle" role="group" aria-label="比較指標">
-                        <button class="toggle-btn active" type="button" data-mode="avg" onclick="switchComparisonMode('avg')">平均</button>
-                        <button class="toggle-btn" type="button" data-mode="high" onclick="switchComparisonMode('high')">最高</button>
-                        <button class="toggle-btn" type="button" data-mode="low" onclick="switchComparisonMode('low')">最低</button>
-                        <button class="toggle-btn" type="button" data-mode="deviation" onclick="switchComparisonMode('deviation')">偏差</button>
-                    </div>
-                </div>
-                <div class="chart-wrapper" id="comparisonChartWrapper">
-                    <canvas id="comparisonChart"></canvas>
-                </div>
-                <div class="chart-wrapper" id="deviationChartWrapper" hidden>
-                    <canvas id="deviationChart"></canvas>
-                </div>
-                <div class="analysis-card" id="comparisonComment">
-                    <div class="analysis-card-header">
-                        <span class="analysis-mark"><svg class="icon"><use href="#icon-analysis"></use></svg></span>
-                        <span class="analysis-badge" data-analysis-badge>データ分析</span>
-                    </div>
-                    <p id="comparisonAiText"></p>
-                </div>
-            </section>
+                    <div class="stats-grid" id="statsGrid"></div>
+                </section>
 
-            <section class="report-section" id="baselineSection">
-                <div class="section-heading">
-                    <span class="section-icon"><svg class="icon"><use href="#icon-ruler"></use></svg></span>
-                    <div>
-                        <span class="section-kicker">BASELINE</span>
-                        <h2 id="baselineTitle">過去平均との比較</h2>
+                <section class="report-section section-wide">
+                    <div class="section-heading section-heading-split">
+                        <div class="section-heading-main">
+                            <span class="section-icon"><svg class="icon" aria-hidden="true"><use href="#icon-trend"></use></svg></span>
+                            <div>
+                                <span class="section-kicker">DAILY RANGE</span>
+                                <h2>気温推移</h2>
+                            </div>
+                        </div>
+                        <p class="section-note">日別の最高・平均・最低気温</p>
                     </div>
-                </div>
-                <div class="baseline-display" id="baselineDisplay"></div>
-            </section>
-
-            <section class="report-section" id="eventsSection">
-                <div class="section-heading">
-                    <span class="section-icon"><svg class="icon"><use href="#icon-bolt"></use></svg></span>
-                    <div>
-                        <span class="section-kicker">NOTABLE DAYS</span>
-                        <h2>特筆イベント</h2>
+                    <div class="chart-wrapper chart-wrapper-large">
+                        <canvas id="dailyTempChart" role="img" aria-label="日別の最高・平均・最低気温の推移グラフ"></canvas>
                     </div>
-                </div>
-                <div class="events-timeline" id="eventsTimeline"></div>
-            </section>
-
-            <section class="report-section section-wide">
-                <div class="section-heading">
-                    <span class="section-icon"><svg class="icon"><use href="#icon-season"></use></svg></span>
-                    <div>
-                        <span class="section-kicker">SEASON TRACKER</span>
-                        <h2>季節の進み具合</h2>
+                    <div class="analysis-card" id="trendComment">
+                        <div class="analysis-card-header">
+                            <span class="analysis-mark"><svg class="icon" aria-hidden="true"><use href="#icon-analysis"></use></svg></span>
+                            <span class="analysis-badge" data-analysis-badge>データ分析</span>
+                        </div>
+                        <p id="trendAiText"></p>
                     </div>
-                </div>
-                <div class="milestones-list" id="milestonesList"></div>
-            </section>
+                </section>
 
-            <section class="report-section section-wide">
-                <div class="section-heading section-heading-split">
-                    <div class="section-heading-main">
-                        <span class="section-icon"><svg class="icon"><use href="#icon-grid"></use></svg></span>
-                        <div>
-                            <span class="section-kicker">LONG-RANGE CONTEXT</span>
-                            <h2>気温ヒートマップ</h2>
+                <section class="report-section section-wide" id="comparisonSection">
+                    <div class="section-heading section-heading-split">
+                        <div class="section-heading-main">
+                            <span class="section-icon"><svg class="icon" aria-hidden="true"><use href="#icon-compare"></use></svg></span>
+                            <div>
+                                <span class="section-kicker">HISTORICAL CONTEXT</span>
+                                <h2 id="comparisonTitle">過去比較 — 平均気温</h2>
+                            </div>
+                        </div>
+                        <div class="comparison-toggle" id="comparisonToggle" role="group" aria-label="比較指標">
+                            <button class="toggle-btn active" type="button" data-mode="avg" aria-pressed="true" onclick="switchComparisonMode('avg')">平均</button>
+                            <button class="toggle-btn" type="button" data-mode="high" aria-pressed="false" onclick="switchComparisonMode('high')">最高</button>
+                            <button class="toggle-btn" type="button" data-mode="low" aria-pressed="false" onclick="switchComparisonMode('low')">最低</button>
+                            <button class="toggle-btn" type="button" data-mode="deviation" aria-pressed="false" onclick="switchComparisonMode('deviation')">偏差</button>
                         </div>
                     </div>
-                    <div class="comparison-toggle" id="heatmapToggle" role="group" aria-label="ヒートマップ指標">
-                        <button class="toggle-btn active" type="button" data-mode="avg" onclick="switchHeatmapMode('avg')">平均</button>
-                        <button class="toggle-btn" type="button" data-mode="high" onclick="switchHeatmapMode('high')">最高</button>
-                        <button class="toggle-btn" type="button" data-mode="low" onclick="switchHeatmapMode('low')">最低</button>
+                    <div class="chart-wrapper" id="comparisonChartWrapper">
+                        <canvas id="comparisonChart" role="img" aria-label="今年と前年の気温比較グラフ"></canvas>
                     </div>
-                </div>
-                <div class="heatmap-container" id="heatmapContainer"></div>
-                <div class="heatmap-legend" id="heatmapLegend"></div>
-            </section>
+                    <div class="chart-wrapper" id="deviationChartWrapper" hidden>
+                        <canvas id="deviationChart" role="img" aria-label="過去平均との気温偏差グラフ"></canvas>
+                    </div>
+                    <div class="analysis-card" id="comparisonComment">
+                        <div class="analysis-card-header">
+                            <span class="analysis-mark"><svg class="icon" aria-hidden="true"><use href="#icon-analysis"></use></svg></span>
+                            <span class="analysis-badge" data-analysis-badge>データ分析</span>
+                        </div>
+                        <p id="comparisonAiText"></p>
+                    </div>
+                </section>
 
-            <footer class="report-footer section-wide">
-                <span><svg class="icon"><use href="#icon-clock"></use></svg>生成日時 <strong id="generatedAt">--</strong></span>
-                <span id="analysisProvenance"><svg class="icon"><use href="#icon-database"></use></svg>分析元 --</span>
-                <span>外気温モニター</span>
-            </footer>
-        </div>
-    </main>
+                <section class="report-section" id="baselineSection">
+                    <div class="section-heading">
+                        <span class="section-icon"><svg class="icon" aria-hidden="true"><use href="#icon-ruler"></use></svg></span>
+                        <div>
+                            <span class="section-kicker">BASELINE</span>
+                            <h2 id="baselineTitle">過去平均との比較</h2>
+                        </div>
+                    </div>
+                    <div class="baseline-display" id="baselineDisplay"></div>
+                </section>
+
+                <section class="report-section" id="eventsSection">
+                    <div class="section-heading">
+                        <span class="section-icon"><svg class="icon" aria-hidden="true"><use href="#icon-bolt"></use></svg></span>
+                        <div>
+                            <span class="section-kicker">NOTABLE DAYS</span>
+                            <h2>特筆イベント</h2>
+                        </div>
+                    </div>
+                    <div class="events-timeline" id="eventsTimeline"></div>
+                </section>
+
+                <section class="report-section section-wide">
+                    <div class="section-heading">
+                        <span class="section-icon"><svg class="icon" aria-hidden="true"><use href="#icon-season"></use></svg></span>
+                        <div>
+                            <span class="section-kicker">SEASON TRACKER</span>
+                            <h2>季節の進み具合</h2>
+                        </div>
+                    </div>
+                    <div class="milestones-list" id="milestonesList"></div>
+                </section>
+
+                <section class="report-section section-wide">
+                    <div class="section-heading section-heading-split">
+                        <div class="section-heading-main">
+                            <span class="section-icon"><svg class="icon" aria-hidden="true"><use href="#icon-grid"></use></svg></span>
+                            <div>
+                                <span class="section-kicker">LONG-RANGE CONTEXT</span>
+                                <h2>気温ヒートマップ</h2>
+                            </div>
+                        </div>
+                        <div class="comparison-toggle" id="heatmapToggle" role="group" aria-label="ヒートマップ指標">
+                            <button class="toggle-btn active" type="button" data-mode="avg" aria-pressed="true" onclick="switchHeatmapMode('avg')">平均</button>
+                            <button class="toggle-btn" type="button" data-mode="high" aria-pressed="false" onclick="switchHeatmapMode('high')">最高</button>
+                            <button class="toggle-btn" type="button" data-mode="low" aria-pressed="false" onclick="switchHeatmapMode('low')">最低</button>
+                        </div>
+                    </div>
+                    <div class="heatmap-container" id="heatmapContainer"></div>
+                    <div class="heatmap-legend" id="heatmapLegend"></div>
+                </section>
+
+                <footer class="report-footer section-wide">
+                    <span><svg class="icon" aria-hidden="true"><use href="#icon-clock"></use></svg>生成日時 <strong id="generatedAt">--</strong></span>
+                    <span id="analysisProvenance"><svg class="icon" aria-hidden="true"><use href="#icon-database"></use></svg>分析元 --</span>
+                    <span>外気温モニター</span>
+                </footer>
+            </div>
+        </main>
+    </div>
 
 </body>
 
