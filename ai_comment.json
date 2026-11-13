@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-13T19:44:42.055108+09:00",
-  "advice": "今夜は雨の心配がなく穏やかな晴天ですが、日没後から着実に冷え込みが進んでいます。屋外のセンサーでは12.7℃を観測しており、広域の格子推定値である14.3℃に比べても手元では肌寒さが先行している状況です。\n\nこの先も気象庁の予報で降水確率は0％、風も1m/s前後と穏やかな夜が続く見通しです。ただし、深夜0時にかけてさらに約2℃気温が低下する予報となっており、夜更けに向けて一段と冷気が強まる推移が読み取れます。\n\nこれから帰宅される場合は、首元を覆う上着を選ぶなど身体を冷やさない工夫が必要です。また、夜間の室温低下を抑えるため、早めに厚手のカーテンを閉めて窓辺からの冷え込みを防いでおくことをおすすめします。",
+  "generated_at": "2026-11-13T20:42:20.171198+09:00",
+  "advice": "⚠️ 分析エラー (gemini-3.8-flash): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-3.8-flash",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 12.7,
-    "weather_temp": 14.3,
+    "outdoor_temp": 11.9,
+    "weather_temp": 13.9,
     "weather": "快晴",
     "alerts_count": 0
   }
