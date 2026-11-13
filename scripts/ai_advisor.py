@@ -4,11 +4,15 @@ AI気象アドバイザー - Gemini 4 Hydrogen による総合分析
 データ収集 → Gemini APIで分析 → ai_comment.json 出力
 """
 
-import os
+import csv
+import io
 import json
+import math
+import os
+import time
 import requests
 from datetime import datetime, timedelta, timezone
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any, List, Tuple
 from pathlib import Path
 
 # JST タイムゾーン（GitHub ActionsはUTCで動くため必要）
@@ -39,6 +43,17 @@ AREA_CODE = '1312200'  # 葛飾区
 JMA_WARNING_URL = "https://www.jma.go.jp/bosai/warning/data/r8/130000.json"
 JMA_FORECAST_URL = "https://www.jma.go.jp/bosai/forecast/data/forecast/130000.json"
 JMA_FORECAST_AREA_CODE = '130010'  # 東京地方
+
+# HTTP取得・タイムアウト・リトライ設定（ワークフロー5分制限を超えない有界設定）
+SPREADSHEET_SUMMARY_TIMEOUT = 25
+SPREADSHEET_RECENT_TIMEOUT = 30
+SPREADSHEET_DAILY_TIMEOUT = 25
+EXTERNAL_API_TIMEOUT = 18
+HTTP_MAX_ATTEMPTS = 3
+HTTP_RETRY_BACKOFF_BASE = 1.0
+HTTP_RETRY_BACKOFF_MAX = 4.0
+HTTP_RETRYABLE_STATUS_CODES = frozenset({429, 500, 502, 503, 504})
+SPREADSHEET_PHASE_BUDGET_SECONDS = 90.0
 
 # 2026-05-29以降の気象警報・注意報コード。
 # dataTypeCode と code の組み合わせを正規キーとして扱う。
@@ -273,168 +288,740 @@ def calculate_feels_like(temp: float, humidity: float, wind_speed_10m: float) ->
 
 
 # =============================================================================
+# 共通数値・HTTPリトライ・CSVパースユーティリティ
+# =============================================================================
+
+def _finite_number(value: Any) -> Optional[float]:
+    """boolを除く有限の数値だけを比較用に返す。"""
+    if isinstance(value, bool) or value is None:
+        return None
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return None
+    return number if math.isfinite(number) else None
+
+
+def _parse_retry_after(headers: Any) -> Optional[float]:
+    """Retry-After ヘッダの数値秒を上限付きで返す。"""
+    if not headers or not hasattr(headers, 'get'):
+        return None
+    raw_value = headers.get('Retry-After')
+    if raw_value is None:
+        return None
+    seconds = _finite_number(raw_value)
+    if seconds is None or seconds <= 0:
+        return None
+    return min(seconds, HTTP_RETRY_BACKOFF_MAX)
+
+
+def _extract_status_code(obj: Any) -> Optional[int]:
+    """レスポンスまたは例外から HTTP ステータスコードを安全に取得する。"""
+    status_code = getattr(obj, 'status_code', None)
+    if isinstance(status_code, int) and not isinstance(status_code, bool):
+        return status_code
+    return None
+
+
+def _is_retryable_status(status_code: Optional[int]) -> bool:
+    """一時的な HTTP エラー (429 / 5xx) か判定する。"""
+    if status_code is None:
+        return False
+    return status_code in HTTP_RETRYABLE_STATUS_CODES or 500 <= status_code < 600
+
+
+def _is_retryable_exception(exc: Exception) -> bool:
+    """タイムアウト・接続エラー・一時的 HTTP エラーなら True を返す。"""
+    if isinstance(exc, (TimeoutError, ConnectionError)):
+        return True
+
+    requests_exc = getattr(requests, 'exceptions', None)
+    if requests_exc is not None:
+        retryable_types = tuple(
+            cls for cls in (
+                getattr(requests_exc, 'Timeout', None),
+                getattr(requests_exc, 'ConnectionError', None),
+                getattr(requests_exc, 'ChunkedEncodingError', None),
+            )
+            if isinstance(cls, type)
+        )
+        if retryable_types and isinstance(exc, retryable_types):
+            return True
+
+        http_error_cls = getattr(requests_exc, 'HTTPError', None)
+        if isinstance(http_error_cls, type) and isinstance(exc, http_error_cls):
+            resp = getattr(exc, 'response', None)
+            status = _extract_status_code(resp) or _extract_status_code(exc)
+            return _is_retryable_status(status)
+
+    resp = getattr(exc, 'response', None)
+    status = _extract_status_code(resp) or _extract_status_code(exc)
+    if status is not None:
+        return _is_retryable_status(status)
+
+    return False
+
+
+def _compute_retry_delay(attempt_index: int, response: Any = None) -> float:
+    """指数バックオフ待機時間（秒）を計算する。"""
+    backoff = min(
+        HTTP_RETRY_BACKOFF_MAX,
+        HTTP_RETRY_BACKOFF_BASE * (2 ** attempt_index),
+    )
+    retry_after = _parse_retry_after(getattr(response, 'headers', None))
+    if retry_after is not None:
+        return max(backoff, retry_after)
+    return backoff
+
+
+def _http_get_with_retry(
+    url: str,
+    *,
+    timeout: float,
+    headers: Optional[Dict[str, str]] = None,
+    source_name: str = 'HTTP',
+    max_attempts: int = HTTP_MAX_ATTEMPTS,
+    max_retry_elapsed: Optional[float] = None,
+) -> Any:
+    """
+    requests.get をラップした有界リトライ付き HTTP GET ヘルパー。
+    タイムアウト・接続エラー・一時的 429/5xx のみを指数バックオフ付きで再試行する。
+    """
+    attempts = max(1, int(max_attempts))
+    retry_elapsed_limit = (
+        timeout * 1.2 if max_retry_elapsed is None else max_retry_elapsed
+    )
+    started_at = time.monotonic()
+    request_kwargs: Dict[str, Any] = {'timeout': timeout}
+    if headers is not None:
+        request_kwargs['headers'] = headers
+
+    for attempt in range(attempts):
+        try:
+            resp = requests.get(url, **request_kwargs)
+        except Exception as exc:
+            elapsed = time.monotonic() - started_at
+            can_retry = (
+                attempt + 1 < attempts
+                and _is_retryable_exception(exc)
+                and elapsed < retry_elapsed_limit
+            )
+            if not can_retry:
+                raise
+            delay = _compute_retry_delay(attempt)
+            print(
+                f"  [WARN] {source_name} 取得リトライ "
+                f"({attempt + 1}/{attempts - 1}): {exc}"
+            )
+            time.sleep(delay)
+            continue
+
+        status_code = _extract_status_code(resp)
+        if _is_retryable_status(status_code):
+            elapsed = time.monotonic() - started_at
+            if attempt + 1 < attempts and elapsed < retry_elapsed_limit:
+                delay = _compute_retry_delay(attempt, resp)
+                close_fn = getattr(resp, 'close', None)
+                if callable(close_fn):
+                    close_fn()
+                print(
+                    f"  [WARN] {source_name} HTTP {status_code} リトライ "
+                    f"({attempt + 1}/{attempts - 1})"
+                )
+                time.sleep(delay)
+                continue
+            resp.raise_for_status()
+            raise RuntimeError(f"{source_name} returned HTTP {status_code}")
+
+        try:
+            resp.raise_for_status()
+        except Exception as exc:
+            elapsed = time.monotonic() - started_at
+            can_retry = (
+                attempt + 1 < attempts
+                and _is_retryable_exception(exc)
+                and elapsed < retry_elapsed_limit
+            )
+            if not can_retry:
+                raise
+            delay = _compute_retry_delay(attempt, getattr(exc, 'response', resp))
+            close_fn = getattr(resp, 'close', None)
+            if callable(close_fn):
+                close_fn()
+            print(
+                f"  [WARN] {source_name} 応答エラーリトライ "
+                f"({attempt + 1}/{attempts - 1}): {exc}"
+            )
+            time.sleep(delay)
+            continue
+
+        return resp
+
+    raise RuntimeError(f"{source_name} fetch failed after {attempts} attempts")
+
+
+def _iter_csv_rows(csv_text: str) -> List[List[str]]:
+    """CSV文字列を空白・引用符に配慮した行リストへ変換する。"""
+    stripped = (csv_text or '').strip()
+    if not stripped:
+        return []
+    return [
+        [cell.strip() for cell in row]
+        for row in csv.reader(io.StringIO(stripped))
+        if any(cell.strip() for cell in row)
+    ]
+
+
+def _infer_date_for_month_day(
+    month: int,
+    day: int,
+    reference_now: datetime,
+) -> Optional[Any]:
+    """年なし (MM/DD) 表記から年またぎ・うるう年に配慮した date を推論する。"""
+    cutoff = (reference_now + timedelta(days=1)).date()
+    for candidate_year in (reference_now.year, reference_now.year - 1):
+        try:
+            candidate = datetime(candidate_year, month, day, tzinfo=JST).date()
+        except ValueError:
+            continue
+        if candidate_year == reference_now.year and candidate > cutoff:
+            continue
+        return candidate
+    return None
+
+
+def _parse_spreadsheet_datetime(
+    dt_str: str,
+    reference_now: Optional[datetime] = None,
+) -> Optional[datetime]:
+    """スプレッドシートの日時文字列を JST 付き datetime に変換する。"""
+    raw = (dt_str or '').strip()
+    if not raw:
+        return None
+
+    now = reference_now or datetime.now(JST)
+    normalized = raw.replace('/', '-')
+    iso_candidate = (
+        normalized[:-1] + '+00:00' if normalized.endswith('Z') else normalized
+    )
+    try:
+        parsed = datetime.fromisoformat(iso_candidate)
+        return parsed.replace(tzinfo=JST) if parsed.tzinfo is None else parsed.astimezone(JST)
+    except ValueError:
+        pass
+
+    for fmt in ('%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M'):
+        try:
+            return datetime.strptime(normalized, fmt).replace(tzinfo=JST)
+        except ValueError:
+            continue
+
+    parts = normalized.split()
+    if len(parts) >= 2 and parts[0].count('-') == 1:
+        try:
+            month, day = map(int, parts[0].split('-'))
+            time_parts = [int(p) for p in parts[1].split(':')]
+            if len(time_parts) == 2:
+                hour, minute = time_parts
+                second = 0
+            elif len(time_parts) == 3:
+                hour, minute, second = time_parts
+            else:
+                return None
+
+            inferred_date = _infer_date_for_month_day(month, day, now)
+            if inferred_date is None:
+                return None
+            return datetime(
+                inferred_date.year,
+                inferred_date.month,
+                inferred_date.day,
+                hour,
+                minute,
+                second,
+                tzinfo=JST,
+            )
+        except (TypeError, ValueError):
+            return None
+
+    return None
+
+
+def _parse_spreadsheet_date(
+    date_str: str,
+    reference_now: Optional[datetime] = None,
+) -> Optional[Any]:
+    """Dailyシートやdaily_summaryの日付文字列を date オブジェクトに変換する。"""
+    raw = (date_str or '').strip()
+    if not raw:
+        return None
+    normalized = raw.replace('/', '-')
+    for fmt in ('%Y-%m-%d', '%m-%d-%Y'):
+        try:
+            return datetime.strptime(normalized, fmt).date()
+        except ValueError:
+            continue
+
+    if normalized.count('-') == 1:
+        now = reference_now or datetime.now(JST)
+        try:
+            month, day = map(int, normalized.split('-'))
+            return _infer_date_for_month_day(month, day, now)
+        except (TypeError, ValueError):
+            return None
+
+    return None
+
+
+def _is_sensor_anomaly_values(temperature: Any, humidity: Any) -> bool:
+    """センサー特有の (0.0, 0.0) 異常レコードか判定する。"""
+    temp_num = _finite_number(temperature)
+    humid_num = _finite_number(humidity)
+    return temp_num == 0.0 and humid_num == 0.0
+
+
+def _is_daily_anomaly_row(day: Dict[str, Any]) -> bool:
+    """Dailyシートの異常停止日 (high == 0.0 and low == 0.0) か判定する。"""
+    return _finite_number(day.get('high')) == 0.0 and _finite_number(day.get('low')) == 0.0
+
+
+def _parse_summary_sheet(csv_text: str) -> Tuple[Dict[str, float], List[Dict[str, str]]]:
+    """SummaryシートCSVをパースし、現在値・統計項目と生行リストを返す。"""
+    current: Dict[str, float] = {}
+    summary_raw: List[Dict[str, str]] = []
+
+    for row in _iter_csv_rows(csv_text):
+        if len(row) < 2:
+            continue
+        label, value = row[0], row[1]
+        summary_raw.append({'label': label, 'value': value})
+        num = _finite_number(value)
+        if num is None:
+            continue
+
+        if '現在の気温' in label:
+            current['temperature'] = num
+        elif '現在の湿度' in label:
+            current['humidity'] = num
+        elif '今日の最高' in label:
+            current['today_high'] = num
+        elif '今日の最低' in label:
+            current['today_low'] = num
+        elif '年間最高' in label:
+            current['year_high'] = num
+        elif '年間最低' in label:
+            current['year_low'] = num
+        elif '過去最高' in label or '歴代最高' in label:
+            current['all_time_high'] = num
+        elif '過去最低' in label or '歴代最低' in label:
+            current['all_time_low'] = num
+        elif '昨日の最高' in label:
+            current['yesterday_high'] = num
+        elif '昨日の最低' in label:
+            current['yesterday_low'] = num
+
+    return current, summary_raw
+
+
+def _parse_recent_sheet(csv_text: str, now: datetime) -> List[Dict[str, Any]]:
+    """RecentシートCSVをパースして時系列昇順に整列したレコード一覧を返す。"""
+    rows = _iter_csv_rows(csv_text)
+    if not rows:
+        return []
+
+    # ヘッダ行（数値列を持たない先頭行）はスキップし、ヘッダ無しCSVにも対応する
+    if len(rows[0]) < 3 or (
+        _finite_number(rows[0][1]) is None and _finite_number(rows[0][2]) is None
+    ):
+        rows = rows[1:]
+
+    parsed_entries: List[Tuple[Optional[datetime], int, Dict[str, Any]]] = []
+    for idx, row in enumerate(rows):
+        if len(row) < 3:
+            continue
+        temp = _finite_number(row[1])
+        humid = _finite_number(row[2])
+        if temp is None or humid is None:
+            continue
+        dt_str = row[0]
+        parsed_dt = _parse_spreadsheet_datetime(dt_str, now)
+        parsed_entries.append((
+            parsed_dt,
+            idx,
+            {
+                'datetime': dt_str,
+                'temperature': temp,
+                'humidity': humid,
+            },
+        ))
+
+    if any(dt is not None for dt, _, _ in parsed_entries):
+        min_dt = datetime.min.replace(tzinfo=JST)
+        parsed_entries.sort(key=lambda item: (item[0] is not None, item[0] or min_dt, item[1]))
+
+    return [entry for _, _, entry in parsed_entries]
+
+
+def _parse_daily_sheet(csv_text: str, now: datetime) -> List[Dict[str, Any]]:
+    """DailyシートCSV（Date, Max, Min, Avg）をパースして返す。"""
+    rows = _iter_csv_rows(csv_text)
+    if not rows:
+        return []
+
+    if len(rows[0]) < 3 or (
+        _finite_number(rows[0][1]) is None and _finite_number(rows[0][2]) is None
+    ):
+        rows = rows[1:]
+
+    parsed_days: List[Tuple[Any, int, Dict[str, Any]]] = []
+    for idx, row in enumerate(rows):
+        if len(row) < 3:
+            continue
+        high = _finite_number(row[1])
+        low = _finite_number(row[2])
+        avg = _finite_number(row[3]) if len(row) > 3 else None
+        if high is None and low is None and avg is None:
+            continue
+
+        day: Dict[str, Any] = {
+            'date': row[0],
+            'high': high,
+            'low': low,
+            'avg': avg,
+        }
+        if high is not None and low is not None:
+            day['range'] = high - low
+
+        parsed_date = _parse_spreadsheet_date(row[0], now)
+        parsed_days.append((parsed_date, idx, day))
+
+    if any(dt is not None for dt, _, _ in parsed_days):
+        min_date = datetime.min.date()
+        parsed_days.sort(key=lambda item: (item[0] is not None, item[0] or min_date, item[1]))
+
+    return [day for _, _, day in parsed_days]
+
+
+def _merge_daily_into_result(result: Dict[str, Any], now: datetime) -> None:
+    """Dailyシートの直近7日統合と長期履歴統計の算出を行う。"""
+    daily_all = result.get('daily_all') or []
+    if not daily_all:
+        return
+
+    valid_days = [d for d in daily_all if not _is_daily_anomaly_row(d)]
+    existing_keys = set()
+    for existing in result['daily_detailed']:
+        raw_date = existing.get('date')
+        parsed = _parse_spreadsheet_date(str(raw_date or ''), now)
+        existing_keys.add(parsed if parsed is not None else raw_date)
+
+    for day in valid_days[-7:]:
+        raw_date = day.get('date')
+        parsed = _parse_spreadsheet_date(str(raw_date or ''), now)
+        key = parsed if parsed is not None else raw_date
+        if key not in existing_keys:
+            result['daily_detailed'].append(day)
+            existing_keys.add(key)
+
+    all_highs = [d['high'] for d in valid_days if _finite_number(d.get('high')) is not None]
+    all_lows = [d['low'] for d in valid_days if _finite_number(d.get('low')) is not None]
+    all_avgs = [d['avg'] for d in valid_days if _finite_number(d.get('avg')) is not None]
+
+    if all_highs:
+        result['history_stats'] = {
+            'record_high': max(all_highs),
+            'record_low': min(all_lows) if all_lows else None,
+            'avg_high': sum(all_highs) / len(all_highs),
+            'avg_low': sum(all_lows) / len(all_lows) if all_lows else None,
+            'avg_temp': sum(all_avgs) / len(all_avgs) if all_avgs else None,
+            'total_days': len(valid_days),
+        }
+
+
+def _apply_spreadsheet_fallbacks(result: Dict[str, Any], now: datetime) -> None:
+    """
+    Summary取得失敗・項目欠損・(0.0, 0.0)異常値時に、
+    Recent（(0.0, 0.0)除外済み）・Daily・analysisから各統計値を補完する。
+    """
+    current = result['current']
+    raw_records = result.get('raw_records') or []
+    daily_all = result.get('daily_all') or []
+    analysis_daily = (result.get('analysis') or {}).get('daily_summary') or []
+
+    today = now.date()
+    yesterday = today - timedelta(days=1)
+
+    valid_recent: List[Dict[str, Any]] = []
+    dated_valid_recent: List[Dict[str, Any]] = []
+    recent_temps_by_date: Dict[Any, List[float]] = {}
+    anomaly_dates = set()
+
+    for rec in raw_records:
+        temp = _finite_number(rec.get('temperature'))
+        humid = _finite_number(rec.get('humidity'))
+        if temp is None or humid is None:
+            continue
+        parsed_dt = _parse_spreadsheet_datetime(rec.get('datetime', ''), now)
+        rec_date = parsed_dt.date() if parsed_dt is not None else None
+        if _is_sensor_anomaly_values(temp, humid):
+            if rec_date is not None:
+                anomaly_dates.add(rec_date)
+            continue
+        valid_recent.append(rec)
+        if rec_date is not None:
+            dated_valid_recent.append(rec)
+            recent_temps_by_date.setdefault(rec_date, []).append(temp)
+
+    daily_by_date: Dict[Any, Dict[str, Any]] = {}
+    for day in daily_all:
+        if _is_daily_anomaly_row(day):
+            continue
+        parsed_date = _parse_spreadsheet_date(str(day.get('date') or ''), now)
+        if parsed_date is not None:
+            daily_by_date[parsed_date] = day
+
+    analysis_by_date: Dict[Any, Dict[str, Any]] = {}
+    for day in analysis_daily:
+        if _is_daily_anomaly_row(day):
+            continue
+        parsed_date = _parse_spreadsheet_date(str(day.get('date') or ''), now)
+        if parsed_date is not None:
+            analysis_by_date[parsed_date] = day
+
+    # 1. 現在気温・湿度の (0.0, 0.0) 異常検出および欠損補完
+    cur_temp = _finite_number(current.get('temperature'))
+    cur_humid = _finite_number(current.get('humidity'))
+    if cur_temp is not None and cur_humid is not None and _is_sensor_anomaly_values(cur_temp, cur_humid):
+        current.pop('temperature', None)
+        current.pop('humidity', None)
+        cur_temp = None
+        cur_humid = None
+
+    if valid_recent:
+        latest_valid = dated_valid_recent[-1] if dated_valid_recent else valid_recent[-1]
+        if cur_temp is None:
+            current['temperature'] = latest_valid['temperature']
+        if cur_humid is None:
+            current['humidity'] = latest_valid['humidity']
+
+    # 2. 今日の最高・最低気温の補完（Summaryの0.0汚染も補正）
+    today_temps = recent_temps_by_date.get(today) or []
+    today_recent_extrema = {
+        'today_high': max(today_temps) if today_temps else None,
+        'today_low': min(today_temps) if today_temps else None,
+    }
+    today_analysis = analysis_by_date.get(today) or {}
+    today_daily = daily_by_date.get(today) or {}
+
+    for current_key, source_key in (('today_high', 'high'), ('today_low', 'low')):
+        cur_val = _finite_number(current.get(current_key))
+        recent_val = today_recent_extrema[current_key]
+        if (
+            cur_val == 0.0
+            and today in anomaly_dates
+            and recent_val is not None
+            and recent_val != 0.0
+        ):
+            cur_val = None
+            current.pop(current_key, None)
+
+        if cur_val is None:
+            for candidate in (
+                recent_val,
+                _finite_number(today_analysis.get(source_key)),
+                _finite_number(today_daily.get(source_key)),
+            ):
+                if candidate is not None:
+                    current[current_key] = candidate
+                    break
+
+    # 3. 昨日の最高・最低気温の補完（Dailyの0.0汚染時はRecentの正常値へフォールバック）
+    yesterday_temps = recent_temps_by_date.get(yesterday) or []
+    yesterday_recent_extrema = {
+        'yesterday_high': max(yesterday_temps) if yesterday_temps else None,
+        'yesterday_low': min(yesterday_temps) if yesterday_temps else None,
+    }
+    yesterday_daily = daily_by_date.get(yesterday) or {}
+    yesterday_analysis = analysis_by_date.get(yesterday) or {}
+
+    for current_key, source_key in (('yesterday_high', 'high'), ('yesterday_low', 'low')):
+        if _finite_number(current.get(current_key)) is not None:
+            continue
+        daily_val = _finite_number(yesterday_daily.get(source_key))
+        recent_val = yesterday_recent_extrema[current_key]
+        analysis_val = _finite_number(yesterday_analysis.get(source_key))
+
+        daily_is_zero_contaminated = (
+            daily_val == 0.0
+            and (
+                yesterday in anomaly_dates
+                or (recent_val is not None and recent_val != 0.0)
+            )
+        )
+        candidates = (
+            (recent_val, analysis_val, daily_val)
+            if daily_is_zero_contaminated
+            else (daily_val, recent_val, analysis_val)
+        )
+        for candidate in candidates:
+            if candidate is not None:
+                current[current_key] = candidate
+                break
+
+    # 4. 年間・歴代最高最低気温の補完（Summary欠損時にDailyから補完）
+    if daily_by_date:
+        this_year_days = [
+            day for dt, day in daily_by_date.items() if dt.year == today.year
+        ]
+        if _finite_number(current.get('year_high')) is None:
+            year_highs = [
+                _finite_number(d.get('high'))
+                for d in this_year_days
+                if _finite_number(d.get('high')) is not None
+            ]
+            if year_highs:
+                current['year_high'] = max(year_highs)
+        if _finite_number(current.get('year_low')) is None:
+            year_lows = [
+                _finite_number(d.get('low'))
+                for d in this_year_days
+                if _finite_number(d.get('low')) is not None
+            ]
+            if year_lows:
+                current['year_low'] = min(year_lows)
+
+    history_stats = result.get('history_stats') or {}
+    if _finite_number(current.get('all_time_high')) is None:
+        record_high = _finite_number(history_stats.get('record_high')) or _finite_number(
+            current.get('year_high')
+        )
+        if record_high is not None:
+            current['all_time_high'] = record_high
+    if _finite_number(current.get('all_time_low')) is None:
+        record_low = _finite_number(history_stats.get('record_low')) or _finite_number(
+            current.get('year_low')
+        )
+        if record_low is not None:
+            current['all_time_low'] = record_low
+
+
+# =============================================================================
 # データ取得関数
 # =============================================================================
 
 def fetch_spreadsheet_data() -> Dict[str, Any]:
     """
-    Google Spreadsheetから温湿度データを取得（強化版）
-    - 全レコードを取得（1分毎×12000件）
-    - analyze_data_comprehensive で包括的分析を実行
+    Google Spreadsheetから温湿度データを取得（エラー分離・フォールバック補完対応）
+    - Summary / Recent / Daily を個別にリトライ付き取得し、部分失敗時も継続
+    - Summary失敗・欠損時は Recent（(0.0, 0.0)除外）と Daily / analysis から補完
     """
     base_url = f"https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/gviz/tq?tqx=out:csv"
-    
-    result = {
+    now = datetime.now(JST)
+
+    result: Dict[str, Any] = {
         'current': {},
         'analysis': {},         # 包括的分析結果
         'daily_detailed': [],   # 日別詳細（互換性維持）
         'weekly_trend': {},     # 週間傾向（互換性維持）
-        'error': None
+        'error': None,
     }
-    
+    sheet_errors: Dict[str, str] = {}
+    phase_started_at = time.monotonic()
+
+    def _sheet_attempts() -> int:
+        elapsed = time.monotonic() - phase_started_at
+        return 1 if elapsed >= SPREADSHEET_PHASE_BUDGET_SECONDS else HTTP_MAX_ATTEMPTS
+
+    # ========================================
+    # 1. Summary シート（現在値 + 履歴統計）
+    # ========================================
     try:
-        # ========================================
-        # 1. Summary シート（現在値 + 履歴統計）
-        # ========================================
         summary_url = f"{base_url}&sheet=Summary"
-        resp = requests.get(summary_url, timeout=10)
-        resp.raise_for_status()
-        
-        result['summary_raw'] = []  # 生データも保存
-        for line in resp.text.strip().split('\n'):
-            parts = line.replace('"', '').split(',')
-            if len(parts) >= 2:
-                label, value = parts[0].strip(), parts[1].strip()
-                result['summary_raw'].append({'label': label, 'value': value})
-                
-                if '現在の気温' in label:
-                    result['current']['temperature'] = float(value)
-                elif '現在の湿度' in label:
-                    result['current']['humidity'] = float(value)
-                elif '今日の最高' in label:
-                    result['current']['today_high'] = float(value)
-                elif '今日の最低' in label:
-                    result['current']['today_low'] = float(value)
-                # 追加: 履歴統計データを取得
-                elif '過去最高' in label or '歴代最高' in label:
-                    try:
-                        result['current']['all_time_high'] = float(value)
-                    except (TypeError, ValueError):
-                        pass
-                elif '過去最低' in label or '歴代最低' in label:
-                    try:
-                        result['current']['all_time_low'] = float(value)
-                    except (TypeError, ValueError):
-                        pass
-                elif '昨日の最高' in label:
-                    try:
-                        result['current']['yesterday_high'] = float(value)
-                    except (TypeError, ValueError):
-                        pass
-                elif '昨日の最低' in label:
-                    try:
-                        result['current']['yesterday_low'] = float(value)
-                    except (TypeError, ValueError):
-                        pass
-        
-        # ========================================
-        # 2. Recent シート（全レコード取得）
-        # ========================================
+        resp = _http_get_with_retry(
+            summary_url,
+            timeout=SPREADSHEET_SUMMARY_TIMEOUT,
+            source_name='Summaryシート',
+            max_attempts=_sheet_attempts(),
+        )
+        current_values, summary_raw = _parse_summary_sheet(resp.text)
+        result['summary_raw'] = summary_raw
+        result['current'].update(current_values)
+    except Exception as exc:
+        sheet_errors['summary'] = str(exc)
+        print(f"  [WARN] Summaryシート取得エラー: {exc}")
+
+    # ========================================
+    # 2. Recent シート（全レコード取得） + 包括的分析
+    # ========================================
+    try:
         recent_url = f"{base_url}&sheet=Recent"
-        resp = requests.get(recent_url, timeout=30)  # タイムアウト延長
-        resp.raise_for_status()
-        
-        lines = resp.text.strip().split('\n')[1:]  # ヘッダースキップ
-        all_records = []
-        for line in lines:
-            parts = line.replace('"', '').split(',')
-            if len(parts) >= 3:
-                try:
-                    all_records.append({
-                        'datetime': parts[0].strip(),
-                        'temperature': float(parts[1].strip()),
-                        'humidity': float(parts[2].strip())
-                    })
-                except ValueError:
-                    continue
-        
+        resp = _http_get_with_retry(
+            recent_url,
+            timeout=SPREADSHEET_RECENT_TIMEOUT,
+            source_name='Recentシート',
+            max_attempts=_sheet_attempts(),
+        )
+        all_records = _parse_recent_sheet(resp.text, now)
         print(f"  → Recentシート: {len(all_records)}件のレコードを取得")
-        
-        # ========================================
-        # 3. 包括的分析を実行
-        # ========================================
+
         if all_records:
-            # 生データも保存（テスト用）
             result['raw_records'] = all_records
             result['analysis'] = analyze_data_comprehensive(all_records)
-            
-            # 互換性のため一部データをトップレベルにも配置
+
             if 'daily_summary' in result['analysis']:
-                result['daily_detailed'] = result['analysis']['daily_summary']
+                result['daily_detailed'] = list(result['analysis']['daily_summary'])
             if 'statistics' in result['analysis']:
                 result['weekly_trend'] = {
                     'week_high': result['analysis']['statistics'].get('temp_max'),
                     'week_low': result['analysis']['statistics'].get('temp_min'),
                     'avg_high': result['analysis']['statistics'].get('temp_mean'),
                 }
-        
-        # ========================================
-        # 4. Daily シート（全履歴データを取得）
-        # ========================================
-        try:
-            daily_url = f"{base_url}&sheet=Daily"
-            resp = requests.get(daily_url, timeout=15)
-            resp.raise_for_status()
-            
-            lines = resp.text.strip().split('\n')[1:]  # ヘッダースキップ
-            result['daily_all'] = []  # 全履歴データ
-            
-            for line in lines:
-                parts = line.replace('"', '').split(',')
-                if len(parts) >= 3:
-                    try:
-                        day = {
-                            'date': parts[0].strip(),
-                            'high': float(parts[1].strip()) if parts[1].strip() else None,
-                            'low': float(parts[2].strip()) if parts[2].strip() else None,
-                            'avg': float(parts[3].strip()) if len(parts) > 3 and parts[3].strip() else None
-                        }
-                        if day['high'] is not None and day['low'] is not None:
-                            day['range'] = day['high'] - day['low']
-                        result['daily_all'].append(day)
-                    except ValueError:
-                        continue
-            
-            print(f"  → Dailyシート: {len(result['daily_all'])}日分のデータを取得")
-            
-            # 直近7日分は daily_detailed にも追加（重複チェック）
-            for day in result['daily_all'][-7:]:
-                existing_dates = [d.get('date') for d in result['daily_detailed']]
-                if day['date'] not in existing_dates:
-                    result['daily_detailed'].append(day)
-            
-            # 履歴統計を計算
-            if result['daily_all']:
-                all_highs = [d['high'] for d in result['daily_all'] if d.get('high') is not None]
-                all_lows = [d['low'] for d in result['daily_all'] if d.get('low') is not None]
-                all_avgs = [d['avg'] for d in result['daily_all'] if d.get('avg') is not None]
-                
-                if all_highs:
-                    result['history_stats'] = {
-                        'record_high': max(all_highs),
-                        'record_low': min(all_lows) if all_lows else None,
-                        'avg_high': sum(all_highs) / len(all_highs),
-                        'avg_low': sum(all_lows) / len(all_lows) if all_lows else None,
-                        'avg_temp': sum(all_avgs) / len(all_avgs) if all_avgs else None,
-                        'total_days': len(result['daily_all'])
-                    }
-                    
-        except Exception as e:
-            print(f"  [WARN] Dailyシート取得エラー: {e}")
-            
-    except Exception as e:
-        result['error'] = str(e)
-    
+    except Exception as exc:
+        sheet_errors['recent'] = str(exc)
+        print(f"  [WARN] Recentシート取得エラー: {exc}")
+
+    # ========================================
+    # 3. Daily シート（全履歴データを取得）
+    # ========================================
+    try:
+        daily_url = f"{base_url}&sheet=Daily"
+        resp = _http_get_with_retry(
+            daily_url,
+            timeout=SPREADSHEET_DAILY_TIMEOUT,
+            source_name='Dailyシート',
+            max_attempts=_sheet_attempts(),
+        )
+        result['daily_all'] = _parse_daily_sheet(resp.text, now)
+        print(f"  → Dailyシート: {len(result['daily_all'])}日分のデータを取得")
+        _merge_daily_into_result(result, now)
+    except Exception as exc:
+        sheet_errors['daily'] = str(exc)
+        print(f"  [WARN] Dailyシート取得エラー: {exc}")
+
+    # ========================================
+    # 4. フォールバック補完とエラー判定
+    # ========================================
+    _apply_spreadsheet_fallbacks(result, now)
+    if sheet_errors:
+        result['sheet_errors'] = sheet_errors
+
+    has_current_sensor = (
+        _finite_number(result['current'].get('temperature')) is not None
+        and _finite_number(result['current'].get('humidity')) is not None
+    )
+    critical_errors = []
+    if 'recent' in sheet_errors:
+        critical_errors.append(f"Recent: {sheet_errors['recent']}")
+    if 'summary' in sheet_errors and not has_current_sensor:
+        critical_errors.append(f"Summary: {sheet_errors['summary']}")
+    if 'daily' in sheet_errors and 'recent' in sheet_errors and 'summary' in sheet_errors:
+        critical_errors.append(f"Daily: {sheet_errors['daily']}")
+
+    if critical_errors:
+        result['error'] = '; '.join(critical_errors)
+    elif 'summary' in sheet_errors:
+        print("  → Summaryシート取得失敗分を Recent/Daily からフォールバック補完しました")
+
     return result
 
 
@@ -468,8 +1055,11 @@ def fetch_weather_forecast() -> Dict[str, Any]:
     }
     
     try:
-        resp = requests.get(url, timeout=10)
-        resp.raise_for_status()
+        resp = _http_get_with_retry(
+            url,
+            timeout=EXTERNAL_API_TIMEOUT,
+            source_name='Open-Meteo',
+        )
         data = resp.json()
         
         # 現在の天気（全パラメータ）
@@ -571,12 +1161,12 @@ def fetch_jma_forecast() -> Dict[str, Any]:
         'error': None,
     }
     try:
-        response = requests.get(
+        response = _http_get_with_retry(
             JMA_FORECAST_URL,
-            timeout=10,
+            timeout=EXTERNAL_API_TIMEOUT,
             headers={'Cache-Control': 'no-cache'},
+            source_name='JMA予報',
         )
-        response.raise_for_status()
         payload = response.json()
         if not isinstance(payload, list) or not payload:
             raise ValueError('Unexpected JMA forecast response schema')
@@ -720,12 +1310,12 @@ def normalize_jma_alerts(data: Any, area_code: str = AREA_CODE) -> Dict[str, Any
 def fetch_jma_alerts() -> Dict[str, Any]:
     """気象庁APIから葛飾区の警報・注意報を取得"""
     try:
-        resp = requests.get(
+        resp = _http_get_with_retry(
             JMA_WARNING_URL,
-            timeout=10,
-            headers={'Cache-Control': 'no-cache'}
+            timeout=EXTERNAL_API_TIMEOUT,
+            headers={'Cache-Control': 'no-cache'},
+            source_name='JMA警報',
         )
-        resp.raise_for_status()
         return normalize_jma_alerts(resp.json(), AREA_CODE)
     except Exception as e:
         return {
@@ -751,8 +1341,11 @@ def fetch_yahoo_precipitation() -> Dict[str, Any]:
     }
     
     try:
-        resp = requests.get(url, timeout=10)
-        resp.raise_for_status()
+        resp = _http_get_with_retry(
+            url,
+            timeout=EXTERNAL_API_TIMEOUT,
+            source_name='Yahoo降水',
+        )
         data = resp.json()
         
         result['data'] = data.get('data', [])
@@ -912,19 +1505,6 @@ def _trim_advice_body(text: str, max_length: int = 540) -> str:
     if boundary >= int(max_length * 0.65):
         return candidate[:boundary + 1].strip()
     return candidate.rstrip('、， ') + '…'
-
-
-def _finite_number(value: Any) -> Optional[float]:
-    """boolを除く有限の数値だけを比較用に返す。"""
-    import math
-
-    if isinstance(value, bool) or value is None:
-        return None
-    try:
-        number = float(value)
-    except (TypeError, ValueError):
-        return None
-    return number if math.isfinite(number) else None
 
 
 def _rounded_delta(left: Any, right: Any) -> Optional[float]:
