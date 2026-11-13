@@ -113,7 +113,7 @@ jobs:
       - name: Generate weekly report with AI
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY_REPORT }}
-          GEMINI_MODEL: gemini-3.8-flash
+          GEMINI_MODEL: gemini-4-hydrogen
           GEMINI_THINKING_LEVEL: high
           SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
         run: |
@@ -172,7 +172,7 @@ jobs:
       - name: Generate monthly report with AI
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY_REPORT }}
-          GEMINI_MODEL: gemini-3.8-flash
+          GEMINI_MODEL: gemini-4-hydrogen
           GEMINI_THINKING_LEVEL: high
           SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
         run: |
@@ -231,7 +231,7 @@ jobs:
       - name: Run backfill
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY_REPORT }}
-          GEMINI_MODEL: gemini-3.8-flash
+          GEMINI_MODEL: gemini-4-hydrogen
           GEMINI_THINKING_LEVEL: high
           SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
         run: |

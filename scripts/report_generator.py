@@ -47,7 +47,7 @@ from google import genai
 # =============================================================================
 SPREADSHEET_ID = os.environ.get('SPREADSHEET_ID', '1nbmJIIUzw8n2PcHp98NaiKnaAVciBx_Egpokjjx7uW8')
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
-GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.8-flash')
+GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-4-hydrogen')
 GEMINI_THINKING_LEVEL = os.environ.get('GEMINI_THINKING_LEVEL', 'high').strip().lower()
 if GEMINI_THINKING_LEVEL not in {'low', 'medium', 'high'}:
     GEMINI_THINKING_LEVEL = 'high'

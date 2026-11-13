@@ -29,6 +29,7 @@ sys.modules.setdefault("google", google_stub)
 sys.modules.setdefault("google.genai", genai_stub)
 
 import report_generator  # noqa: E402
+assert report_generator.GEMINI_MODEL == report_generator.os.environ.get("GEMINI_MODEL", "gemini-4-hydrogen")
 
 
 def sample_report():
