@@ -10,96 +10,153 @@ function toggleTheme() {
     // Auto mode is commented out - only light/dark available
     // const modes = ['auto', 'light', 'dark'];
     const modes = ['light', 'dark'];
-    const idx = modes.indexOf(themeSetting);
+    const currentTheme = typeof themeSetting !== 'undefined' ? themeSetting : 'dark';
+    const idx = modes.indexOf(currentTheme);
     themeSetting = modes[(idx + 1) % modes.length];
-    localStorage.setItem('theme', themeSetting);
+    try {
+        if (typeof localStorage !== 'undefined') {
+            localStorage.setItem('theme', themeSetting);
+        }
+    } catch (e) {}
     applyTheme();
 }
 
 // Apply theme based on setting
 function applyTheme() {
     let isLight = false;
+    const currentTheme = typeof themeSetting !== 'undefined' ? themeSetting : 'dark';
 
-    if (themeSetting === 'light') {
+    if (currentTheme === 'light') {
         isLight = true;
-    } else if (themeSetting === 'dark') {
+    } else if (currentTheme === 'dark') {
         isLight = false;
     } else {
         // Fallback to dark if auto was previously saved
         themeSetting = 'dark';
-        localStorage.setItem('theme', 'dark');
+        try {
+            if (typeof localStorage !== 'undefined') {
+                localStorage.setItem('theme', 'dark');
+            }
+        } catch (e) {}
         isLight = false;
     }
 
-    document.documentElement.classList.toggle('light-mode', isLight);
+    if (typeof document === 'undefined') return;
+
+    document.documentElement?.classList?.toggle('light-mode', isLight);
 
     // Update button text - SVG icons
     const iconEl = document.getElementById('themeIcon');
     const textEl = document.getElementById('themeText');
 
-    if (themeSetting === 'light') {
-        iconEl.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>';
-        textEl.textContent = 'ライト';
+    if (currentTheme === 'light') {
+        if (iconEl) {
+            iconEl.setAttribute?.('aria-hidden', 'true');
+            iconEl.innerHTML = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>';
+        }
+        if (textEl) textEl.textContent = 'ライト';
     } else {
-        iconEl.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
-        textEl.textContent = 'ダーク';
+        if (iconEl) {
+            iconEl.setAttribute?.('aria-hidden', 'true');
+            iconEl.innerHTML = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
+        }
+        if (textEl) textEl.textContent = 'ダーク';
     }
 
-    // Update meta theme color
-    document.querySelector('meta[name="theme-color"]').content = isLight ? '#f1f5f9' : '#3b82f6';
+    // Sync color-scheme and theme-color metadata
+    document.querySelector('meta[name="color-scheme"]')?.setAttribute('content', isLight ? 'light' : 'dark');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', isLight ? '#edf1f5' : '#08111f');
 
     // Resize charts after theme change (fixes disappearing charts)
-    setTimeout(() => {
-        Object.values(charts).forEach(chart => {
-            if (chart && typeof chart.resize === 'function') {
-                chart.resize();
-            }
-        });
-    }, 100);
+    if (typeof charts !== 'undefined' && charts && typeof setTimeout === 'function') {
+        setTimeout(() => {
+            Object.values(charts).forEach(chart => {
+                if (chart && typeof chart.resize === 'function') {
+                    chart.resize();
+                }
+            });
+        }, 100);
+    }
 }
 
 // =====================================================
 // View Mode toggle: Normal <-> Simple
 // =====================================================
 function toggleViewMode() {
+    if (typeof document === 'undefined' || !document.body) return;
     const isSimple = document.body.classList.toggle('simple-mode');
-    localStorage.setItem('viewMode', isSimple ? 'simple' : 'normal');
+    try {
+        if (typeof localStorage !== 'undefined') {
+            localStorage.setItem('viewMode', isSimple ? 'simple' : 'normal');
+        }
+    } catch (e) {}
     updateModeUI(isSimple);
 
     // Resize charts after mode change
-    setTimeout(() => {
-        Object.values(charts).forEach(chart => {
-            if (chart && typeof chart.resize === 'function') {
-                chart.resize();
-            }
-        });
-    }, 100);
+    if (typeof charts !== 'undefined' && charts && typeof setTimeout === 'function') {
+        setTimeout(() => {
+            Object.values(charts).forEach(chart => {
+                if (chart && typeof chart.resize === 'function') {
+                    chart.resize();
+                }
+            });
+        }, 100);
+    }
 }
 
 function updateModeUI(isSimple) {
+    if (typeof document === 'undefined') return;
     const iconEl = document.getElementById('modeIcon');
     const textEl = document.getElementById('modeText');
 
     if (isSimple) {
-        iconEl.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/></svg>';
-        textEl.textContent = 'シンプル';
+        if (iconEl) {
+            iconEl.innerHTML = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/></svg>';
+        }
+        if (textEl) textEl.textContent = 'シンプル';
     } else {
-        iconEl.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>';
-        textEl.textContent = '通常モード';
+        if (iconEl) {
+            iconEl.innerHTML = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>';
+        }
+        if (textEl) textEl.textContent = '通常モード';
     }
 }
 
 function initViewMode() {
-    const savedMode = localStorage.getItem('viewMode') || 'normal';
+    if (typeof document === 'undefined' || !document.body) return;
+    let savedMode = 'normal';
+    try {
+        if (typeof localStorage !== 'undefined') {
+            savedMode = localStorage.getItem('viewMode') || 'normal';
+        }
+    } catch (e) {}
     if (savedMode === 'simple') {
         document.body.classList.add('simple-mode');
         updateModeUI(true);
     }
 }
 
-// Initialize theme and view mode on load
-applyTheme();
-initViewMode();
+// Initialize theme, view mode, and cross-tab theme sync on load
+if (typeof document !== 'undefined') {
+    applyTheme();
+    initViewMode();
+}
+
+if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+    window.addEventListener('storage', (event) => {
+        if (event && event.key !== null && event.key !== 'theme') return;
+        let savedTheme = null;
+        try {
+            savedTheme = typeof localStorage !== 'undefined' ? localStorage.getItem('theme') : null;
+        } catch (e) {
+            savedTheme = event ? event.newValue : null;
+        }
+        const nextTheme = savedTheme === 'light' ? 'light' : 'dark';
+        if (typeof themeSetting !== 'undefined' && themeSetting === nextTheme) return;
+        themeSetting = nextTheme;
+        applyTheme();
+    });
+}
 
 // Weather effects control based on weather code
 let lightningInterval = null;
