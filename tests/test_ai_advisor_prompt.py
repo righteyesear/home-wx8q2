@@ -696,12 +696,31 @@ def _run_retry_and_fallback_tests():
     assert ss_recent_fail["current"]["yesterday_high"] == 17.5
     assert ss_recent_fail["history_stats"]["total_days"] == 3
 
-    # 7. 年またぎ MM/DD HH:MM パース安全性
+    # 7. 年またぎ・うるう年・時刻なし入力の日時/日付パース安全性
     jan_now = datetime(2026, 1, 2, 10, 0, tzinfo=module.JST)
     dec_dt = module._parse_spreadsheet_datetime("12/31 23:55", jan_now)
     jan_dt = module._parse_spreadsheet_datetime("01/01 00:05", jan_now)
     assert dec_dt == datetime(2025, 12, 31, 23, 55, tzinfo=module.JST)
     assert jan_dt == datetime(2026, 1, 1, 0, 5, tzinfo=module.JST)
+
+    year_end_now = datetime(2025, 12, 31, 23, 55, tzinfo=module.JST)
+    assert module._parse_spreadsheet_datetime("01/01 00:05", year_end_now) == datetime(
+        2026, 1, 1, 0, 5, tzinfo=module.JST
+    )
+    assert module._parse_spreadsheet_date("01/01", year_end_now) == datetime(
+        2026, 1, 1, tzinfo=module.JST
+    ).date()
+
+    non_leap_now = datetime(2026, 3, 1, 10, 0, tzinfo=module.JST)
+    assert module._parse_spreadsheet_datetime("02/29 12:00", non_leap_now) == datetime(
+        2024, 2, 29, 12, 0, tzinfo=module.JST
+    )
+    assert module._parse_spreadsheet_date("02/29", non_leap_now) == datetime(
+        2024, 2, 29, tzinfo=module.JST
+    ).date()
+
+    assert module._parse_spreadsheet_datetime("2026-11-13", jan_now) is None
+    assert module._parse_spreadsheet_datetime("2026-11-13+09:00", jan_now) is None
     assert module._parse_spreadsheet_datetime("invalid-date", jan_now) is None
 
     # 8. 経過時間バジェットによる有界リトライ打ち切り保証（5分制限対策）
@@ -815,6 +834,23 @@ def _run_retry_and_fallback_tests():
     assert written_data["source_status"]["spreadsheet_error"] is None
     assert written_data["data_summary"]["outdoor_temp"] == 18.6
     assert written_data["data_summary"]["weather_temp"] == 24.5
+
+    # 10. record_high / record_low == 0.0 が falsy 判定で year_high / year_low に上書きされないこと
+    zero_low_result = {
+        "current": {"year_high": 35.0, "year_low": 2.5},
+        "history_stats": {"record_high": 36.0, "record_low": 0.0},
+    }
+    module._apply_spreadsheet_fallbacks(zero_low_result, now)
+    assert zero_low_result["current"]["all_time_low"] == 0.0
+    assert zero_low_result["current"]["all_time_high"] == 36.0
+
+    zero_high_result = {
+        "current": {"year_high": -1.5, "year_low": -5.0},
+        "history_stats": {"record_high": 0.0, "record_low": -6.0},
+    }
+    module._apply_spreadsheet_fallbacks(zero_high_result, now)
+    assert zero_high_result["current"]["all_time_high"] == 0.0
+    assert zero_high_result["current"]["all_time_low"] == -6.0
 
 
 _run_retry_and_fallback_tests()

@@ -479,14 +479,13 @@ def _infer_date_for_month_day(
 ) -> Optional[Any]:
     """年なし (MM/DD) 表記から年またぎ・うるう年に配慮した date を推論する。"""
     cutoff = (reference_now + timedelta(days=1)).date()
-    for candidate_year in (reference_now.year, reference_now.year - 1):
+    for candidate_year in range(reference_now.year + 1, reference_now.year - 9, -1):
         try:
             candidate = datetime(candidate_year, month, day, tzinfo=JST).date()
         except ValueError:
             continue
-        if candidate_year == reference_now.year and candidate > cutoff:
-            continue
-        return candidate
+        if candidate <= cutoff:
+            return candidate
     return None
 
 
@@ -501,6 +500,15 @@ def _parse_spreadsheet_datetime(
 
     now = reference_now or datetime.now(JST)
     normalized = raw.replace('/', '-')
+    if 'T' in normalized:
+        date_time_parts = normalized.split('T', 1)
+    elif 't' in normalized:
+        date_time_parts = normalized.split('t', 1)
+    else:
+        date_time_parts = normalized.split(None, 1)
+    if len(date_time_parts) < 2 or ':' not in date_time_parts[1]:
+        return None
+
     iso_candidate = (
         normalized[:-1] + '+00:00' if normalized.endswith('Z') else normalized
     )
@@ -891,18 +899,16 @@ def _apply_spreadsheet_fallbacks(result: Dict[str, Any], now: datetime) -> None:
                 current['year_low'] = min(year_lows)
 
     history_stats = result.get('history_stats') or {}
-    if _finite_number(current.get('all_time_high')) is None:
-        record_high = _finite_number(history_stats.get('record_high')) or _finite_number(
-            current.get('year_high')
-        )
-        if record_high is not None:
-            current['all_time_high'] = record_high
-    if _finite_number(current.get('all_time_low')) is None:
-        record_low = _finite_number(history_stats.get('record_low')) or _finite_number(
-            current.get('year_low')
-        )
-        if record_low is not None:
-            current['all_time_low'] = record_low
+    for target_key, history_key, year_key in (
+        ('all_time_high', 'record_high', 'year_high'),
+        ('all_time_low', 'record_low', 'year_low'),
+    ):
+        if _finite_number(current.get(target_key)) is None:
+            fallback_val = _finite_number(history_stats.get(history_key))
+            if fallback_val is None:
+                fallback_val = _finite_number(current.get(year_key))
+            if fallback_val is not None:
+                current[target_key] = fallback_val
 
 
 # =============================================================================
