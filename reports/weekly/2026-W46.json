@@ -7,7 +7,7 @@
     "end_date": "2026-11-15",
     "label": "2026年 第46週（11/9 〜 11/15）"
   },
-  "generated_at": "2026-11-15T03:00:10.880875+09:00",
+  "generated_at": "2026-11-15T07:23:00.105753+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
@@ -30,7 +30,7 @@
       "min_temp": 4.8,
       "min_temp_date": "2026/11/11",
       "avg_low": 8.3,
-      "avg_daily_range": 6.9,
+      "avg_daily_range": 7.0,
       "prev_week_diff": -4.1,
       "prev_year_diff": -1.3
     },
@@ -86,10 +86,10 @@
       {
         "date": "2026/11/15",
         "weekday": "日",
-        "high": 12.8,
+        "high": 12.9,
         "low": 12.5,
         "avg": 12.7,
-        "range": 0.3
+        "range": 0.4
       }
     ],
     "comparison": {
@@ -111,7 +111,7 @@
       "avg_temp_diff": -1.3,
       "max_temp_diff": -0.2,
       "min_temp_diff": -2.6,
-      "avg_daily_range_diff": 0.2,
+      "avg_daily_range_diff": 0.3,
       "ai_comment": ""
     },
     "baseline": {
@@ -363,7 +363,7 @@
         17.3,
         18.3,
         18.9,
-        12.8
+        12.9
       ],
       "lows": [
         9.0,
@@ -419,7 +419,7 @@
         17.3,
         18.3,
         18.9,
-        12.8
+        12.9
       ],
       "last_year_high": [
         13.6,
@@ -596,8 +596,8 @@
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-11-15T03:00:10.913336+09:00",
-    "data_fingerprint": "10bef0ebfcd3cc439952",
+    "generated_at": "2026-11-15T07:23:00.133286+09:00",
+    "data_fingerprint": "2b174f2bcfc3fdc4acee",
     "period_closed": false,
     "coverage_complete": true,
     "observed_days": 7,
