@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-11-14T21:37:03.047282+09:00",
-  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-11-14T22:53:56.090824+09:00",
+  "advice": "今夜は雨が降らず穏やかに経過するものの、天気は明日に向けて下り坂へ向かう見込みです。現在、屋外の個人センサーは13.2℃を示しており、昨日同時刻より2.1℃高く、この時間としては冷え込みが緩やかに保たれています。\n\n直近の気温低下は落ち着いたペースで推移しており、未明にかけても12℃前後までゆっくり下がる程度で、風も弱く安定した状態が続くとみられます。この先1時間も雨の予想はありませんが、気象庁の予報では降水確率が明日午前に50%、午後には80%へと上がるため、穏やかな空模様は今夜限りとなりそうです。\n\n夜間の外出や換気は傘なしで済ませられますが、明日は朝から雨が降りやすくなります。就寝前に玄関へ雨具を用意し、明日の洗濯物は部屋干しに切り替える段取りにしておくと安心です。",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=18)",
+    "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 14.0,
-    "weather_temp": null,
-    "weather": "快晴",
+    "outdoor_temp": 13.2,
+    "weather_temp": 13.7,
+    "weather": "薄曇り",
     "alerts_count": 0
   }
 }
