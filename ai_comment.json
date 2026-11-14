@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-11-14T20:57:41.899810+09:00",
-  "advice": "冷たい風の影響がほとんどなく、実際の気温と体で感じる寒さにずれのない落ち着いた夜です。家の外の日陰にある個人センサーは14.8℃、弱い推定風速を加味した参考の体感温度も14.7℃と、ほぼ同じ水準を示しています。\n\n直近3時間の気温低下はわずかで、昨日の同じ時間と比べても3.1℃高い水準です。深夜1時ごろには12.9℃付近まで少しずつ下がる見込みですが、穏やかな風の状態が続くため、実際の数値以上に冷たく感じるような急変は起きにくいとみられます。\n\n風を遮る重い防寒着まではいらず、長袖に薄手の上着やニットを重ねる程度で夜間の移動に対応できます。室内でも暖房を強くしすぎると暑く感じやすいため、着脱しやすい羽織もので調節するのが向いています。気象庁の予報では明日の朝から雨が降りやすくなるため、就寝前に傘を出しておくと朝の支度が整います。",
+  "generated_at": "2026-11-14T21:37:03.047282+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": null,
+    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=18)",
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 14.8,
-    "weather_temp": 14.8,
-    "weather": "薄曇り",
+    "outdoor_temp": 14.0,
+    "weather_temp": null,
+    "weather": "快晴",
     "alerts_count": 0
   }
 }
