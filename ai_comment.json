@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-15T21:32:36.587387+09:00",
-  "advice": "夜間の雨は21時までに止み、落ち着いた空気に移りました。雨量の観測は0ミリに戻り、日陰の屋外センサーは12.7℃、湿度は95％と湿り気を帯びています。\n\n今後1時間の雨予測も0ミリが続き、気象庁の予報でも深夜以降の降水確率は0％へ下がるため、再び降り出す心配は薄れています。過去3時間の気温変化はわずか0.2℃と安定しており、この時間帯の最近の平均より1.3℃高めです。雲に覆われて放射冷却が抑えられることから、夜半過ぎにかけても気温はほぼ横ばいで推移し、急な冷え込みは進まないとみられます。\n\nこれから帰宅や外出をする際、傘を開く場面はほとんどなさそうです。ただ、外気は湿気が多く濡れた物が乾きにくいため、使った雨具は室内で水気を取っておくとよいでしょう。気温の急落はないものの夜更けの肌寒さは残るため、秋物の上着で冷えを防いでください。",
+  "generated_at": "2026-11-15T22:01:34.652281+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -12,7 +12,7 @@
   },
   "data_summary": {
     "outdoor_temp": 12.7,
-    "weather_temp": 11.5,
+    "weather_temp": 11.1,
     "weather": "曇り",
     "alerts_count": 0
   }
