@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-11-18T04:42:48.090694+09:00",
-  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-11-18T05:22:04.958212+09:00",
+  "advice": "現在降っている雨はまもなく止む見込みです。5時15分時点で1時間あたり約2ミリの雨が約1時間続いており、屋外日陰のセンサーは10.6℃と、昨日同時刻より2.3℃低い冷え込みとなっています。\n\n強弱を繰り返していた雨雲は抜けつつあり、レーダー予測では5時40分ごろにわずかな雨が残る程度で、この先1時間以内に降水は収まる見通しです。気象庁の予報でも明け方まで雨の後は晴れ時々くもりへと変わり、6時以降の降水確率は20%以下まで下がります。\n\n5時台に出かける場合は傘が欠かせませんが、6時以降の通勤や通学なら折りたたみ傘でも対応できそうです。気温は直近3時間でほぼ横ばいのまま10℃台で推移しており、昨日より肌寒く感じられるため、濡れた路面に注意しつつ暖かな服装で備えてください。",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": null,
+    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=18)",
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 10.3,
-    "weather_temp": 9.8,
-    "weather": "弱い霧雨",
+    "outdoor_temp": 10.6,
+    "weather_temp": null,
+    "weather": "快晴",
     "alerts_count": 0
   }
 }
