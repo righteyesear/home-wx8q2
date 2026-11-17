@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-18T00:00:02.854747+09:00",
-  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-11-18T03:23:01.095170+09:00",
+  "advice": "東金町周辺では弱い雨が降り始めており、このあと午前4時前にかけて一時的に本降りとなる見込みです。家の外の日陰センサーは10.2℃を示し、昨日の同じ時刻より約3℃低い冷え込みの中で雨を迎えています。\n\n雨雲の予測によると、現在は降り出しの弱い雨ですが、3時55分ごろには1時間あたり7ミリ程度まで強まり、4時15分には再び小降りへ落ち着く見通しです。気象庁の予報でも朝6時以降の降水確率は10％へ大きく下がるため、雨のピークは未明の短時間に限られるとみられます。\n\nこのあと1時間ほどのうちに外へ出る場合は、しっかりした傘を用意し、路面の水はねや視界の悪化、継続中の雷注意報に伴う空の変化にご注意ください。一方、朝6時以降の移動では雨が上がっている可能性が高いため、通勤や通学の支度は足元のぬかるみへの配慮を優先するとよさそうです。",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 9.7,
-    "weather_temp": 9.1,
-    "weather": "雨",
+    "outdoor_temp": 10.2,
+    "weather_temp": 10.0,
+    "weather": "霧雨",
     "alerts_count": 1
   }
 }
