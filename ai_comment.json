@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-18T03:58:05.080083+09:00",
-  "advice": "雨脚が急激に強まり、現在は1時間あたり約10ミリのしっかりした雨です。3時30分ごろまでの小雨から一転して降り方が増した一方、屋外の日陰センサーは10.3℃を示し、この3時間の気温は小幅な変化にとどまっています。\n\nこのあと4時30分ごろにかけて雨は一度弱まりますが、そのまま止み切るわけではありません。一時的に小降りへ落ち着いたあと、4時50分ごろには再び7ミリ近くまで強まる見込みです。ただ、気象庁の予報では朝6時以降の降水確率が10％へ大きく下がり、気温も朝にかけて少しずつ上がるため、未明の波を越えれば天気は回復へ向かうとみられます。\n\n5時ごろまでに外へ出る際は、一時的な小康状態に油断せず大きめの傘を持ち、暗がりでの見通しの悪さや水たまりに注意してください。朝6時以降の通勤や通学では雨具なしで動ける可能性が高いため、濡れた道でも滑りにくい靴を選んでおくと安心です。",
+  "generated_at": "2026-11-18T04:42:48.090694+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -12,8 +12,8 @@
   },
   "data_summary": {
     "outdoor_temp": 10.3,
-    "weather_temp": 9.7,
-    "weather": "薄曇り",
-    "alerts_count": 1
+    "weather_temp": 9.8,
+    "weather": "弱い霧雨",
+    "alerts_count": 0
   }
 }
