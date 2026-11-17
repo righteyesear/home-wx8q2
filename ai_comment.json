@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-11-17T23:12:06.806518+09:00",
-  "advice": "日付が変わる前後に雨脚が一段と強まり、雷を伴う恐れがあります。23時現在も1時間あたり約9ミリの本降りが続いており、屋外日陰の個人センサーは昨日同時刻を3.7℃下回る9.8℃で推移しています。\n\nこの先23時40分頃まではいったん勢いが落ち着くものの、50分頃には約15ミリまで再び急増する予測です。気象庁の予報でも夜遅くは所により雷を伴い激しく降る見込みで、雷注意報の発表とあわせて急な強まりに注意が必要です。気温はここ3時間ほぼ横ばいですが、朝6時以降の降水確率は10%まで下がり、夜明け後は回復へ向かうとみられます。\n\nこれから帰宅や移動を予定している場合は、雨脚が再び強まる23時40分頃までに済ませるのが賢明です。深夜は路面の水たまりや視界の悪化が広がりやすいため、濡れにくい靴や雨具を備え、雷鳴が聞こえたら無理をせず建物内でやり過ごしてください。",
+  "generated_at": "2026-11-18T00:00:02.854747+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=18)",
+    "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 9.8,
-    "weather_temp": null,
-    "weather": "快晴",
+    "outdoor_temp": 9.7,
+    "weather_temp": 9.1,
+    "weather": "雨",
     "alerts_count": 1
   }
 }
