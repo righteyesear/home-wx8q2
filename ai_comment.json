@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-19T11:58:51.779280+09:00",
-  "advice": "正午前の1時間で気温が1.5℃上がり、屋外の日陰にある個人センサーの実測は19.1℃に達しています。ただ、推定される風速を踏まえた体感温度の参考値は17.0℃と実測より低めで、数値ほど暑さを感じる状態ではありません。\n\n気象庁の予報でも夜まで晴れが続いて雨の心配はないものの、広域の予測では昼過ぎをピークに気温が下り坂へ向かい、16時頃には16.1℃まで下がる見込みです。午後は風もやや強まるため、現在の暖かさに比べて夕方は体感が一段と冷えてくるとみられます。\n\n昼前後は日差しの下で快適に過ごせますが、日が傾くと風の影響も重なって急に肌寒くなります。夕方まで外出が続く場合は、軽装のまま出かけるのではなく、風を通しにくい羽織りものを一枚用意しておくと体温調節がしやすくなります。",
+  "generated_at": "2026-11-19T12:59:38.417150+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 19.1,
-    "weather_temp": 18.5,
+    "outdoor_temp": 19.4,
+    "weather_temp": 19.0,
     "weather": "快晴",
     "alerts_count": 0
   }
