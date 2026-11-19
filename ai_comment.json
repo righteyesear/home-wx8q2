@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-19T20:19:49.868582+09:00",
-  "advice": "数値以上に、肌寒さが際立つ夜になっています。家の外の日陰に設けたセンサーは12.8℃を示し、昨日の同じ時刻より2.6℃低い水準です。推定の風を加味した体感温度の参考値は10.5℃にとどまり、実測の気温とは2℃以上の開きが見られます。\n\n直近3時間ほど続いた冷え込みはここ1時間でやや緩やかになったものの、下がり続ける流れ自体は変わっていません。晴れが続いて雨の心配はない一方、広域の予報では日付が変わる頃に10℃前後、午前1時には9.7℃まで落ち込む見通しです。弱い風も残るため、深夜にかけても気温より低い体感が続くとみられます。\n\nこれから外へ出る際は、気温の数字だけで服装を決めず、風を遮る上着や首元の防寒で体感の低さに備えてください。屋内でも外の冷え込みにつられて窓際から室温が下がりやすくなるため、カーテンを閉めて冷気を抑え、暖房を無理なく活用して室温を保つのがおすすめです。",
+  "generated_at": "2026-11-19T23:08:53.009577+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 12.8,
-    "weather_temp": 12.6,
+    "outdoor_temp": 10.7,
+    "weather_temp": 11.0,
     "weather": "快晴",
     "alerts_count": 0
   }
