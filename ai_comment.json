@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-19T12:59:38.417150+09:00",
-  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on",
+  "generated_at": "2026-11-19T14:54:44.774802+09:00",
+  "advice": "午後の葛飾区はよく晴れて、直近の同じ時間帯としては際立つ暖かさです。家の外の日陰に設置したセンサーでは19.3℃を観測しており、最近の午後平均を2.6℃上回る陽気となっています。\n\n昨日と比べてもわずかに気温が高く、日中は穏やかな暖かさが続いてきました。ただ、16時半すぎの日の入りに向かって冷え込みが進み、夕方から夜にかけて5℃ほど気温が下がる見込みです。西寄りの風も少し吹くため、実際の気温以上に空気がひんやり感じられそうです。\n\n夜にかけても晴れが続いて雨の心配はありませんが、日中と日没後の寒暖差が大きくなります。これから外出される方は、羽織るものなど調節しやすい服装で冷え込みに備えてください。",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 19.4,
-    "weather_temp": 19.0,
+    "outdoor_temp": 19.3,
+    "weather_temp": 18.0,
     "weather": "快晴",
     "alerts_count": 0
   }
