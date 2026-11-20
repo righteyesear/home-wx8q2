@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-20T06:04:48.684559+09:00",
-  "advice": "朝の冷え込みはほぼ横ばいで、気温の変化は落ち着いています。自宅外の日陰センサーは9.9℃で直近1時間はわずかな上下にとどまり、昨日同時刻を1.8℃下回る水準です。広域の推定気温も8℃台後半で変わりなく、地域全体として冷たい空気が居座っています。\n\n日の出前後の7時頃までは気温の足踏みが続きますが、その後は晴れて日差しが届き、11時には13.6℃まで5℃近く上がる見通しです。ただ、午前後半にかけて南西寄りの風がやや強まるほか、今日の最高気温も14℃台にとどまるため、日差しが届く時間帯でも日陰では肌寒さが残りやすいとみられます。\n\n朝の外出は冷え込みの底に近い時間帯となるため、マフラーや手袋など小物を活用して暖かさを保つ工夫が役立ちます。昼前にかけて風が出てくると日当たりの有無で体感が大きく変わるため、日中の外出には防風性のあるコートなどを選んでおくと服装の調整に困りません。",
+  "generated_at": "2026-11-20T10:05:15.822093+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 9.9,
-    "weather_temp": 8.8,
+    "outdoor_temp": 13.0,
+    "weather_temp": 12.9,
     "weather": "快晴",
     "alerts_count": 0
   }
