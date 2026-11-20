@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-20T10:05:15.822093+09:00",
-  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on",
+  "generated_at": "2026-11-20T11:53:14.068560+09:00",
+  "advice": "晴れて気温は順調に上がっていますが、風の影響で体感が伴いにくい状況です。自宅外の日陰にあるセンサーでは直近1時間で1.5℃上昇して15.3℃に達した一方、推定風速を踏まえた体感温度の参考値は11.7℃にとどまっています。\n\n午前中の上昇にもかかわらず、昨日同時刻と比べると4℃近く低い水準で推移しており、ひんやりとした空気です。この先も雨が降る気配はなく晴天が続く見込みですが、昼過ぎを境に気温の上昇は頭打ちとなり、日没に向けて再び冷え込みが強まるとみられます。乾いた西南西の風も続くため、数字以上に肌寒さを感じやすい午後になりそうです。\n\n日向と日陰、また風の当たり方によって寒暖の差が大きく感じられます。脱ぎ着で調節しやすい上着を選び、日が傾く時間帯の冷え込みに備えて早めの防寒を意識しておくと安心です。",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 13.0,
-    "weather_temp": 12.9,
+    "outdoor_temp": 15.3,
+    "weather_temp": 14.1,
     "weather": "快晴",
     "alerts_count": 0
   }
