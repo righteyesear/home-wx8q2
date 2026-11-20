@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-11-20T21:21:08.949509+09:00",
-  "advice": "気温の下がり方が落ち着き、今夜は昨日とほぼ同じ水準の穏やかな冷え込みで推移しています。21時過ぎの個人センサーは11.0℃、湿度は43%で、直近1時間の気温低下は0.3℃とごくわずかにとどまりました。\n\n気象庁の予報では明日も晴れが続いて雨の心配はなく、雨雲ナウキャストでも1時間先まで降水は見込まれていません。先ほどまで続いていた気温低下のペースが鈍り、最近の同じ時間帯の平均より1.2℃低い状態のまま、この先も急な冷え込みへは向かわないとみられます。\n\n気温が急変しない分、今夜は暖房を強めすぎずに過ごせそうですが、空気が乾いているため加湿器やこまめな水分補給で喉を守りやすくなります。明日も晴れて朝から冷え込む見込みなので、起き抜けに羽織る上着を枕元に用意して休むのが安心です。",
+  "generated_at": "2026-11-20T22:51:28.467792+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=18)",
+    "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 11.0,
-    "weather_temp": null,
+    "outdoor_temp": 9.8,
+    "weather_temp": 8.8,
     "weather": "快晴",
     "alerts_count": 0
   }
