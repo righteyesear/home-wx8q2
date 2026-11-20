@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-11-21T00:54:01.063067+09:00",
-  "advice": "直近1時間で気温が1.2℃下がり、深夜に入って冷え込みが深まってきました。家の外の日陰にあるセンサーの実測は8.0℃で、昨日の同じ時刻より1.5℃低い水準です。\n\n雲のない晴れが続いて熱が逃げやすいため、この先も明け方にかけて7.0℃前後までさらに低下する見込みです。風は弱く穏やかな予報ですが、風の影響を加味した体感の参考値はすでに7.4℃と実測を下回っており、朝に向かって一段と肌寒さが増すとみられます。\n\n未明から早朝が寒さの底になるため、就寝中も室温が下がりすぎないよう寝具や暖房を調整しておくと安心です。朝早くに出かける際は、冬物の上着などでしっかり防寒して備えてください。",
+  "generated_at": "2026-11-21T01:50:46.059442+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": null,
+    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=18)",
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 8.0,
-    "weather_temp": 8.1,
+    "outdoor_temp": 7.2,
+    "weather_temp": null,
     "weather": "快晴",
     "alerts_count": 0
   }
