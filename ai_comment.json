@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-22T02:55:28.844058+09:00",
-  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-11-22T03:35:26.723923+09:00",
+  "advice": "未明の屋外は冷え込みが厳しく、日陰にあるセンサーは5.4℃を観測しています。直近の同じ時間帯の平均より約5℃低く、この1週間でも際立った寒さです。空はよく晴れており、雨の心配はありません。\n\nここ3時間で1.5℃下がったあと直近1時間は横ばいに転じており、日の出ごろまで今の冷え込みが続く見込みです。雲のない晴天で風も弱いため、地面の熱が上空へ逃げる放射冷却が働きやすく、広域の推定より足元の冷えが深まりやすい状態とみられます。\n\n早朝に外出される場合は、冬用のコートや手袋などしっかりとした防寒が欠かせません。朝までは室内でも床付近や窓際が冷えやすいため、暖房や暖かい上着で体調を崩さないようご注意ください。日中は晴れて日差しが届く見通しです。",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 5.2,
-    "weather_temp": 6.9,
+    "outdoor_temp": 5.4,
+    "weather_temp": 6.3,
     "weather": "快晴",
     "alerts_count": 0
   }
