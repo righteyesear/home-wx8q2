@@ -7,32 +7,32 @@
     "end_date": "2026-11-22",
     "label": "2026年 第47週（11/16 〜 11/22）"
   },
-  "generated_at": "2026-11-21T05:14:26.655440+09:00",
+  "generated_at": "2026-11-21T11:14:13.949695+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
       "ai_comment": "",
       "highlights": [
         "最高気温 19.8℃",
-        "最低気温 5.1℃",
-        "前週比 +0.8℃",
-        "前年比 +0.7℃"
+        "最低気温 4.7℃",
+        "前週比 +1.0℃",
+        "前年比 +0.9℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 6,
-      "avg_temp": 12.4,
-      "avg_temp_stdev": 3.1,
+      "avg_temp": 12.6,
+      "avg_temp_stdev": 2.9,
       "max_temp": 19.8,
       "max_temp_date": "2026/11/19",
-      "avg_high": 16.2,
-      "min_temp": 5.1,
+      "avg_high": 16.8,
+      "min_temp": 4.7,
       "min_temp_date": "2026/11/21",
       "avg_low": 8.8,
-      "avg_daily_range": 7.3,
-      "prev_week_diff": 0.8,
-      "prev_year_diff": 0.7
+      "avg_daily_range": 8.0,
+      "prev_week_diff": 1.0,
+      "prev_year_diff": 0.9
     },
     "daily_data": [
       {
@@ -78,10 +78,10 @@
       {
         "date": "2026/11/21",
         "weekday": "土",
-        "high": 8.9,
-        "low": 5.1,
-        "avg": 6.8,
-        "range": 3.8
+        "high": 12.4,
+        "low": 4.7,
+        "avg": 7.5,
+        "range": 7.7
       }
     ],
     "comparison": {
@@ -100,27 +100,21 @@
         "avg_low": 6.9,
         "avg_daily_range": 9.4
       },
-      "avg_temp_diff": 0.7,
+      "avg_temp_diff": 0.9,
       "max_temp_diff": -1.5,
-      "min_temp_diff": 0.4,
-      "avg_daily_range_diff": -2.1,
+      "min_temp_diff": 0.0,
+      "avg_daily_range_diff": -1.4,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 12.2,
-      "current_deviation": 0.2,
+      "current_deviation": 0.4,
       "years_count": 2
     },
     "events": {
       "title": "特筆イベント",
-      "items": [
-        {
-          "date": "2026/11/21",
-          "type": "rapid_change",
-          "description": "平均気温が前日比-5.1℃の急低下"
-        }
-      ]
+      "items": []
     },
     "season": {
       "title": "季節の進み具合",
@@ -334,7 +328,7 @@
           "11": {
             "avg": 13.5,
             "high": 24.6,
-            "low": 4.8
+            "low": 4.7
           }
         }
       }
@@ -359,7 +353,7 @@
         19.2,
         19.8,
         16.0,
-        8.9
+        12.4
       ],
       "lows": [
         10.5,
@@ -367,7 +361,7 @@
         9.7,
         9.8,
         8.3,
-        5.1
+        4.7
       ],
       "avgs": [
         15.0,
@@ -375,7 +369,7 @@
         14.4,
         14.9,
         11.9,
-        6.8
+        7.5
       ]
     },
     "prev_year_comparison": {
@@ -393,7 +387,7 @@
         14.4,
         14.9,
         11.9,
-        6.8
+        7.5
       ],
       "last_year": [
         13.2,
@@ -410,7 +404,7 @@
         19.2,
         19.8,
         16.0,
-        8.9
+        12.4
       ],
       "last_year_high": [
         17.6,
@@ -427,7 +421,7 @@
         9.7,
         9.8,
         8.3,
-        5.1
+        4.7
       ],
       "last_year_low": [
         8.5,
@@ -454,7 +448,7 @@
         2.2,
         2.7,
         -0.3,
-        -5.4
+        -4.7
       ],
       "baseline_avg": 12.2
     }
@@ -463,18 +457,18 @@
     "context_version": "3.2",
     "daily_pattern": {
       "opening_avg": 13.35,
-      "closing_avg": 9.35,
-      "front_to_back_change": -4.0,
-      "linear_slope_per_day": -1.14,
-      "daily_avg_stdev": 2.86,
-      "mean_absolute_day_change": 2.92,
+      "closing_avg": 9.7,
+      "front_to_back_change": -3.65,
+      "linear_slope_per_day": -1.04,
+      "daily_avg_stdev": 2.63,
+      "mean_absolute_day_change": 2.78,
       "largest_rise": {
         "change": 2.700000000000001,
         "from_date": "2026/11/17",
         "to_date": "2026/11/18"
       },
       "largest_drop": {
-        "change": -5.1000000000000005,
+        "change": -4.4,
         "from_date": "2026/11/20",
         "to_date": "2026/11/21"
       },
@@ -484,7 +478,7 @@
       },
       "coolest_average_day": {
         "date": "2026/11/21",
-        "value": 6.8
+        "value": 7.5
       },
       "days_high_35_or_more": 0,
       "days_high_30_or_more": 0,
@@ -525,12 +519,12 @@
         2026
       ],
       "peer_average": 11.15,
-      "deviation_from_peer_average": 1.25,
+      "deviation_from_peer_average": 1.45,
       "rank_warmest": 1,
       "rank_coldest": 3,
       "sample_min": 10.8,
-      "sample_max": 12.4,
-      "sample_stdev": 0.65
+      "sample_max": 12.6,
+      "sample_stdev": 0.74
     },
     "recent_history": {
       "previous_periods": [
@@ -577,15 +571,15 @@
       ],
       "previous_period_count": 4,
       "previous_period_mean": 16.2,
-      "difference_from_previous_period_mean": -3.8
+      "difference_from_previous_period_mean": -3.6
     }
   },
   "analysis_meta": {
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-11-21T05:14:26.676483+09:00",
-    "data_fingerprint": "e8ce50f4f61810a165b0",
+    "generated_at": "2026-11-21T11:14:13.982318+09:00",
+    "data_fingerprint": "3e5669f03f47db894be4",
     "period_closed": false,
     "coverage_complete": false,
     "observed_days": 6,
