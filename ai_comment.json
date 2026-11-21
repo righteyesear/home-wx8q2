@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-22T04:52:53.598849+09:00",
-  "advice": "今朝は5℃を下回る強い冷え込みとなり、家の外の日陰に設置したセンサーは4.9℃を記録しています。昨日と並ぶ低い水準で、広域の推定値より1.3℃低く、身近な場所ほど冷たさが際立っています。\n\nここ3時間続いた気温の下降は直近1時間で緩やかになり、冷え込みは底に近づいています。気象庁の予報でも今日は晴れて雨の心配はなく、7時ごろにいったん下げ止まったあと、9時にかけて2℃以上持ち直す見込みです。\n\n暖房の効いた室内と冷え込んだ屋外では温度差が大きく、急な冷気は身体への負担につながります。わずかな外出でも部屋の中で上着やマフラーを身に着けてから外へ出ると、急激な冷えを避けられます。廊下や洗面所など家の中の寒暖差にも羽織るもので備え、日中の気温上昇に合わせて脱ぎ着で調節してください。",
+  "generated_at": "2026-11-22T08:43:20.744486+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 4.9,
-    "weather_temp": 6.2,
+    "outdoor_temp": 8.8,
+    "weather_temp": 7.7,
     "weather": "快晴",
     "alerts_count": 1
   }
