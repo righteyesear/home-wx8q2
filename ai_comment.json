@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-21T12:49:31.844214+09:00",
-  "advice": "快晴のもと日差しはたっぷり届いていますが、空気はここ数日より一段とひんやりしています。家の外の日陰にあるセンサーは13.9℃で、直近の同じ時間帯の平均より2.9℃低く、昨日同時刻と比べても約2℃下回っています。葛飾区付近で雨の観測はなく、この先1時間も降りません。\n\n朝からの昇温の勢いはすでに落ち着きつつあり、気象庁の予報でも今夜にかけて晴れが続く一方、気温は昼過ぎをピークに横ばいで推移して夕方に向けてゆるやかに下がる見通しです。風は弱く穏やかですが、推定風速を加味した参考の体感温度は11.6℃にとどまっており、日差しの届かない場所では数値以上に肌寒く感じられます。\n\n午後の外出や洗濯物の外干しには絶好の日和ですが、昨日までの感覚で軽装のまま出かけると日陰で冷えやすくなります。日の入りが16時半ごろと早く、日が傾くと空気が冷え込むため、夕方以降も外にいる予定なら羽織れる上着を持参するのがおすすめです。",
+  "generated_at": "2026-11-21T14:38:34.386840+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 13.9,
-    "weather_temp": 13.0,
+    "outdoor_temp": 14.5,
+    "weather_temp": 13.5,
     "weather": "快晴",
     "alerts_count": 0
   }
