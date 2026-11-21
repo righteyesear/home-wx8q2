@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-11-21T22:50:30.097769+09:00",
-  "advice": "今夜は最近の同時間帯と比べても冷え込みが一段と強く、冬の気配を感じる寒さとなっています。自宅外の個人センサーは7.7℃を観測しており、昨日同時刻より1.8℃低く、直近の同時間帯平均を4.1℃下回っています。\n\n気温は直近3時間で1.8℃下がるなど安定したペースで低下が続いており、この先1時間もさらに下がる見通しです。気象庁の予報でも明日昼前にかけて晴れが続き、当面は雨の心配がない一方で、深夜から朝にかけて冷え込みがいっそう強まるとみられます。\n\n夜間に外出する際は、昨日と同じ服装では肌寒く感じやすいため、冬物の上着などでしっかりと防寒してください。ここまでの実測では今朝も4.7℃まで気温が下がっており、就寝時は暖かい寝具を整えてお休みになるのが安心です。",
+  "generated_at": "2026-11-22T00:58:58.114787+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=18)",
+    "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 7.7,
-    "weather_temp": null,
+    "outdoor_temp": 6.5,
+    "weather_temp": 7.6,
     "weather": "快晴",
     "alerts_count": 0
   }
