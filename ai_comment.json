@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-11-21T20:56:26.252563+09:00",
-  "advice": "気温の下がり方は少し緩やかになったものの、冷え込み自体は着実に深まっています。屋外のセンサーは9.1℃を観測し、直近1時間の下げ幅は0.6℃にとどまりました。穏やかな晴れが続いており、雨や強い風の心配はありません。\n\n下げの勢いは落ち着きつつありますが、最近の同じ時間帯の平均と比べると4.0℃低く、この時期としては本格的な冷え込みといえます。広域の予報でも日付が変わってからさらに気温が下がり、深夜1時頃には7℃台まで下がる見通しです。センサーの値が広域の推定より低めに推移していることからも、夜更けにかけてじわじわと寒さが増していくとみられます。\n\n天候の崩れはなく遅い時間の外出にも支障はありませんが、これから外へ出る際は首元や手先を守る防寒小物を添えるのがおすすめです。室内でも窓際から冷気が伝わりやすくなる時間帯のため、カーテンをしっかり閉めて保温性を高め、暖かい状態で眠りにつきたいところです。",
+  "generated_at": "2026-11-21T22:18:16.159141+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": null,
+    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=18)",
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 9.1,
-    "weather_temp": 9.8,
+    "outdoor_temp": 7.9,
+    "weather_temp": null,
     "weather": "快晴",
     "alerts_count": 0
   }
