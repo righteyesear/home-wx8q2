@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-22T21:09:54.960656+09:00",
-  "advice": "冷え込みのペースが衰えず、屋外の日陰に置かれたセンサーは現在8.2℃を示しています。直近1時間で0.8℃下がり、昨夜とほぼ同じ水準まで気温が落ちてきました。\n\n下がり方の勢いは大きく変わらず、今後1時間も1.1℃ほど下降して7℃台前半になる見込みです。今夜は雲が少なく雨の心配がないうえ、風も弱く地表の熱が逃げやすいため、午前2時には5.8℃まで冷え込むとみられます。\n\nこのあと1時間は気温の低下が続きやすい時間帯ですので、外出や帰宅の際は手袋などで手先や首元までしっかり保温してください。室内も冷えやすく乾燥注意報が出ているため、早めの寝具の調整やのどの保湿も意識したいところです。",
+  "generated_at": "2026-11-22T22:41:57.358752+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 8.2,
-    "weather_temp": 8.1,
+    "outdoor_temp": 6.9,
+    "weather_temp": 7.7,
     "weather": "快晴",
     "alerts_count": 1
   }
