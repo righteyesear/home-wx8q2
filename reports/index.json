@@ -1,6 +1,17 @@
 {
   "weekly": [
     {
+      "period": "2026-W48",
+      "label": "11/23 〜 11/29",
+      "file": "weekly/2026-W48.json",
+      "is_final": false,
+      "analysis_available": false,
+      "status": "draft",
+      "coverage_complete": false,
+      "observed_days": 1,
+      "expected_days": 7
+    },
+    {
       "period": "2026-W47",
       "label": "11/16 〜 11/22",
       "file": "weekly/2026-W47.json",
@@ -1906,5 +1917,5 @@
       "expected_days": 31
     }
   ],
-  "updated_at": "2026-11-22T20:19:50.037065+09:00"
+  "updated_at": "2026-11-23T04:35:47.097511+09:00"
 }
