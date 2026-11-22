@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-22T22:41:57.358752+09:00",
-  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-11-22T23:58:45.140791+09:00",
+  "advice": "雨や風の急変はなく天気は落ち着いていますが、今夜は冷え込みが一段と強まりました。屋外日陰の個人センサーは6.1℃まで下がり、最近の同時間帯平均より5.1℃低い寒さです。広域の推定値よりも低く、地面付近の冷えが一層進んでいます。\n\n直近3時間で気温は約2℃下がったものの、ここ1時間の低下は穏やかで、今後1時間に急変する見込みはありません。ただ、晴れて風も弱いため地表付近の熱が逃げやすく、明朝にかけてさらに2℃近く下がるとみられます。朝まで雨の心配もなく、穏やかな空模様が続く予想です。\n\nこの先1時間を含め傘は不要ですが、昨日同時刻を下回る冷え込みのため、深夜の外出にはしっかりとした防寒が欠かせません。乾燥注意報も続いているため、室内で休む際も寝冷え対策とあわせて加湿や火の元の確認を心がけてください。",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 6.9,
-    "weather_temp": 7.7,
+    "outdoor_temp": 6.1,
+    "weather_temp": 7.1,
     "weather": "快晴",
     "alerts_count": 1
   }
