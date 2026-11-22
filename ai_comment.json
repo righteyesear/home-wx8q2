@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-22T08:43:20.744486+09:00",
-  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-11-22T10:56:23.921873+09:00",
+  "advice": "朝の急な昇温で厳しい冷え込みは緩みましたが、乾燥と日陰の肌寒さにはまだ注意が必要です。屋外日陰の個人センサーでは現在12.2℃・湿度42%を観測しており、過去3時間で5.5℃、直近1時間でも1.0℃上昇しました。\n\nただ、最近の同じ時間帯の平均と比べるとまだ2℃ほど低く、今後1時間から午後の予報では上昇の勢いが緩んで13℃弱で頭打ちとなる見込みです。晴れが続いて雨の心配はないものの、風速の推定値を踏まえた参考の体感温度は気温の数値より2℃ほど低く、日が当たらない場所や北西の風を受けると暖かさを感じにくいとみられます。\n\n日向では過ごしやすくても、日陰に備えて脱ぎ着しやすい上着を用意しておくと安心です。乾燥注意報が続いており空気の乾きが強いため、火の元の点検や水分補給を心がけ、夕方の日没前には冷え込みに備えた服装へ切り替えてください。",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 8.8,
-    "weather_temp": 7.7,
+    "outdoor_temp": 12.2,
+    "weather_temp": 11.1,
     "weather": "快晴",
     "alerts_count": 1
   }
