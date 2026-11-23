@@ -7,41 +7,41 @@
     "end_date": "2026-11-29",
     "label": "2026年 第48週（11/23 〜 11/29）"
   },
-  "generated_at": "2026-11-23T04:35:47.069636+09:00",
+  "generated_at": "2026-11-23T10:41:14.067517+09:00",
   "sections": {
     "summary": {
       "title": "週間サマリー",
       "ai_comment": "",
       "highlights": [
-        "最高気温 6.1℃",
-        "最低気温 4.1℃",
-        "前週比 -7.2℃",
-        "前年比 -6.7℃"
+        "最高気温 9.2℃",
+        "最低気温 3.6℃",
+        "前週比 -7.0℃",
+        "前年比 -6.5℃"
       ]
     },
     "statistics": {
       "title": "週間統計",
       "days": 1,
-      "avg_temp": 5.1,
+      "avg_temp": 5.3,
       "avg_temp_stdev": 0,
-      "max_temp": 6.1,
+      "max_temp": 9.2,
       "max_temp_date": "2026/11/23",
-      "avg_high": 6.1,
-      "min_temp": 4.1,
+      "avg_high": 9.2,
+      "min_temp": 3.6,
       "min_temp_date": "2026/11/23",
-      "avg_low": 4.1,
-      "avg_daily_range": 2.0,
-      "prev_week_diff": -7.2,
-      "prev_year_diff": -6.7
+      "avg_low": 3.6,
+      "avg_daily_range": 5.6,
+      "prev_week_diff": -7.0,
+      "prev_year_diff": -6.5
     },
     "daily_data": [
       {
         "date": "2026/11/23",
         "weekday": "月",
-        "high": 6.1,
-        "low": 4.1,
-        "avg": 5.1,
-        "range": 2.0
+        "high": 9.2,
+        "low": 3.6,
+        "avg": 5.3,
+        "range": 5.6
       }
     ],
     "comparison": {
@@ -60,16 +60,16 @@
         "avg_low": 7.8,
         "avg_daily_range": 8.1
       },
-      "avg_temp_diff": -6.7,
-      "max_temp_diff": -12.6,
-      "min_temp_diff": -1.5,
-      "avg_daily_range_diff": -6.1,
+      "avg_temp_diff": -6.5,
+      "max_temp_diff": -9.5,
+      "min_temp_diff": -2.0,
+      "avg_daily_range_diff": -2.5,
       "ai_comment": ""
     },
     "baseline": {
       "title": "2年平均との比較",
       "baseline_avg": 11.7,
-      "current_deviation": -6.6,
+      "current_deviation": -6.4,
       "years_count": 2
     },
     "events": {
@@ -288,7 +288,7 @@
           "11": {
             "avg": 13.0,
             "high": 24.6,
-            "low": 3.7
+            "low": 3.6
           }
         }
       }
@@ -303,13 +303,13 @@
         "11/23(月)"
       ],
       "highs": [
-        6.1
+        9.2
       ],
       "lows": [
-        4.1
+        3.6
       ],
       "avgs": [
-        5.1
+        5.3
       ]
     },
     "prev_year_comparison": {
@@ -317,7 +317,7 @@
         "月"
       ],
       "this_year": [
-        5.1
+        5.3
       ],
       "last_year": [
         12.1,
@@ -329,7 +329,7 @@
         11.6
       ],
       "this_year_high": [
-        6.1
+        9.2
       ],
       "last_year_high": [
         15.1,
@@ -341,7 +341,7 @@
         14.5
       ],
       "this_year_low": [
-        4.1
+        3.6
       ],
       "last_year_low": [
         9.7,
@@ -358,7 +358,7 @@
         "11/23(月)"
       ],
       "deviations": [
-        -6.6
+        -6.4
       ],
       "baseline_avg": 11.7
     }
@@ -366,8 +366,8 @@
   "analysis_context": {
     "context_version": "3.2",
     "daily_pattern": {
-      "opening_avg": 5.1,
-      "closing_avg": 5.1,
+      "opening_avg": 5.3,
+      "closing_avg": 5.3,
       "front_to_back_change": 0.0,
       "linear_slope_per_day": 0.0,
       "daily_avg_stdev": 0.0,
@@ -376,11 +376,11 @@
       "largest_drop": null,
       "warmest_average_day": {
         "date": "2026/11/23",
-        "value": 5.1
+        "value": 5.3
       },
       "coolest_average_day": {
         "date": "2026/11/23",
-        "value": 5.1
+        "value": 5.3
       },
       "days_high_35_or_more": 0,
       "days_high_30_or_more": 0,
@@ -421,12 +421,12 @@
         2026
       ],
       "peer_average": 11.45,
-      "deviation_from_peer_average": -6.35,
+      "deviation_from_peer_average": -6.15,
       "rank_warmest": 3,
       "rank_coldest": 1,
-      "sample_min": 5.1,
+      "sample_min": 5.3,
       "sample_max": 11.5,
-      "sample_stdev": 2.99
+      "sample_stdev": 2.9
     },
     "recent_history": {
       "previous_periods": [
@@ -465,23 +465,23 @@
           "period": "2026年 第47週（11/16 〜 11/22）",
           "start_date": "2026-11-16",
           "year": 2026,
-          "avg_temp": 12.4,
+          "avg_temp": 12.3,
           "max_temp": 19.8,
           "min_temp": 3.7,
           "avg_daily_range": 8.6
         }
       ],
       "previous_period_count": 4,
-      "previous_period_mean": 14.1,
-      "difference_from_previous_period_mean": -9.0
+      "previous_period_mean": 14.07,
+      "difference_from_previous_period_mean": -8.77
     }
   },
   "analysis_meta": {
     "source": "draft",
     "analysis_available": false,
     "protocol_version": "3.2",
-    "generated_at": "2026-11-23T04:35:47.094019+09:00",
-    "data_fingerprint": "373a2d5c93f8785da9b8",
+    "generated_at": "2026-11-23T10:41:14.100359+09:00",
+    "data_fingerprint": "82ca2ae6699a65884464",
     "period_closed": false,
     "coverage_complete": false,
     "observed_days": 1,
