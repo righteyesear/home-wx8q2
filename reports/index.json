@@ -15,9 +15,9 @@
       "period": "2026-W47",
       "label": "11/16 〜 11/22",
       "file": "weekly/2026-W47.json",
-      "is_final": false,
-      "analysis_available": false,
-      "status": "draft",
+      "is_final": true,
+      "analysis_available": true,
+      "status": "final",
       "coverage_complete": true,
       "observed_days": 7,
       "expected_days": 7
@@ -1917,5 +1917,5 @@
       "expected_days": 31
     }
   ],
-  "updated_at": "2026-11-23T04:35:47.097511+09:00"
+  "updated_at": "2026-11-23T10:32:18.290774+09:00"
 }
