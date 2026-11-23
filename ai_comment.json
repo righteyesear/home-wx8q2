@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-23T20:59:39.919239+09:00",
-  "advice": "今夜は気温の急変や雨の心配はなく、穏やかに推移しています。家の外の日陰にあるセンサーの実測は10.4℃で、直近1時間の変化はマイナス0.2℃と安定した状態です。昨日同時刻より2.8℃高く、冷え込みは少し緩んでいます。\n\nこの先1時間も雨は降らず、気温はほぼ横ばいで推移する見通しです。ただ、ここ最近の夜の平均と比べるとまだ2℃近く低めのため、空気の冷たさは残ります。深夜0時頃からは予報でも雲が広がり始める見込みで、気温の下がり方は緩やかなまま、明日の午後にかけては降水確率60％と天気が下り坂へ向かうとみられます。\n\n今夜の外出や帰宅は、風も弱く穏やかなため普段通りの防寒で問題ありません。明日の日中に備えて、今夜のうちに雨具を用意しておくと安心です。",
+  "generated_at": "2026-11-23T22:51:01.545354+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 10.4,
+    "outdoor_temp": 9.8,
     "weather_temp": 10.7,
-    "weather": "快晴",
+    "weather": "薄曇り",
     "alerts_count": 0
   }
 }
