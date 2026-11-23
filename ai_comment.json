@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-24T03:52:29.216689+09:00",
-  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-11-24T04:58:42.639788+09:00",
+  "advice": "直近の気温や雨に急変はなく落ち着いていますが、未明に強風注意報が発表されており、これからの風の強まりと午後の雨に注意が必要です。日陰にある屋外センサーの実測は8.3℃で、ここ3時間はほぼ横ばいで安定し、今後1時間も雨は降らない見込みです。\n\n今朝の気温は昨日同時刻より4.4℃高く、このあとも朝のうちにかけて上昇が続くとみられます。一方で、早朝は穏やかだった風は6時頃から次第に強まる見通しで、昼過ぎから夕方にかけては降水確率70％の雨が予想されています。\n\n今後1時間の外出に雨の影響はありませんが、強風に備えてベランダの飛ばされやすい物は早めに固定するか室内へ取り込むと安心です。昼過ぎ以降も外に出る場合は、雨具と風を防げる上着を用意して備えてください。",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 8.1,
-    "weather_temp": 10.3,
+    "outdoor_temp": 8.3,
+    "weather_temp": 12.1,
     "weather": "薄曇り",
-    "alerts_count": 0
+    "alerts_count": 1
   }
 }
