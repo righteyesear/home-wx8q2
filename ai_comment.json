@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-11-25T05:29:22.624036+09:00",
+  "generated_at": "2026-11-25T06:03:43.530783+09:00",
   "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on",
   "model": "gemini-4-hydrogen",
   "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": null,
+    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=18)",
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 9.0,
-    "weather_temp": 8.5,
+    "outdoor_temp": 8.7,
+    "weather_temp": null,
     "weather": "快晴",
     "alerts_count": 1
   }
