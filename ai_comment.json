@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-25T03:28:25.723678+09:00",
-  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-11-25T04:25:12.258547+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on",
   "model": "gemini-4-hydrogen",
   "analysis_status": "error",
   "source_status": {
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 9.8,
-    "weather_temp": 9.2,
+    "outdoor_temp": 9.5,
+    "weather_temp": 8.8,
     "weather": "快晴",
-    "alerts_count": 0
+    "alerts_count": 1
   }
 }
