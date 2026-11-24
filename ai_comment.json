@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-11-24T13:14:42.448824+09:00",
-  "advice": "強風注意報が発表されているなか、午後から雨へ変わる見込みで、空模様と風の急な変化に注意が必要です。家の外の日陰にあるセンサーでは18.4℃を観測しており、昨日同時刻より5.2℃も高く、ここ3時間ほどでも気温が大きく上がりました。\n\n1時間先までの降水予測では13時50分頃にわずかな雨が予想される程度で、今後1時間はまだ本降りの気配はありません。ただ、気象庁の予報では昼過ぎから夕方にかけて雨となり、18時までの降水確率は70%と高めです。暖かな状態から一転して、このあとは雨や風の強まりへと移り変わるとみられます。\n\n外出時は傘などの雨具に加え、風を通しにくい上着を持っておくと安心です。洗濯物や屋外の飛ばされやすい物は今のうちに取り込み、このあと1時間の空の暗さや風の変化に目を配ってください。",
+  "generated_at": "2026-11-24T14:45:24.998495+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=18)",
+    "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 18.4,
-    "weather_temp": null,
-    "weather": "快晴",
+    "outdoor_temp": 18.1,
+    "weather_temp": 17.9,
+    "weather": "薄曇り",
     "alerts_count": 1
   }
 }
