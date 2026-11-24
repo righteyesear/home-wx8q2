@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-24T19:31:54.645182+09:00",
-  "advice": "雨が上がり、夕方から続いていた急激な気温の低下も落ち着きを取り戻しています。屋外の日陰センサーは12.3℃で、この3時間に5.7℃下がったあと、直近1時間の変化は0.2℃にとどまりました。\n\n19時以降は雨が観測されておらず、今後1時間も降水はない見通しです。夕方までの注意報はすでに解除され、気象庁の予報では夜にかけて曇りから次第に晴れへ向かいます。ただ、周辺の予測では深夜にかけて気温がさらに3℃ほど下がり、北寄りの風もやや強まるとみられます。\n\nこれから1時間ほどの移動は傘を持たずに済みそうですが、雨上がりの濡れた路面では滑りやすさにご注意ください。昼間の暖かさから空気が一変して冷え込んでいるため、風を通しにくい上着を羽織るなど、しっかりと防寒対策を整えてお出かけください。",
+  "generated_at": "2026-11-24T21:01:36.835290+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -12,8 +12,8 @@
   },
   "data_summary": {
     "outdoor_temp": 12.3,
-    "weather_temp": 13.5,
-    "weather": "弱い霧雨",
+    "weather_temp": 12.5,
+    "weather": "晴れ",
     "alerts_count": 0
   }
 }
