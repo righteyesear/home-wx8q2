@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-26T03:32:28.963272+09:00",
-  "advice": "未明に入り気温の低下が続いており、屋外の日陰にある個人センサーは現在4.8℃を示しています。直近3時間で1.7℃下がっており、最近の同じ時間帯の平均と比べても3.4℃低い水準です。\n\n個人センサーは広域の推定値よりわずかに低く推移しており、直近1時間の低下傾向が続けば、今後1時間もさらに0.5℃ほど下がる見込みです。雲のない空と弱い風のもと、日の出を迎える6時半ごろまでは4℃台の底冷えが続くでしょう。朝にかけても安定した晴天で、降水のおそれはありません。\n\n早朝に出かける予定がある場合は、マフラーや手袋などで首元や指先までしっかり防寒してください。室内も冷気がたまりやすいため、起床時刻に合わせて暖房のタイマーを活用すると動き出しやすくなります。乾燥注意報が継続しているため、喉の保湿にも気を配っておきたいところです。",
+  "generated_at": "2026-11-26T04:05:10.493289+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 4.8,
-    "weather_temp": 5.4,
+    "outdoor_temp": 4.7,
+    "weather_temp": 5.2,
     "weather": "快晴",
     "alerts_count": 1
   }
