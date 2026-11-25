@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T05:25:15.397268+09:00",
+  "generated_at": "2026-11-26T06:01:19.380181+09:00",
   "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on",
   "model": "gemini-4-hydrogen",
   "analysis_status": "error",
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 4.2,
-    "weather_temp": 5.0,
+    "outdoor_temp": 4.0,
+    "weather_temp": 4.8,
     "weather": "快晴",
     "alerts_count": 1
   }
