@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-25T18:23:12.509447+09:00",
-  "advice": "夕方からの気温低下が続いており、冷え込みが着実に進んでいます。日陰の屋外センサーは11.2℃を示し、直近1時間で0.9℃下がりました。夕方にかけて気温が落ち込み続け、肌寒さが一段と強まっています。\n\n夜遅くにかけても雨の心配はなく、気象庁の予報通り晴れが続く見込みです。ここ数時間続いている気温低下のペースは衰えておらず、1時間後には10.4℃前後まで下がるとみられます。雲が少なく風も穏やかなため、深夜に向けてさらに冷え込む予想です。\n\nこれから帰宅や外出で外を歩く場合は、日中の服装のままでは寒く感じるため、首元まで覆える上着やマフラーでしっかり防寒してください。また、乾燥注意報が継続しているため、室内で暖房を使い始める際は、加湿や火の元の点検もあわせて行うと安心です。",
+  "generated_at": "2026-11-25T19:54:37.572490+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 11.2,
-    "weather_temp": 10.7,
-    "weather": "快晴",
+    "outdoor_temp": 9.9,
+    "weather_temp": 9.7,
+    "weather": "晴れ",
     "alerts_count": 1
   }
 }
