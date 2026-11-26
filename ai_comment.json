@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T22:22:11.804882+09:00",
+  "generated_at": "2026-11-27T00:54:12.461651+09:00",
   "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-4-hydrogen",
   "analysis_status": "error",
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 11.1,
-    "weather_temp": 10.3,
+    "outdoor_temp": 10.3,
+    "weather_temp": 9.4,
     "weather": "薄曇り",
     "alerts_count": 0
   }
