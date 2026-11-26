@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-27T00:54:12.461651+09:00",
-  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-11-27T02:27:18.404974+09:00",
+  "advice": "葛飾区の深夜は、天候の急変や雨の心配がなく穏やかに推移しています。屋外の日陰にある個人センサーの実測は9.9℃で、直近1時間の変化はほぼなく落ち着いた状態です。昨日の同じ時間帯より5.0℃高く、今夜の冷え込みは緩やかです。\n\n過去3時間の気温低下が小さく、今後も風は弱い状態が続くため、明け方にかけての冷え込みも緩やかとみられます。広域の推定値では局所の実測よりやや低めながら、朝の気温は7.0℃前後までゆっくり下がる程度で大きな変化はありません。今後1時間はもちろん、日中に向けても降水は予想されておらず、天気は安定して推移する見込みです。\n\n急な冷え込みや雨への警戒は不要で、落ち着いた朝を迎えられそうです。それでも明け方は空気がひんやりと感じられるため、早朝に外出される際は上着で無理なく体温を調節してください。",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 10.3,
-    "weather_temp": 9.4,
-    "weather": "薄曇り",
+    "outdoor_temp": 9.9,
+    "weather_temp": 8.4,
+    "weather": "晴れ",
     "alerts_count": 0
   }
 }
