@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-27T04:26:18.282150+09:00",
-  "advice": "早朝にかけて冷え込みが強まっており、今後1時間ほどは一段の気温低下に注意が必要です。外の日陰にある個人センサーでは、直近3時間で2.7℃（この1時間で1.1℃）下がり、現在7.4℃となっています。\n\n昨日の同時刻より2.8℃高く、ここ最近の未明の平均並みの気温ではあるものの、低下のペースは衰えていません。この先1時間もさらに下がる傾向で、広域予報では朝7時頃にかけて底を打つとみられます。なお雨雲はなく、気象庁の予報でも日中の降水確率は0％です。\n\nこれから通勤や散歩などで外に出る場合は、冷えた空気に備えて首元や手先を温める防寒対策を心がけてください。朝8時以降は気温が上向き始める見込みですので、日中の昇温に合わせて脱ぎ着しやすい重ね着を選ぶのが無難です。",
+  "generated_at": "2026-11-27T05:02:52.965716+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 7.4,
-    "weather_temp": 7.9,
+    "outdoor_temp": 7.0,
+    "weather_temp": 7.6,
     "weather": "快晴",
     "alerts_count": 0
   }
