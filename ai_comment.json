@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-11-26T18:01:03.543108+09:00",
-  "advice": "今夜は天気の急変はなく、緩やかに冷え込みが進む見通しです。葛飾区（家の外の日陰にある個人センサー）の気温は12.1℃で、ここ3時間で2.0℃下がったものの変化のペースは安定しており、雨の気配もありません。\n\n最近の同じ時間帯の平均と比べると2.4℃低く、普段より肌寒い夕方となっています。気象庁の予報では今夜から明日昼にかけてくもりで降水確率は0%、1時間先までの雨の予測もなく、穏やかな空模様が続くとみられます。\n\nこの先も冷え込みが深まるため、帰宅や夜間の外出では上着などでしっかり防寒してください。乾燥注意報も継続しているため、就寝前の火の元の確認や室内の加湿も意識しておくと安心です。",
+  "generated_at": "2026-11-26T19:29:40.431935+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=18)",
+    "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 12.1,
-    "weather_temp": null,
-    "weather": "快晴",
+    "outdoor_temp": 11.5,
+    "weather_temp": 10.9,
+    "weather": "薄曇り",
     "alerts_count": 1
   }
 }
