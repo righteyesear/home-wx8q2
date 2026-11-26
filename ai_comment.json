@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-11-26T12:59:10.044699+09:00",
-  "advice": "朝の強い冷え込みから一転して順調に気温が上がり、昼にかけて寒暖差が大きくなっています。家の外の日陰にあるセンサーでは現在13.3℃、湿度50%で、直近3時間に4.2℃、直近1時間でも0.9℃上昇しました。今朝ここまでの最低気温は昨日より2.9℃低い3.7℃まで下がっており、一日の中でも気温の開きが目立ちます。\n\n気温の上昇ペースは安定しており、今後1時間も1℃前後上がって14℃台に達する見込みです。ただ、最近の同時間帯の平均より2.4℃低く、気象庁の予報では夕方から曇りに変わるため、午後の暖かさは控えめにとどまるとみられます。なお、この先1時間を含め雨の気配はなく、乾燥注意報が継続しています。\n\n昼間は動きやすい陽気でも、日陰や夕方以降は再び空気の冷たさを感じやすくなります。脱ぎ着しやすい上着で温度調節に備えると安心です。あわせて空気が乾いているため、こまめな水分補給や火の元の確認も意識しておくとよいでしょう。",
+  "generated_at": "2026-11-26T13:43:34.851859+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=18)",
+    "weather_error": null,
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 13.3,
-    "weather_temp": null,
-    "weather": "快晴",
+    "outdoor_temp": 13.9,
+    "weather_temp": 13.9,
+    "weather": "薄曇り",
     "alerts_count": 1
   }
 }
