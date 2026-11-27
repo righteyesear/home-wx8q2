@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-28T05:34:02.300276+09:00",
-  "advice": "雨足はいったん弱まっており、まもなく短い止み間に入りますが、6時台半ばには再び雨が強まる見通しです。1時間あまり降り続いていた雨は現在1時間あたり0.25ミリまで落ち着き、外の日陰に設置されたセンサーは9.7℃を観測しています。\n\n5時ごろに約3.9ミリを記録した雨は急速に弱まり、5時35分から5時50分ごろはいったん止む予測です。ただ6時前から再び弱い雨が戻り、6時25分ごろには約1.1ミリへ強まるとみられます。気象庁の予報でも昼前まで雨が続いたあと、くもりから晴れへ向かう見込みです。気温は昨日の同じ時刻より3.1℃高いものの緩やかに下がっており、9時ごろにかけて9℃前後まで冷える予想となっています。\n\n早朝の短い移動は、雨が途切れる5時35分ごろからの約20分間を活用すると濡れにくくなります。6時以降に出発する場合は止み間でも傘を持参し、昼前に天気が回復したあとの置き忘れにもご注意ください。朝のうちは気温が下がり肌寒いため、防寒できる上着での外出をおすすめします。",
+  "generated_at": "2026-11-28T06:44:12.188619+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 9.7,
-    "weather_temp": 9.9,
+    "outdoor_temp": 9.3,
+    "weather_temp": 9.4,
     "weather": "雨",
     "alerts_count": 0
   }
