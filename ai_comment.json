@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-28T00:42:35.748784+09:00",
-  "advice": "葛飾区では雨が降り始めており、これから明け方にかけて傘が必要な空模様となります。直近の降水実況では1時間あたり0.65ミリほどの弱い雨で、屋外の個人センサーは12.0℃を示しています。直近3時間の気温変化はほとんどなく、昨日同時刻より少し高めで落ち着いた深夜です。\n\n次の1時間は、いったん止む時間帯を挟みながら弱く断続的に降る見通しです。ただ、このまま回復には向かわず、気象庁の予報で0時から6時の降水確率が90％とされている通り、未明から雨脚が強まり気温も10℃台前半まで下がっていくとみられます。\n\nこの先1時間以内の短い外出であれば折り畳み傘でもしのげそうですが、急に降り出す場面に備えて傘を携行してください。深夜から朝にかけて移動の予定がある場合は、本降りに備えてしっかりした雨具と、冷え込み対策の上着を用意しておくと安心です。",
+  "generated_at": "2026-11-28T02:04:44.472681+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,9 +11,9 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 12.0,
-    "weather_temp": 13.2,
-    "weather": "弱い霧雨",
+    "outdoor_temp": 11.4,
+    "weather_temp": 13.3,
+    "weather": "強い霧雨",
     "alerts_count": 0
   }
 }
