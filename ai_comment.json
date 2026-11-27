@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-27T15:45:27.851677+09:00",
-  "advice": "直近で雨や風の急な変化はなく、穏やかに晴れています。家の外の日陰に設けたセンサーでは15.8℃を観測し、昨日同時刻より2.6℃高い暖かさです。今後1時間も降水や急な冷え込みの兆候はなく、落ち着いた状態が続くとみられます。\n\nこれまでの3時間は気温の変動が小さく安定していましたが、間もなく迎える日没をはさんで次第に下がり始める見通しです。気象庁の予報でも夜は曇りから所により夜遅くには雨となり、日付が変わる頃には降水確率が80%まで高まるため、今夜は天気が下り坂へ向かいます。\n\n夕方までの買い物や洗濯物の取り込みは、日差しと穏やかさが残るうちに済ませておくと効率的です。日が落ちてからの外出や帰宅が遅くなる場合は、冷え込みに備えた上着に加えて雨具も携帯しておくと安心できます。",
+  "generated_at": "2026-11-27T18:11:45.871125+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 15.8,
-    "weather_temp": 15.2,
+    "outdoor_temp": 13.2,
+    "weather_temp": 13.5,
     "weather": "快晴",
     "alerts_count": 0
   }
