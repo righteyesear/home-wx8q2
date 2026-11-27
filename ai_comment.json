@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-27T11:03:53.073341+09:00",
-  "advice": "この先1時間は急激な変化や雨の心配がなく、落ち着いた秋晴れが続く見通しです。外の日陰にあるセンサーの実測は14.1℃に達し、ここ3時間で5.0℃上がった朝の気温上昇は緩やかになって、昨日の同じ頃より高めの水準です。\n\nすでに昨日の最高気温に迫る暖かさとなっており、日差しと弱い風の下で午後には16℃前後まで上がる見込みです。ただ、日が傾いてからは雲が増え始め、夜遅く以降は雨が降りやすくなるため空の変化に注意が必要です。\n\n日中は風も穏やかなため、部屋の換気や日向での散歩などにはちょうどよい陽気といえます。日暮れが早いため、夕方以降も外出を続ける場合は冷え込みと遅い時間の雨に備え、上着や折り畳み傘を携行するとよいでしょう。",
+  "generated_at": "2026-11-27T12:57:23.688711+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 14.1,
-    "weather_temp": 13.7,
+    "outdoor_temp": 15.7,
+    "weather_temp": 15.8,
     "weather": "快晴",
     "alerts_count": 0
   }
