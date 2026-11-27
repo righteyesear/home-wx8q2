@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-28T02:57:23.365454+09:00",
-  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
+  "generated_at": "2026-11-28T03:48:12.464765+09:00",
+  "advice": "いま雨は一時的に止んでいますが、このあと1時間以内に本降りへ強まる見込みです。現在、屋外の個人センサーは10.5℃を示しており、先ほど降ったごく弱い雨はいったん上がっています。\n\n雨雲の動きをみると、4時すぎから再び降り出し、1時間後には1時間あたり4ミリを超えるしっかりした雨脚に変わる予想です。気象庁の予報でも明け方までの降水確率は90％と高く、午前中も雨が残りやすい一方、午後には20％へ下がり回復に向かう見通しです。気温は昨日同時刻より3℃ほど高く推移しており、朝にかけても急な冷え込みはないため、寒さより雨の強まりへの備えが中心になります。\n\n早朝に出かける際は、いま降っていなくても傘を必ず持ち、4時半以降の移動は靴や裾の濡れ対策もしておくと安心です。日中は雨の心配が薄れていくため、急がない用事は昼過ぎ以降に回すと動きやすくなります。",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 10.9,
-    "weather_temp": 10.8,
+    "outdoor_temp": 10.5,
+    "weather_temp": 10.4,
     "weather": "弱い雨",
     "alerts_count": 0
   }
