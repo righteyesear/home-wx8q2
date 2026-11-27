@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-11-27T20:54:30.260790+09:00",
-  "advice": "21時45分ごろにかけて雨や気温の急変はなく、落ち着いた夜が続く見込みです。屋外の日陰にある個人センサーは現在11.9℃で、直近1時間の変化は-0.2℃にとどまり、同時間帯の平均と比べても大きな差はありません。\n\n夕方の冷え込みはすでに下げ止まっており、この先は雲が広がるにつれて気温が下がるどころか、深夜1時には13℃台へ少し上がる見通しです。寒さが強まる気配はないものの、気象庁の予報では午前0時から6時の降水確率が90％と高く、夜遅くから雨へ変わる可能性が高まっています。\n\n22時ごろまでの近場への外出は雨具なしで問題ありませんが、帰宅が深夜になる場合は傘をお持ちください。今夜は冷え込みが和らぐため過度な防寒よりも濡れ対策を優先し、外に出している洗濯物や荷物は就寝前に屋内へ移動させておくとよいでしょう。",
+  "generated_at": "2026-11-27T22:19:20.166400+09:00",
+  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again ",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "ok",
+  "analysis_status": "error",
   "source_status": {
     "spreadsheet_error": null,
-    "weather_error": null,
+    "weather_error": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=18)",
     "jma_forecast_error": null,
     "jma_error": null,
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 11.9,
-    "weather_temp": 12.2,
+    "outdoor_temp": 12.0,
+    "weather_temp": null,
     "weather": "快晴",
     "alerts_count": 0
   }
