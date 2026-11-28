@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-28T15:17:40.035789+09:00",
-  "advice": "⚠️ 分析エラー (gemini-4-hydrogen): 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on",
+  "generated_at": "2026-11-28T17:31:44.827921+09:00",
+  "advice": "雨の心配はありませんが、時折吹く強めの風に注意が必要な夕方です。日陰の個人センサーは15.4℃を示し、直近1時間で気温が上がって昨日同時刻より高めとなりました。一方、広域の格子推定では平均の風は穏やかながら、瞬間的に12.8m/sの突風が示されており、急な風の強まりに気をつけたい状況です。\n\n気象庁の予報では今夜遅くにかけて曇りから晴れへ変わり、降水確率も低く雨具は不要とみられます。これまで気温は上昇傾向でしたが、この先は19時頃をピークに風が弱まり、21時以降はさらに落ち着く見込みです。同時に気温も下がり始め、22時頃にかけて約2.6℃低下して肌寒さが増してくる予想です。\n\n夕方から宵の口の外出は、自転車が横風にあおられたり、落ち葉や軽い荷物が飛ばされたりする場面が想定されます。帽子や手荷物は風にあおられないよう押さえ、ベランダや玄関先の鉢植え、自転車カバーなどは飛ばないよう固定しておくとよいでしょう。夜遅くは風が収まる分、冷え込みへの備えに切り替えてみてください。",
   "model": "gemini-4-hydrogen",
-  "analysis_status": "error",
+  "analysis_status": "ok",
   "source_status": {
     "spreadsheet_error": null,
     "weather_error": null,
@@ -11,8 +11,8 @@
     "rain_nowcast_error": null
   },
   "data_summary": {
-    "outdoor_temp": 13.7,
-    "weather_temp": 15.2,
+    "outdoor_temp": 15.4,
+    "weather_temp": 17.3,
     "weather": "曇り",
     "alerts_count": 0
   }
